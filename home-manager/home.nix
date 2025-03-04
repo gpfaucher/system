@@ -70,6 +70,13 @@
   programs.rofi.enable = true;
   home.packages = with pkgs; [ google-chrome playerctl pulsemixer zoom-us lutris ];
 
+    programs.nixvim = {
+    enable = true;
+
+    colorschemes.catppuccin.enable = true;
+    plugins.lualine.enable = true;
+  };
+
   # Enable home-manager and git
   programs.home-manager.enable = true;
   programs.git.enable = true;
