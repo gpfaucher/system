@@ -16,6 +16,18 @@
     programs.nixvim = {
     enable = true;
 
+    keymaps = [
+      {
+        action = "<cmd>Telescope find_files<cr>";
+        key = "<leader>sf";
+        options = {
+          silent = true;
+        };
+      }
+    ];
+
+    globals.mapleader = " ";
+
     colorschemes.catppuccin.enable = true;
     opts = {
       number = true;
@@ -273,15 +285,6 @@
     gitsigns = {
       enable = true;
       settings.current_line_blame = true;
-    };
-
-    which-key = {
-      enable = false;
-      registrations = {
-        "<leader>fg" = "Find Git files with telescope";
-        "<leader>fw" = "Find text with telescope";
-        "<leader>ff" = "Find files with telescope";
-      };
     };
 
     # Markdown preview server
@@ -638,7 +641,7 @@
     };
 
     fidget = {
-      enable = true;
+      enable = false;
       logger = {
         level = "warn"; # “off”, “error”, “warn”, “info”, “debug”, “trace”
         floatPrecision = 0.01; # Limit the number of decimals displayed for floats
