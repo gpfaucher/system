@@ -1,0 +1,14 @@
+# TODO
+
+- [ ] Organise repository:
+  - [ ] Add a new `hosts` folder with configurations possible for multiple hosts. Add a local file per host with hardware settings.
+  - [ ] Add a new `modules` folder with configurations that can be shared between hosts, e.g. services and system-wide settings and home-manager configuratios..
+- [ ] Configure Neovim
+  - [ ] Consider separating the configuration into a separate flake and using it here.
+  - [ ]
+- [x] Switch to unstable packages as the main `nixpkgs` version for now.
+
+# References
+
+A nice example of structure a dotfiles/nixos flake:
+  - https://github.com/Ahwxorg/nixos-config/blob/master/modules/home/default.nix

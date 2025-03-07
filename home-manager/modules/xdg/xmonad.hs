@@ -299,7 +299,8 @@ myLogHook = return ()
 -- per-workspace layout choices.
 --
 -- By default, do nothing.
-myStartupHook = return ()
+myStartupHook = do
+    spawnOnce "hsetroot -solid '#F08F90"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
@@ -331,8 +332,7 @@ defaults = def {
 
       -- hooks, layouts
         manageHook = myManageHook, 
-	layoutHook = spacingRaw False (Border 5 5 5 5) True (Border 5 5 5 5) True $ smartBorders $ myLayout,
-	--layoutHook = gaps [(L,30), (R,30), (U,40), (D,60)] $ spacingRaw False (Border 5 5 5 5) True (Border 5 5 5 5) True $ smartBorders $ myLayout,
+        layoutHook = spacingRaw False (Border 5 5 5 5) True (Border 5 5 5 5) True $ smartBorders $ myLayout,
         handleEventHook    = myEventHook,
         logHook            = myLogHook,
         startupHook        = myStartupHook >> addEWMHFullscreen

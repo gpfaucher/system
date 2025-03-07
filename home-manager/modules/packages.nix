@@ -7,5 +7,6 @@
     zoom-us
     fzf
     nerd-fonts.jetbrains-mono
+    hsetroot
   ];
 }

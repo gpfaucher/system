@@ -1,17 +1,6 @@
 { inputs, pkgs, ... }:
 {
-  # You can import other home-manager modules here
-  imports = [
-    # If you want to use modules your own flake exports (from modules/home-manager):
-    # outputs.homeManagerModules.example
-
-    # Or modules exported from other flakes (such as nix-colors):
-    # inputs.nix-colors.homeManagerModules.default
-
-    # You can also split up your configuration and import pieces of it here:
-    # ./nvim.nix
-    inputs.nixvim.homeManagerModules.nixvim
-  ];
+  imports = [ inputs.nixvim.homeManagerModules.nixvim ];
 
     programs.nixvim = {
     enable = true;
@@ -20,6 +9,13 @@
       {
         action = "<cmd>Telescope find_files<cr>";
         key = "<leader>sf";
+        options = {
+          silent = true;
+        };
+      }
+      {
+        action = "<cmd>Telescope live_grep<cr>";
+        key = "<leader>sg";
         options = {
           silent = true;
         };
@@ -435,6 +431,8 @@
         # Average webdev LSPs
         # ts-ls.enable = true; # TS/JS
         ts_ls.enable = true; # TS/JS
+        hls.enable = true; # Haskell
+        hls.installGhc = true;
         cssls.enable = true; # CSS
         tailwindcss.enable = true; # TailwindCSS
         html.enable = true; # HTML
