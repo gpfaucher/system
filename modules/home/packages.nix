@@ -1,9 +1,16 @@
-{ pkgs, ... }:
+{ pkgs, ... }: 
 {
   home.packages = with pkgs; [
+    killall
+    xdg-utils
+    pamixer
+    ffmpeg
+    unzip
+    wget
+    hyfetch
+    ripgrep
     google-chrome
     playerctl
-    pulsemixer
     zoom-us
     fzf
     nerd-fonts.jetbrains-mono

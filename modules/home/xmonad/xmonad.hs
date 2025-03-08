@@ -1,3 +1,4 @@
+
 import XMonad
 import XMonad.Layout.Fullscreen
     ( fullscreenEventHook, fullscreenManageHook, fullscreenSupport, fullscreenFull )
@@ -300,7 +301,8 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-    spawnOnce "hsetroot -solid '#F08F90"
+    spawnOnce "xrandr --output DP-2 --mode 3440x1440 --rate 144"
+    spawnOnce "hsetroot -solid '#F08F90'"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.
