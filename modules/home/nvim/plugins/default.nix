@@ -40,105 +40,10 @@
     ts-autotag.enable = true; # Automatic tags.
     nvim-autopairs.enable = true;
 
-    none-ls = {
-      enable = true;
-      settings = {
-        cmd = [ "bash -c nvim" ];
-        debug = true;
-      };
-      sources = {
-        code_actions = {
-          statix.enable = true;
-          gitsigns.enable = true;
-        };
-        diagnostics = {
-          statix.enable = true;
-          deadnix.enable = true;
-          pylint.enable = true;
-          checkstyle.enable = true;
-        };
-        formatting = {
-          alejandra.enable = true;
-          stylua.enable = true;
-          shfmt.enable = true;
-          nixpkgs_fmt.enable = true;
-          google_java_format.enable = false;
-          prettier = {
-            enable = true;
-            disableTsServerFormatter = true;
-          };
-          black = {
-            enable = true;
-            settings = ''
-              {
-                extra_args = { "--fast" },
-              }
-            '';
-          };
-        };
-        completion = {
-          luasnip.enable = true;
-          spell.enable = true;
-        };
-      };
-    };
-
     # Lazygit
     lazygit = {
       enable = true;
     };
-
-    # Notify
-    notify = {
-      enable = true;
-      backgroundColour = "#1e1e2e";
-      fps = 60;
-      render = "default";
-      timeout = 500;
-      topDown = true;
-    };
-
-    # Persistence
-    persistence.enable = true;
-
-    # Linting
-    lint = {
-      enable = true;
-      lintersByFt = {
-        text = [ "vale" ];
-        json = [ "jsonlint" ];
-        markdown = [ "vale" ];
-        rst = [ "vale" ];
-        ruby = [ "ruby" ];
-        janet = [ "janet" ];
-        inko = [ "inko" ];
-        clojure = [ "clj-kondo" ];
-        dockerfile = [ "hadolint" ];
-        terraform = [ "tflint" ];
-      };
-    };
-
-    # Trouble
-    trouble = {
-      enable = true;
-    };
-
-    # Friendly Snippets
-    friendly-snippets = {
-      enable = true;
-    };
-
-    # Code snippets
-    luasnip = {
-      enable = true;
-      settings = {
-        enable_autosnippets = true;
-        store_selection_keys = "<Tab>";
-      };
-    };
-
-    # Easily toggle comments
-    commentary.enable = true;
 
     # Git signs in code
     gitsigns = {
@@ -227,30 +132,7 @@
     };
 
     hardtime = {
-      enable = false;
-      settings = {
-        disableMouse = true;
-        enabled = false;
-        disabledFiletypes = [ "Oil" ];
-        restrictionMode = "hint";
-        hint = true;
-        maxCount = 40;
-        maxTime = 1000;
-        restrictedKeys = {
-          "h" = [ "n" "x" ];
-          "j" = [ "n" "x" ];
-          "k" = [ "n" "x" ];
-          "l" = [ "n" "x" ];
-          "-" = [ "n" "x" ];
-          "+" = [ "n" "x" ];
-          "gj" = [ "n" "x" ];
-          "gk" = [ "n" "x" ];
-          "<CR>" = [ "n" "x" ];
-          "<C-M>" = [ "n" "x" ];
-          "<C-N>" = [ "n" "x" ];
-          "<C-P>" = [ "n" "x" ];
-        };
-      };
+      enable = true;
     };
 
     # Nix expressions in Neovim
@@ -258,102 +140,14 @@
       enable = true;
     };
 
-    # Language server
-    lsp = {
-      enable = true;
-      servers = {
-        # Average webdev LSPs
-        # ts-ls.enable = true; # TS/JS
-        ts_ls.enable = true; # TS/JS
-        cssls.enable = true; # CSS
-        tailwindcss.enable = true; # TailwindCSS
-        html.enable = true; # HTML
-        astro.enable = true; # AstroJS
-        phpactor.enable = true; # PHP
-        svelte.enable = false; # Svelte
-        vuels.enable = false; # Vue
-        pyright.enable = true; # Python
-        marksman.enable = true; # Markdown
-        nil_ls.enable = true; # Nix
-        dockerls.enable = true; # Docker
-        bashls.enable = true; # Bash
-        clangd.enable = true; # C/C++
-        csharp_ls.enable = true; # C#
-        yamlls.enable = true; # YAML
-        ltex = {
-          enable = true;
-          settings = {
-            enabled = [ "astro" "html" "latex" "markdown" "text" "tex" "gitcommit" ];
-            completionEnabled = true;
-            language = "en-US de-DE nl";
-            # dictionary = {
-            #   "nl-NL" = [
-            #     ":/home/liv/.local/share/nvim/ltex/nl-NL.txt"
-            #   ];
-            #   "en-US" = [
-            #     ":/home/liv/.local/share/nvim/ltex/en-US.txt"
-            #   ];
-            #   "de-DE" = [
-            #     ":/home/liv/.local/share/nvim/ltex/de-DE.txt"
-            #   ];
-            # };
-          };
-        };
-        gopls = {
-          # Golang
-          enable = true;
-          autostart = true;
-        };
-
-        lua_ls = {
-          # Lua
-          enable = true;
-          settings.telemetry.enable = false;
-        };
-
-        # Rust
-        rust_analyzer = {
-          enable = true;
-          installRustc = true;
-          installCargo = true;
-        };
-      };
-    };
-
     mini = {
       enable = true;
       modules = {
         starter.enable = true;
+        pairs.enable = true;
       };
-    };
-
-    lspkind = {
-      enable = true;
-      symbolMap = {
-        Copilot = "";
-      };
-      extraOptions = {
-        maxwidth = 50;
-        ellipsis_char = "...";
-      };
-    };
-
-    schemastore = {
-      enable = true;
-      yaml.enable = true;
-      json.enable = false;
     };
   };
-
-  programs.nixvim.extraConfigLuaPre = ''
-    if vim.g.have_nerd_font then
-      require('nvim-web-devicons').setup {}
-    end
-  '';
-
-  programs.nixvim.extraConfigLuaPost = ''
-    -- vim: ts=2 sts=2 sw=2 et
-  '';
 
   programs.nixvim.extraConfigLua = ''
     require("telescope").load_extension("lazygit")

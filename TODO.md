@@ -16,22 +16,25 @@
   - [ ] Fix power management with NVIDIA so that suspend and wakeup works.
 - [ ] Configure Rofi with a Kanagawa theme
 - [ ] Configure Neovim
-  - [ ] Consider separating the configuration into a separate flake and using it here.
-  - [ ] Separate out different aspect of th configuration into modules:
+
+  - [x] Consider separating the configuration into a separate flake and using it here.
+  - [x] Separate out different aspect of th configuration into modules:
     - [x] A `keymaps.nix` with all the globally defined keymaps.
     - [x] A `plugins` folder with a `default.nix` that imports all different plugin configuration (stored in separate files).
-  - [ ] Go through `none-ls` configuration and add all useful formatters (like `nix fmt`). Make sure they're installed with as packages.
-  - [ ] Add keymaps for all different plugins like `Neotree`.
+  - [x] Go through `none-ls` configuration and add all useful formatters (like `nix fmt`). Make sure they're installed with as packages.
+  - [x] Add keymaps for all different plugins like `Neotree`.
   - [x] Tweak `nvim-cmp` settings. Adjust keymaps, sources and UI.
   - [x] Consider setting up Lua bytecode compilation to speed up Neovim
-  - [ ] Remove all unnecessary plugins.
+  - [x] Remove all unnecessary plugins.
 
 - [x] Switch to unstable packages as the main `nixpkgs` version to start out.
 
 # References
 
 A nice example of structure a dotfiles/nixos flake:
-  - https://github.com/Ahwxorg/nixos-config/blob/master/modules/home/default.nix
+
+- https://github.com/Ahwxorg/nixos-config/blob/master/modules/home/default.nix
 
 Very promising tool to setup development environments (with presets for e.g. Flutter / Android Emulators)
-  - https://github.com/cachix/devenv/tree/main
+
+- https://github.com/cachix/devenv/tree/main

@@ -2,7 +2,7 @@ _ :
 {
   programs.nixvim.keymaps = [
     {
-      action = "<cmd>Neotree find_files<cr>";
+      action = "<cmd>Neotree toggle<cr>";
       key = "<leader>e";
       options = {
         silent = true;
