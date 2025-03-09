@@ -1,7 +1,7 @@
-{ pkgs, ... } :
-{
+{ pkgs, ... }: {
   imports = [
     ./completion.nix
+    ./lsp.nix
   ];
 
   programs.nixvim.plugins = {
@@ -43,7 +43,7 @@
     none-ls = {
       enable = true;
       settings = {
-        cmd = ["bash -c nvim"];
+        cmd = [ "bash -c nvim" ];
         debug = true;
       };
       sources = {
@@ -74,7 +74,6 @@
                 extra_args = { "--fast" },
               }
             '';
-
           };
         };
         completion = {
@@ -106,16 +105,16 @@
     lint = {
       enable = true;
       lintersByFt = {
-        text = ["vale"];
-        json = ["jsonlint"];
-        markdown = ["vale"];
-        rst = ["vale"];
-        ruby = ["ruby"];
-        janet = ["janet"];
-        inko = ["inko"];
-        clojure = ["clj-kondo"];
-        dockerfile = ["hadolint"];
-        terraform = ["tflint"];
+        text = [ "vale" ];
+        json = [ "jsonlint" ];
+        markdown = [ "vale" ];
+        rst = [ "vale" ];
+        ruby = [ "ruby" ];
+        janet = [ "janet" ];
+        inko = [ "inko" ];
+        clojure = [ "clj-kondo" ];
+        dockerfile = [ "hadolint" ];
+        terraform = [ "tflint" ];
       };
     };
 
@@ -124,7 +123,7 @@
       enable = true;
     };
 
-    # Friendly Snippets 
+    # Friendly Snippets
     friendly-snippets = {
       enable = true;
     };
@@ -172,12 +171,12 @@
     todo-comments = {
       enable = true;
       settings.colors = {
-        error = ["DiagnosticError" "ErrorMsg" "#DC2626"];
-        warning = ["DiagnosticWarn" "WarningMsg" "#FBBF24"];
-        info = ["DiagnosticInfo" "#2563EB"];
-        hint = ["DiagnosticHint" "#10B981"];
-        default = ["Identifier" "#7C3AED"];
-        test = ["Identifier" "#FF00FF"];
+        error = [ "DiagnosticError" "ErrorMsg" "#DC2626" ];
+        warning = [ "DiagnosticWarn" "WarningMsg" "#FBBF24" ];
+        info = [ "DiagnosticInfo" "#2563EB" ];
+        hint = [ "DiagnosticHint" "#10B981" ];
+        default = [ "Identifier" "#7C3AED" ];
+        test = [ "Identifier" "#FF00FF" ];
       };
     };
 
@@ -300,12 +299,14 @@
             # };
           };
         };
-        gopls = { # Golang
+        gopls = {
+          # Golang
           enable = true;
           autostart = true;
         };
 
-        lua_ls = { # Lua
+        lua_ls = {
+          # Lua
           enable = true;
           settings.telemetry.enable = false;
         };
@@ -325,7 +326,6 @@
         starter.enable = true;
       };
     };
-
 
     lspkind = {
       enable = true;
@@ -385,13 +385,12 @@
       Event = "",
       Operator = "",
       TypeParameter = "",
-    } 
-       '';
+    }
+  '';
 
-  programs.nixvim.extraPlugins = with pkgs.vimPlugins;
-    [
-      vim-be-good
-      glow-nvim # Glow inside of Neovim
-      clipboard-image-nvim
-    ];
+  programs.nixvim.extraPlugins = with pkgs.vimPlugins; [
+    vim-be-good
+    glow-nvim # Glow inside of Neovim
+    clipboard-image-nvim
+  ];
 }

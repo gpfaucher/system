@@ -18,13 +18,12 @@
 - [ ] Configure Neovim
   - [ ] Consider separating the configuration into a separate flake and using it here.
   - [ ] Separate out different aspect of th configuration into modules:
-    - [ ] A `keymaps.nix` with all the globally defined keymaps.
-    - [ ] A `plugins` folder with a `default.nix` that imports all different plugin configuration (stored in separate files).
-    - [ ] A `keymaps.nix` with all the globally defined keymaps.
+    - [x] A `keymaps.nix` with all the globally defined keymaps.
+    - [x] A `plugins` folder with a `default.nix` that imports all different plugin configuration (stored in separate files).
   - [ ] Go through `none-ls` configuration and add all useful formatters (like `nix fmt`). Make sure they're installed with as packages.
   - [ ] Add keymaps for all different plugins like `Neotree`.
-  - [ ] Tweak `nvim-cmp` settings. Adjust keymaps, sources and UI.
-  - [ ] Consider setting up Lua bytecode compilation to speed up Neovim
+  - [x] Tweak `nvim-cmp` settings. Adjust keymaps, sources and UI.
+  - [x] Consider setting up Lua bytecode compilation to speed up Neovim
   - [ ] Remove all unnecessary plugins.
 
 - [x] Switch to unstable packages as the main `nixpkgs` version to start out.
