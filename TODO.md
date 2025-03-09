@@ -14,6 +14,7 @@
   - [x] Set XMonad background color to `#F08F90` using `hsetroot`
   - [ ] Set SDDM background color to `#F08F90`
   - [ ] Fix power management with NVIDIA so that suspend and wakeup works.
+- [ ] Configure Rofi with a Kanagawa theme
 - [ ] Configure Neovim
   - [ ] Consider separating the configuration into a separate flake and using it here.
   - [ ] Separate out different aspect of th configuration into modules:
