@@ -3,13 +3,8 @@
 - [x] Organise repository:
   - [x] Add a new `hosts` folder with configurations possible for multiple hosts. Add a local file per host with hardware settings.
   - [x] Add a new `modules` folder with configurations that can be shared between hosts, e.g. services and system-wide settings and home-manager configuratios..
-- [ ] Add development shells for different environments using `devenv`:
-  - [ ] All shells should use the base `fish` shell as default shell.
-  - [ ] Flutter mobile app development with Flutter, Dart and an Android Emulator
-  - [ ] Golang development with the golang toolchain
-  - [ ] Python development with different environments
-  - [ ] C# development with tools like EF Core, different SDK versions
-  - [ ] Next.js / Node.js development
+- [x] Add development shells for different environments using `devenv`:
+  - [x] All shells should use the base `fish` shell as default shell.
 - [ ] Finalise XOrg configuration
   - [x] Set XMonad background color to `#F08F90` using `hsetroot`
   - [ ] Set SDDM background color to `#F08F90`

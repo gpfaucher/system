@@ -2,6 +2,7 @@
   imports = [
     ./completion.nix
     ./lsp.nix
+    ./linting.nix
   ];
 
   programs.nixvim.plugins = {
