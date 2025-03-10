@@ -15,8 +15,7 @@
   - [ ] Set SDDM background color to `#F08F90`
   - [ ] Fix power management with NVIDIA so that suspend and wakeup works.
 - [ ] Configure Rofi with a Kanagawa theme
-- [ ] Configure Neovim
-
+- [x] Configure Neovim
   - [x] Consider separating the configuration into a separate flake and using it here.
   - [x] Separate out different aspect of th configuration into modules:
     - [x] A `keymaps.nix` with all the globally defined keymaps.

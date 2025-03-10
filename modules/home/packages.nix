@@ -15,5 +15,6 @@
     fzf
     nerd-fonts.jetbrains-mono
     hsetroot
+    xclip
   ];
 }

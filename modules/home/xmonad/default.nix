@@ -1,17 +1,10 @@
-_ :
-{
+_: {
   xsession.windowManager.xmonad = {
     enable = true;
     enableContribAndExtras = true;
     config = ./xmonad.hs;
   };
 
-  services.gammastep = {
-    enable = true;
-    provider = "manual";
-    latitude = 52.992752;
-    longitude = 6.564228;
-  };
 
   services.picom = {
     enable = true;
