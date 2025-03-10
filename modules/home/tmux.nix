@@ -1,5 +1,4 @@
-{  pkgs, ... }:
-{
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     tmux
   ];
@@ -9,7 +8,7 @@
     extraConfig = ''
       set -g default-terminal "xterm-256color"
       set -ag terminal-overrides ",xterm-256color:RGB"
-      set-option -g default-shell ${pkgs.zsh}/bin/fish
+      set-option -g default-shell ${pkgs.fish}/bin/fish
       set -g status-keys vi
 
 
@@ -58,9 +57,9 @@
 
       # Allow passthrough so that image.nvim works.
       set -gq allow-passthrough on
-      '';
+    '';
     plugins = with pkgs.tmuxPlugins; [
-      yank 
+      yank
       fzf-tmux-url
       vim-tmux-navigator
     ];
