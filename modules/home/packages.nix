@@ -15,5 +15,8 @@
     nerd-fonts.jetbrains-mono
     hsetroot
     xclip
+    tmux-sessionizer
+    obsidian
+    google-drive-ocamlfuse
   ];
 }

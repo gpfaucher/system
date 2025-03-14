@@ -30,6 +30,7 @@
     nerd-fonts.jetbrains-mono
     devenv
     direnv
+    figma-linux
   ];
 
 
