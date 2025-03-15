@@ -1,5 +1,4 @@
-{ pkgs, ... }: 
-{
+{ pkgs, ... }: {
   home.packages = with pkgs; [
     killall
     xdg-utils
@@ -16,5 +15,10 @@
     nerd-fonts.jetbrains-mono
     hsetroot
     xclip
+    tmux-sessionizer
+    obsidian
+    google-drive-ocamlfuse
+    nnn
+    librewolf
   ];
 }

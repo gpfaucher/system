@@ -15,19 +15,24 @@
     };
   };
 
-  outputs = {
-    self,
-    nixpkgs,
-    ...
-  } @ inputs: let
-    inherit (self) outputs;
-    username = "gabriel";
-  in {
-    nixosConfigurations = {
-      nexus = nixpkgs.lib.nixosSystem {
-        specialArgs = { host = "nexus"; inherit inputs outputs username; };
-        modules = [ ./hosts/nexus ];
+  outputs =
+    { self
+    , nixpkgs
+    , ...
+    } @ inputs:
+    let
+      inherit (self) outputs;
+      username = "gabriel";
+    in
+    {
+      nixosConfigurations = {
+        nexus = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            host = "nexus";
+            inherit inputs outputs username;
+          };
+          modules = [ ./hosts/nexus ];
+        };
       };
     };
-  };
 }

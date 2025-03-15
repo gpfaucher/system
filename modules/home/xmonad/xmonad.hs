@@ -301,8 +301,11 @@ myLogHook = return ()
 --
 -- By default, do nothing.
 myStartupHook = do
-    spawnOnce "xrandr --output DP-2 --mode 3440x1440 --rate 144"
-    spawnOnce "hsetroot -solid '#F08F90'"
+    spawnOnce "xrandr --output DP-2 --mode 3440x1440 --rate 144 &"
+    spawnOnce "hsetroot -solid '#F08F90' &"
+    spawnOnce "setxkbmap -option ctrl:nocaps &"
+    spawnOnce "xcape -e 'Control_L=Escape' &"
+    spawnOnce "mount | grep ~/drive >/dev/null || google-drive-ocamlfuse ~/drive"
 
 ------------------------------------------------------------------------
 -- Now run xmonad with all the defaults we set up.

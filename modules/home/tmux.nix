@@ -11,7 +11,6 @@
       set-option -g default-shell ${pkgs.fish}/bin/fish
       set -g status-keys vi
 
-
       set-window-option -g mode-keys vi
       bind h select-pane -L
       bind j select-pane -D
@@ -38,8 +37,8 @@
 
       # Remove C-b because that just sucks
       unbind C-b
-      set -g prefix C-t
-      bind-key C-t send-prefix
+      set -g prefix C-a
+      bind-key C-a send-prefix
 
       set-option -g bell-action none
       set -g status-position bottom

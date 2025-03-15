@@ -1,10 +1,10 @@
-_ :
-{
+_: {
   programs.starship.enable = true;
   programs.fish = {
     enable = true;
     interactiveShellInit = ''
       set fish_greeting # Disable greeting
+      set NIX_BUILD_SHELL "fish"
 
       # Kanagawa Fish shell theme
       set -l foreground DCD7BA normal
@@ -39,6 +39,6 @@ _ :
       set -g fish_pager_color_prefix $cyan
       set -g fish_pager_color_completion $foreground
       set -g fish_pager_color_description $comment
-      '';
-    };
+    '';
+  };
 }
