@@ -18,5 +18,7 @@
     tmux-sessionizer
     obsidian
     google-drive-ocamlfuse
+    nnn
+    librewolf
   ];
 }
