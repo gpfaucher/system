@@ -17,6 +17,7 @@
     google-drive-ocamlfuse
     nnn
     rofi-wayland
+    wlr-randr
 
     # Fonts
     nerd-fonts.jetbrains-mono

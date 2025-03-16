@@ -3,7 +3,7 @@ _: {
     enable = true;
     settings = {
       main = {
-        font = "JetBrainsMono Nerd Font Mono:size=11";
+        font = "JetBrainsMono Nerd Font Mono:size=12";
       };
       colors = {
         foreground = "dcd7ba";

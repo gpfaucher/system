@@ -3,6 +3,7 @@ _: {
     enable = true;
     extraConfig = ''
       rivertile -view-padding 6 -outer-padding 6 &
+      wlr-randr --output DP-2 --mode 3440x1440@144
     '';
     settings = {
       border-width = 2;
@@ -15,7 +16,7 @@ _: {
         normal = {
           "Alt+Shift Return" = "spawn foot";
           "Alt Q" = "close";
-          "Super P" = "spawn 'rofi -show drun'";
+          "Alt P" = "spawn 'rofi -show drun'";
           "Alt+Shift E" = "exit";
           "Alt J" = "focus-view next";
           "Alt K" = "focus-view previous";
