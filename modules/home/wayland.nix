@@ -4,6 +4,7 @@ _: {
     extraConfig = ''
       rivertile -view-padding 6 -outer-padding 6 &
       wlr-randr --output DP-2 --mode 3440x1440@144
+      google-drive-ocamlfuse ~/drive
     '';
     settings = {
       border-width = 2;
@@ -18,6 +19,7 @@ _: {
           "Alt Q" = "close";
           "Alt P" = "spawn rofi-powermenu-cmd";
           "Alt O" = "spawn 'rofi -show drun'";
+          "Alt B" = "spawn zathura-picker";
           "Alt+Shift E" = "exit";
           "Alt J" = "focus-view next";
           "Alt K" = "focus-view previous";
