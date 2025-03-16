@@ -8,16 +8,20 @@
     package = config.boot.kernelPackages.nvidiaPackages.beta;
   };
 
+  programs.river = {
+    enable = true;
+  };
   services.xserver = {
     enable = true;
-    videoDrivers = [ "nvidia" ];
-    windowManager.xmonad = {
-      enable = true;
-      enableContribAndExtras = true;
-    };
-    xkb = {
-      layout = "us";
-      variant = "";
-    };
+      videoDrivers = [ "nvidia" ];
+    displayManager.gdm.enable = true;
+    #   # windowManager.xmonad = {
+    #   #   enable = true;
+    #   #   enableContribAndExtras = true;
+    #   # };
+    #   # xkb = {
+    #   #   layout = "us";
+    #   #   variant = "";
+    #   # };
   };
 }

@@ -19,6 +19,8 @@
     obsidian
     google-drive-ocamlfuse
     nnn
-    librewolf
+    mullvad-browser
+    foot
+    rofi-wayland
   ];
 }
