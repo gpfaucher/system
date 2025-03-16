@@ -1,50 +1,33 @@
-_ : 
-{
-    programs.alacritty = {
-      enable = true;
-      settings = {
-        font = {
-          size = 11;
-          normal.family = "JetBrainsMono Nerd Font Mono";
-          bold.family = "JetBrainsMono Nerd Font Mono";
-          italic.family = "JetBrainsMono Nerd Font Mono";
-          bold_italic.family = "JetBrainsMono Nerd Font Mono";
-        };
-        colors = {
-          primary = {
-            background = "#1f1f28";
-            foreground = "#dcd7ba";
-          };
-          normal = {
-            black = "#090618";
-            red = "#c34043";
-            green = "#76946a";
-            yellow = "#c0a36e";
-            blue = "#7e9cd8";
-            magenta = "#957fb8";
-            cyan = "#6a9589";
-            white = "#c8c093";
-          };
-          bright = {
-            black = "#727169";
-            red = "#e82424";
-            green = "#98bb6c";
-            yellow = "#e6c384";
-            blue = "#7fb4ca";
-            magenta = "#938aa9";
-            cyan = "#7aa89f";
-            white = "#dcd7ba";
-          };
-          selection = {
-            background = "#2d4f67";
-            foreground = "#c8c093";
-          };
-          indexed_colors = [
-            { index = 16; color = "#ffa066"; }
-            { index = 17; color = "#ff5d62"; }
-          ];
-        };
+_: {
+  programs.foot = {
+    enable = true;
+    settings = {
+      main = {
+        font = "JetBrainsMono Nerd Font Mono:size=11";
+      };
+      colors = {
+        foreground = "dcd7ba";
+        selection-foreground = "c8c093";
+        selection-background = "2d4f67";
+        regular0 = "090618";
+        regular1 = "c34043";
+        regular2 = "76946a";
+        regular3 = "c0a36e";
+        regular4 = "7e9cd8";
+        regular5 = "957fb8";
+        regular6 = "6a9589";
+        regular7 = "c8c093";
+        bright0 = "727169";
+        bright1 = "e82424";
+        bright2 = "98bb6c";
+        bright3 = "e6c384";
+        bright4 = "7fb4ca";
+        bright5 = "938aa9";
+        bright6 = "7aa89f";
+        bright7 = "dcd7ba";
+        "16" = "ffa066";
+        "17" = "ff5d62";
       };
     };
+  };
 }
-
