@@ -7,5 +7,6 @@
     ++ [ (import ./tmux.nix) ]
     ++ [ (import ./terminal.nix) ]
     ++ [ (import ./nvim) ]
+    ++ [ (import ./scripts) ]
     ++ [ (import ./wayland.nix) ];
 }

@@ -16,7 +16,8 @@ _: {
         normal = {
           "Alt+Shift Return" = "spawn foot";
           "Alt Q" = "close";
-          "Alt P" = "spawn 'rofi -show drun'";
+          "Alt P" = "spawn rofi-powermenu-cmd";
+          "Alt O" = "spawn 'rofi -show drun'";
           "Alt+Shift E" = "exit";
           "Alt J" = "focus-view next";
           "Alt K" = "focus-view previous";
