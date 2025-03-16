@@ -5,6 +5,7 @@ _: {
       rivertile -view-padding 6 -outer-padding 6 &
       wlr-randr --output DP-2 --mode 3440x1440@144
       google-drive-ocamlfuse ~/drive
+      rm -rf ~/Documents ~/Desktop/ ~/Downloads/
     '';
     settings = {
       border-width = 2;
