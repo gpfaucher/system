@@ -1,11 +1,23 @@
 #! /usr/bin/env bash
 
-case "$@" in
-Suspend)
+options="Suspend\nLogout\nReboot\nShutdown"
+choice=$(echo -e "$options" | rofi -dmenu -p "Select an option")
+
+case "$choice" in
+"Suspend")
 	sudo systemctl suspend
 	;;
-
-Reboot)
+"Logout")
+	sudo loginctl terminate-user "$USER"
+	;;
+"Reboot")
 	sudo reboot now
+	;;
+"Shutdown")
+	sudo poweroff
+	exit 0
+	;;
+*)
+	echo "Invalid selection or canceled."
 	;;
 esac
