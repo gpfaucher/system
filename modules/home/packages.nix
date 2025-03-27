@@ -14,10 +14,10 @@
     hsetroot
     xclip
     tmux-sessionizer
-    google-drive-ocamlfuse
     nnn
     rofi-wayland
     wlr-randr
+    wl-clipboard
 
     # Fonts
     nerd-fonts.jetbrains-mono
@@ -25,7 +25,7 @@
     # GUI
     zoom-us
     obsidian
-    mullvad-browser
     foot
+    firefox
   ];
 }

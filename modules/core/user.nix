@@ -23,7 +23,7 @@
     isNormalUser = true;
     description = "${username}";
     extraGroups = [ "networkmanager" "wheel" "docker" "input" ];
-    shell = pkgs.fish;
+    shell = pkgs.zsh;
   };
   nix.settings.allowed-users = [ "${username}" ];
 }

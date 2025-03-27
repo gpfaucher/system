@@ -2,10 +2,8 @@ _: {
   wayland.windowManager.river = {
     enable = true;
     extraConfig = ''
-      rivertile -view-padding 6 -outer-padding 6 &
-      wlr-randr --output DP-2 --mode 3440x1440@144
-      google-drive-ocamlfuse ~/drive
-      rm -rf ~/Documents ~/Desktop/ ~/Downloads/
+      rivertile -view-padding 0 -outer-padding 0 &
+      wlr-randr --output DP-2 --mode 3440x1440@144 &
     '';
     settings = {
       border-width = 2;
@@ -18,7 +16,7 @@ _: {
         normal = {
           "Alt+Shift Return" = "spawn foot";
           "Alt Q" = "close";
-          "Alt P" = "spawn rofi-powermenu-cmd";
+          "Alt P" = "spawn rofi-powermenu";
           "Alt O" = "spawn 'rofi -show drun'";
           "Alt B" = "spawn zathura-picker";
           "Alt+Shift E" = "exit";
@@ -91,7 +89,7 @@ _: {
         };
       };
       set-cursor-warp = "on-output-change";
-      set-repeat = "50 300";
+      set-repeat = "50 200";
       background-color = "0x002b36";
       border-color-focused = "0x93a1a1";
       border-color-unfocused = "0x586e75";
