@@ -2,12 +2,13 @@ _: {
   programs.starship.enable = true;
   programs.zsh = {
     enable = true;
-    antidote = {
+    defaultKeymap = "viins";
+    prezto = {
       enable = true;
-      plugins = [
-        "marlonrichert/zsh-autocomplete"
-        "zsh-users/zsh-autosuggestions"
-      ];
+      editor.keymap = "vi";
+    };
+    autosuggestion = {
+      enable = true;
     };
     initExtra = ''
       export NIX_BUILD_SHELL="zsh"
