@@ -1,6 +1,7 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
     # CLI
+    eza
     killall
     xdg-utils
     playerctl
