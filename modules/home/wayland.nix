@@ -1,9 +1,21 @@
 _: {
+  xdg.configFile."evremap/config.toml".text = ''
+    # The name of the device to remap.
+    # Run `sudo evremap list-devices` to see the devices available
+    # on your system.
+    device_name = "Keychron Keychron K3 Pro"
+
+    [[dual_role]]
+    input = "KEY_CAPSLOCK"
+    hold = ["KEY_LEFTCTRL"]
+    tap = ["KEY_ESC"]
+  '';
   wayland.windowManager.river = {
     enable = true;
     extraConfig = ''
-      rivertile -view-padding 0 -outer-padding 0 &
-      wlr-randr --output DP-2 --mode 3440x1440@144 &
+            rivertile -view-padding 0 -outer-padding 0 &
+            wlr-randr --output DP-2 --mode 3440x1440@144 &
+      sudo evremap remap ~/.config/evremap/config.toml
     '';
     settings = {
       border-width = 2;

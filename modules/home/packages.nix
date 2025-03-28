@@ -18,6 +18,7 @@
     rofi-wayland
     wlr-randr
     wl-clipboard
+evremap
 
     # Fonts
     nerd-fonts.jetbrains-mono
