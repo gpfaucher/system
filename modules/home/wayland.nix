@@ -13,9 +13,9 @@ _: {
   wayland.windowManager.river = {
     enable = true;
     extraConfig = ''
-            rivertile -view-padding 0 -outer-padding 0 &
-            wlr-randr --output DP-2 --mode 3440x1440@144 &
-      sudo evremap remap ~/.config/evremap/config.toml
+      rivertile -view-padding 0 -outer-padding 0 &
+      wlr-randr --output DP-2 --mode 3440x1440@144 &
+      sudo evremap remap ~/.config/evremap/config.toml &
     '';
     settings = {
       border-width = 2;
@@ -29,7 +29,7 @@ _: {
           "Alt+Shift Return" = "spawn foot";
           "Alt Q" = "close";
           "Alt P" = "spawn rofi-powermenu";
-          "Alt O" = "spawn 'rofi -show drun'";
+          "Alt O" = "spawn wofi";
           "Alt B" = "spawn zathura-picker";
           "Alt+Shift E" = "exit";
           "Alt J" = "focus-view next";

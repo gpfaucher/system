@@ -1,7 +1,7 @@
 #! /usr/bin/env bash
 
 options="Suspend\nLogout\nReboot\nShutdown"
-choice=$(echo -e "$options" | rofi -dmenu -p "Select an option")
+choice=$(echo -e "$options" | wofi --dmenu -p "Select an option")
 
 case "$choice" in
 "Suspend")

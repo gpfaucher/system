@@ -1,5 +1,4 @@
-_ :
-{
+_: {
   programs.nixvim.plugins = {
     blink-cmp = {
       enable = true;
@@ -29,20 +28,8 @@ _ :
         };
 
         sources = {
-          default = [ "lsp" "path" "snippets" "buffer" "git" ];
-          providers = {
-            git = {
-              module = "blink-cmp-git";
-              name = "git";
-              score_offset = 100;
-              opts = {
-                commit = { };
-                git_centers = { git_hub = { }; };
-              };
-            };
-          };
+          default = [ "lsp" "path" "snippets" "buffer" ];
         };
-
 
         completion = {
           documentation = {

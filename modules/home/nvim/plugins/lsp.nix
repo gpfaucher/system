@@ -117,6 +117,13 @@ _: {
       };
     }
     {
+      action = "<cmd>Lspsaga show_line_diagnostics<cr>";
+      key = "gp";
+      options = {
+        silent = true;
+      };
+    }
+    {
       action = "<cmd>Lspsaga goto_definition<cr>";
       key = "gd";
       options = {
