@@ -65,5 +65,13 @@ _ :
         silent = true;
       };
     }
+    # Editing
+    {
+      action = "<cmd>ZenMode<cr>";
+      key = "<leader>f";
+      options = {
+        silent = true;
+      };
+    }
   ];
 }

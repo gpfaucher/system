@@ -28,10 +28,24 @@ _: {
         };
 
         sources = {
-          default = [ "lsp" "path" "snippets" "buffer" ];
+          default = [ "lsp" "path" "snippets" "buffer" "git" ];
+          providers = {
+            git = {
+              module = "blink-cmp-git";
+              name = "git";
+              score_offset = 100;
+              opts = {
+                commit = { };
+                git_centers = { git_hub = { }; };
+              };
+            };
+          };
         };
 
         completion = {
+          trigger = {
+            show_on_blocked_trigger_characters = [ " " ":" ];
+          };
           documentation = {
             auto_show = true;
             auto_show_delay_ms = 500;
