@@ -1,4 +1,4 @@
-_: {
+k_: {
   programs.nixvim.plugins = {
     lspkind = {
       enable = true;
@@ -112,6 +112,20 @@ _: {
     {
       action = "<cmd>Lspsaga code_action<cr>";
       key = "ga";
+      options = {
+        silent = true;
+      };
+    }
+    {
+      action = "<cmd>Lspsaga show_workspace_diagnostics<cr>";
+      key = "<leader>pw";
+      options = {
+        silent = true;
+      };
+    }
+    {
+      action = "<cmd>Lspsaga show_line_diagnostics<cr>";
+      key = "<leader>p";
       options = {
         silent = true;
       };

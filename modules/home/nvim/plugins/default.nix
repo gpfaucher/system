@@ -3,6 +3,7 @@
     ./completion.nix
     ./lsp.nix
     ./linting.nix
+    ./editing.nix
   ];
 
   programs.nixvim.plugins = {

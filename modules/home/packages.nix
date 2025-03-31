@@ -1,24 +1,33 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
+    # CLI
+    eza
     killall
     xdg-utils
+    playerctl
     pamixer
     ffmpeg
     unzip
     wget
     hyfetch
     ripgrep
-    google-chrome
-    playerctl
-    zoom-us
     fzf
-    nerd-fonts.jetbrains-mono
     hsetroot
     xclip
     tmux-sessionizer
-    obsidian
-    google-drive-ocamlfuse
     nnn
-    librewolf
+    rofi-wayland
+    wlr-randr
+    wl-clipboard
+evremap
+
+    # Fonts
+    nerd-fonts.jetbrains-mono
+
+    # GUI
+    zoom-us
+    obsidian
+    foot
+    firefox
   ];
 }

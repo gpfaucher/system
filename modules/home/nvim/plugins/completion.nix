@@ -1,5 +1,4 @@
-_ :
-{
+_: {
   programs.nixvim.plugins = {
     blink-cmp = {
       enable = true;
@@ -43,8 +42,10 @@ _ :
           };
         };
 
-
         completion = {
+          trigger = {
+            show_on_blocked_trigger_characters = [ " " ":" ];
+          };
           documentation = {
             auto_show = true;
             auto_show_delay_ms = 500;

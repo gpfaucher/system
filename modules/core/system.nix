@@ -34,7 +34,7 @@
 
   boot.loader.systemd-boot.enable = true;
   boot.loader.efi.canTouchEfiVariables = true;
-
+  security.sudo.wheelNeedsPassword = false;
   services.mullvad-vpn.enable = true;
   networking.nameservers = [ "1.1.1.1#one.one.one.one" "1.0.0.1#one.one.one.one" ];
 
