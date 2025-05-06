@@ -33,6 +33,13 @@
           };
           modules = [ ./hosts/nexus ];
         };
+        voyager = nixpkgs.lib.nixosSystem {
+          specialArgs = {
+            host = "voyager";
+            inherit inputs outputs username;
+          };
+          modules = [ ./hosts/voyager ];
+        };
       };
     };
 }

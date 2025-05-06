@@ -23,11 +23,16 @@ evremap
 
     # Fonts
     nerd-fonts.jetbrains-mono
+    teams-for-linux
+    wdisplays
 
     # GUI
     zoom-us
     obsidian
     foot
+
+    # Browsers
     firefox
+    google-chrome
   ];
 }

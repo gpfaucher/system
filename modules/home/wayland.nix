@@ -14,8 +14,9 @@ _: {
     enable = true;
     extraConfig = ''
       rivertile -view-padding 0 -outer-padding 0 &
-      wlr-randr --output DP-2 --mode 3440x1440@144 &
+      # wlr-randr --output DP-2 --mode 3440x1440@144 &
       sudo evremap remap ~/.config/evremap/config.toml &
+      kanshi &
     '';
     settings = {
       border-width = 2;
