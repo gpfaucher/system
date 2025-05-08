@@ -12,6 +12,10 @@ _: {
       set fish_greeting # Disable greeting
       set NIX_BUILD_SHELL "fish"
 
+      eval (ssh-agent -c)
+      ssh-add ~/.ssh/ssh-pfx-github
+      clear
+
       # Kanagawa Fish shell theme
       set -l foreground DCD7BA normal
       set -l selection 2D4F67 brcyan
