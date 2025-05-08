@@ -13,6 +13,11 @@
     };
   };
 
+  services.logind = {
+    # extraConfig = "HandlePowerKey=suspend";
+    lidSwitch = "suspend";
+  };
+
   nixpkgs.config = {
     allowUnfree = true;
   };

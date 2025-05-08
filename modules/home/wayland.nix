@@ -10,6 +10,7 @@ _: {
     hold = ["KEY_LEFTCTRL"]
     tap = ["KEY_ESC"]
   '';
+
   wayland.windowManager.river = {
     enable = true;
     extraConfig = ''

@@ -1,7 +1,9 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
+
     # CLI
     eza
+    nix-search
     killall
     xdg-utils
     playerctl
@@ -19,17 +21,33 @@
     rofi-wayland
     wlr-randr
     wl-clipboard
-evremap
+    evremap
+    quickemu
+    solaar
+
+
+    # GNOME
+    gnomeExtensions.solaar-extension
+    gnomeExtensions.appindicator
+    gnomeExtensions.just-perfection
+    gnomeExtensions.dash-to-panel
+    gnomeExtensions.yakuake
+    gnome-tweaks
 
     # Fonts
     nerd-fonts.jetbrains-mono
-    teams-for-linux
-    wdisplays
 
     # GUI
     zoom-us
     obsidian
     foot
+    wpsoffice
+    nautilus
+    zed-editor
+    vscode-fhs
+    ticktick
+    kdePackages.yakuake
+    teams-for-linux
 
     # Browsers
     firefox

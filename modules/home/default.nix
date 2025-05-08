@@ -8,7 +8,8 @@
     ++ [ (import ./fish.nix) ]
     ++ [ (import ./tmux.nix) ]
     ++ [ (import ./terminal.nix) ]
+    ++ [ (import ./logitech.nix) ]
     ++ [ (import ./nvim) ]
-    ++ [ (import ./scripts) ]
-    ++ [ (import ./wayland.nix) ];
+    ++ [ (import ./scripts) ];
+  # ++ [ (import ./wayland.nix) ];
 }

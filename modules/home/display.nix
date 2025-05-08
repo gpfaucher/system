@@ -14,7 +14,7 @@ _: {
             position = "760,1440"; # (3440 - 1920) / 2 = 760
           }
           {
-            criteria = "DP-2";
+            criteria = "DP-1";
             mode = "3440x1440@100";
             # Keep the external monitor at the top-left
             position = "0,0";
