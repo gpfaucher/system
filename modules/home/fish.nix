@@ -14,6 +14,7 @@ _: {
 
       eval (ssh-agent -c)
       ssh-add ~/.ssh/ssh-pfx-github
+      ssh-add
       clear
 
       # Kanagawa Fish shell theme
