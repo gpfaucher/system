@@ -25,6 +25,13 @@
     quickemu
     solaar
 
+    awscli2
+
+    # IDE
+    jetbrains.pycharm-professional
+    jetbrains.webstorm
+    jetbrains.datagrip
+
 
     # GNOME
     gnomeExtensions.solaar-extension
@@ -45,12 +52,10 @@
     nautilus
     zed-editor
     vscode-fhs
-    ticktick
-    kdePackages.yakuake
-    teams-for-linux
 
     # Browsers
     firefox
     google-chrome
+    floorp
   ];
 }

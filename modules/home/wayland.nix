@@ -85,8 +85,8 @@ _: {
           "None XF86AudioPlay" = "spawn 'playerctl play-pause'";
           "None XF86AudioPrev" = "spawn 'playerctl previous'";
           "None XF86AudioNext" = "spawn 'playerctl next'";
-          "None XF86MonBrightnessUp" = "spawn 'brightnessctl set +5%'";
-          "None XF86MonBrightnessDown" = "spawn 'brightnessctl set 5%-'";
+          "None XF86MonBrightnessUp" = "spawn 'sudo light -A 5'";
+          "None XF86MonBrightnessDown" = "spawn 'sudo light -U 5'";
         };
         passthrough = {
           "Super F11" = "enter-mode normal";

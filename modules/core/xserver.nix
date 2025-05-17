@@ -1,12 +1,24 @@
-{ config, ... }: {
-  hardware.nvidia = {
-    modesetting.enable = true;
-    open = false;
-
-    powerManagement.enable = true;
-    nvidiaPersistenced = true;
-    package = config.boot.kernelPackages.nvidiaPackages.beta;
+{ config, pkgs, ... }: {
+  programs.light.enable = true;
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true;
   };
+  hardware.graphics.extraPackages = with pkgs; [
+  amdvlk
+];
+# For 32 bit applications 
+hardware.graphics.extraPackages32 = with pkgs; [
+  driversi686Linux.amdvlk
+];
+  # hardware.nvidia = {
+  #   modesetting.enable = true;
+  #   open = false;
+
+  #   powerManagement.enable = true;
+  #   # nvidiaPersistenced = true;
+  #   package = config.boot.kernelPackages.nvidiaPackages.beta;
+  # };
 
   powerManagement.resumeCommands = ''
     wlr-randr --output DP-2 --mode 3440x1440@144 &
@@ -18,10 +30,9 @@
     enable = true;
   };
 
-  # services.displayManager.ly.enable = true;
   services.xserver = {
     enable = true;
-    videoDrivers = [ "nvidia" ];
+    # videoDrivers = [ "nvidia" ];
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
   };
