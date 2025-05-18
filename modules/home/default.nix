@@ -11,5 +11,6 @@
     ++ [ (import ./logitech.nix) ]
     ++ [ (import ./nvim) ]
     ++ [ (import ./scripts) ]
+    ++ [ (import ./hyprland.nix) ]
     ++ [ (import ./wayland.nix) ];
 }

@@ -33,7 +33,7 @@
     nerd-fonts.jetbrains-mono
     devenv
     direnv
-    figma-linux
+    kitty
   ];
 
   boot.loader.systemd-boot.enable = true;

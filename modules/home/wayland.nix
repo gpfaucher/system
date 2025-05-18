@@ -10,6 +10,8 @@ _: {
     hold = ["KEY_LEFTCTRL"]
     tap = ["KEY_ESC"]
   '';
+  wayland.windowManager.hyprland.enable = true; # enable Hyprland
+  home.sessionVariables.NIXOS_OZONE_WL = "1";
 
   wayland.windowManager.river = {
     enable = true;

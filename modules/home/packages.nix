@@ -57,5 +57,7 @@
     firefox
     google-chrome
     floorp
+
+    xdg-desktop-portal-hyprland
   ];
 }
