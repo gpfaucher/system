@@ -5,7 +5,7 @@
     enable = true;
     settings = [
       {
-        profile.name = "docked";
+        profile.name = "docked-work";
         profile.outputs = [
           {
             criteria = "eDP-1";
@@ -17,6 +17,24 @@
           }
           {
             criteria = "DP-1";
+            mode = "3440x1440@100";
+            # Keep the external monitor at the top-left
+            position = "0,0";
+          }
+        ];
+      }
+      {
+        profile.name = "docked-home";
+        profile.outputs = [
+          {
+            criteria = "eDP-1";
+            status = "disable";
+            # Position the laptop below the external monitor and centered
+            # The Y position is the height of the external monitor (1440)
+            # The X position is half the difference between the external monitor width (3440) and laptop width (1920)
+          }
+          {
+            criteria = "HDMI-A-1";
             mode = "3440x1440@100";
             # Keep the external monitor at the top-left
             position = "0,0";
