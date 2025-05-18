@@ -106,9 +106,9 @@ _: {
       };
       set-cursor-warp = "on-output-change";
       set-repeat = "50 200";
-      background-color = "0x002b36";
-      border-color-focused = "0x93a1a1";
-      border-color-unfocused = "0x586e75";
+      # background-color = "0x002b36";
+      # border-color-focused = "0x93a1a1";
+      # border-color-unfocused = "0x586e75";
       default-layout = "rivertile";
     };
   };

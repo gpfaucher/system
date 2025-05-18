@@ -13,11 +13,13 @@
       url = "github:nix-community/nixvim";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+    stylix.url = "github:nix-community/stylix";
   };
 
   outputs =
     { self
     , nixpkgs
+    , stylix
     , ...
     } @ inputs:
     let
@@ -38,7 +40,10 @@
             host = "voyager";
             inherit inputs outputs username;
           };
-          modules = [ ./hosts/voyager ];
+          modules = [
+            stylix.nixosModules.stylix
+            ./hosts/voyager
+          ];
         };
       };
     };

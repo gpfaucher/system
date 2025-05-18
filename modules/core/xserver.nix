@@ -1,9 +1,7 @@
-{ config
-, pkgs
-, ...
-}: {
+{ pkgs, ... }: {
   xdg.portal.wlr.enable = true;
-  xdg.portal.extraPortals = [pkgs.xdg-desktop-portal-hyprland];
+  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
+
   programs.light.enable = true;
   hardware.graphics = {
     enable = true;
@@ -38,9 +36,10 @@
     enable = true;
   };
 
+  # services.greetd.package = [ pkgs.regreet ];
+
   services.xserver = {
     enable = true;
-    # videoDrivers = [ "nvidia" ];
     displayManager.gdm.enable = true;
     desktopManager.gnome.enable = true;
   };

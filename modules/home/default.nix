@@ -12,5 +12,6 @@
     ++ [ (import ./nvim) ]
     ++ [ (import ./scripts) ]
     ++ [ (import ./hyprland.nix) ]
+    ++ [ (import ./waybar.nix) ]
     ++ [ (import ./wayland.nix) ];
 }

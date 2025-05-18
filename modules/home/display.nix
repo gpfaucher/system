@@ -1,4 +1,6 @@
-_: {
+{ pkgs, ... }: {
+  stylix.enable = true;
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-hard.yaml";
   services.kanshi = {
     enable = true;
     settings = [
@@ -27,7 +29,7 @@ _: {
           {
             criteria = "eDP-1";
             mode = "3840x2400";
-            scale = 1.75; # Keep the scale increase
+            scale = 1.666667; # Keep the scale increase
             # Position the laptop below the external monitor and centered
             # The Y position is the height of the external monitor (1440)
             # The X position is half the difference between the external monitor width (3440) and laptop width (1920)

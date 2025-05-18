@@ -2,9 +2,9 @@ _: {
   programs.foot = {
     enable = true;
     settings = {
-      main = {
-        font = "JetBrainsMono Nerd Font Mono:size=12";
-      };
+      # main = {
+      #   font = "JetBrainsMono Nerd Font Mono:size=12";
+      # };
       colors = {
         foreground = "dcd7ba";
         selection-foreground = "c8c093";

@@ -1,7 +1,9 @@
 { pkgs, ... }: {
   home.packages = with pkgs; [
-
     # CLI
+    networkmanagerapplet
+    dunst
+    brightnessctl
     eza
     nix-search
     killall
@@ -31,7 +33,6 @@
     jetbrains.pycharm-professional
     jetbrains.webstorm
     jetbrains.datagrip
-
 
     # GNOME
     gnomeExtensions.solaar-extension
