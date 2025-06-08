@@ -1,0 +1,53 @@
+- name: Check if yay is installed
+  command: which yay
+  register: yay_check
+  failed_when: false
+  changed_when: false
+  tags:
+    - install
+    - yay
+    - aur
+
+- name: Install base-devel and git (required for building AUR packages)
+  become: true
+  pacman:
+    name: ["base-devel", "git"]
+    state: present
+  when: yay_check.rc != 0
+  tags:
+    - install
+    - yay
+    - aur
+
+- name: Clone yay repository
+  git:
+    repo: https://aur.archlinux.org/yay.git
+    dest: /tmp/yay
+    force: yes
+  when: yay_check.rc != 0
+  become: false
+  tags:
+    - install
+    - yay
+    - aur
+
+- name: Build and install yay
+  shell: |
+    cd /tmp/yay
+    makepkg -si --noconfirm
+  when: yay_check.rc != 0
+  become: false
+  tags:
+    - install
+    - yay
+    - aur
+
+- name: Clean up yay build directory
+  file:
+    path: /tmp/yay
+    state: absent
+  when: yay_check.rc != 0
+  tags:
+    - install
+    - yay
+    - aur

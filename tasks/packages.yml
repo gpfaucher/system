@@ -1,0 +1,17 @@
+- name: Productivity tools
+  become: true
+  pacman:
+    name: ["ticktick", "teams-for-linux"]
+  tags:
+    - install
+    - yay
+    - aur
+
+- name: CLI tools
+  become: true
+  pacman:
+    name: ["aws-cli-v2", "asdf", "neovim", "fish"]
+  tags:
+    - install
+    - yay
+    - aur
