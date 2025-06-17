@@ -35,6 +35,7 @@ return {
 					"emmet_ls",
 					"emmet_language_server",
 					"marksman",
+					"terraform_ls",
 					"basedpyright",
 				},
 			})
@@ -105,7 +106,7 @@ return {
 			local capabilities = require("blink.cmp").get_lsp_capabilities() -- Import capabilities from blink.cmp
 
 			-- Default setup for most servers
-			local servers_with_default_config = { "gopls", "html", "cssls" }
+			local servers_with_default_config = { "gopls", "html", "cssls", "terraformls" }
 			for _, lsp in ipairs(servers_with_default_config) do
 				lspconfig[lsp].setup({ capabilities = capabilities })
 			end
