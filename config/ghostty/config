@@ -1,0 +1,9 @@
+# Fonts
+font-size = 15
+font-family = "MonaspiceAr NFM"
+
+window-decoration = "none"
+theme = "catppuccin-mocha"
+
+gtk-single-instance = true
+confirm-close-surface = false
