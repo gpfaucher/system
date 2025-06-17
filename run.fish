@@ -25,4 +25,5 @@ sudo systemctl enable --now NetworkManager.service
 sudo systemctl enable --now bluetooth
 
 echo "$(tput setaf 2)--------- Linking dotfiles using stow  ---------$(tput sgr0)"
+git clone https://github.com/tmux-plugins/tpm ~/.config/tmux/plugins/tpm
 stow -t ~/.config config
