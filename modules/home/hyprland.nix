@@ -1,11 +1,29 @@
 _: {
+  wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.settings = {
     "$mod" = "Alt";
-    exec-once = [ "kanshi &" ] ++ [ "waybar & nm-applet &" ];
     general = {
       gaps_out = 10;
+      gaps_in = 10;
+      allow_tearing = false;
+      layout = "master";
+    };
+    input = {
+      # kb_layout = "us";
+      # kb_options = "caps:swapescape";
+      # kb_options = "ctrl:nocaps";
+
+      repeat_delay = 300;
+      repeat_rate = 50;
+
+      follow_mouse = 1;
+
+      sensitivity = 0; # -1.0 - 1.0, 0 means no modification.
     };
 
+    monitor = [
+      "DP-2,3440x1440@100,auto,auto"
+    ];
     gestures = {
       workspace_swipe = 1;
       workspace_swipe_fingers = 3;
@@ -17,26 +35,36 @@ _: {
       workspace_swipe_forever = 1;
     };
     xwayland.force_zero_scaling = true;
-    # env = [
-    #   "NIXOS_OZONE_WL, 1"
-    #   "NIXPKGS_ALLOW_UNFREE, 1"
-    #   "XDG_CURRENT_DESKTOP, Hyprland"
-    #   "XDG_SESSION_TYPE, wayland"
-    #   "XDG_SESSION_DESKTOP, Hyprland"
-    #   "GDK_BACKEND, wayland, x11"
-    #   "GDK_SCALE, 2"
-    #   "XCURSOR_SIZE, 32"
-    #   "CLUTTER_BACKEND, wayland"
-    #   "QT_QPA_PLATFORM=wayland;xcb"
-    #   "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
-    #   "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
-    #   "SDL_VIDEODRIVER, x11"
-    #   "MOZ_ENABLE_WAYLAND, 1"
-    #   "AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1"
-    #   "GDK_SCALE,1"
-    #   "QT_SCALE_FACTOR,1"
-    #   "EDITOR,nvim"
-    # ];
+    env = [
+      "NIXOS_OZONE_WL, 1"
+      "ELECTRON_OZONE_PLATFORM_HINT, auto"
+      "WLR_NO_HARDWARE_CURSORS, 1"
+      "NIXPKGS_ALLOW_UNFREE, 1"
+      "LIBVA_DRIVER_NAME,nvidia"
+      "GLX_VENDOR_LIBRARY_NAME,nvidia"
+      "XDG_CURRENT_DESKTOP, Hyprland"
+      "XDG_SESSION_TYPE, wayland"
+      "XDG_SESSION_DESKTOP, Hyprland"
+      "GDK_BACKEND, wayland, x11"
+      "GDK_SCALE, 2"
+      "NVIDIA_ANTI_FLICKER, true"
+      "CLUTTER_BACKEND, wayland"
+      "QT_QPA_PLATFORM=wayland;xcb"
+      "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
+      "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
+      "SDL_VIDEODRIVER, x11"
+      "MOZ_ENABLE_WAYLAND, 1"
+      "AQ_DRM_DEVICES,/dev/dri/card0:/dev/dri/card1"
+      "GDK_SCALE,1"
+      "QT_SCALE_FACTOR,1"
+      "EDITOR,nvim"
+    ];
+    exec-once = [
+      "waybar"
+      "nm-applet"
+      "blueman-applet"
+      "hyprctl setcursor Numix-Cursor 24"
+    ];
     binde = [
       "ALTSHIFT,H,resizeactive,-150 0"
       "ALTSHIFT,J,resizeactive,0 150"
@@ -66,18 +94,20 @@ _: {
       ++ (
         # workspaces
         # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
-        builtins.concatLists (builtins.genList
-          (
-            i:
-            let
-              ws = i + 1;
-            in
-            [
-              "$mod, code:1${toString i}, workspace, ${toString ws}"
-              "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
-            ]
-          )
-          9)
+        builtins.concatLists (
+          builtins.genList
+            (
+              i:
+              let
+                ws = i + 1;
+              in
+              [
+                "$mod, code:1${toString i}, workspace, ${toString ws}"
+                "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
+              ]
+            )
+            9
+        )
       );
   };
 }

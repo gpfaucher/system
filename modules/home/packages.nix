@@ -2,6 +2,7 @@
   home.packages = with pkgs; [
     # CLI
     networkmanagerapplet
+    wlogout
     dunst
     brightnessctl
     eza
@@ -34,23 +35,14 @@
     jetbrains.webstorm
     jetbrains.datagrip
 
-    # GNOME
-    gnomeExtensions.solaar-extension
-    gnomeExtensions.appindicator
-    gnomeExtensions.just-perfection
-    gnomeExtensions.dash-to-panel
-    gnomeExtensions.yakuake
-    gnome-tweaks
-
     # Fonts
     nerd-fonts.jetbrains-mono
+    nerd-fonts.monaspace
 
     # GUI
     zoom-us
-    obsidian
+    swaynotificationcenter
     foot
-    wpsoffice
-    nautilus
     zed-editor
     vscode-fhs
 

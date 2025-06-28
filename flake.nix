@@ -2,17 +2,9 @@
   description = "Your new nix config";
 
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
-
-    home-manager = {
-      url = "github:nix-community/home-manager";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
-    nixvim = {
-      url = "github:nix-community/nixvim";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    home-manager.url = "github:nix-community/home-manager";
+    nixvim.url = "github:nix-community/nixvim";
     stylix.url = "github:nix-community/stylix";
   };
 
@@ -33,7 +25,10 @@
             host = "nexus";
             inherit inputs outputs username;
           };
-          modules = [ ./hosts/nexus ];
+          modules = [
+            stylix.nixosModules.stylix
+            ./hosts/nexus
+          ];
         };
         voyager = nixpkgs.lib.nixosSystem {
           specialArgs = {
