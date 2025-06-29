@@ -12,7 +12,9 @@ with lib; {
     package = pkgs.waybar;
     settings = [
       {
-        margin = "0";
+        margin-left = 10;
+        margin-right = 10;
+        margin-top = 10;
         layer = "top";
         position = "top";
         modules-center = [ "hyprland/workspaces" ];
@@ -54,16 +56,17 @@ with lib; {
         };
         "memory" = {
           interval = 5;
-          format = " {}%";
+          format = "RAM: {}%";
           tooltip = true;
         };
         "cpu" = {
           interval = 5;
-          format = " {usage:2}%";
+          format = "CPU: {usage:2}%";
+
           tooltip = true;
         };
         "disk" = {
-          format = " {free}";
+          format = "/: {free}";
           tooltip = true;
         };
         "network" = {

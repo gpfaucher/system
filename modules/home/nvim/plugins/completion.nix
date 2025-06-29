@@ -2,6 +2,7 @@ _: {
   programs.nixvim.plugins = {
     blink-cmp = {
       enable = true;
+      setupLspCapabilities = true;
       settings = {
         appearance = {
           use_nvim_cmp_as_default = true;
@@ -28,7 +29,13 @@ _: {
         };
 
         sources = {
-          default = [ "lsp" "path" "snippets" "buffer" "git" ];
+          default = [
+            "lsp"
+            "path"
+            "snippets"
+            "buffer"
+            "git"
+          ];
           providers = {
             git = {
               module = "blink-cmp-git";
@@ -36,7 +43,9 @@ _: {
               score_offset = 100;
               opts = {
                 commit = { };
-                git_centers = { git_hub = { }; };
+                git_centers = {
+                  git_hub = { };
+                };
               };
             };
           };
@@ -44,7 +53,10 @@ _: {
 
         completion = {
           trigger = {
-            show_on_blocked_trigger_characters = [ " " ":" ];
+            show_on_blocked_trigger_characters = [
+              " "
+              ":"
+            ];
           };
           documentation = {
             auto_show = true;
@@ -63,7 +75,10 @@ _: {
             scrollbar = true;
             # -- Which directions to show the window,
             # -- falling back to the next direction when there's not enough space
-            direction_priority = [ "s" "n" ];
+            direction_priority = [
+              "s"
+              "n"
+            ];
 
             # -- Whether to automatically show the window when new completion items are available
             auto_show = true;

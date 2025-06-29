@@ -3,8 +3,8 @@ _: {
   wayland.windowManager.hyprland.settings = {
     "$mod" = "Alt";
     general = {
-      gaps_out = 10;
-      gaps_in = 10;
+      gaps_out = 15;
+      gaps_in = 5;
       allow_tearing = false;
       layout = "master";
     };

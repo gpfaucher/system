@@ -1,4 +1,4 @@
-k_: {
+_: {
   programs.nixvim = {
     diagnostic.settings = {
       virtual_text = true;
@@ -75,7 +75,9 @@ k_: {
                 };
                 analysis = {
                   diagnosticsMode = "workspace";
-                  typeCheckingMode = "off";
+                  typeCheckingMode = "recommended";
+                  autoSearchPaths = true;
+                  useLibraryCodeForTypes = true;
                 };
               };
             };
