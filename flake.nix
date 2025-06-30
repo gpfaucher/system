@@ -1,19 +1,19 @@
 {
   description = "Your new nix config";
-
   inputs = {
-    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable-small";
+    nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
     nixvim.url = "github:nix-community/nixvim";
     stylix.url = "github:nix-community/stylix";
   };
-
   outputs =
-    { self
-    , nixpkgs
-    , stylix
-    , ...
-    } @ inputs:
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      stylix,
+      ...
+    }@inputs:
     let
       inherit (self) outputs;
       username = "gabriel";
@@ -27,6 +27,16 @@
           };
           modules = [
             stylix.nixosModules.stylix
+            home-manager.nixosModules.home-manager
+            {
+              nixpkgs.config.allowUnfree = true;
+
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs username;
+              };
+            }
             ./hosts/nexus
           ];
         };
@@ -37,6 +47,16 @@
           };
           modules = [
             stylix.nixosModules.stylix
+            home-manager.nixosModules.home-manager
+            {
+              nixpkgs.config.allowUnfree = true;
+
+              home-manager.useGlobalPkgs = true;
+              home-manager.useUserPackages = true;
+              home-manager.extraSpecialArgs = {
+                inherit inputs outputs username;
+              };
+            }
             ./hosts/voyager
           ];
         };

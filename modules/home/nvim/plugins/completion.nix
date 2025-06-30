@@ -1,5 +1,8 @@
 _: {
   programs.nixvim.plugins = {
+    claude-code = {
+      enable = true;
+    };
     blink-cmp = {
       enable = true;
       setupLspCapabilities = true;

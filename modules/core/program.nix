@@ -14,6 +14,7 @@
   };
 
   environment.systemPackages = with pkgs; [
+    claude-code
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     nerd-fonts.jetbrains-mono

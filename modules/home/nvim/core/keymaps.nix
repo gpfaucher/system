@@ -1,14 +1,14 @@
-_ :
 {
   programs.nixvim.keymaps = [
+    # File Explorer
     {
       action = "<cmd>Neotree toggle<cr>";
-      key = "<leader>e";
+      key = "<leader>e"; # 'e' for explorer - this is good
       options = {
         silent = true;
       };
     }
-    # Telescope.nvim
+
     {
       action = "<cmd>Telescope find_files<cr>";
       key = "<leader>sf";
@@ -24,51 +24,39 @@ _ :
       };
     }
     {
-      action = "<cmd>Telescope buffers<cr>";
-      key = "<leader><space>";
-      options = {
-        silent = true;
-      };
-    }
-    {
-      action = "<cmd>Telescope git_commits<cr>";
-      key = "<leader>sc";
-      options = {
-        silent = true;
-      };
-    }
-    {
       action = "<cmd>Telescope current_buffer_fuzzy_find<cr>";
       key = "<leader>sb";
       options = {
         silent = true;
       };
     }
+
+    {
+      action = "<cmd>Telescope buffers<cr>";
+      key = "<leader><space>";
+      options = {
+        silent = true;
+      };
+    }
+
+    {
+      action = "<cmd>Telescope git_commits<cr>";
+      key = "<leader>gc"; # git commits
+      options = {
+        silent = true;
+      };
+    }
+
     {
       action = "<cmd>Telescope help_tags<cr>";
-      key = "<leader>sh";
+      key = "<leader>sh"; # help help-tags
       options = {
         silent = true;
       };
     }
     {
       action = "<cmd>Telescope man_pages<cr>";
-      key = "<leader>sm";
-      options = {
-        silent = true;
-      };
-    }
-    {
-      action = "<cmd>Telescope quickfix<cr>";
-      key = "<leader>sq";
-      options = {
-        silent = true;
-      };
-    }
-    # Editing
-    {
-      action = "<cmd>ZenMode<cr>";
-      key = "<leader>f";
+      key = "<leader>sm"; # help man-pages
       options = {
         silent = true;
       };

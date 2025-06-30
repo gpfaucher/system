@@ -3,7 +3,5 @@ _: {
     leap = {
       enable = true;
     };
-
-    zen-mode.enable = true;
   };
 }

@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   imports = [
     ./completion.nix
     ./lsp.nix
@@ -78,12 +79,32 @@
     todo-comments = {
       enable = true;
       settings.colors = {
-        error = [ "DiagnosticError" "ErrorMsg" "#DC2626" ];
-        warning = [ "DiagnosticWarn" "WarningMsg" "#FBBF24" ];
-        info = [ "DiagnosticInfo" "#2563EB" ];
-        hint = [ "DiagnosticHint" "#10B981" ];
-        default = [ "Identifier" "#7C3AED" ];
-        test = [ "Identifier" "#FF00FF" ];
+        error = [
+          "DiagnosticError"
+          "ErrorMsg"
+          "#DC2626"
+        ];
+        warning = [
+          "DiagnosticWarn"
+          "WarningMsg"
+          "#FBBF24"
+        ];
+        info = [
+          "DiagnosticInfo"
+          "#2563EB"
+        ];
+        hint = [
+          "DiagnosticHint"
+          "#10B981"
+        ];
+        default = [
+          "Identifier"
+          "#7C3AED"
+        ];
+        test = [
+          "Identifier"
+          "#FF00FF"
+        ];
       };
     };
 
@@ -131,10 +152,6 @@
         "harpoon"
         "reason"
       ];
-    };
-
-    hardtime = {
-      enable = true;
     };
 
     # Nix expressions in Neovim
@@ -185,7 +202,6 @@
   '';
 
   programs.nixvim.extraPlugins = with pkgs.vimPlugins; [
-    vim-be-good
     glow-nvim # Glow inside of Neovim
     clipboard-image-nvim
   ];

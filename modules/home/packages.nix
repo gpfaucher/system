@@ -26,7 +26,6 @@
     wl-clipboard
     evremap
     quickemu
-    solaar
 
     awscli2
 
@@ -43,7 +42,6 @@
     zoom-us
     swaynotificationcenter
     foot
-    zed-editor
     vscode-fhs
 
     # Browsers

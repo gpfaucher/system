@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   # imports = [ inputs.nix-gaming.nixosModules.default ];
   nix = {
     settings = {
@@ -24,8 +25,8 @@
     lidSwitch = "suspend";
   };
 
+  nixpkgs.config.allowUnfree = true;
   nixpkgs.config = {
-    allowUnfree = true;
     allowUnsupportedSystem = true;
   };
 
