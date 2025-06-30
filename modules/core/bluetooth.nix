@@ -9,6 +9,12 @@
       General = {
         Enable = "Source,Sink,Media,Socket";
         Experimental = true;
+        KernelExperimental = true;
+        JustWorksRepairing = "always";
+        MultiProfile = "multiple";
+      };
+      LE = {
+        EnableAdvMonInterleaveScan = true;
       };
     };
   };

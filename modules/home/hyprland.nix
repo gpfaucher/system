@@ -2,7 +2,7 @@
 {
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.settings = {
-    "$mod" = "Alt";
+    "$mod" = "Super";
 
     general = {
       gaps_out = 0;
