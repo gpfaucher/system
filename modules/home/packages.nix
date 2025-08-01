@@ -1,5 +1,10 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
+    autorandr
+    arandr
+    alacritty
+    ghostty
     # CLI
     networkmanagerapplet
     wlogout

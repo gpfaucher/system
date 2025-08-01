@@ -12,5 +12,6 @@
     ++ [ (import ./system.nix) ]
     ++ [ (import ./user.nix) ]
     ++ [ (import ./bluetooth.nix) ]
+    ++ [ (import ./xserver.nix) ]
     ++ [ (import ./steam.nix) ];
 }

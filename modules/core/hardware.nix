@@ -1,11 +1,9 @@
-{ pkgs
-, config
-, ...
-}: {
-  xdg.portal.config.common.default = "*";
-  xdg.portal.wlr.enable = true;
-  xdg.portal.extraPortals = [ pkgs.xdg-desktop-portal-hyprland ];
-
+{
+  pkgs,
+  config,
+  ...
+}:
+{
   services.xserver.videoDrivers = [ "nvidia" ];
   hardware = {
     graphics = {
@@ -17,6 +15,7 @@
         driversi686Linux.amdvlk
       ];
     };
+
     enableRedistributableFirmware = true;
     nvidia = {
       modesetting.enable = true;
