@@ -1,10 +1,17 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    filezilla
+    gemini-cli
+    opencode
+    zellij
     autorandr
     arandr
+    xpipe
     alacritty
     ghostty
+    todoist-electron
+
     # CLI
     networkmanagerapplet
     wlogout
