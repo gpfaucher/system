@@ -1,7 +1,7 @@
 { ... }: 
 {
   imports = [
-    ./hardware-configuration.nix
     ./../../modules/core
+    ./../../modules/core/hardware/nexus.nix
   ];
 }

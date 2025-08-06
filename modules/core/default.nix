@@ -1,17 +1,19 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   stylix.enable = true;
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
 
-  imports =
-    [ (import ./docker.nix) ]
-    ++ [ (import ./hardware.nix) ]
-    ++ [ (import ./networking.nix) ]
-    ++ [ (import ./pipewire.nix) ]
-    ++ [ (import ./program.nix) ]
-    ++ [ (import ./security.nix) ]
-    ++ [ (import ./system.nix) ]
-    ++ [ (import ./user.nix) ]
-    ++ [ (import ./bluetooth.nix) ]
-    ++ [ (import ./xserver.nix) ]
-    ++ [ (import ./steam.nix) ];
+  imports = [
+    ./bluetooth.nix
+    ./docker.nix
+    ./greetd.nix
+    ./networking.nix
+    ./pipewire.nix
+    ./program.nix
+    ./security.nix
+    ./steam.nix
+    ./system.nix
+    ./user.nix
+    ./xserver.nix
+  ];
 }
