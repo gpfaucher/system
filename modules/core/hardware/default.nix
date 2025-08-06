@@ -1,7 +1,7 @@
 { ... }:
 {
   imports = [
-    ./nexus.nix
+    # ./nexus.nix
     ./voyager.nix
   ];
 }

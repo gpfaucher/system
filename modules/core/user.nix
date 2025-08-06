@@ -6,8 +6,7 @@
   ...
 }:
 {
-  # Remove this line - it's already imported in flake.nix
-  # imports = [ inputs.home-manager.nixosModules.home-manager ];
+  
   
   home-manager = {
     useUserPackages = true;

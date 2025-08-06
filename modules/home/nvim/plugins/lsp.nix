@@ -6,6 +6,9 @@ _: {
   programs.nixvim.plugins = {
     lspkind = {
       enable = true;
+      cmp = {
+        enable = false;
+      };
       symbolMap = {
         Copilot = "";
       };

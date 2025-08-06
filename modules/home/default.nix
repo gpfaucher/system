@@ -1,15 +1,21 @@
 { pkgs, ... }:
 {
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
-  imports =
-    [ (import ./git.nix) ]
-    ++ [ (import ./zathura.nix) ]
-    ++ [ (import ./packages.nix) ]
-    ++ [ (import ./fish.nix) ]
-    ++ [ (import ./xserver.nix) ]
-    ++ [ (import ./tmux.nix) ]
-    ++ [ (import ./logitech.nix) ]
-    ++ [ (import ./nvim) ]
-    ++ [ (import ./scripts) ]
-    ++ [ (import ./terminal.nix) ];
+  imports = [
+    ./autorandr.nix
+    ./default.desktop.nix
+    ./fish.nix
+    ./git.nix
+    ./logitech.nix
+    ./packages.nix
+    ./scripts/default.nix
+    ./statusbar.nix
+    ./steam.nix
+    ./terminal.nix
+    ./tmux.nix
+    ./xserver.nix
+    ./zathura.nix
+
+    ./nvim/default.nix
+  ];
 }

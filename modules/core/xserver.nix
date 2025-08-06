@@ -1,7 +1,6 @@
 _: {
   services.xserver = {
     enable = true;
-    videoDrivers = [ "nvidia" ];
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
@@ -10,5 +9,13 @@ _: {
       layout = "us";
       variant = "";
     };
+  };
+
+  services.picom = {
+    enable = true;
+    backend = "glx";
+    fade = true;
+    fadeDelta = 5;
+    shadow = true;
   };
 }

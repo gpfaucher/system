@@ -1,8 +1,7 @@
-_ : 
 {
-  programs.steam = {
-    enable = true;
-    remotePlay.openFirewall = true;
-    dedicatedServer.openFirewall = false;
-  };
+  # programs.steam = {
+  #   enable = true;
+  #   remotePlay.openFirewall = true;
+  #   dedicatedServer.openFirewall = false;
+  # };
 }
