@@ -1,6 +1,6 @@
 _: {
   services.xserver = {
-    enable = true;
+    enable = false;
     windowManager.xmonad = {
       enable = true;
       enableContribAndExtras = true;
@@ -12,7 +12,7 @@ _: {
   };
 
   services.picom = {
-    enable = true;
+    enable = false;
     backend = "glx";
     fade = true;
     fadeDelta = 5;

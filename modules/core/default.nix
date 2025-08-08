@@ -14,6 +14,5 @@
     ./steam.nix
     ./system.nix
     ./user.nix
-    ./xserver.nix
   ];
 }

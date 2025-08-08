@@ -1,11 +1,12 @@
 _: {
-  services.pulseaudio.enable = true;
+  services.pulseaudio.enable = false;
 
   services.pipewire = {
-    enable = false;
-    # alsa.enable = true;
-    # alsa.support32Bit = true;
-    # pulse.enable = true;
-    # wireplumber.enable = true;
+    enable = true;
+    audio.enable = true;
+    alsa.enable = true;
+    alsa.support32Bit = true;
+    pulse.enable = true;
+    wireplumber.enable = true;
   };
 }

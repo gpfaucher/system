@@ -2,9 +2,8 @@
 {
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
   imports = [
-    ./autorandr.nix
     ./default.desktop.nix
-    ./fish.nix
+    ./zsh.nix
     ./git.nix
     ./logitech.nix
     ./packages.nix
@@ -13,7 +12,8 @@
     ./steam.nix
     ./terminal.nix
     ./tmux.nix
-    ./xserver.nix
+    ./sway.nix
+    ./kanshi.nix
     ./zathura.nix
 
     ./nvim/default.nix

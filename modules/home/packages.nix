@@ -5,16 +5,12 @@
     gemini-cli
     opencode
     zellij
-    autorandr
-    arandr
-    xpipe
     alacritty
     ghostty
     todoist-electron
 
     # CLI
     networkmanagerapplet
-    wlogout
     dunst
     brightnessctl
     eza
@@ -26,14 +22,11 @@
     ffmpeg
     unzip
     wget
-    hyfetch
     ripgrep
     fzf
     hsetroot
-    xclip
     tmux-sessionizer
     nnn
-    rofi-wayland
     wlr-randr
     wl-clipboard
     evremap
@@ -55,12 +48,18 @@
     swaynotificationcenter
     foot
     vscode-fhs
+    sway
+    swaybg
+    swaylock
+    wofi
 
     # Browsers
     firefox
     google-chrome
     floorp
 
-    xdg-desktop-portal-hyprland
+    xdg-desktop-portal-wlr
+    pkgs.teams
+    pkgs.kanshi
   ];
 }
