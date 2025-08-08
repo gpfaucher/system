@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    sway
     filezilla
     gemini-cli
     opencode

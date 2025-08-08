@@ -6,8 +6,7 @@
   ...
 }:
 {
-  
-  
+
   home-manager = {
     useUserPackages = true;
     useGlobalPkgs = true;
@@ -16,8 +15,8 @@
     users.${username} = {
       nixpkgs.config.allowUnfree = true;
       nixpkgs.config.allowUnfreePredicate = _: true;
-      
-      imports = if (host == "nexus") then [ ./../home/default.desktop.nix ] else [ ./../home ];
+
+      imports = [ ./../home ];
       home = {
         username = "${username}";
         homeDirectory = "/home/${username}";
@@ -26,7 +25,7 @@
       programs.home-manager.enable = true;
     };
   };
-  
+
   users.users.${username} = {
     isNormalUser = true;
     description = "${username}";
