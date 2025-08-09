@@ -3,6 +3,15 @@ _: {
     enable = true;
     settings = [
       {
+        profile.name = "pc";
+        profile.outputs = [
+          {
+            criteria = "Microstep MSI MAG342CQR DB6H261C02187";
+            mode = "3440x1440@144.00";
+          }
+        ];
+      }
+      {
         profile.name = "wfh";
         profile.outputs = [
           {
