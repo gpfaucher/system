@@ -2,7 +2,7 @@ _ :
 {
   programs.nixvim = {
     globals.mapleader = " ";
-    colorschemes.kanagawa.enable = true;
+    colorschemes.ayu.enable = true;
     opts = {
       number = true;
       relativenumber = true;

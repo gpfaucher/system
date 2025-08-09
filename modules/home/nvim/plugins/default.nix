@@ -35,7 +35,7 @@
       ];
     };
 
-    lualine.enable = true; # Status bar.
+    # lualine.enable = true; # Status bar.
     neoscroll.enable = true; # Smooth scrolling
     treesitter.enable = true; # Includes all parsers for treesitter
     web-devicons.enable = true; # Icons.
