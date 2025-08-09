@@ -2,6 +2,8 @@
 {
   home.packages = with pkgs; [
     lmstudio
+    pavucontrol
+    pamixer
     sway
     dmenu
     htop

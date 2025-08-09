@@ -21,6 +21,7 @@ _: {
           {
             criteria = "eDP-1";
             status = "enable";
+            scale = 2.00;
           }
         ];
       }
