@@ -1,8 +1,12 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    lmstudio
     sway
+    dmenu
+    htop
     filezilla
+    bemenu
     gemini-cli
     opencode
     zellij

@@ -3,11 +3,11 @@
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/catppuccin-mocha.yaml";
   imports = [
     ./displays.nix
-    ./fish.nix
+    ./shell.nix
     ./git.nix
     ./packages.nix
+    ./wayland.nix
     ./scripts/default.nix
-    ./statusbar.nix
     ./steam.nix
     ./terminal.nix
     ./zathura.nix
