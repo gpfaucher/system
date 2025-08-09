@@ -1,11 +1,11 @@
-{ lib, ... }: {
-  programs.foot = {
+_: {
+  programs.ghostty = {
     enable = true;
+    enableZshIntegration = true;
+    installVimSyntax = true;
     settings = {
-      main = {
-        font = lib.mkForce "JetBrainsMono Nerd Font Mono:size=12";
-        dpi-aware = lib.mkForce "yes";
-      };
+      font-size = 18;
+      font-family = "JetBrainsMonoNL Nerd Font Mono";
     };
   };
 }

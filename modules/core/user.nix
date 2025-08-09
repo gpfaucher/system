@@ -12,9 +12,6 @@
     extraSpecialArgs = { inherit inputs username host; };
     backupFileExtension = "backup";
     users.${username} = {
-      nixpkgs.config.allowUnfree = true;
-      nixpkgs.config.allowUnfreePredicate = _: true;
-
       imports = [ ./../home ];
       home = {
         username = "${username}";

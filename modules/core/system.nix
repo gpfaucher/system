@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+_: {
   # imports = [ inputs.nix-gaming.nixosModules.default ];
   nix = {
     settings = {
@@ -20,13 +19,10 @@
     };
   };
 
-  services.logind = {
-    # extraConfig = "HandlePowerKey=suspend";
-    lidSwitch = "suspend";
-  };
+  services.logind.lidSwitch = "suspend";
 
-  nixpkgs.config.allowUnfree = true;
   nixpkgs.config = {
+    allowUnfree = true;
     allowUnsupportedSystem = true;
   };
 

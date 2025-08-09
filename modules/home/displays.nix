@@ -1,9 +1,10 @@
 _: {
   services.kanshi = {
     enable = true;
-    profiles = {
-      wfh = {
-        outputs = [
+    settings = [
+      {
+        profile.name = "wfh";
+        profile.outputs = [
           {
             criteria = "eDP-1";
             status = "disable";
@@ -13,15 +14,16 @@ _: {
             mode = "3440x1440@100.00";
           }
         ];
-      };
-      laptop = {
-        outputs = [
+      }
+      {
+        profile.name = "laptop";
+        profile.outputs = [
           {
             criteria = "eDP-1";
             status = "enable";
           }
         ];
-      };
-    };
+      }
+    ];
   };
 }

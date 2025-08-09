@@ -3,6 +3,7 @@
   wayland.windowManager.sway = {
     enable = true;
     config = {
+      terminal = "ghostty";
       modifier = "Mod1";
       startup = [
         {
