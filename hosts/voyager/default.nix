@@ -1,7 +1,8 @@
-{ ... }: 
+{ ... }:
 {
   imports = [
     ./../../modules/core
-    ./../../modules/core/hardware/voyager.nix
+    ./hardware.nix
+    ./gpu.nix
   ];
 }

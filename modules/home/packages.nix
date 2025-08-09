@@ -1,6 +1,8 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    mesa-demos
+    teams-for-linux
     lmstudio
     pavucontrol
     pamixer
@@ -68,6 +70,6 @@
     google-chrome
     floorp
 
-    xdg-desktop-portal-hyprland
+    xdg-desktop-portal-wlr
   ];
 }
