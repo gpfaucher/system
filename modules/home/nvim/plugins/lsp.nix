@@ -80,7 +80,7 @@ _: {
               };
               analysis = {
                 diagnosticsMode = "workspace";
-                typeCheckingMode = "basic";
+                typeCheckingMode = "off";
                 autoSearchPaths = true;
                 useLibraryCodeForTypes = true;
               };

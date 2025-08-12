@@ -12,6 +12,19 @@ _: {
         ];
       }
       {
+        profile.name = "work_1";
+        profile.outputs = [
+          {
+            criteria = "eDP-1";
+            status = "disable";
+          }
+          {
+            criteria = "AOC U34V5C 1QDQ6HA000288";
+            mode = "3440x1440@100.00";
+          }
+        ];
+      }
+      {
         profile.name = "wfh";
         profile.outputs = [
           {

@@ -1,6 +1,8 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    docker-buildx
+    overskride
     mesa-demos
     teams-for-linux
     lmstudio
