@@ -1,11 +1,16 @@
-{ lib, config, pkgs, ... }:
+{
+  lib,
+  config,
+  pkgs,
+  ...
+}:
 {
   wayland.windowManager.sway = {
     enable = true;
     config = {
       terminal = "ghostty";
       modifier = "Mod1";
-      bars = [];
+      bars = [ ];
       startup = [
         {
           command = "kanshi";
@@ -22,6 +27,7 @@
         in
         lib.mkOptionDefault {
           "${modifier}+o" = "exec dmenu_run";
+          "${modifier}+l" = "exec waylock";
         };
     };
   };
