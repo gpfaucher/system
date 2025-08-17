@@ -1,7 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
-    waylock
+    plymouth
     docker-buildx
     overskride
     mesa-demos
@@ -9,19 +9,14 @@
     lmstudio
     pavucontrol
     pamixer
-    sway
-    dmenu
     htop
     filezilla
-    bemenu
     gemini-cli
     opencode
     zellij
     autorandr
     arandr
     xpipe
-    alacritty
-    ghostty
     todoist-electron
 
     # CLI
@@ -72,7 +67,5 @@
     firefox
     google-chrome
     floorp
-
-    xdg-desktop-portal-wlr
   ];
 }
