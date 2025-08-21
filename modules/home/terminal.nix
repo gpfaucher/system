@@ -1,10 +1,11 @@
+{ lib, ... }:
 {
   programs.foot = {
     enable = true;
     settings = {
       main = {
-        font = "JetBrainsMonoNL Nerd Font Mono:size=20";
-        dpi-aware = "yes";
+        font = lib.mkForce "JetBrainsMonoNL Nerd Font Mono:size=20";
+        dpi-aware = lib.mkForce "yes";
       };
 
       colors = {

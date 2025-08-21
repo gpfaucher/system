@@ -14,9 +14,11 @@
     - colorscheme
     - vim keybindings
     - setup proper projects
+- switch from sway to river
+- setup  and fix screensharing
 
 ## Shell
-- fix prompt
+- fix prompt: minimal starsip
 - fix colorscheme
 - add neovim node
 - fix git aliases
@@ -30,3 +32,5 @@
 - setup easy keybinds for buffer diagnostics with jumps and quickfix actions
 - keybinds for undo tree opzetten
 - which-key opzetten voor makkelijkere keybinds
+- ollama.nvim opzetten voor local llm usage in editor
+- opencode opzetten met ollama

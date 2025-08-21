@@ -5,6 +5,7 @@
     ./lsp.nix
     ./linting.nix
     ./editing.nix
+    ./files.nix
   ];
 
   programs.nixvim.plugins = {

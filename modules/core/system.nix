@@ -1,5 +1,4 @@
 _: {
-  # imports = [ inputs.nix-gaming.nixosModules.default ];
   nix = {
     settings = {
       auto-optimise-store = true;
@@ -18,8 +17,6 @@ _: {
       options = "--delete-older-than 7d";
     };
   };
-
-  services.logind.lidSwitch = "suspend";
 
   nixpkgs.config = {
     allowUnfree = true;
