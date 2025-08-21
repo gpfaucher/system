@@ -8,7 +8,7 @@
   wayland.windowManager.sway = {
     enable = true;
     config = {
-      terminal = "ghostty";
+      terminal = "foot";
       modifier = "Mod1";
       bars = [ ];
       startup = [

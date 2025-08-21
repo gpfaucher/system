@@ -1,12 +1,35 @@
-_: {
-  programs.ghostty = {
+{
+  programs.foot = {
     enable = true;
-    enableZshIntegration = true;
-    installVimSyntax = true;
     settings = {
-      font-size = 18;
-      font-family = "JetBrainsMonoNL Nerd Font Mono";
-      theme = "ayu";
+      main = {
+        font = "JetBrainsMonoNL Nerd Font Mono:size=20";
+        dpi-aware = "yes";
+      };
+
+      colors = {
+        alpha = 1.0;
+        foreground = "ffffff";
+        background = "161616";
+
+        regular0 = "262626";
+        regular1 = "ff7eb6";
+        regular2 = "42be65";
+        regular3 = "ffe97b";
+        regular4 = "33b1ff";
+        regular5 = "ee5396";
+        regular6 = "3ddbd9";
+        regular7 = "dde1e6";
+
+        bright0 = "393939";
+        bright1 = "ff7eb6";
+        bright2 = "42be65";
+        bright3 = "ffe97b";
+        bright4 = "33b1ff";
+        bright5 = "ee5396";
+        bright6 = "3ddbd9";
+        bright7 = "ffffff";
+      };
     };
   };
 }

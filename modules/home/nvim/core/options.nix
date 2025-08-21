@@ -1,8 +1,7 @@
-_ :
-{
+_: {
   programs.nixvim = {
     globals.mapleader = " ";
-    colorschemes.ayu.enable = true;
+    colorschemes.oxocarbon.enable = true;
     opts = {
       number = true;
       relativenumber = true;

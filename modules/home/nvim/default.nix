@@ -11,7 +11,7 @@
     defaultEditor = true;
     enable = true;
     performance = {
-      combinePlugins.enable = true;
+      combinePlugins.enable = false;
       byteCompileLua = {
         enable = true;
         configs = true;

@@ -1,6 +1,9 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    libgcc
+    zig
+    alacritty
     plymouth
     docker-buildx
     overskride
