@@ -1,4 +1,4 @@
-{ pkgs, ... }:
+_:
 {
   imports = [
     ./displays.nix
@@ -11,5 +11,6 @@
     ./terminal.nix
     ./zathura.nix
     ./nvim/default.nix
+    ./tmux.nix
   ];
 }
