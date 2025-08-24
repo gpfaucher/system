@@ -1,12 +1,19 @@
-{ pkgs, ... }:
-{
+_: {
   programs.fish = {
     enable = true;
+    shellAbbrs = {
+      ga = "git add";
+      gl = "git log --pretty=format:'%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]' --decorate --date=short";
+      gc = "git commit -a";
+      gca = "git commit --amend";
+      gd = "git diff";
+      gcom = "git checkout master";
+      grh = "git reset --hard";
+      lg = "lazygit";
+    };
     interactiveShellInit = ''
-      # Disable the default greeting message.
       set fish_greeting
-
-      # Set NIX_BUILD_SHELL to fish.
+      set -g fish_key_bindings fish_vi_key_bindings
       set NIX_BUILD_SHELL "fish"
 
       # Oxocarbon Fish Theme (for syntax highlighting, etc.)
@@ -41,19 +48,18 @@
   programs.starship = {
     enable = true;
     settings = {
-      # By concatenating the strings, we create a single line for the format
-      # variable, avoiding any issues with backslashes and newlines.
+      add_newline = false;
       format =
-        "$username" +
-        "$hostname" +
-        "$directory" +
-        "$git_branch" +
-        "$git_state" +
-        "$git_status" +
-        "$cmd_duration" +
-        "$line_break" +
-        "$python" +
-        "$character";
+        "$username"
+        + "$hostname"
+        + "$directory"
+        + "$git_branch"
+        + "$git_state"
+        + "$git_status"
+        + "$cmd_duration"
+        + "$line_break"
+        + "$python"
+        + "$character";
 
       directory = {
         style = "blue";

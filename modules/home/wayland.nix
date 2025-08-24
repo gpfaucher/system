@@ -5,21 +5,19 @@
 {
   home.sessionVariables.NIXOS_OZONE_WL = "1";
 
+  programs.mullvad-vpn.enable = true;
+
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.settings = {
     "$mod" = "Alt";
+
+    "$terminal" = "foot";
+    "$fileManager" = "nnn";
+    "$menu" = "wofi --show drun";
+    "$screenshot" = "grimshot copy area";
+
     exec-once = [ "kanshi &" ] ++ [ "dunst &" ];
-    gestures = {
-      workspace_swipe = 1;
-      workspace_swipe_fingers = 3;
-      workspace_swipe_distance = 500;
-      workspace_swipe_invert = 1;
-      workspace_swipe_min_speed_to_force = 30;
-      workspace_swipe_cancel_ratio = 0.5;
-      workspace_swipe_create_new = 1;
-      workspace_swipe_forever = 1;
-    };
-    xwayland.force_zero_scaling = true;
+
     env = [
       "NIXOS_OZONE_WL, 1"
       "NIXPKGS_ALLOW_UNFREE, 1"
@@ -40,56 +38,125 @@
       "QT_SCALE_FACTOR,1"
       "EDITOR,nvim"
     ];
-    binde = [
-      "ALTSHIFT,H,resizeactive,-150 0"
-      "ALTSHIFT,J,resizeactive,0 150"
-      "ALTSHIFT,K,resizeactive,0 -150"
-      "ALTSHIFT,L,resizeactive,150 0"
-    ];
+
+    general = {
+      gaps_in = 0;
+      gaps_out = 0;
+      border_size = 3;
+      layout = "dwindle";
+    };
+
+    decoration = {
+      rounding = 0;
+      blur.enabled = true;
+      blur.size = 3;
+      blur.passes = 1;
+    };
+
+    animations = {
+      enabled = true;
+      bezier = "myBezier, 0.05, 0.9, 0.1, 1.05";
+      animation = [
+        "windows, 1, 7, myBezier"
+        "windowsOut, 1, 7, default, popin"
+        "border, 1, 10, default"
+        "borderangle, 1, 8, default"
+        "fade, 1, 7, default"
+        "workspaces, 1, 6, default"
+      ];
+    };
+
+    dwindle = {
+      pseudotile = true;
+      preserve_split = true;
+    };
+
+    gestures = {
+      workspace_swipe = true;
+    };
+
+    input = {
+      kb_layout = "us";
+      follow_mouse = 1;
+      touchpad.natural_scroll = false;
+    };
+
     bind = [
-      "$mod,q,killactive,"
-      "$mod, o, exec, dmenu_run"
-      "SUPER, l, exec, waylock"
-      "ALTSHIFT, Return, exec, foot"
-      "$mod,h,movefocus,l"
-      "$mod,l,movefocus,r"
-      "$mod,k,movefocus,u"
-      "$mod,j,movefocus,d"
-      ",XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
-      ",XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-      " ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
-      ",XF86AudioPlay, exec, playerctl play-pause"
-      ",XF86AudioPause, exec, playerctl play-pause"
-      ",XF86AudioNext, exec, playerctl next"
-      ",XF86AudioPrev, exec, playerctl previous"
-      ",XF86MonBrightnessDown,exec,brightnessctl set 5%-"
-      ",XF86MonBrightnessUp,exec,brightnessctl set +5%"
-    ]
-    ++ (
-      # workspaces
-      # binds $mod + [shift +] {1..9} to [move to] workspace {1..9}
-      builtins.concatLists (
-        builtins.genList (
-          i:
-          let
-            ws = i + 1;
-          in
-          [
-            "$mod, code:1${toString i}, workspace, ${toString ws}"
-            "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
-          ]
-        ) 9
-      )
-    );
+      "$mod, Q, exec, $terminal"
+      "$mod, C, killactive,"
+      "$mod, M, exit,"
+      "$mod, E, exec, $fileManager"
+      "$mod, V, togglefloating,"
+      "$mod, R, exec, $menu"
+      "$mod, P, pseudo,"
+      "$mod, J, togglesplit,"
+      ", Print, exec, grim -g '$(slurp -d)' - | wl-copy"
+
+      "$mod, left, movefocus, l"
+      "$mod, right, movefocus, r"
+      "$mod, up, movefocus, u"
+      "$mod, down, movefocus, d"
+
+      "$mod, 1, workspace, 1"
+      "$mod, 2, workspace, 2"
+      "$mod, 3, workspace, 3"
+      "$mod, 4, workspace, 4"
+      "$mod, 5, workspace, 5"
+      "$mod, 6, workspace, 6"
+      "$mod, 7, workspace, 7"
+      "$mod, 8, workspace, 8"
+      "$mod, 9, workspace, 9"
+      "$mod, 0, workspace, 10"
+
+      "$mod SHIFT, 1, movetoworkspace, 1"
+      "$mod SHIFT, 2, movetoworkspace, 2"
+      "$mod SHIFT, 3, movetoworkspace, 3"
+      "$mod SHIFT, 4, movetoworkspace, 4"
+      "$mod SHIFT, 5, movetoworkspace, 5"
+      "$mod SHIFT, 6, movetoworkspace, 6"
+      "$mod SHIFT, 7, movetoworkspace, 7"
+      "$mod SHIFT, 8, movetoworkspace, 8"
+      "$mod SHIFT, 9, movetoworkspace, 9"
+      "$mod SHIFT, 0, movetoworkspace, 10"
+
+      "$mod, mouse_down, workspace, e+1"
+      "$mod, mouse_up, workspace, e-1"
+    ];
+
+    bindm = [
+      "$mod, mouse:272, movewindow"
+      "$mod, mouse:273, resizewindow"
+    ];
+
+    bindel = [
+      ",XF86AudioRaiseVolume, exec, wpctl set-volume -l 1 @DEFAULT_AUDIO_SINK@ 5%+"
+      ",XF86AudioLowerVolume, exec, wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
+      ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+      ",XF86AudioMicMute, exec, wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle"
+      ",XF86MonBrightnessUp, exec, brightnessctl set 5%+"
+      ",XF86MonBrightnessDown, exec, brightnessctl set 5%-"
+    ];
+
+    bindl = [
+      ", XF86AudioNext, exec, playerctl next"
+      ", XF86AudioPause, exec, playerctl play-pause"
+      ", XF86AudioPlay, exec, playerctl play-pause"
+      ", XF86AudioPrev, exec, playerctl previous"
+    ];
+
+    windowrulev2 = "suppressevent maximize, class:.*"; # Suppress maximize events
   };
 
   home.packages = with pkgs; [
-    sway-contrib.grimshot
+    grim
+    slurp
     waylock
     dmenu
     dunst
     foot
     light
     brightnessctl
+    wofi
+    playerctl
   ];
 }

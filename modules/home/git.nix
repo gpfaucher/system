@@ -1,11 +1,16 @@
-{ pkgs, ... } :
+{ pkgs, ... }:
 {
   programs.git = {
     enable = true;
+    difftastic = {
+      enable = true;
+      enableAsDifftool = true;
+      background = "dark";
+    };
     userEmail = "gpfaucher@gmail.com";
     userName = "Gabriel Faucher";
 
-    extraConfig = { 
+    extraConfig = {
       init.defaultBranch = "master";
       credential.helper = "store";
       alias.stat = "status";
@@ -14,5 +19,10 @@
 
   };
 
-  home.packages = [ pkgs.gh  pkgs.git-lfs  pkgs.lazygit ];
+  home.packages = with pkgs; [
+    delta
+    gh
+    git-lfs
+    lazygit
+  ];
 }

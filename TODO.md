@@ -1,7 +1,6 @@
 # TODO
 
 ## General
-- pick one theme, apply everywhere
 - pick and setup a browser you like
 - setup default workspaces for apps:
     - 1: browser
@@ -14,13 +13,10 @@
     - colorscheme
     - vim keybindings
     - setup proper projects
-- switch from sway to river
-- setup  and fix screensharing
+- hyprland keybinds fixen voor swappen windows etc
 
 ## Shell
-- fix prompt: minimal starsip
-- fix colorscheme
-- add neovim node
+- add vim mode
 - fix git aliases
 - add a shit ton of abbreviations
 

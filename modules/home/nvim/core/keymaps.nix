@@ -1,14 +1,5 @@
 {
   programs.nixvim.keymaps = [
-    # File Explorer
-    {
-      action = "<cmd>Neotree toggle<cr>";
-      key = "<leader>e"; # 'e' for explorer - this is good
-      options = {
-        silent = true;
-      };
-    }
-
     {
       action = "<cmd>Telescope find_files<cr>";
       key = "<leader>sf";

@@ -6,6 +6,7 @@
     ./linting.nix
     ./editing.nix
     ./files.nix
+    ./ai.nix
   ];
 
   programs.nixvim.plugins = {

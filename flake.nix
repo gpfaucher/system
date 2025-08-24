@@ -4,13 +4,11 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
     nixvim.url = "github:nix-community/nixvim";
-    stylix.url = "github:nix-community/stylix";
   };
   outputs =
     {
       self,
       nixpkgs,
-      stylix,
       home-manager,
       ...
     }@inputs:
@@ -35,7 +33,6 @@
               };
             }
             ./hosts/nexus
-            stylix.nixosModules.stylix
           ];
         };
         voyager = nixpkgs.lib.nixosSystem {
@@ -53,7 +50,6 @@
               };
             }
             ./hosts/voyager
-            stylix.nixosModules.stylix
           ];
         };
       };
