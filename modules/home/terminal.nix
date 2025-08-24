@@ -7,7 +7,6 @@
         font = lib.mkForce "JetBrainsMonoNL Nerd Font Mono:size=20";
         dpi-aware = lib.mkForce "yes";
       };
-
       colors = {
         alpha = 1.0;
         foreground = "ffffff";

@@ -43,6 +43,12 @@ _: {
       # Initialize Starship prompt.
       starship init fish | source
     '';
+    functions = {
+      fish_user_key_bindings = ''
+        bind -M insert ctrl-o "tms; commandline -f repaint"
+        bind -M default ctrl-o "tms; commandline -f repaint"
+      '';
+    };
   };
 
   programs.starship = {
