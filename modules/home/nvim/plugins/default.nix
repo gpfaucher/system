@@ -7,6 +7,7 @@
     ./editing.nix
     ./files.nix
     ./ai.nix
+    ./keymaps.nix
   ];
 
   programs.nixvim.plugins = {

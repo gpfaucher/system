@@ -14,7 +14,7 @@
     "$terminal" = "foot";
     "$fileManager" = "nnn";
     "$menu" = "wofi --show drun";
-    "$screenshot" = "grimshot copy area";
+    "$screenshot" = "grimblast copy area";
 
     exec-once = [ "kanshi &" ] ++ [ "dunst &" ];
 
@@ -90,7 +90,7 @@
       "$mod, R, exec, $menu"
       "$mod, P, pseudo,"
       "$mod, J, togglesplit,"
-      ", Print, exec, grim -g '$(slurp -d)' - | wl-copy"
+      ", Print, exec, $screenshot"
 
       "$mod, left, movefocus, l"
       "$mod, right, movefocus, r"
@@ -148,8 +148,7 @@
   };
 
   home.packages = with pkgs; [
-    grim
-    slurp
+    grimblast
     waylock
     dmenu
     dunst
