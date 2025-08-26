@@ -1,4 +1,26 @@
 _: {
+  xdg.configFile."opencode/config.json" = {
+    text = ''
+      {
+      "$schema": "https://opencode.ai/config.json",
+        "provider": {
+          "ollama": {
+            "npm": "@ai-sdk/openai-compatible",
+            "name": "Ollama (local)",
+            "options": {
+              "baseURL": "http://localhost:11434/v1"
+            },
+            "models": {
+              "mistral:7b": {
+                "name": "Mistral"
+              }
+            }
+          }
+        }
+
+      }
+    '';
+  };
   programs.fish = {
     enable = true;
     shellAbbrs = {
