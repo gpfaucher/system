@@ -8,7 +8,7 @@ _: {
     keymaps = [
       {
         action = "<cmd>LazyGit <cr>";
-        key = "<leader>g";
+        key = "<leader>gl";
       }
     ];
   };

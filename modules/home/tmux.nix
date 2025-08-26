@@ -19,6 +19,12 @@
       unbind '"'
       bind - split-window -v
 
+      bind-key -r f run-shell "tmux neww tms"
+      bind-key -r M-h run-shell "tmux neww tms -s 0"
+      bind-key -r M-t run-shell "tmux neww tms -s 1"
+      bind-key -r M-n run-shell "tmux neww tms -s 2"
+      bind-key -r M-s run-shell "tmux neww tms -s 3"
+
       unbind r
       bind r source-file ~/.tmux.conf
 

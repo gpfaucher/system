@@ -6,7 +6,6 @@
     ./linting.nix
     ./editing.nix
     ./files.nix
-    ./ai.nix
     ./keymaps.nix
   ];
 
