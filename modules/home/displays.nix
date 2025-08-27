@@ -19,6 +19,19 @@ _: {
             status = "disable";
           }
           {
+            criteria = "AOC CU34V5C 1UJQBHA000782";
+            mode = "3440x1440@100.00";
+          }
+        ];
+      }
+      {
+        profile.name = "work_2";
+        profile.outputs = [
+          {
+            criteria = "eDP-1";
+            status = "disable";
+          }
+          {
             criteria = "AOC U34V5C 1QDQ6HA000288";
             mode = "3440x1440@100.00";
           }
