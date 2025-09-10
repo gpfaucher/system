@@ -32,6 +32,30 @@ _: {
           __unkeyed-1 = "<leader>u";
           group = "UI/UX";
         }
+        {
+          __unkeyed-1 = "<leader>d";
+          group = "Diagnostics";
+        }
+        {
+          __unkeyed-1 = "<C-f>";
+          group = "Tmux Sessionizer";
+        }
+        {
+          __unkeyed-1 = "<M-h>";
+          group = "Tmux Session 0";
+        }
+        {
+          __unkeyed-1 = "<M-t>";
+          group = "Tmux Session 1";
+        }
+        {
+          __unkeyed-1 = "<M-n>";
+          group = "Tmux Session 2";
+        }
+        {
+          __unkeyed-1 = "<M-s>";
+          group = "Tmux Session 3";
+        }
       ];
 
       replace = {

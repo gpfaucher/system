@@ -1,4 +1,5 @@
 { pkgs, ... }:
+
 {
   imports = [
     ./completion.nix
@@ -7,10 +8,10 @@
     ./editing.nix
     ./files.nix
     ./keymaps.nix
+    ./octo.nix
   ];
 
   programs.nixvim.plugins = {
-    # Navigate Tmux with the same keybindings as Neovim
     tmux-navigator = {
       enable = true;
       keymaps = [
@@ -54,12 +55,6 @@
     gitsigns = {
       enable = true;
       settings.current_line_blame = true;
-    };
-
-    render-markdown.enable = true;
-    markdown-preview = {
-      enable = true;
-      settings.theme = "dark";
     };
 
     # Prettier fancier command window

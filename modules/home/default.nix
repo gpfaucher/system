@@ -2,6 +2,7 @@ _:
 {
   imports = [
     ./displays.nix
+    ./evremap.nix
     ./shell.nix
     ./git.nix
     ./packages.nix

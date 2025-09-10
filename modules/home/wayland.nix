@@ -8,6 +8,7 @@
   programs.mullvad-vpn.enable = true;
 
   wayland.windowManager.hyprland.enable = true;
+  services.hyprpaper.enable = true;
   wayland.windowManager.hyprland.settings = {
     "$mod" = "Alt";
 
@@ -16,9 +17,21 @@
     "$menu" = "wofi --show drun";
     "$screenshot" = "grimblast copy area";
 
-    exec-once = [ "kanshi &" ] ++ [ "dunst &" ];
+    exec-once = [ 
+      "kanshi &" 
+      "dunst &"
+      # Set background color
+      "hyprctl hyprpaper wallpaper eDP-1,#749F8D &"
+      # Setup default workspaces
+      "hyprctl dispatch exec [workspace 1] firefox &"
+      "hyprctl dispatch exec [workspace 2] foot tmux new-session -A -s work &"
+      "hyprctl dispatch exec [workspace 3] datagrip &"
+      "hyprctl dispatch exec [workspace 4] ticktick &"
+      "hyprctl dispatch exec [workspace 5] foot &"
+      "hyprctl dispatch exec [workspace 10] teams-for-linux &"
+    ];
 
-    env = [
+env = [
       "NIXOS_OZONE_WL, 1"
       "NIXPKGS_ALLOW_UNFREE, 1"
       "XDG_CURRENT_DESKTOP, Hyprland"
@@ -27,6 +40,7 @@
       "GDK_BACKEND, wayland, x11"
       "GDK_SCALE, 2"
       "XCURSOR_SIZE, 32"
+      "XCURSOR_THEME, Adwaita"
       "CLUTTER_BACKEND, wayland"
       "QT_QPA_PLATFORM=wayland;xcb"
       "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
@@ -79,6 +93,7 @@
       kb_layout = "us";
       follow_mouse = 1;
       touchpad.natural_scroll = false;
+      kb_options = "caps:escape";
     };
 
     bind = [
@@ -157,5 +172,12 @@
     brightnessctl
     wofi
     playerctl
+    # Normal cursor theme
+    adwaita-icon-theme
   ];
+
+  xdg.portal = {
+    enable = true;
+    config.common.default = "*";
+  };
 }

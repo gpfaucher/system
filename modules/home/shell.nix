@@ -4,15 +4,19 @@ _: {
       {
       "$schema": "https://opencode.ai/config.json",
         "provider": {
-          "ollama": {
+          "synthetic": {
             "npm": "@ai-sdk/openai-compatible",
-            "name": "Ollama (local)",
+            "name": "Synthetic",
             "options": {
-              "baseURL": "http://localhost:11434/v1"
+              "baseURL": "https://api.synthetic.new/v1",
+              "apiKey": "syn_3293e2d06f19bcd7b3ebacca0eb5ca7b"
             },
             "models": {
-              "mistral:7b": {
-                "name": "Mistral"
+              "hf:Qwen/Qwen3-Coder-480B-A35B-Instruct": {
+                "name": "Qwen 3 Coder"
+              },
+              "hf:zai-org/GLM-4.5": {
+                "name": "GLM 4.5"
               }
             }
           }

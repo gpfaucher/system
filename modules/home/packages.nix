@@ -1,11 +1,16 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    ticktick
+    ngrok
+    protonmail-desktop
+    xfce.thunar
+    obs-studio
+    lyra-cursors
+    nwg-look
     calibre
-    ollama
     neovide
     libgcc
-    zig
     alacritty
     plymouth
     docker-buildx
@@ -14,8 +19,6 @@
     teams-for-linux
     lmstudio
     pavucontrol
-    pamixer
-    htop
     filezilla
     gemini-cli
     opencode
@@ -30,22 +33,10 @@
     wlogout
     dunst
     brightnessctl
-    eza
     nix-search
-    killall
-    xdg-utils
-    playerctl
-    pamixer
-    ffmpeg
-    unzip
-    wget
     hyfetch
-    ripgrep
-    fzf
     hsetroot
     xclip
-    tmux-sessionizer
-    nnn
     rofi-wayland
     wlr-randr
     wl-clipboard
@@ -53,11 +44,6 @@
     quickemu
 
     awscli2
-
-    # IDE
-    jetbrains.pycharm-professional
-    jetbrains.webstorm
-    jetbrains.datagrip
 
     # Fonts
     nerd-fonts.jetbrains-mono
@@ -67,7 +53,6 @@
     zoom-us
     swaynotificationcenter
     foot
-    vscode-fhs
 
     # Browsers
     firefox

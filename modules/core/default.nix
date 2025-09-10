@@ -4,6 +4,7 @@ _: {
     ./docker.nix
     ./greetd.nix
     ./networking.nix
+    ./packages.nix
     ./pipewire.nix
     ./program.nix
     ./security.nix

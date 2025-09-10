@@ -98,6 +98,48 @@
           silent = true;
         };
       }
+      # Undotree keymaps
+      {
+        key = "<leader>u";
+        action = "<cmd>UndotreeToggle<cr>";
+        options = {
+          desc = "Toggle Undotree";
+          silent = true;
+        };
+      }
+      # Buffer diagnostics keymaps
+      {
+        key = "<leader>dn";
+        action = "<cmd>lua vim.diagnostic.goto_next()<cr>";
+        options = {
+          desc = "Next Diagnostic";
+          silent = true;
+        };
+      }
+      {
+        key = "<leader>dp";
+        action = "<cmd>lua vim.diagnostic.goto_prev()<cr>";
+        options = {
+          desc = "Previous Diagnostic";
+          silent = true;
+        };
+      }
+      {
+        key = "<leader>dq";
+        action = "<cmd>lua vim.diagnostic.setloclist()<cr>";
+        options = {
+          desc = "Diagnostic Quickfix";
+          silent = true;
+        };
+      }
+      {
+        key = "<leader>df";
+        action = "<cmd>Telescope diagnostics<cr>";
+        options = {
+          desc = "Find Diagnostics";
+          silent = true;
+        };
+      }
     ];
   };
 }

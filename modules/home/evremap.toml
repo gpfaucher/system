@@ -1,0 +1,7 @@
+# Caps lock to escape on tap, control on hold
+device_name = "AT Translated Set 2 keyboard"
+
+[[dual_role]]
+input = "KEY_CAPSLOCK"
+hold = ["KEY_LEFTCTRL"]
+tap = ["KEY_ESC"]

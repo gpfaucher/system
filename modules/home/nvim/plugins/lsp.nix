@@ -28,8 +28,14 @@ _: {
 
     lspsaga = {
       enable = true;
-      symbolInWinbar.enable = false;
-      lightbulb.virtualText = false;
+      settings = {
+        symbol_in_winbar = {
+          enable = true;
+        };
+        lightbulb = {
+          virtual_text = false;
+        };
+      };
     };
 
     actions-preview = {
@@ -53,23 +59,6 @@ _: {
         clangd.enable = true;
         csharp_ls.enable = true;
         yamlls.enable = true;
-
-        ltex = {
-          enable = true;
-          settings = {
-            enabled = [
-              "astro"
-              "html"
-              "latex"
-              "markdown"
-              "text"
-              "tex"
-              "gitcommit"
-            ];
-            completionEnabled = true;
-            language = "en-US de-DE nl";
-          };
-        };
 
         basedpyright = {
           enable = true;

@@ -6,7 +6,7 @@
       set -g default-terminal "$TERM"
       set -ag terminal-overrides ",$TERM:Tc"
       set-option -a terminal-features 'alacritty:RGB'
-      set -g prefix C-b
+      set -g prefix C-a
 
       bind s choose-tree -sZ -O name
 
@@ -61,6 +61,12 @@
       set -g @resurrect-capture-pane-contents 'on'
       set -g @continuum-restore 'on'
 
+      # Kinesis keyboard friendly bindings
+      # Map common navigation keys to vi-style movement
+      bind-key k select-pane -U
+      bind-key j select-pane -D
+      bind-key h select-pane -L
+      bind-key l select-pane -R
     '';
     plugins = with pkgs.tmuxPlugins; [
       open
