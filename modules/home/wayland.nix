@@ -17,21 +17,23 @@
     "$menu" = "wofi --show drun";
     "$screenshot" = "grimblast copy area";
 
-    exec-once = [ 
-      "kanshi &" 
+    exec-once = [
+      "kanshi &"
       "dunst &"
       # Set background color
-      "hyprctl hyprpaper wallpaper eDP-1,#749F8D &"
+      # "hyprctl hyprpaper wallpaper eDP-1,#749F8D &"
+      # "hyprctl hyprpaper wallpaper DP-1,#749F8D &"
+
       # Setup default workspaces
-      "hyprctl dispatch exec [workspace 1] firefox &"
-      "hyprctl dispatch exec [workspace 2] foot tmux new-session -A -s work &"
-      "hyprctl dispatch exec [workspace 3] datagrip &"
-      "hyprctl dispatch exec [workspace 4] ticktick &"
-      "hyprctl dispatch exec [workspace 5] foot &"
-      "hyprctl dispatch exec [workspace 10] teams-for-linux &"
+      # "hyprctl dispatch exec [workspace 1] firefox &"
+      # "hyprctl dispatch exec [workspace 2] foot tmux new-session -A -s work &"
+      # "hyprctl dispatch exec [workspace 3] datagrip &"
+      # "hyprctl dispatch exec [workspace 4] ticktick &"
+      # "hyprctl dispatch exec [workspace 5] foot &"
+      # "hyprctl dispatch exec [workspace 10] teams-for-linux &"
     ];
 
-env = [
+    env = [
       "NIXOS_OZONE_WL, 1"
       "NIXPKGS_ALLOW_UNFREE, 1"
       "XDG_CURRENT_DESKTOP, Hyprland"

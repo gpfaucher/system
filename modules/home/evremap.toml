@@ -1,5 +1,5 @@
 # Caps lock to escape on tap, control on hold
-device_name = "AT Translated Set 2 keyboard"
+device_name = "Keychron Keychron K3 Pro"
 
 [[dual_role]]
 input = "KEY_CAPSLOCK"
