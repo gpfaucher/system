@@ -13,5 +13,6 @@ _:
     ./zathura.nix
     ./nvim/default.nix
     ./tmux.nix
+    ./kde.nix
   ];
 }

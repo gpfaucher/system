@@ -1,6 +1,8 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    kdePackages.xdg-desktop-portal-kde
+    xdg-desktop-portal-gtk
     ticktick
     ngrok
     protonmail-desktop
