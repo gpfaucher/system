@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    graphite-cli
     kdePackages.xdg-desktop-portal-kde
     xdg-desktop-portal-gtk
     ticktick
