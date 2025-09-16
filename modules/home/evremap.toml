@@ -1,5 +1,4 @@
-# Caps lock to escape on tap, control on hold
-device_name = "Keychron Keychron K3 Pro"
+device_name = "*"
 
 [[dual_role]]
 input = "KEY_CAPSLOCK"
