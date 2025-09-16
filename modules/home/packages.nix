@@ -3,6 +3,7 @@
   home.packages = with pkgs; [
     codex
     nodejs_22
+    bun
     kmonad
     zlib
     graphite-cli

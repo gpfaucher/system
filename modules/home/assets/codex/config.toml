@@ -8,28 +8,28 @@
 
 [mcp_servers.filesystem]
 enabled = true
-command = "npx"
+command = "bunx"
 args = ["-y", "@modelcontextprotocol/server-filesystem"]
 env = { MCP_FILESYSTEM_ROOT = "." }
 
 [mcp_servers.ripgrep]
 enabled = true
-command = "npx"
+command = "bunx"
 args = ["-y", "@modelcontextprotocol/server-ripgrep"]
 
 [mcp_servers.git]
 enabled = true
-command = "npx"
+command = "bunx"
 args = ["-y", "@modelcontextprotocol/server-git"]
 
 [mcp_servers.fetch]
 enabled = true
-command = "npx"
+command = "bunx"
 args = ["-y", "@modelcontextprotocol/server-fetch"]
 
 [mcp_servers.searxng]
 enabled = true
-command = "npx"
+command = "bunx"
 args = ["-y", "@modelcontextprotocol/server-searxng"]
 env = { SEARXNG_URL = "http://localhost:8080" }
 
