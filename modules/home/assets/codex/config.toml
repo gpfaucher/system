@@ -28,7 +28,7 @@ command = "npx"
 args = ["-y", "@modelcontextprotocol/server-fetch"]
 
 [mcp_servers.searxng]
-enabled = false
+enabled = true
 command = "npx"
 args = ["-y", "@modelcontextprotocol/server-searxng"]
 env = { SEARXNG_URL = "http://localhost:8080" }

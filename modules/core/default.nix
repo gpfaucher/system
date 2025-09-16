@@ -7,6 +7,7 @@ _: {
     ./packages.nix
     ./pipewire.nix
     ./program.nix
+    ./searxng.nix
     ./security.nix
     ./steam.nix
     ./system.nix
