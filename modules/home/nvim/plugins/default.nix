@@ -61,8 +61,7 @@
     # Prettier fancier command window
     noice.enable = true;
 
-    # Trouble list for diagnostics/refs/etc.
-    trouble.enable = true;
+    # Removed trouble.nvim per request
 
     # Good old Telescope
     telescope = {

@@ -175,22 +175,50 @@
         action = ":LazyGit<cr>";
         options = { desc = "LazyGit"; silent = true; };
       }
-      # Trouble diagnostics toggle
+      # Taskwarrior helpers
       {
-        key = "<leader>xx";
-        action = "<cmd>TroubleToggle<cr>";
-        options = { desc = "Trouble Toggle"; silent = true; };
+        key = "<leader>tt";
+        action.__raw = ''function()
+          vim.cmd('vsplit')
+          vim.cmd('terminal task next')
+        end'';
+        options = { desc = "Tasks: Next"; silent = true; };
       }
       {
-        key = "<leader>xd";
-        action = "<cmd>TroubleToggle document_diagnostics<cr>";
-        options = { desc = "Doc Diagnostics"; silent = true; };
+        key = "<leader>ta";
+        action.__raw = ''function()
+          vim.ui.input({ prompt = 'Task add: ' }, function(input)
+            if input and #input > 0 then
+              vim.system({ 'task', 'add', input }, { text = true }, function() end)
+            end
+          end)
+        end'';
+        options = { desc = "Tasks: Add"; silent = true; };
       }
       {
-        key = "<leader>xw";
-        action = "<cmd>TroubleToggle workspace_diagnostics<cr>";
-        options = { desc = "Workspace Diagnostics"; silent = true; };
+        key = "<leader>td";
+        action.__raw = ''function()
+          vim.ui.input({ prompt = 'Task done (ID): ' }, function(id)
+            if id and #id > 0 then
+              vim.system({ 'task', id, 'done' }, { text = true }, function() end)
+            end
+          end)
+        end'';
+        options = { desc = "Tasks: Done"; silent = true; };
       }
+      {
+        key = "<leader>tp";
+        action.__raw = ''function()
+          vim.ui.input({ prompt = 'Project filter: ' }, function(project)
+            if project and #project > 0 then
+              vim.cmd('vsplit')
+              vim.cmd('terminal task project:' .. project .. ' next')
+            end
+          end)
+        end'';
+        options = { desc = "Tasks: Project"; silent = true; };
+      }
+      # Removed Trouble.nvim mappings
       # Telescope Frecency
       {
         key = "<leader>sr";

@@ -10,16 +10,13 @@
   ];
 
   home.packages = with pkgs; [
-    (catppuccin-kde.override {
-      flavour = [ "mocha" ];
-      accents = [ "lavender" ];
-    })
     kdePackages.kcalc
     kdotool
     tela-circle-icon-theme
     kdePackages.xdg-desktop-portal-kde
     xdg-desktop-portal-gtk
     wireplumber
+    oxocarbon-gtk-theme
   ];
 
   services.gpg-agent = {
@@ -30,8 +27,17 @@
   programs.plasma = {
     enable = true;
     workspace = {
-      # Requires catppuccin-kde package above
-      colorScheme = "Catppuccin-Mocha-Lavender";
+      # Use a dark scheme; true Oxocarbon Plasma theme requires an external package.
+      colorScheme = "BreezeDark";
+    };
+  };
+
+  # Apply Oxocarbon for GTK apps
+  gtk = {
+    enable = true;
+    theme = {
+      package = pkgs.oxocarbon-gtk-theme;
+      name = "Oxocarbon-Dark";
     };
   };
 }
