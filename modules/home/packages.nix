@@ -2,6 +2,7 @@
 {
   home.packages = with pkgs; [
     codex
+    nodejs_22
     kmonad
     zlib
     graphite-cli
@@ -47,6 +48,7 @@
     wlr-randr
     wl-clipboard
     quickemu
+    ripgrep
 
     # Formatters for Neovim (conform.nvim)
     ruff
