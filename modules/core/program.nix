@@ -1,12 +1,8 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   programs = {
     dconf.enable = true;
-    # ssh.startAgent = true;
     fish.enable = true;
-    # gnupg.agent = {
-    #   enable = true;
-    #   enableSSHSupport = true;
-    # };
   };
 
   services.openssh = {
@@ -14,7 +10,6 @@
   };
 
   environment.systemPackages = with pkgs; [
-    claude-code
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     nerd-fonts.jetbrains-mono
@@ -22,7 +17,6 @@
     nerd-fonts.monaspace
     devenv
     direnv
-    numix-cursor-theme
     wget
     git
   ];

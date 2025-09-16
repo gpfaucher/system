@@ -9,7 +9,6 @@
     gh
     python312Packages.bugwarrior
     zig
-    # ollama
 
     # IDEs
     jetbrains.pycharm-professional

@@ -1,6 +1,5 @@
 _: {
   services.mullvad-vpn.enable = true;
-  # services.tailscale.enable = true;
 
   nix = {
     settings = {
