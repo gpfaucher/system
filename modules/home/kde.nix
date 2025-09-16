@@ -16,7 +16,6 @@
     kdePackages.xdg-desktop-portal-kde
     xdg-desktop-portal-gtk
     wireplumber
-    oxocarbon-gtk-theme
   ];
 
   services.gpg-agent = {
@@ -32,12 +31,5 @@
     };
   };
 
-  # Apply Oxocarbon for GTK apps
-  gtk = {
-    enable = true;
-    theme = {
-      package = pkgs.oxocarbon-gtk-theme;
-      name = "Oxocarbon-Dark";
-    };
-  };
+  # GTK theming can be added if an Oxocarbon package is provided; skipped for now.
 }

@@ -33,44 +33,26 @@ let
               pkill -f "kmonad .*kmonad-dyn" || true
             }
 
-            make_cfg() {
-              local dev="$1"; shift
-              local out="$1"; shift
-              cat >"$out" <<'KBD'
-              (defcfg
-                input  (device-file "__DEVICE__")
-                output (uinput-sink "kmonad-dyn")
-                fallthrough true
-                allow-cmd true)
+      make_cfg() {
+        local dev="$1"; shift
+        local out="$1"; shift
+        cat >"$out" <<KBD
+        (defcfg
+          input  (device-file "$dev")
+          output (uinput-sink "kmonad-dyn")
+          fallthrough true
+          allow-cmd true)
 
-              (defsrc
-                esc    f1 f2 f3 f4 f5 f6 f7 f8 f9 f10 f11 f12
-                prnt   sclk pause
-                grave  1 2 3 4 5 6 7 8 9 0 minus equal bs
-                ins    home pgup
-                tab    q w e r t y u i o p lbracket rbracket backslash
-                del    end  pgdn
-                caps   a s d f g h j k l semicolon quote enter
-                lshift z x c v b n m comma dot slash rshift
-                up
-                lctrl  lmeta lalt space ralt rmeta menu rctrl
-                left   down right)
+        (defsrc
+          caps)
 
-              (deflayer base
-                __     __ __ __ __ __ __ __ __ __  __  __  __
-                __     __   __   __
-                __     __ __ __ __ __ __ __ __ __  __   __    __
-                __     __   __
-                __     __ __ __ __ __ __ __ __ __  __        __
-                __     __   __
-                (tap-hold-next esc lctl) __ __ __ __ __ __ __ __ __ __     __
-                __     __ __ __ __ __ __ __ __ __ __ __     __
-                __
-                __     __    __   __    __   __    __   __
-                __     __   __)
-      KBD
-              sed -e "s|__DEVICE__|$dev|g" -i "$out"
-            }
+        (defalias
+          caps-ctl-esc (tap-hold-next 200 esc lctl))
+
+        (deflayer base
+          @caps-ctl-esc)
+KBD
+      }
 
             start_all() {
               kill_all || true
