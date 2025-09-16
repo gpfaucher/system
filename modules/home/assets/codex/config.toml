@@ -37,8 +37,9 @@ env = { SEARXNG_URL = "http://localhost:8080" }
 # Leave disabled by default and provide the token via a secret manager/environment.
 [mcp_servers.context7]
 enabled = true
-url = "https://mcp.context7.com/mcp"
-headers = { Authorization = "Bearer ctx7sk-a8bd2804-d72c-4423-8822-91720bd755be" }
+command = "npx"
+args = ["-y", "mcp-server"]
+env = { API_KEY = "ctx7sk-a8bd2804-d72c-4423-8822-91720bd755be", CONTEXT7_URL = "https://mcp.context7.com/mcp" }
 
 # Additional Codex configuration
 ignore = [
