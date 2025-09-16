@@ -19,6 +19,9 @@
       unbind '"'
       bind - split-window -v
 
+      # Quick session switcher
+      bind-key -r C-o run-shell "tmux neww tms"
+
       bind-key -r f run-shell "tmux neww tms"
       bind-key -r M-h run-shell "tmux neww tms -s 0"
       bind-key -r M-t run-shell "tmux neww tms -s 1"
@@ -60,6 +63,7 @@
 
       set -g @resurrect-capture-pane-contents 'on'
       set -g @continuum-restore 'on'
+      set -g @continuum-save-interval '15'
 
       # Kinesis keyboard friendly bindings
       # Map common navigation keys to vi-style movement
@@ -74,6 +78,7 @@
       sensible
       sessionist
       resurrect
+      continuum
     ];
   };
 

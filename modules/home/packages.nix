@@ -1,6 +1,8 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    codex
+    kmonad
     zlib
     graphite-cli
     kdePackages.xdg-desktop-portal-kde
@@ -44,8 +46,17 @@
     rofi
     wlr-randr
     wl-clipboard
-    evremap
     quickemu
+
+    # Formatters for Neovim (conform.nvim)
+    ruff
+    black
+    isort
+    alejandra
+    stylua
+    nodePackages.prettier
+    gofumpt
+    gotools
 
     awscli2
 

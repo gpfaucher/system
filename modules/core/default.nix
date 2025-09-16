@@ -12,6 +12,5 @@ _: {
     ./system.nix
     ./user.nix
     ./xserver.nix
-    ./ai.nix
   ];
 }

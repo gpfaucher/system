@@ -6,13 +6,11 @@ _: {
   programs.nixvim.plugins = {
     lspkind = {
       enable = true;
-      cmp = {
-        enable = false;
-      };
+      cmp.enable = false;
       settings = {
-        symbol_map = {
-          Copilot = "";
-        };
+        mode = "symbol_text"; # include text labels to reduce reliance on icons
+        preset = "default";
+        symbol_map = { Copilot = "C"; };
         maxwidth = 50;
         ellipsis_char = "...";
       };
@@ -30,6 +28,9 @@ _: {
       enable = true;
       settings = {
         symbol_in_winbar = {
+          enable = false;
+        };
+        implement = {
           enable = false;
         };
         lightbulb = {

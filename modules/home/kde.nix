@@ -11,7 +11,7 @@
 
   home.packages = with pkgs; [
     (catppuccin-kde.override {
-      flavour = [ "macchiato" ];
+      flavour = [ "mocha" ];
       accents = [ "lavender" ];
     })
     kdePackages.kcalc
@@ -29,5 +29,9 @@
 
   programs.plasma = {
     enable = true;
+    workspace = {
+      # Requires catppuccin-kde package above
+      colorScheme = "Catppuccin-Mocha-Lavender";
+    };
   };
 }

@@ -45,6 +45,7 @@
     sleuth.enable = true; # Dynamic tabwidth.
     ts-autotag.enable = true; # Automatic tags.
     nvim-autopairs.enable = true;
+    # nvim-bqf (Better quickfix UI) via extraPlugins below
 
     # Lazygit
     lazygit = {
@@ -58,9 +59,10 @@
     };
 
     # Prettier fancier command window
-    noice = {
-      enable = true;
-    };
+    noice.enable = true;
+
+    # Trouble list for diagnostics/refs/etc.
+    trouble.enable = true;
 
     # Good old Telescope
     telescope = {
@@ -142,39 +144,16 @@
 
   programs.nixvim.extraConfigLua = ''
     require("telescope").load_extension("lazygit")
-
-    luasnip = require("luasnip")
-    kind_icons = {
-      Text = "󰊄",
-      Method = "",
-      Function = "󰡱",
-      Constructor = "",
-      Field = "",
-      Variable = "󱀍",
-      Class = "",
-      Interface = "",
-      Module = "󰕳",
-      Property = "",
-      Unit = "",
-      Value = "",
-      Enum = "",
-      Keyword = "",
-      Snippet = "",
-      Color = "",
-      File = "",
-      Reference = "",
-      Folder = "",
-      EnumMember = "",
-      Constant = "",
-      Struct = "",
-      Event = "",
-      Operator = "",
-      TypeParameter = "",
-    }
+    pcall(function() require('telescope').load_extension('frecency') end)
   '';
 
   programs.nixvim.extraPlugins = with pkgs.vimPlugins; [
     glow-nvim # Glow inside of Neovim
     clipboard-image-nvim
+    telescope-frecency-nvim
+    sqlite-lua
+    flash-nvim
+    nvim-bqf
+    taskwarrior3
   ];
 }

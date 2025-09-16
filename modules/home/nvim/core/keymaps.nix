@@ -59,6 +59,14 @@
       }
       # Added tmux-sessionizer keymaps
       {
+        key = "<C-o>";
+        action = "<cmd>silent !tmux neww tms<CR>";
+        options = {
+          desc = "Tmux Sessionizer (Ctrl-o)";
+          silent = true;
+        };
+      }
+      {
         key = "<C-f>";
         action = "<cmd>silent !tmux neww tms<CR>";
         options = {
@@ -139,6 +147,68 @@
           desc = "Find Diagnostics";
           silent = true;
         };
+      }
+      # Quickfix navigation and toggles
+      {
+        key = "]q";
+        action = "<cmd>cnext<cr>";
+        options = { desc = "Quickfix Next"; silent = true; };
+      }
+      {
+        key = "[q";
+        action = "<cmd>cprev<cr>";
+        options = { desc = "Quickfix Prev"; silent = true; };
+      }
+      {
+        key = "<leader>qq";
+        action = "<cmd>copen<cr>";
+        options = { desc = "Quickfix Open"; silent = true; };
+      }
+      {
+        key = "<leader>qc";
+        action = "<cmd>cclose<cr>";
+        options = { desc = "Quickfix Close"; silent = true; };
+      }
+      # Lazygit
+      {
+        key = "<leader>gg";
+        action = ":LazyGit<cr>";
+        options = { desc = "LazyGit"; silent = true; };
+      }
+      # Trouble diagnostics toggle
+      {
+        key = "<leader>xx";
+        action = "<cmd>TroubleToggle<cr>";
+        options = { desc = "Trouble Toggle"; silent = true; };
+      }
+      {
+        key = "<leader>xd";
+        action = "<cmd>TroubleToggle document_diagnostics<cr>";
+        options = { desc = "Doc Diagnostics"; silent = true; };
+      }
+      {
+        key = "<leader>xw";
+        action = "<cmd>TroubleToggle workspace_diagnostics<cr>";
+        options = { desc = "Workspace Diagnostics"; silent = true; };
+      }
+      # Telescope Frecency
+      {
+        key = "<leader>sr";
+        action = "<cmd>Telescope frecency<cr>";
+        options = { desc = "Recent Files"; silent = true; };
+      }
+      # Flash.nvim
+      {
+        key = "s";
+        mode = "n";
+        action = "<cmd>lua require('flash').jump()<cr>";
+        options = { desc = "Flash Jump"; silent = true; };
+      }
+      {
+        key = "S";
+        mode = "n";
+        action = "<cmd>lua require('flash').treesitter()<cr>";
+        options = { desc = "Flash TS"; silent = true; };
       }
     ];
   };

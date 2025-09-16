@@ -11,6 +11,14 @@ _: {
           group = "Search";
         }
         {
+          __unkeyed-1 = "<leader>x";
+          group = "Trouble";
+        }
+        {
+          __unkeyed-1 = "<leader>q";
+          group = "Quickfix";
+        }
+        {
           __unkeyed-1 = "<leader>bs";
           group = "󰒺 Sort";
           icon = "";
@@ -24,6 +32,10 @@ _: {
           group = "Find";
         }
         {
+          __unkeyed-1 = "<leader>sr";
+          group = "Recent Files";
+        }
+        {
           __unkeyed-1 = "<leader>r";
           group = "Refactor";
           icon = " ";
@@ -31,6 +43,22 @@ _: {
         {
           __unkeyed-1 = "<leader>u";
           group = "UI/UX";
+        }
+        {
+          __unkeyed-1 = "<leader>gg";
+          group = "Git (LazyGit)";
+        }
+        {
+          __unkeyed-1 = "s";
+          group = "Flash Jump";
+        }
+        {
+          __unkeyed-1 = "<leader>h";
+          group = "Harpoon";
+        }
+        {
+          __unkeyed-1 = "<leader>t";
+          group = "Tasks";
         }
         {
           __unkeyed-1 = "<leader>d";
