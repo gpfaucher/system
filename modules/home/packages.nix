@@ -1,6 +1,7 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    zlib
     graphite-cli
     kdePackages.xdg-desktop-portal-kde
     xdg-desktop-portal-gtk
@@ -40,7 +41,7 @@
     hyfetch
     hsetroot
     xclip
-    rofi-wayland
+    rofi
     wlr-randr
     wl-clipboard
     evremap
@@ -60,6 +61,5 @@
     # Browsers
     firefox
     google-chrome
-    floorp
   ];
 }

@@ -30,10 +30,10 @@ _: {
       enable = true;
       settings = {
         symbol_in_winbar = {
-          enable = true;
+          enable = false;
         };
         lightbulb = {
-          virtual_text = false;
+          virtual_text = true;
         };
       };
     };
@@ -41,6 +41,7 @@ _: {
     actions-preview = {
       enable = true;
     };
+
     lsp = {
       enable = true;
       servers = {

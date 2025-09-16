@@ -1,4 +1,5 @@
-{ pkgs, ... }: {
+{ pkgs, ... }:
+{
   environment.systemPackages = with pkgs; [
     # Development tools
     git
@@ -9,15 +10,15 @@
     python312Packages.bugwarrior
     zig
     # ollama
-    
+
     # IDEs
     jetbrains.pycharm-professional
     jetbrains.webstorm
     jetbrains.datagrip
     vscode-fhs
-    zed-editor
+    zed-editor-fhs
     lapce
-    
+
     # CLI tools
     htop
     ripgrep
@@ -26,7 +27,7 @@
     tmux-sessionizer
     nnn
     taskwarrior3
-    
+
     # System tools
     killall
     xdg-utils
