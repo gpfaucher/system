@@ -1,46 +1,11 @@
-###############################################
-# Codex CLI Configuration (TOML)
-# Location: ~/.codex/config.toml
-# Note: Do not commit secrets. Headers below use placeholders.
-###############################################
-
-# IMPORTANT: the top-level key is `mcp_servers` rather than `mcpServers`.
-
-[mcp_servers.filesystem]
-enabled = true
-command = "bunx"
-args = ["-y", "@modelcontextprotocol/server-filesystem"]
-env = { MCP_FILESYSTEM_ROOT = "." }
-
-[mcp_servers.ripgrep]
-enabled = true
-command = "bunx"
-args = ["-y", "@modelcontextprotocol/server-ripgrep"]
-
-[mcp_servers.git]
-enabled = true
-command = "bunx"
-args = ["-y", "@modelcontextprotocol/server-git"]
-
-[mcp_servers.fetch]
-enabled = true
-command = "bunx"
-args = ["-y", "@modelcontextprotocol/server-fetch"]
-
-[mcp_servers.searxng]
-enabled = true
-command = "bunx"
-args = ["-y", "@modelcontextprotocol/server-searxng"]
-env = { SEARXNG_URL = "http://localhost:8080" }
-
-# Example of an HTTP MCP server with an Authorization header.
-# Leave disabled by default and provide the token via a secret manager/environment.
 [mcp_servers.context7]
 enabled = true
 command = "npx"
 args = ["-y", "@upstash/context7-mcp", "--api-key", "ctx7sk-a8bd2804-d72c-4423-8822-91720bd755be"]
 
-# Additional Codex configuration
+[tools]
+web_search = true
+
 ignore = [
   ".git",
   ".direnv",

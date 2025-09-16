@@ -1,5 +1,6 @@
 _: {
   imports = [
+    ./codex.nix
     ./kmonad.nix
     ./bugwarrior.nix
     ./shell.nix

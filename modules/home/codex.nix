@@ -3,6 +3,7 @@
   # Install Codex configuration at ~/.codex/config.toml (TOML format)
   home.file.".codex/config.toml" = {
     source = ./assets/codex/config.toml;
+    force = true;
   };
 
   # Optionally, you can set environment variables here via Home-Manager if desired, e.g.:
