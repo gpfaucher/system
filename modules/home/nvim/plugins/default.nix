@@ -117,14 +117,16 @@
     # Highlight word under cursor
     illuminate = {
       enable = true;
-      underCursor = false;
-      filetypesDenylist = [
-        "Outline"
-        "TelescopePrompt"
-        "alpha"
-        "harpoon"
-        "reason"
-      ];
+      settings = {
+        under_cursor = false;
+        filetypes_denylist = [
+          "Outline"
+          "TelescopePrompt"
+          "alpha"
+          "harpoon"
+          "reason"
+        ];
+      };
     };
 
     # Nix expressions in Neovim

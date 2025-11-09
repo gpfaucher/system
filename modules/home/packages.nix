@@ -1,6 +1,17 @@
 { pkgs, ... }:
 {
   home.packages = with pkgs; [
+    ghostty
+    postgresql
+    jetbrains.goland
+    hyprmon
+    bruno
+    claude-code
+    act
+    moon
+    kdePackages.yakuake
+    chromium
+    protonvpn-gui
     codex
     nodejs_22
     bun
@@ -24,7 +35,7 @@
     docker-buildx
     overskride
     mesa-demos
-    teams-for-linux
+    # teams-for-linux
     lmstudio
     pavucontrol
     filezilla
@@ -50,6 +61,7 @@
     wl-clipboard
     quickemu
     ripgrep
+    nil
 
     # Formatters for Neovim (conform.nvim)
     ruff

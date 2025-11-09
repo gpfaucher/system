@@ -11,6 +11,7 @@ _: {
     ./terminal.nix
     ./nvim/default.nix
     ./tmux.nix
-    ./kde.nix
+    ./hyprland.nix
+    ./wofi.nix
   ];
 }

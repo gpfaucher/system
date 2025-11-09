@@ -53,7 +53,6 @@ _: {
         astro.enable = true;
         phpactor.enable = true;
         svelte.enable = false;
-        vuels.enable = false;
         marksman.enable = true;
         nil_ls.enable = true;
         dockerls.enable = true;

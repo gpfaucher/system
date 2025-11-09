@@ -4,7 +4,7 @@
     enable = true;
     settings = {
       main = {
-        font = lib.mkForce "JetBrainsMonoNL Nerd Font Mono:size=20";
+        font = lib.mkForce "JetBrainsMonoNL Nerd Font Mono:size=14";
       };
       colors = {
         alpha = 1.0;

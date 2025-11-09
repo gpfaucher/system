@@ -16,6 +16,7 @@
     jetbrains.datagrip
     vscode-fhs
     zed-editor-fhs
+    go
     lapce
 
     # CLI tools

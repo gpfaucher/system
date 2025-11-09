@@ -3,6 +3,7 @@ _: {
     ./bluetooth.nix
     ./docker.nix
     ./greetd.nix
+    ./hyprland.nix
     ./networking.nix
     ./packages.nix
     ./pipewire.nix

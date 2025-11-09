@@ -37,6 +37,12 @@ _: {
   };
   programs.fish = {
     enable = true;
+    loginShellInit = ''
+      # Auto-start Hyprland on tty1
+      if test (tty) = "/dev/tty1"
+        exec Hyprland
+      end
+    '';
     shellAbbrs = {
       ga = "git add";
       gl = "git log --pretty=format:'%C(yellow)%h\\ %ad%Cred%d\\ %Creset%s%Cblue\\ [%cn]' --decorate --date=short";

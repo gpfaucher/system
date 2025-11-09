@@ -4,6 +4,7 @@
     nixpkgs.url = "github:nixos/nixpkgs/nixos-unstable";
     home-manager.url = "github:nix-community/home-manager";
     nixvim.url = "github:nix-community/nixvim";
+    hyprland.url = "github:hyprwm/Hyprland";
     plasma-manager = {
       url = "github:AlexNabokikh/plasma-manager";
       inputs.nixpkgs.follows = "nixpkgs";
