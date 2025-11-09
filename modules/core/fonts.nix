@@ -9,15 +9,10 @@
     enable = true;
   };
 
-  environment.systemPackages = with pkgs; [
+  fonts.packages = with pkgs; [
     noto-fonts-cjk-sans
     noto-fonts-cjk-serif
     nerd-fonts.jetbrains-mono
-    nerd-fonts.jetbrains-mono
     nerd-fonts.monaspace
-    devenv
-    direnv
-    wget
-    git
   ];
 }

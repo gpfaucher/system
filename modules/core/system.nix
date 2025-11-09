@@ -1,6 +1,29 @@
 _: {
   services.mullvad-vpn.enable = true;
 
+  # Power management for better battery life
+  services.auto-cpufreq = {
+    enable = true;
+    settings = {
+      charger = {
+        governor = "performance";
+        turbo = "auto";
+      };
+      battery = {
+        governor = "powersave";
+        turbo = "auto";
+        scaling_min_freq = 1400000;
+        scaling_max_freq = 2800000;
+      };
+    };
+  };
+
+  # Lid switch behavior
+  services.logind = {
+    lidSwitch = "suspend";              # Suspend when on battery
+    lidSwitchExternalPower = "ignore";  # Stay awake when charging
+  };
+
   nix = {
     settings = {
       auto-optimise-store = true;

@@ -23,10 +23,11 @@
       bind-key -r C-o run-shell "tmux neww tms"
 
       bind-key -r f run-shell "tmux neww tms"
-      bind-key -r M-h run-shell "tmux neww tms -s 0"
-      bind-key -r M-t run-shell "tmux neww tms -s 1"
-      bind-key -r M-n run-shell "tmux neww tms -s 2"
-      bind-key -r M-s run-shell "tmux neww tms -s 3"
+      # Remapped to avoid conflicts with Hyprland Alt modifier
+      bind-key -r C-1 run-shell "tmux neww tms -s 0"
+      bind-key -r C-2 run-shell "tmux neww tms -s 1"
+      bind-key -r C-3 run-shell "tmux neww tms -s 2"
+      bind-key -r C-4 run-shell "tmux neww tms -s 3"
 
       unbind r
       bind r source-file ~/.tmux.conf

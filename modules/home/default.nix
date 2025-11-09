@@ -1,17 +1,16 @@
 _: {
   imports = [
-    ./codex.nix
-    ./kmonad.nix
     ./bugwarrior.nix
-    ./shell.nix
+    ./codex.nix
     ./git.nix
-    ./packages.nix
-    ./wayland.nix
-    ./steam.nix
-    ./terminal.nix
-    ./nvim/default.nix
-    ./tmux.nix
     ./hyprland.nix
+    ./kmonad.nix
+    ./nvim/default.nix
+    ./packages
+    ./shell.nix
+    ./terminal.nix
+    ./tmux.nix
+    ./wayland.nix
     ./wofi.nix
   ];
 }

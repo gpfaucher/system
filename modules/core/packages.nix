@@ -1,37 +1,24 @@
 { pkgs, ... }:
 {
   environment.systemPackages = with pkgs; [
-    # Development tools
+    # Essential system tools
     git
     wget
     direnv
     devenv
-    gh
-    python312Packages.bugwarrior
-    zig
-
-    # IDEs
-    jetbrains.pycharm-professional
-    jetbrains.webstorm
-    jetbrains.datagrip
-    vscode-fhs
-    zed-editor-fhs
-    go
-    lapce
-
-    # CLI tools
-    htop
-    ripgrep
-    fzf
-    eza
-    tmux-sessionizer
-    nnn
-    taskwarrior3
-
-    # System tools
     killall
     xdg-utils
     ffmpeg
     unzip
+
+    # CLI tools
+    htop
+    fzf
+    eza
+    taskwarrior3
+
+    # Power management and monitoring
+    powertop      # Detailed power consumption analysis
+    acpi          # Quick battery status
   ];
 }

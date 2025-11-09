@@ -2,7 +2,7 @@
 {
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.settings = {
-    "$mod" = "Super";
+    "$mod" = "ALT";
 
     general = {
       gaps_out = 0;
@@ -119,21 +119,40 @@
       "hyprctl setcursor Numix-Cursor 24"
     ];
     binde = [
-      "ALTSHIFT,H,resizeactive,-150 0"
-      "ALTSHIFT,J,resizeactive,0 150"
-      "ALTSHIFT,K,resizeactive,0 -150"
-      "ALTSHIFT,L,resizeactive,150 0"
+      "SUPERSHIFT,H,resizeactive,-150 0"
+      "SUPERSHIFT,J,resizeactive,0 150"
+      "SUPERSHIFT,K,resizeactive,0 -150"
+      "SUPERSHIFT,L,resizeactive,150 0"
     ];
+    # Window rules for floating TUI apps
+    windowrulev2 = [
+      "float,title:^(btop)$"
+      "size 80% 80%,title:^(btop)$"
+      "center,title:^(btop)$"
+
+      "float,title:^(bluetuith)$"
+      "size 80% 80%,title:^(bluetuith)$"
+      "center,title:^(bluetuith)$"
+
+      "float,title:^(impala)$"
+      "size 80% 80%,title:^(impala)$"
+      "center,title:^(impala)$"
+    ];
+
     bind =
       [
         "$mod,q,killactive,"
         "$mod, o, exec, wofi"
         "$mod, b, exec, wofi-bluetooth"
-        "ALTSHIFT, Return, exec, foot"
+        "SUPER, Return, exec, ghostty"
         "$mod,h,movefocus,l"
         "$mod,l,movefocus,r"
         "$mod,k,movefocus,u"
         "$mod,j,movefocus,d"
+        # Floating TUI apps
+        "$mod SHIFT, b, exec, ghostty --title=btop -e btop"
+        "$mod SHIFT, t, exec, ghostty --title=bluetuith -e bluetuith"
+        "$mod SHIFT, i, exec, ghostty --title=impala -e impala"
         ",XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
         ",XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
         " ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"

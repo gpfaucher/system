@@ -10,14 +10,9 @@
   services.hyprpaper.enable = true;
 
   home.packages = with pkgs; [
+    # Wayland-specific utilities
     grimblast
     waylock
-    dmenu
-    dunst
-    foot
-    light
-    brightnessctl
-    wofi
     playerctl
     adwaita-icon-theme
   ];

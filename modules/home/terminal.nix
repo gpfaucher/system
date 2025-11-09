@@ -1,34 +1,43 @@
-{ lib, ... }:
+{ pkgs, config, ... }:
 {
-  programs.foot = {
-    enable = true;
-    settings = {
-      main = {
-        font = lib.mkForce "JetBrainsMonoNL Nerd Font Mono:size=14";
-      };
-      colors = {
-        alpha = 1.0;
-        foreground = "ffffff";
-        background = "161616";
+  home.packages = with pkgs; [
+    ghostty
+    alacritty
+  ];
 
-        regular0 = "262626";
-        regular1 = "ff7eb6";
-        regular2 = "42be65";
-        regular3 = "ffe97b";
-        regular4 = "33b1ff";
-        regular5 = "ee5396";
-        regular6 = "3ddbd9";
-        regular7 = "dde1e6";
+  # Ghostty configuration
+  home.file."${config.xdg.configHome}/ghostty/config".text = ''
+    # Font configuration
+    font-family = JetBrainsMono Nerd Font Mono
+    font-size = 14
 
-        bright0 = "393939";
-        bright1 = "ff7eb6";
-        bright2 = "42be65";
-        bright3 = "ffe97b";
-        bright4 = "33b1ff";
-        bright5 = "ee5396";
-        bright6 = "3ddbd9";
-        bright7 = "ffffff";
-      };
-    };
-  };
+    # Theme (Carbon/Oxocarbon inspired)
+    background = 161616
+    foreground = ffffff
+
+    # Cursor
+    cursor-color = ffffff
+
+    # Colors
+    palette = 0=#262626
+    palette = 1=#ff7eb6
+    palette = 2=#42be65
+    palette = 3=#ffe97b
+    palette = 4=#33b1ff
+    palette = 5=#ee5396
+    palette = 6=#3ddbd9
+    palette = 7=#dde1e6
+    palette = 8=#393939
+    palette = 9=#ff7eb6
+    palette = 10=#42be65
+    palette = 11=#ffe97b
+    palette = 12=#33b1ff
+    palette = 13=#ee5396
+    palette = 14=#3ddbd9
+    palette = 15=#ffffff
+
+    # Window settings
+    window-padding-x = 4
+    window-padding-y = 4
+  '';
 }

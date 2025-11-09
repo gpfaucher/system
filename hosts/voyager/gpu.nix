@@ -7,8 +7,15 @@ _: {
     open = true;
     modesetting.enable = true;
     powerManagement.enable = true;
+    # Fine-grained power management (turns off GPU when not in use)
+    powerManagement.finegrained = true;
     prime = {
-      sync.enable = true;
+      # Offload mode: NVIDIA GPU only used when explicitly requested
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;  # Provides nvidia-offload command
+      };
+      # sync.enable = true;  # Old setting - kept both GPUs always on
 
       nvidiaBusId = "PCI:1:0:0";
       amdgpuBusId = "PCI:6:0:0";

@@ -74,8 +74,9 @@
           silent = true;
         };
       }
+      # Remapped to avoid conflicts with Hyprland Alt modifier
       {
-        key = "<M-h>";
+        key = "<C-1>";
         action = "<cmd>silent !tmux neww tms -s 0<CR>";
         options = {
           desc = "Tmux Sessionizer Session 0";
@@ -83,7 +84,7 @@
         };
       }
       {
-        key = "<M-t>";
+        key = "<C-2>";
         action = "<cmd>silent !tmux neww tms -s 1<CR>";
         options = {
           desc = "Tmux Sessionizer Session 1";
@@ -91,7 +92,7 @@
         };
       }
       {
-        key = "<M-n>";
+        key = "<C-3>";
         action = "<cmd>silent !tmux neww tms -s 2<CR>";
         options = {
           desc = "Tmux Sessionizer Session 2";
@@ -99,7 +100,7 @@
         };
       }
       {
-        key = "<M-s>";
+        key = "<C-4>";
         action = "<cmd>silent !tmux neww tms -s 3<CR>";
         options = {
           desc = "Tmux Sessionizer Session 3";
