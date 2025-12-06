@@ -81,7 +81,7 @@
     };
 
     monitor = [
-      "DP-2,3440x1440@100,auto,auto"
+      ",preferred,auto,1"  # Fallback: let kanshi handle specifics
     ];
     gestures = {
       workspace_swipe_distance = 500;
@@ -103,7 +103,7 @@
       "XDG_SESSION_TYPE, wayland"
       "XDG_SESSION_DESKTOP, Hyprland"
       "GDK_BACKEND, wayland, x11"
-      "GDK_SCALE, 2"
+      "GDK_SCALE,1"
       "NVIDIA_ANTI_FLICKER, true"
       "CLUTTER_BACKEND, wayland"
       "QT_QPA_PLATFORM=wayland;xcb"
@@ -111,18 +111,24 @@
       "QT_AUTO_SCREEN_SCALE_FACTOR, 1"
       "SDL_VIDEODRIVER, x11"
       "MOZ_ENABLE_WAYLAND, 1"
-      "GDK_SCALE,1"
       "QT_SCALE_FACTOR,1"
+      "XCURSOR_SIZE,24"
+      "XCURSOR_THEME,Adwaita"
       "EDITOR,nvim"
     ];
-    exec-once = [
-      "hyprctl setcursor Numix-Cursor 24"
-    ];
     binde = [
+      # Existing floating window resize
       "SUPERSHIFT,H,resizeactive,-150 0"
       "SUPERSHIFT,J,resizeactive,0 150"
       "SUPERSHIFT,K,resizeactive,0 -150"
       "SUPERSHIFT,L,resizeactive,150 0"
+      # Master layout split ratio (for tiled windows)
+      "$mod CTRL,H,splitratio,-0.05"
+      "$mod CTRL,L,splitratio,+0.05"
+    ];
+    bindm = [
+      "$mod, mouse:272, movewindow"     # ALT + left-click drag to move
+      "$mod, mouse:273, resizewindow"   # ALT + right-click drag to resize
     ];
     # Window rules for floating TUI apps
     windowrulev2 = [
@@ -153,6 +159,8 @@
         "$mod SHIFT, b, exec, ghostty --title=btop -e btop"
         "$mod SHIFT, t, exec, ghostty --title=bluetuith -e bluetuith"
         "$mod SHIFT, i, exec, ghostty --title=impala -e impala"
+        # Quick reconnect to last bluetooth device
+        "$mod CTRL, b, exec, bluetoothctl connect $(bluetoothctl devices Paired | head -1 | awk '{print $2}')"
         ",XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
         ",XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
         " ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
