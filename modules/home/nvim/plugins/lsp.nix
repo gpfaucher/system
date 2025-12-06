@@ -10,7 +10,7 @@ _: {
       settings = {
         mode = "symbol_text"; # include text labels to reduce reliance on icons
         preset = "default";
-        symbol_map = { Copilot = "C"; };
+        symbol_map = {Copilot = "C";};
         maxwidth = 50;
         ellipsis_char = "...";
       };
@@ -148,5 +148,4 @@ _: {
       };
     }
   ];
-
 }

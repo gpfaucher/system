@@ -1,6 +1,5 @@
-{ pkgs, ... }:
-{
-  home.packages = [ pkgs.python312Packages.bugwarrior pkgs.taskwarrior3 ];
+{pkgs, ...}: {
+  home.packages = [pkgs.python312Packages.bugwarrior pkgs.taskwarrior3];
 
   xdg.configFile."bugwarrior/bugwarriorrc" = {
     text = ''
@@ -42,7 +41,6 @@
       OnCalendar = "hourly";
       Persistent = true;
     };
-    Install.WantedBy = [ "timers.target" ];
+    Install.WantedBy = ["timers.target"];
   };
 }
-

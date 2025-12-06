@@ -1,5 +1,4 @@
-{ pkgs, ... }:
-{
+{pkgs, ...}: {
   home.packages = with pkgs; [
     # System monitoring and management
     htop
@@ -8,7 +7,6 @@
     lazydocker
     impala
     hyfetch
-    networkmanagerapplet
 
     # File and text utilities
     ripgrep
@@ -29,6 +27,10 @@
     tmux-sessionizer
     zellij
 
+    # Development tools
+    direnv
+    devenv
+
     # Wayland/X utilities
     brightnessctl
     dunst
@@ -37,8 +39,6 @@
     rofi
     wlr-randr
     quickemu
-    autorandr
-    arandr
 
     # Utilities
     ngrok

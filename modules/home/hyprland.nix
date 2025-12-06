@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+{lib, ...}: {
   wayland.windowManager.hyprland.enable = true;
   wayland.windowManager.hyprland.settings = {
     "$mod" = "ALT";
@@ -81,7 +80,7 @@
     };
 
     monitor = [
-      ",preferred,auto,1"  # Fallback: let kanshi handle specifics
+      ",preferred,auto,1" # Fallback: let kanshi handle specifics
     ];
     gestures = {
       workspace_swipe_distance = 500;
@@ -127,8 +126,8 @@
       "$mod CTRL,L,splitratio,+0.05"
     ];
     bindm = [
-      "$mod, mouse:272, movewindow"     # ALT + left-click drag to move
-      "$mod, mouse:273, resizewindow"   # ALT + right-click drag to resize
+      "$mod, mouse:272, movewindow" # ALT + left-click drag to move
+      "$mod, mouse:273, resizewindow" # ALT + right-click drag to resize
     ];
     # Window rules for floating TUI apps
     windowrulev2 = [
@@ -155,15 +154,53 @@
         "$mod,l,movefocus,r"
         "$mod,k,movefocus,u"
         "$mod,j,movefocus,d"
+
+        # Screenshots (grimblast)
+        ", Print, exec, grimblast --notify copy area"
+        "SHIFT, Print, exec, grimblast --notify save area"
+        "CTRL, Print, exec, grimblast --notify copy output"
+        "$mod, Print, exec, grimblast --notify copy window"
+
+        # Session locking
+        "$mod CTRL, l, exec, pidof waylock || waylock -fork-on-lock"
+
+        # Clipboard history
+        "$mod, v, exec, cliphist list | wofi --dmenu | cliphist decode | wl-copy"
+
+        # Notification center
+        "$mod, n, exec, swaync-client -t -sw"
+
+        # Fullscreen and floating
+        "$mod, f, fullscreen, 0"
+        "$mod SHIFT, f, fullscreen, 1"
+        "$mod, space, togglefloating,"
+
+        # Workspace navigation
+        "$mod, Tab, workspace, previous"
+        "$mod SHIFT, Tab, movetoworkspace, previous"
+        "$mod, grave, togglespecialworkspace, scratchpad"
+        "$mod SHIFT, grave, movetoworkspace, special:scratchpad"
+
         # Floating TUI apps
         "$mod SHIFT, b, exec, ghostty --title=btop -e btop"
         "$mod SHIFT, t, exec, ghostty --title=bluetuith -e bluetuith"
         "$mod SHIFT, i, exec, ghostty --title=impala -e impala"
+
         # Quick reconnect to last bluetooth device
         "$mod CTRL, b, exec, bluetoothctl connect $(bluetoothctl devices Paired | head -1 | awk '{print $2}')"
+
+        # Monitor/display management
+        "$mod CTRL, m, exec, hyprctl keyword monitor eDP-1,3840x2400@60,0x0,2"
+        "$mod CTRL SHIFT, m, exec, kanshictl reload"
+        "$mod CTRL, d, exec, wdisplays"
+
+        # Presentation mode - mirror laptop screen
+        "$mod CTRL, p, exec, wl-mirror eDP-1"
+
+        # Media keys
         ",XF86AudioRaiseVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%+"
         ",XF86AudioLowerVolume,exec,wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-"
-        " ,XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
+        ",XF86AudioMute, exec, wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle"
         ",XF86AudioPlay, exec, playerctl play-pause"
         ",XF86AudioPause, exec, playerctl play-pause"
         ",XF86AudioNext, exec, playerctl next"
@@ -174,15 +211,14 @@
       ++ (
         builtins.concatLists (
           builtins.genList (
-            i:
-            let
+            i: let
               ws = i + 1;
-            in
-            [
+            in [
               "$mod, code:1${toString i}, workspace, ${toString ws}"
               "$mod SHIFT, code:1${toString i}, movetoworkspace, ${toString ws}"
             ]
-          ) 9
+          )
+          9
         )
       );
   };

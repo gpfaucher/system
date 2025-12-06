@@ -45,9 +45,9 @@ _: {
               name = "git";
               score_offset = 100;
               opts = {
-                commit = { };
+                commit = {};
                 git_centers = {
-                  git_hub = { };
+                  git_hub = {};
                 };
               };
             };
@@ -89,7 +89,7 @@ _: {
             draw = {
               padding = 3;
               gap = 2;
-              treesitter = [ "lsp" ];
+              treesitter = ["lsp"];
             };
           };
         };

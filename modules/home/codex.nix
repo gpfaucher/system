@@ -1,5 +1,4 @@
-{ lib, ... }:
-{
+{lib, ...}: {
   # Install Codex configuration at ~/.codex/config.toml (TOML format)
   home.file.".codex/config.toml" = {
     source = ./assets/codex/config.toml;

@@ -3,8 +3,7 @@
   lib,
   pkgs,
   ...
-}:
-{
+}: {
   imports = [
     inputs.plasma-manager.homeManagerModules.plasma-manager
   ];

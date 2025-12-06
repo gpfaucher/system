@@ -13,7 +13,7 @@ _: {
       # Offload mode: NVIDIA GPU only used when explicitly requested
       offload = {
         enable = true;
-        enableOffloadCmd = true;  # Provides nvidia-offload command
+        enableOffloadCmd = true; # Provides nvidia-offload command
       };
       # sync.enable = true;  # Old setting - kept both GPUs always on
 

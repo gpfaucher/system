@@ -1,5 +1,4 @@
-{ ... }:
-{
+{...}: {
   # bluetuith config file
   xdg.configFile."bluetuith/bluetuith.conf".text = ''
     {

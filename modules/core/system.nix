@@ -20,8 +20,8 @@ _: {
 
   # Lid switch behavior
   services.logind = {
-    lidSwitch = "suspend";              # Suspend when on battery
-    lidSwitchExternalPower = "ignore";  # Stay awake when charging
+    lidSwitch = "suspend"; # Suspend when on battery
+    lidSwitchExternalPower = "ignore"; # Stay awake when charging
   };
 
   nix = {
@@ -49,7 +49,7 @@ _: {
   };
 
   i18n.defaultLocale = "en_US.UTF-8";
-  i18n.supportedLocales = [ "en_US.UTF-8/UTF-8" ];
+  i18n.supportedLocales = ["en_US.UTF-8/UTF-8"];
 
   environment.variables.EDITOR = "nvim";
 
