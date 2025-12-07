@@ -5,8 +5,8 @@
     settings = {
       server = {
         bind_address = "127.0.0.1";
-        port = 8080;
-        base_url = "http://localhost:8080/";
+        port = 8888;
+        base_url = "http://localhost:8888/";
         secret_key = "bd4e0c4a2f3b4a598a7c9d0e1f2a3b4c";
       };
       search = {

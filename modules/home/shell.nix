@@ -27,7 +27,7 @@ _: {
           "searxng": {
             "type": "local",
             "command": ["npx", "-y", "mcp-searxng"],
-            "environment": {"SEARXNG_URL": "http://localhost:8080"}
+            "environment": {"SEARXNG_URL": "http://localhost:8888"}
           },
           "sequential_thinking": {
             "type": "local",
