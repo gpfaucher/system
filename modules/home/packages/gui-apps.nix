@@ -1,8 +1,11 @@
-{pkgs, ...}: {
+{ pkgs, ... }:
+{
   home.packages = with pkgs; [
     # Communication
     zoom-us
     protonmail-desktop
+    thunderbird-latest-unwrapped
+
     # teams-for-linux
 
     # File managers and utilities
@@ -18,6 +21,7 @@
     ticktick
     todoist-electron
     bruno
+    obsidian
 
     # VPN and network
     protonvpn-gui
@@ -38,6 +42,7 @@
     # AI and ML tools
     claude-code
     lmstudio
+    antigravity-fhs
 
     # Display management
     hyprmon

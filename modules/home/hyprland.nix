@@ -96,14 +96,14 @@
       "ELECTRON_OZONE_PLATFORM_HINT, auto"
       "WLR_NO_HARDWARE_CURSORS, 1"
       "NIXPKGS_ALLOW_UNFREE, 1"
-      "LIBVA_DRIVER_NAME,nvidia"
-      "GLX_VENDOR_LIBRARY_NAME,nvidia"
+      "LIBVA_DRIVER_NAME,radeonsi"
+      # "__GLX_VENDOR_LIBRARY_NAME,nvidia"  # Only set when using nvidia-offload
       "XDG_CURRENT_DESKTOP, Hyprland"
       "XDG_SESSION_TYPE, wayland"
       "XDG_SESSION_DESKTOP, Hyprland"
       "GDK_BACKEND, wayland, x11"
       "GDK_SCALE,1"
-      "NVIDIA_ANTI_FLICKER, true"
+      # "NVIDIA_ANTI_FLICKER, true"  # Only useful when NVIDIA is primary
       "CLUTTER_BACKEND, wayland"
       "QT_QPA_PLATFORM=wayland;xcb"
       "QT_WAYLAND_DISABLE_WINDOWDECORATION, 1"
