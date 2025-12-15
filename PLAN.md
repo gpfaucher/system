@@ -1,37 +1,39 @@
-# Plan: Make NixOS More Windows-Like and User-Friendly
+# Plan: Make NixOS More User-Friendly with GNOME
 
 ## Goal
-Transform the current Hyprland-based tiling WM setup into a polished, user-friendly desktop experience similar to Windows - using pure Nix/NixOS (no Flatpak).
+Transform the current Hyprland-based tiling WM setup into a polished, user-friendly desktop experience using GNOME - the "just works" approach.
 
 ---
 
 ## Current State
 - Using **Hyprland** (tiling window manager) - power-user focused
 - Using **greetd** (TTY login) - no graphical login screen
-- KDE/Plasma config exists in `kde.nix` but is **disabled** in `greetd.nix`
-- No GUI software center
+- KDE/Plasma config exists in `kde.nix` but is disabled
 - Manual display management with kanshi
+
+---
+
+## Why GNOME over KDE?
+- **Simpler** - works great out of the box, fewer settings to tweak
+- **Better laptop support** - excellent touchpad gestures (3-finger swipe)
+- **Easier NixOS config** - native dconf support via Home Manager, no extra flake inputs
+- **Polished UX** - consistent, distraction-free workflow
 
 ---
 
 ## Implementation Plan
 
-### Phase 1: Enable KDE Plasma 6 Desktop
+### Phase 1: Enable GNOME Desktop
 
-**1.1 Modify `modules/core/greetd.nix` -> rename to `display.nix`:**
+**1.1 Modify `modules/core/greetd.nix`:**
 ```nix
 {pkgs, ...}: {
-  # Enable SDDM (KDE's display manager) with Wayland
-  services.displayManager.sddm = {
-    enable = true;
-    wayland.enable = true;
-    theme = "breeze";
-  };
+  # Enable GDM (GNOME's display manager)
+  services.xserver.enable = true;
+  services.xserver.displayManager.gdm.enable = true;
+  services.xserver.desktopManager.gnome.enable = true;
 
-  # Enable KDE Plasma 6
-  services.desktopManager.plasma6.enable = true;
-
-  # Optional: Auto-login for faster boot (like Windows)
+  # Optional: Auto-login
   services.displayManager.autoLogin = {
     enable = true;
     user = "gabriel";
@@ -39,113 +41,114 @@ Transform the current Hyprland-based tiling WM setup into a polished, user-frien
 }
 ```
 
-**1.2 Add `kde.nix` to home-manager imports:**
+**1.2 Exclude bloat (optional):**
 ```nix
-# modules/home/default.nix - add:
-./kde.nix
-```
-
-**1.3 Update flake.nix to include plasma-manager:**
-```nix
-inputs = {
-  # ... existing inputs
-  plasma-manager = {
-    url = "github:nix-community/plasma-manager";
-    inputs.nixpkgs.follows = "nixpkgs";
-    inputs.home-manager.follows = "home-manager";
-  };
-};
-```
-
----
-
-### Phase 2: Enhance KDE Configuration
-
-**2.1 Expand `modules/home/kde.nix` with Windows-like settings:**
-```nix
-programs.plasma = {
-  enable = true;
-
-  workspace = {
-    colorScheme = "BreezeDark";
-    lookAndFeel = "org.kde.breezedark.desktop";
-    clickItemTo = "select";  # Single-click to select (Windows default)
-  };
-
-  panels = [{
-    location = "bottom";
-    height = 44;
-    widgets = [
-      "org.kde.plasma.kickoff"      # Start menu
-      "org.kde.plasma.icontasks"    # Taskbar
-      "org.kde.plasma.systemtray"   # System tray
-      "org.kde.plasma.digitalclock" # Clock
-    ];
-  }];
-
-  kwin = {
-    effects.shakeCursor.enable = true;
-    titlebarButtons = {
-      left = ["on-all-desktops"];
-      right = ["minimize" "maximize" "close"];
-    };
-  };
-
-  shortcuts = {
-    # Windows-like shortcuts
-    "kwin"."Window Maximize" = "Meta+Up";
-    "kwin"."Window Minimize" = "Meta+Down";
-    "kwin"."Switch Window Left" = "Meta+Left";
-    "kwin"."Switch Window Right" = "Meta+Right";
-  };
-};
-```
-
----
-
-### Phase 3: Windows-Like File Management & Apps (Pure Nix)
-
-**3.1 Replace Thunar with Dolphin (KDE native):**
-```nix
-# modules/home/packages/gui-apps.nix - replace:
-xfce.thunar  # remove this
-# with:
-kdePackages.dolphin
-kdePackages.dolphin-plugins
-kdePackages.ark          # Archive manager (like WinRAR)
-kdePackages.gwenview     # Image viewer
-kdePackages.okular       # PDF viewer
-kdePackages.spectacle    # Screenshot tool
-kdePackages.kate         # Text editor (like Notepad++)
-```
-
----
-
-### Phase 4: System Settings & Control Panel
-
-**4.1 Add KDE system utilities:**
-```nix
-environment.systemPackages = with pkgs; [
-  kdePackages.systemsettings
-  kdePackages.kde-cli-tools
-  kdePackages.kinfocenter       # System info (like Windows "About")
-  kdePackages.partitionmanager  # Disk management
-  kdePackages.plasma-nm         # Network manager
-  kdePackages.bluedevil         # Bluetooth manager
-  kdePackages.powerdevil        # Power management
+environment.gnome.excludePackages = with pkgs; [
+  gnome-tour
+  gnome-music
+  epiphany        # GNOME Web browser
+  geary           # Email client
+  totem           # Video player (if using VLC)
 ];
 ```
 
 ---
 
-### Phase 5: Boot Polish
+### Phase 2: GNOME Configuration via Home Manager
 
-**5.1 Add boot splash screen:**
+**2.1 Create `modules/home/gnome.nix`:**
+```nix
+{pkgs, ...}: {
+  # Enable dconf for GNOME settings
+  dconf.enable = true;
+
+  dconf.settings = {
+    # Dark theme
+    "org/gnome/desktop/interface" = {
+      color-scheme = "prefer-dark";
+      gtk-theme = "Adwaita-dark";
+    };
+
+    # Touchpad gestures
+    "org/gnome/desktop/peripherals/touchpad" = {
+      tap-to-click = true;
+      two-finger-scrolling-enabled = true;
+    };
+
+    # Workspaces on all monitors
+    "org/gnome/mutter" = {
+      workspaces-only-on-primary = false;
+    };
+
+    # Favorite apps in dock
+    "org/gnome/shell" = {
+      favorite-apps = [
+        "org.gnome.Nautilus.desktop"
+        "firefox.desktop"
+        "org.gnome.Terminal.desktop"
+      ];
+    };
+  };
+
+  # GNOME Extensions
+  home.packages = with pkgs; [
+    gnomeExtensions.appindicator      # System tray icons
+    gnomeExtensions.dash-to-dock      # macOS-style dock (optional)
+    gnomeExtensions.blur-my-shell     # Visual polish
+  ];
+
+  dconf.settings."org/gnome/shell" = {
+    disable-user-extensions = false;
+    enabled-extensions = [
+      "appindicatorsupport@rgcjonas.gmail.com"
+    ];
+  };
+}
+```
+
+**2.2 Add to `modules/home/default.nix`:**
+```nix
+./gnome.nix
+```
+
+---
+
+### Phase 3: GNOME Apps (Replace Current Apps)
+
+**3.1 Update `modules/home/packages/gui-apps.nix`:**
+```nix
+# Remove:
+xfce.thunar
+
+# Add GNOME apps:
+gnome-text-editor    # Simple text editor
+loupe                # Image viewer (GNOME 45+)
+gnome-calculator
+gnome-system-monitor
+gnome-disk-utility
+file-roller          # Archive manager
+evince               # PDF viewer (or use existing)
+```
+
+---
+
+### Phase 4: Polish
+
+**4.1 Boot splash:**
 ```nix
 boot.plymouth = {
   enable = true;
-  theme = "breeze";  # KDE-themed boot splash
+  theme = "spinner";  # Clean GNOME-style spinner
 };
+```
+
+**4.2 Fonts (GNOME defaults):**
+```nix
+fonts.packages = with pkgs; [
+  cantarell-fonts      # GNOME default UI font
+  noto-fonts
+  noto-fonts-emoji
+];
 ```
 
 ---
@@ -154,32 +157,30 @@ boot.plymouth = {
 
 | File | Change |
 |------|--------|
-| `flake.nix` | Add plasma-manager input |
-| `modules/core/greetd.nix` | Enable SDDM + Plasma 6 |
-| `modules/home/default.nix` | Import `kde.nix` |
-| `modules/home/kde.nix` | Expand with panels, shortcuts, Windows-like config |
-| `modules/core/packages.nix` | Add KDE system utilities |
-| `modules/home/packages/gui-apps.nix` | Replace Thunar with Dolphin & KDE apps |
+| `modules/core/greetd.nix` | Enable GDM + GNOME |
+| `modules/home/default.nix` | Import `gnome.nix` |
+| `modules/home/gnome.nix` | New file - dconf settings, extensions |
+| `modules/home/packages/gui-apps.nix` | Replace Thunar with Nautilus/GNOME apps |
 
 ---
 
 ## Optional: Keep Hyprland as Alternative
 
-You can have both! Use KDE by default but keep Hyprland available:
-- SDDM lets you choose session at login
-- Keep Hyprland config intact
-- Switch between them as needed
+GDM allows session selection at login:
+- GNOME (default)
+- GNOME on Xorg
+- Hyprland (if kept installed)
 
 ---
 
-## What You Get (Windows-Like Features)
+## What You Get
 
-1. **Graphical login screen** (SDDM) - like Windows lock screen
-2. **Start menu + taskbar** - KDE Kickoff at bottom
-3. **File explorer** - Dolphin with Windows-like behavior
-4. **System settings** - GUI control panel
-5. **Familiar shortcuts** - Win+E, Win+Arrow, etc.
-6. **Boot splash** - Plymouth themed splash screen
-7. **Notifications** - Native KDE notifications
-8. **Single-click behavior** - Optional Windows-style file selection
-9. **All from Nix** - No Flatpak, pure declarative config
+1. **Graphical login** - GDM with user avatar
+2. **Activities overview** - Hot corner or Super key
+3. **App grid** - Like a phone launcher
+4. **Touchpad gestures** - 3-finger swipe for workspaces
+5. **Settings app** - Full GUI system settings
+6. **File manager** - Nautilus (clean, simple)
+7. **Notifications** - Native GNOME notifications
+8. **Extensions** - System tray, dock, blur effects
+9. **Just works** - Minimal config needed
