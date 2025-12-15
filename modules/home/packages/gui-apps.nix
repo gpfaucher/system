@@ -9,7 +9,6 @@
     # teams-for-linux
 
     # File managers and utilities
-    xfce.thunar
     filezilla
     xpipe
 
@@ -31,13 +30,18 @@
 
     # Theming and appearance
     lyra-cursors
-    nwg-look
 
     # System utilities
     pavucontrol
-    overskride
-    swaynotificationcenter
     plymouth
+
+    # GNOME utilities
+    gnome-calculator
+    gnome-system-monitor
+    gnome-disk-utility
+    file-roller
+    loupe
+    gnome-text-editor
 
     # AI and ML tools
     claude-code

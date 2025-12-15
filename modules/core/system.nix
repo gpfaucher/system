@@ -19,9 +19,9 @@ _: {
   };
 
   # Lid switch behavior
-  services.logind = {
-    lidSwitch = "suspend"; # Suspend when on battery
-    lidSwitchExternalPower = "ignore"; # Stay awake when charging
+  services.logind.settings.Login = {
+    HandleLidSwitch = "suspend";
+    HandleLidSwitchExternalPower = "ignore";
   };
 
   nix = {

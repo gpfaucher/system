@@ -4,6 +4,7 @@ _: {
     ./bugwarrior.nix
     ./codex.nix
     ./git.nix
+    ./gnome.nix
     ./hyprland.nix
     ./kanshi.nix
     ./kmonad.nix
