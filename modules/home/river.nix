@@ -61,7 +61,7 @@ Super + Shift + S     Area → clipboard
 
 ━━━ SYSTEM ━━━
 Super + V             Clipboard history
-Super + Ctrl + L      Lock screen
+Super + Escape        Lock screen
 Super + Shift + E     Power menu
 Super + N             Dismiss notification
 Super + Shift + N     Dismiss all notifications
@@ -215,7 +215,7 @@ in {
       riverctl map normal $mod V spawn 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'
 
       # === Screen Lock ===
-      riverctl map normal $mod+Control L spawn 'chayang && waylock'
+      riverctl map normal $mod Escape spawn 'chayang && waylock'
 
       # === Power Menu ===
       riverctl map normal $mod+Shift E spawn wlogout

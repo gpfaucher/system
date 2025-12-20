@@ -59,6 +59,10 @@
       pane_frames = false;
       simplified_ui = true;
       hide_session_name = true;
+      show_startup_tips = false;
+
+      # Disable mouse for resizing (use keyboard instead)
+      mouse_mode = false;
 
       # Theme will be set by stylix automatically
       ui = {
@@ -68,7 +72,8 @@
         };
       };
 
-      # Disable default keybindings clutter
+      # Use default keybindings
+      # Resize: Ctrl+p, then r to enter resize mode, then hjkl/arrows to resize
       keybinds = {
         unbind = ["Ctrl h"];
       };
