@@ -25,7 +25,6 @@
 
     # Terminal multiplexers and session managers
     tmux-sessionizer
-    zellij
 
     # Development tools
     direnv

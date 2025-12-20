@@ -13,7 +13,8 @@ _: {
       smartcase = true;
       signcolumn = "yes";
       updatetime = 250;
-      timeoutlen = 500;
+      timeoutlen = 300; # Faster for home row mods (was 500)
+      ttimeoutlen = 10; # Fast key code timeout
       splitright = true;
       splitbelow = true;
       list = true;
@@ -28,6 +29,9 @@ _: {
       ruler = true;
       autoindent = true;
       smartindent = true;
+      virtualedit = "block"; # Allow cursor beyond line end in visual block
+      hlsearch = true;
+      incsearch = true;
     };
   };
 }

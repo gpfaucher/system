@@ -1,6 +1,167 @@
 {
   programs.nixvim = {
     keymaps = [
+      # === Window navigation (Ctrl + hjkl) ===
+      {
+        key = "<C-h>";
+        action = "<C-w>h";
+        options = {
+          desc = "Focus left window";
+          silent = true;
+        };
+      }
+      {
+        key = "<C-j>";
+        action = "<C-w>j";
+        options = {
+          desc = "Focus below window";
+          silent = true;
+        };
+      }
+      {
+        key = "<C-k>";
+        action = "<C-w>k";
+        options = {
+          desc = "Focus above window";
+          silent = true;
+        };
+      }
+      {
+        key = "<C-l>";
+        action = "<C-w>l";
+        options = {
+          desc = "Focus right window";
+          silent = true;
+        };
+      }
+      # === Buffer navigation ===
+      {
+        key = "<S-h>";
+        action = "<cmd>bprevious<cr>";
+        options = {
+          desc = "Previous buffer";
+          silent = true;
+        };
+      }
+      {
+        key = "<S-l>";
+        action = "<cmd>bnext<cr>";
+        options = {
+          desc = "Next buffer";
+          silent = true;
+        };
+      }
+      {
+        key = "<leader>bd";
+        action = "<cmd>bdelete<cr>";
+        options = {
+          desc = "Delete buffer";
+          silent = true;
+        };
+      }
+      # === Quick save ===
+      {
+        key = "<C-s>";
+        action = "<cmd>w<cr>";
+        mode = ["n" "i" "v"];
+        options = {
+          desc = "Save file";
+          silent = true;
+        };
+      }
+      # === Better escape in insert mode (backup for jk combo on keyboard) ===
+      {
+        key = "jk";
+        mode = "i";
+        action = "<Esc>";
+        options = {
+          desc = "Exit insert mode";
+          silent = true;
+        };
+      }
+      # === Center cursor after movements ===
+      {
+        key = "<C-d>";
+        action = "<C-d>zz";
+        options = {
+          desc = "Scroll down centered";
+          silent = true;
+        };
+      }
+      {
+        key = "<C-u>";
+        action = "<C-u>zz";
+        options = {
+          desc = "Scroll up centered";
+          silent = true;
+        };
+      }
+      {
+        key = "n";
+        action = "nzzzv";
+        options = {
+          desc = "Next search centered";
+          silent = true;
+        };
+      }
+      {
+        key = "N";
+        action = "Nzzzv";
+        options = {
+          desc = "Previous search centered";
+          silent = true;
+        };
+      }
+      # === Harpoon keymaps ===
+      {
+        key = "<leader>ha";
+        action.__raw = "function() require('harpoon'):list():add() end";
+        options = {
+          desc = "Harpoon add file";
+          silent = true;
+        };
+      }
+      {
+        key = "<leader>he";
+        action.__raw = "function() require('harpoon').ui:toggle_quick_menu(require('harpoon'):list()) end";
+        options = {
+          desc = "Harpoon menu";
+          silent = true;
+        };
+      }
+      {
+        key = "<leader>h1";
+        action.__raw = "function() require('harpoon'):list():select(1) end";
+        options = {
+          desc = "Harpoon file 1";
+          silent = true;
+        };
+      }
+      {
+        key = "<leader>h2";
+        action.__raw = "function() require('harpoon'):list():select(2) end";
+        options = {
+          desc = "Harpoon file 2";
+          silent = true;
+        };
+      }
+      {
+        key = "<leader>h3";
+        action.__raw = "function() require('harpoon'):list():select(3) end";
+        options = {
+          desc = "Harpoon file 3";
+          silent = true;
+        };
+      }
+      {
+        key = "<leader>h4";
+        action.__raw = "function() require('harpoon'):list():select(4) end";
+        options = {
+          desc = "Harpoon file 4";
+          silent = true;
+        };
+      }
+      # === Telescope keymaps ===
       {
         key = "<leader>sf";
         action = "<cmd>Telescope find_files<cr>";

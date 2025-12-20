@@ -1,7 +1,11 @@
 _: {
   networking = {
-    wireless.iwd.enable = true;
-    # networkmanager.enable = true;
+    networkmanager.enable = true;
     nameservers = ["9.9.9.9"];
   };
+
+  # Disable WiFi power saving to prevent random disconnects
+  boot.extraModprobeConfig = ''
+    options iwlwifi power_save=0
+  '';
 }

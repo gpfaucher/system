@@ -1,29 +1,33 @@
-{pkgs, username, ...}: {
-  # Enable GDM (GNOME's display manager)
-  services.xserver.enable = true;
-  services.displayManager.gdm.enable = true;
-  services.desktopManager.gnome.enable = true;
-
-  # Disable power-profiles-daemon (conflicts with auto-cpufreq)
-  services.power-profiles-daemon.enable = false;
-
-  # Auto-login for faster boot
-  services.displayManager.autoLogin = {
+{
+  pkgs,
+  ...
+}: {
+  # greetd display manager with tuigreet
+  services.greetd = {
     enable = true;
-    user = username;
+    settings = {
+      default_session = {
+        command = "${pkgs.tuigreet}/bin/tuigreet --time --remember --remember-session --cmd river";
+        user = "greeter";
+      };
+      # NOTE: initial_session (auto-login) removed - it breaks waylock unlock
+      # because greetd's auto-login doesn't set up PAM sessions properly
+    };
   };
 
-  # Workaround for GNOME autologin
-  # https://github.com/NixOS/nixpkgs/issues/103746
-  systemd.services."getty@tty1".enable = false;
-  systemd.services."autovt@tty1".enable = false;
+  # Suppress greetd errors on tty
+  systemd.services.greetd.serviceConfig = {
+    Type = "idle";
+    StandardInput = "tty";
+    StandardOutput = "tty";
+    StandardError = "journal";
+    TTYReset = true;
+    TTYVHangup = true;
+    TTYVTDisallocate = true;
+  };
 
-  # Exclude GNOME bloat
-  environment.gnome.excludePackages = with pkgs; [
-    gnome-tour
-    gnome-music
-    epiphany
-    geary
-    totem
-  ];
+  # Disable conflicting display managers
+  services.displayManager.sddm.enable = false;
+  services.displayManager.gdm.enable = false;
+  services.xserver.displayManager.lightdm.enable = false;
 }

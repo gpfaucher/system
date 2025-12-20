@@ -61,8 +61,9 @@
     };
   };
 
-  # GNOME Extensions
+  # GNOME Extensions and tools
   home.packages = with pkgs; [
     gnomeExtensions.appindicator
+    gnome-tweaks
   ];
 }

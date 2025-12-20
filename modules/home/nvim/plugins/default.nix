@@ -154,5 +154,13 @@
     flash-nvim
     nvim-bqf
     taskwarrior3
+    harpoon2 # Quick file navigation
   ];
+
+  # Setup harpoon
+  programs.nixvim.extraConfigLuaPost = ''
+    -- Harpoon setup
+    local harpoon = require("harpoon")
+    harpoon:setup({})
+  '';
 }

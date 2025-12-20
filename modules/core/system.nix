@@ -2,6 +2,7 @@ _: {
   services.mullvad-vpn.enable = true;
 
   # Power management for better battery life
+  services.power-profiles-daemon.enable = false; # Conflicts with auto-cpufreq
   services.auto-cpufreq = {
     enable = true;
     settings = {

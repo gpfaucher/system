@@ -1,8 +1,6 @@
 {pkgs, ...}: {
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    extraPortals = [pkgs.xdg-desktop-portal-hyprland pkgs.xdg-desktop-portal-gtk];
-    config.common.default = "*";
-  };
+  # X server for legacy app compatibility
+  services.xserver.enable = true;
+
+  # XDG Portal configuration is handled in river.nix
 }
