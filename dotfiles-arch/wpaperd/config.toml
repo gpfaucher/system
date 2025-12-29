@@ -1,0 +1,4 @@
+[default]
+# Path to your wallpaper - update this!
+path = "~/.config/wpaperd/wallpaper.png"
+mode = "stretch"

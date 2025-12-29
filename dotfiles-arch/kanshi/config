@@ -1,0 +1,39 @@
+# Kanshi display configuration
+# Automatically switch display profiles based on connected monitors
+
+# Laptop only (no external monitors)
+profile laptop {
+    output eDP-1 enable mode 3840x2400@60Hz position 0,0 scale 2.0
+}
+
+# External ultrawide only via DP (laptop closed/disabled)
+profile docked-dp {
+    output DP-2 enable mode 3440x1440@100Hz position 0,0 scale 1.0
+    output eDP-1 disable
+}
+
+# External display via HDMI only (laptop disabled)
+profile docked-hdmi {
+    output HDMI-A-1 enable mode 3440x1440@100Hz position 0,0 scale 1.0
+    output eDP-1 disable
+}
+
+# Both displays (laptop + external ultrawide)
+profile docked-dual {
+    output DP-2 enable mode 3440x1440@100Hz position 0,0 scale 1.0
+    output eDP-1 enable mode 3840x2400@60Hz position 3440,0 scale 2.0
+}
+
+# Presentation: Laptop + any HDMI display (conference rooms, projectors)
+profile presentation-hdmi {
+    output eDP-1 enable mode 3840x2400@60Hz position 0,0 scale 2.0
+    output HDMI-A-* enable position 1920,0 scale 1.0
+    exec notify-send 'Presentation Mode' 'HDMI display connected'
+}
+
+# Presentation: Laptop + any DP display (USB-C docks, adapters)
+profile presentation-dp {
+    output eDP-1 enable mode 3840x2400@60Hz position 0,0 scale 2.0
+    output DP-* enable position 1920,0 scale 1.0
+    exec notify-send 'Presentation Mode' 'DP display connected'
+}

@@ -1,0 +1,60 @@
+#!/bin/sh
+cat << 'EOF' | fuzzel --dmenu --prompt "Keybinds: "
+━━━ WINDOWS ━━━
+Super + H/J/K/L       Focus left/down/up/right
+Super + Shift + HJKL  Swap window
+Super + Q             Close window
+Super + F             Fullscreen
+Super + Space         Toggle float
+
+━━━ LAYOUT ━━━
+Super + Ctrl + H/L    Shrink/grow master
+Super + M             Monocle layout
+Super + T             Tiled layout
+Super + Tab           Toggle layout
+
+━━━ WORKSPACES ━━━
+Super + 1-9           Switch workspace
+Super + Shift + 1-9   Move to workspace
+Super + 0             View all
+Super + P             Scratchpad
+Super + Shift + P     Move to scratchpad
+
+━━━ APPS ━━━
+Super + Return        Terminal (ghostty)
+Super + A             App launcher (fuzzel)
+Super + B             Firefox
+Super + E             File manager (yazi)
+Super + Shift + B     btop
+Super + Shift + T     bluetuith
+Super + Shift + I     impala (wifi)
+
+━━━ SCREENSHOTS ━━━
+Print                 Area -> clipboard
+Ctrl + Print          Screen -> clipboard
+Shift + Print         Area -> save
+Super + Shift + S     Area -> clipboard
+
+━━━ RECORDING ━━━
+Super + R             Area -> GIF clipboard (toggle)
+Super + Ctrl + R      Screen -> GIF clipboard (toggle)
+Super + Shift + R     Area -> save MP4 (toggle)
+
+━━━ SYSTEM ━━━
+Super + V             Clipboard history
+Super + Escape        Lock screen
+Super + Shift + E     Power menu
+Super + N             Dismiss notification
+Super + Shift + N     Dismiss all notifications
+Super + Slash         This cheatsheet
+
+━━━ DISPLAY ━━━
+Super + Ctrl + D      Display settings
+Super + Ctrl + M      Reload kanshi
+Super + Ctrl + P      Mirror screen
+
+━━━ MOUSE ━━━
+Super + Left Click    Move window
+Super + Right Click   Resize window
+Super + Middle Click  Toggle float
+EOF
