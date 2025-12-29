@@ -10,7 +10,7 @@ in {
     layout = [
       {
         label = "lock";
-        action = "chayang && waylock";
+        action = "waylock";
         text = "Lock";
         keybind = "l";
       }

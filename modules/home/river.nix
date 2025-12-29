@@ -21,6 +21,62 @@
     notify-send "Screenshot" "Saved to ~/Pictures/Screenshots"
   '';
 
+  # Screen recording scripts (wf-recorder for wlroots)
+  # Toggle recording - if running, stop and process; if not, start
+  screenrecord-area = pkgs.writeShellScriptBin "screenrecord-area" ''
+    pid=$(pgrep -x wf-recorder)
+    if [ -n "$pid" ]; then
+      kill -SIGINT $pid
+      wait $pid 2>/dev/null
+      # Convert to GIF and copy to clipboard
+      sleep 0.5
+      ${pkgs.ffmpeg}/bin/ffmpeg -y -i /tmp/recording.mp4 -vf "fps=15,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 /tmp/recording.gif
+      wl-copy -t image/gif < /tmp/recording.gif
+      notify-send "Recording" "GIF copied to clipboard"
+      rm -f /tmp/recording.mp4 /tmp/recording.gif
+    else
+      area=$(slurp)
+      if [ -n "$area" ]; then
+        notify-send "Recording" "Recording area... Press again to stop"
+        wf-recorder -g "$area" -f /tmp/recording.mp4
+      fi
+    fi
+  '';
+
+  screenrecord-screen = pkgs.writeShellScriptBin "screenrecord-screen" ''
+    pid=$(pgrep -x wf-recorder)
+    if [ -n "$pid" ]; then
+      kill -SIGINT $pid
+      wait $pid 2>/dev/null
+      sleep 0.5
+      ${pkgs.ffmpeg}/bin/ffmpeg -y -i /tmp/recording.mp4 -vf "fps=15,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" -loop 0 /tmp/recording.gif
+      wl-copy -t image/gif < /tmp/recording.gif
+      notify-send "Recording" "GIF copied to clipboard"
+      rm -f /tmp/recording.mp4 /tmp/recording.gif
+    else
+      notify-send "Recording" "Recording screen... Press again to stop"
+      wf-recorder -f /tmp/recording.mp4
+    fi
+  '';
+
+  screenrecord-save = pkgs.writeShellScriptBin "screenrecord-save" ''
+    pid=$(pgrep -x wf-recorder)
+    if [ -n "$pid" ]; then
+      kill -SIGINT $pid
+      wait $pid 2>/dev/null
+      sleep 0.5
+      mkdir -p ~/Videos/Recordings
+      mv /tmp/recording.mp4 ~/Videos/Recordings/$(date +%Y%m%d-%H%M%S).mp4
+      notify-send "Recording" "Saved to ~/Videos/Recordings"
+    else
+      area=$(slurp)
+      if [ -n "$area" ]; then
+        notify-send "Recording" "Recording area... Press again to stop"
+        wf-recorder -g "$area" -f /tmp/recording.mp4
+      fi
+    fi
+  '';
+
   # Keybind cheatsheet
   river-keybinds = pkgs.writeShellScriptBin "river-keybinds" ''
     cat << 'EOF' | fuzzel --dmenu --prompt "Keybinds: "
@@ -41,8 +97,8 @@ Super + Tab           Toggle layout
 Super + 1-9           Switch workspace
 Super + Shift + 1-9   Move to workspace
 Super + 0             View all
-Super + `             Scratchpad
-Super + Shift + `     Move to scratchpad
+Super + P             Scratchpad
+Super + Shift + P     Move to scratchpad
 
 ━━━ APPS ━━━
 Super + Return        Terminal (ghostty)
@@ -58,6 +114,11 @@ Print                 Area → clipboard
 Ctrl + Print          Screen → clipboard
 Shift + Print         Area → save
 Super + Shift + S     Area → clipboard
+
+━━━ RECORDING ━━━
+Super + R             Area → GIF clipboard (toggle)
+Super + Ctrl + R      Screen → GIF clipboard (toggle)
+Super + Shift + R     Area → save MP4 (toggle)
 
 ━━━ SYSTEM ━━━
 Super + V             Clipboard history
@@ -89,7 +150,7 @@ in {
 
       spawn = [
         # Layout generator (wideriver - dwm/xmonad style)
-        "'wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 --border-width 2 --border-width-monocle 0'"
+        "'wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 --border-width 2 --border-width-monocle 0 --inner-gap 4 --outer-gap 4'"
 
         # Wallpaper
         "wpaperd"
@@ -110,9 +171,6 @@ in {
 
         # Polkit agent
         "'${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1'"
-
-        # Idle management with screen fade before lock
-        "'swayidle -w timeout 300 \"chayang && waylock\" timeout 600 \"systemctl suspend\" before-sleep \"waylock\"'"
 
         # Auto display management
         "kanshi"
@@ -192,18 +250,18 @@ in {
       riverctl map normal $mod 0 set-focused-tags $all_tags
       riverctl map normal $mod+Shift 0 set-view-tags $all_tags
 
-      # === Scratchpad ===
+      # === Scratchpad (tag 21, outside normal 1-9 workspaces) ===
       scratch_tag=$((1 << 20))
-      riverctl map normal $mod Grave toggle-focused-tags $scratch_tag
-      riverctl map normal $mod+Shift Grave set-view-tags $scratch_tag
-      all_but_scratch=$(( ((1 << 32) - 1) ^ $scratch_tag ))
-      riverctl spawn-tagmask $all_but_scratch
+      riverctl map normal $mod P toggle-focused-tags ''${scratch_tag}
+      riverctl map normal $mod+Shift P set-view-tags ''${scratch_tag}
+      all_but_scratch_tag=$(( ((1 << 32) - 1) ^ $scratch_tag ))
+      riverctl spawn-tagmask ''${all_but_scratch_tag}
 
       # === App Launchers ===
       riverctl map normal $mod Return spawn ghostty
       riverctl map normal $mod A spawn fuzzel
       riverctl map normal $mod B spawn firefox
-      riverctl map normal $mod E spawn "ghostty -e yazi"
+      riverctl map normal $mod E spawn "ghostty -e fish -c yazi"
 
       # === Screenshots (grim + slurp) ===
       riverctl map normal None Print spawn screenshot-area
@@ -211,11 +269,16 @@ in {
       riverctl map normal Control Print spawn screenshot-screen
       riverctl map normal Shift Print spawn screenshot-save
 
+      # === Screen Recording (wf-recorder) ===
+      riverctl map normal $mod R spawn screenrecord-area
+      riverctl map normal $mod+Control R spawn screenrecord-screen
+      riverctl map normal $mod+Shift R spawn screenrecord-save
+
       # === Clipboard History ===
       riverctl map normal $mod V spawn 'cliphist list | fuzzel --dmenu | cliphist decode | wl-copy'
 
       # === Screen Lock ===
-      riverctl map normal $mod Escape spawn 'chayang && waylock'
+      riverctl map normal $mod Escape spawn waylock
 
       # === Power Menu ===
       riverctl map normal $mod+Shift E spawn wlogout
@@ -297,14 +360,19 @@ in {
     screenshot-save
     river-keybinds
 
+    # Screen recording
+    wf-recorder
+    ffmpeg
+    screenrecord-area
+    screenrecord-screen
+    screenrecord-save
+
     # Clipboard
     wl-clipboard
     cliphist
 
-    # Lock & Idle
+    # Lock
     waylock
-    swayidle
-    chayang
 
     # Wallpaper
     wpaperd

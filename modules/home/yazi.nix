@@ -35,7 +35,7 @@
     };
 
     keymap = {
-      manager.keymap = [
+      mgr.prepend_keymap = [
         {
           on = ["g" "h"];
           run = "cd ~";

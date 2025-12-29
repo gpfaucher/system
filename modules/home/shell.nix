@@ -332,7 +332,7 @@ _: {
     };
     shellAliases = {
       # Paddock SSH tunnels (Postgres on 5432/5433, Redis on 6379/6380)
-      staging-tunnel = "ssh -fN paddock-staging-tunnel && echo 'Staging tunnel open: Postgres localhost:5432, Redis localhost:6379'";
+      staging-tunnel = "ssh -fN paddock-staging-tunnel && echo 'Staging tunnel open: Postgres localhost:5432'";
       staging-tunnel-stop = "pkill -f 'ssh.*paddock-staging-tunnel'";
       staging-tunnel-status = "pgrep -f 'ssh.*paddock-staging-tunnel' >/dev/null && echo 'Running' || echo 'Not running'";
       prod-tunnel = "ssh -fN paddock-prod-tunnel && echo 'Prod tunnel open: Postgres localhost:5433, Redis localhost:6380'";

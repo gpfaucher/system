@@ -8,11 +8,8 @@
     # Polarity for auto-generated schemes
     polarity = "dark";
 
-    # High-res gruvbox wallpaper (works on ultrawide and 4K)
-    image = pkgs.fetchurl {
-      url = "https://raw.githubusercontent.com/AngelJumbo/gruvbox-wallpapers/main/wallpapers/minimalistic/gruv-abstract-maze.png";
-      sha256 = "sha256-VRZnvn405EnAv1za4eoF/ryvGn9bMlC4vx9662qNSO4=";
-    };
+    # Solid gruvbox background (#282828)
+    image = ../../assets/wallpaper.png;
 
     # Fonts
     fonts = {

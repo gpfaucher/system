@@ -218,24 +218,7 @@
           silent = true;
         };
       }
-      # Added tmux-sessionizer keymaps
-      {
-        key = "<C-o>";
-        action = "<cmd>silent !tmux neww tms<CR>";
-        options = {
-          desc = "Tmux Sessionizer (Ctrl-o)";
-          silent = true;
-        };
-      }
-      {
-        key = "<C-f>";
-        action = "<cmd>silent !tmux neww tms<CR>";
-        options = {
-          desc = "Tmux Sessionizer";
-          silent = true;
-        };
-      }
-      # Remapped to avoid conflicts with Hyprland Alt modifier
+      # Tmux-sessionizer keymaps (using Ctrl+number to avoid conflicts)
       {
         key = "<C-1>";
         action = "<cmd>silent !tmux neww tms -s 0<CR>";

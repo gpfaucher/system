@@ -7,7 +7,6 @@
 in {
   home.packages = with pkgs; [
     waylock
-    chayang
   ];
 
   xdg.configFile."waylock/waylock.toml".text = ''

@@ -15,8 +15,8 @@
       window-padding-y = 4;
       gtk-titlebar = false;
 
-      # Transparency (blur handled by Hyprland compositor)
-      background-opacity = 0.85;
+      # Transparency
+      background-opacity = 0.9;
 
       # Keybindings for terminal
       keybind = [
@@ -72,8 +72,10 @@
         };
       };
 
-      # Use default keybindings
-      # Resize: Ctrl+p, then r to enter resize mode, then hjkl/arrows to resize
+      # Start in locked mode - all keys pass through to neovim/apps
+      # Press Ctrl+g to unlock zellij for pane/tab management
+      default_mode = "locked";
+
       keybinds = {
         unbind = ["Ctrl h"];
       };

@@ -3,16 +3,15 @@
 let
   sshConfig = pkgs.writeText "ssh-config" ''
     Host paddock-staging
-      HostName 3.74.248.25
+      HostName 3.65.122.203
       User ec2-user
       IdentityFile ~/.ssh/paddock-ec2
 
     Host paddock-staging-tunnel
-      HostName 3.74.248.25
+      HostName 3.65.122.203
       User ec2-user
       IdentityFile ~/.ssh/paddock-ec2
       LocalForward 5432 staging-postgres.cpuuywqis1x2.eu-central-1.rds.amazonaws.com:5432
-      LocalForward 6379 staging-redis.qstxhc.0001.euc1.cache.amazonaws.com:6379
       ServerAliveInterval 60
       ServerAliveCountMax 3
 
