@@ -1,0 +1,64 @@
+#!/bin/bash
+
+# present-mode - Toggle presentation mode (disable notifications and blur)
+
+STATE_FILE="${XDG_STATE_HOME:-$HOME/.local/state}/present-mode"
+
+# Colors
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+NC='\033[0m'
+
+# Create state directory if it doesn't exist
+mkdir -p "$(dirname "$STATE_FILE")"
+
+enable_present_mode() {
+    # Disable mako notifications (Do Not Disturb mode)
+    if command -v makoctl &> /dev/null; then
+        makoctl mode -a dnd
+    fi
+
+    # Disable blur (hyprland)
+    if command -v hyprctl &> /dev/null; then
+        hyprctl keyword decoration:blur:enabled false 2>/dev/null
+    fi
+
+    # Mark as enabled
+    echo "enabled" > "$STATE_FILE"
+    echo -e "${GREEN}Presentation mode: ON${NC}"
+    echo "  - Notifications disabled"
+    echo "  - Blur disabled"
+}
+
+disable_present_mode() {
+    # Enable mako notifications
+    if command -v makoctl &> /dev/null; then
+        makoctl mode -r dnd
+    fi
+
+    # Enable blur (hyprland)
+    if command -v hyprctl &> /dev/null; then
+        hyprctl keyword decoration:blur:enabled true 2>/dev/null
+    fi
+
+    # Mark as disabled
+    rm -f "$STATE_FILE"
+    echo -e "${YELLOW}Presentation mode: OFF${NC}"
+    echo "  - Notifications restored"
+    echo "  - Blur restored"
+}
+
+show_status() {
+    if [[ -f "$STATE_FILE" ]]; then
+        echo -e "Presentation mode: ${GREEN}ON${NC}"
+    else
+        echo -e "Presentation mode: ${YELLOW}OFF${NC}"
+    fi
+}
+
+# Toggle based on current state
+if [[ -f "$STATE_FILE" ]]; then
+    disable_present_mode
+else
+    enable_present_mode
+fi

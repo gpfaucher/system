@@ -1,0 +1,70 @@
+#!/bin/bash
+
+# nvidia-toggle - Switch between GPU modes using envycontrol
+
+set -e
+
+# Colors
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Check if envycontrol is installed
+if ! command -v envycontrol &> /dev/null; then
+    echo -e "${RED}Error: envycontrol is not installed${NC}"
+    exit 1
+fi
+
+# Get current status
+current_mode=$(envycontrol --query 2>/dev/null || echo "unknown")
+echo -e "${BLUE}Current GPU mode:${NC} ${GREEN}${current_mode}${NC}"
+echo ""
+
+# Display menu
+echo "Select GPU mode:"
+echo -e "  ${YELLOW}1)${NC} integrated - Use integrated GPU only (best battery)"
+echo -e "  ${YELLOW}2)${NC} hybrid     - Use integrated with on-demand NVIDIA"
+echo -e "  ${YELLOW}3)${NC} nvidia     - Use NVIDIA GPU only (best performance)"
+echo -e "  ${YELLOW}q)${NC} quit"
+echo ""
+
+read -rp "Enter choice [1-3/q]: " choice
+
+case $choice in
+    1)
+        mode="integrated"
+        ;;
+    2)
+        mode="hybrid"
+        ;;
+    3)
+        mode="nvidia"
+        ;;
+    q|Q)
+        echo "Cancelled."
+        exit 0
+        ;;
+    *)
+        echo -e "${RED}Invalid choice${NC}"
+        exit 1
+        ;;
+esac
+
+# Apply the mode
+echo -e "${YELLOW}Switching to ${mode} mode...${NC}"
+sudo envycontrol -s "$mode"
+
+echo ""
+echo -e "${GREEN}GPU mode changed to ${mode}${NC}"
+echo ""
+
+# Prompt for reboot
+read -rp "Reboot now to apply changes? [y/N]: " reboot_choice
+if [[ "$reboot_choice" =~ ^[Yy]$ ]]; then
+    echo "Rebooting..."
+    sudo reboot
+else
+    echo -e "${YELLOW}Remember to reboot for changes to take effect.${NC}"
+fi

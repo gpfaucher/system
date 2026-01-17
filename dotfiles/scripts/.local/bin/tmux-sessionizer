@@ -1,0 +1,57 @@
+#!/bin/bash
+
+# tmux-sessionizer - Quickly create or attach to tmux sessions for projects
+
+# Directories to search for projects
+SEARCH_DIRS=(
+    "$HOME/work"
+    "$HOME/projects"
+)
+
+# Build list of directories
+dirs=""
+for dir in "${SEARCH_DIRS[@]}"; do
+    if [[ -d "$dir" ]]; then
+        dirs+=$(find "$dir" -mindepth 1 -maxdepth 1 -type d 2>/dev/null)
+        dirs+=$'\n'
+    fi
+done
+
+# Remove empty lines and sort
+dirs=$(echo "$dirs" | grep -v '^$' | sort -u)
+
+# Use fzf to select a directory or allow custom input
+if [[ -n "$1" ]]; then
+    selected="$1"
+else
+    selected=$(echo "$dirs" | fzf --prompt="Select project: " --print-query | tail -1)
+fi
+
+# Exit if nothing selected
+if [[ -z "$selected" ]]; then
+    exit 0
+fi
+
+# Generate session name from directory
+session_name=$(basename "$selected" | tr '.' '_')
+
+# Check if tmux is running
+tmux_running=$(pgrep tmux)
+
+# If not in tmux and tmux isn't running, start new session
+if [[ -z "$TMUX" ]] && [[ -z "$tmux_running" ]]; then
+    tmux new-session -s "$session_name" -c "$selected"
+    exit 0
+fi
+
+# If session doesn't exist, create it
+if ! tmux has-session -t="$session_name" 2> /dev/null; then
+    tmux new-session -ds "$session_name" -c "$selected"
+fi
+
+# Attach or switch to session
+if [[ -z "$TMUX" ]]; then
+    tmux attach-session -t "$session_name"
+else
+    tmux switch-client -t "$session_name"
+fi

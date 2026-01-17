@@ -1,0 +1,46 @@
+# Swaylock configuration - Gruvbox Dark
+
+# Behavior
+daemonize
+ignore-empty-password
+show-failed-attempts
+
+# Appearance
+color=282828
+font=JetBrainsMono Nerd Font
+font-size=14
+
+# Inside circle
+inside-color=28282800
+inside-clear-color=28282800
+inside-ver-color=45858800
+inside-wrong-color=cc241d00
+
+# Ring
+ring-color=504945
+ring-clear-color=b8bb26
+ring-ver-color=83a598
+ring-wrong-color=fb4934
+
+# Line between ring and inside
+line-color=00000000
+line-clear-color=00000000
+line-ver-color=00000000
+line-wrong-color=00000000
+
+# Separator
+separator-color=00000000
+
+# Key highlight
+key-hl-color=fabd2f
+bs-hl-color=fb4934
+
+# Text
+text-color=ebdbb2
+text-clear-color=b8bb26
+text-ver-color=83a598
+text-wrong-color=fb4934
+
+# Layout
+indicator-radius=100
+indicator-thickness=10

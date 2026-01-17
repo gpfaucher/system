@@ -1,0 +1,30 @@
+# OS generated files
+.DS_Store
+Thumbs.db
+
+# Environment files
+.env
+.env.local
+
+# Log files
+*.log
+
+# Node.js
+node_modules/
+
+# Python
+__pycache__/
+.venv/
+*.pyc
+
+# direnv
+.direnv/
+
+# IDEs and editors
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Cache
+.cache/

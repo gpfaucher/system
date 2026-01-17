@@ -1,0 +1,16 @@
+#!/bin/bash
+
+# screenshot-area - Capture a selected area and copy to clipboard
+
+# Check if grimblast is installed
+if ! command -v grimblast &> /dev/null; then
+    notify-send "Screenshot Error" "grimblast is not installed" -u critical
+    exit 1
+fi
+
+# Capture area and copy to clipboard
+if grimblast --notify copy area; then
+    notify-send "Screenshot" "Area captured and copied to clipboard" -t 2000
+else
+    notify-send "Screenshot" "Screenshot cancelled or failed" -u normal -t 2000
+fi

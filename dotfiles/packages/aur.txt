@@ -1,0 +1,13 @@
+# AUR helper (comment out after initial install)
+paru
+
+# System utilities
+envycontrol
+wlogout
+
+# Wayland tools
+grimblast-git
+
+# Applications
+teams-for-linux
+visual-studio-code-bin

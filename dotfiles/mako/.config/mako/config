@@ -1,0 +1,26 @@
+default-timeout=5000
+max-visible=5
+layer=overlay
+anchor=top-right
+
+width=300
+height=100
+margin=10
+padding=10
+
+border-size=2
+border-radius=0
+
+font=JetBrainsMono Nerd Font 10
+
+background-color=#282828
+text-color=#ebdbb2
+border-color=#504945
+progress-color=#458588
+
+[urgency=low]
+border-color=#3c3836
+
+[urgency=critical]
+border-color=#cc241d
+default-timeout=0

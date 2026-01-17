@@ -1,0 +1,43 @@
+# Kanshi - dynamic display configuration
+# Profiles are automatically applied when monitors are connected/disconnected
+
+# Laptop only (internal display)
+profile laptop {
+    output eDP-1 enable mode 2560x1600@165Hz position 0,0 scale 1.6
+}
+
+# Single external monitor (HDMI) - laptop off
+profile docked-hdmi {
+    output eDP-1 disable
+    output HDMI-A-1 enable mode 3440x1440@100Hz position 0,0 scale 1.0
+}
+
+# Single external monitor (DisplayPort) - laptop off
+profile docked-dp {
+    output eDP-1 disable
+    output DP-1 enable mode 3440x1440@100Hz position 0,0 scale 1.0
+    output DP-2 enable mode 3440x1440@100Hz position 0,0 scale 1.0
+}
+
+# Dual monitors - external + laptop
+profile docked-dual {
+    output DP-1 enable mode 2560x1440@60Hz position 0,0 scale 1.0
+    output eDP-1 enable mode 2560x1600@165Hz position 2560,0 scale 1.6
+}
+
+# Presentation mode - mirror to external
+profile presentation-hdmi {
+    output eDP-1 enable mode 2560x1600@60Hz position 0,0 scale 1.6
+    output HDMI-A-1 enable mode 1920x1080@60Hz position 1600,0 scale 1.0
+}
+
+profile presentation-dp {
+    output eDP-1 enable mode 2560x1600@60Hz position 0,0 scale 1.6
+    output DP-1 enable mode 1920x1080@60Hz position 1600,0 scale 1.0
+}
+
+# Fallback for unknown external monitors
+profile external-fallback {
+    output eDP-1 disable
+    output * enable mode preferred position 0,0 scale 1.0
+}
