@@ -1,0 +1,37 @@
+#!/bin/bash
+# Quick system status notification (replacement for bar)
+
+# Battery
+bat_capacity=$(cat /sys/class/power_supply/BAT0/capacity 2>/dev/null || echo "N/A")
+bat_status=$(cat /sys/class/power_supply/BAT0/status 2>/dev/null || echo "")
+if [ "$bat_status" = "Charging" ]; then
+    bat_icon="⚡"
+elif [ "$bat_capacity" -lt 20 ] 2>/dev/null; then
+    bat_icon="🪫"
+else
+    bat_icon="🔋"
+fi
+
+# Wifi
+wifi_ssid=$(iwctl station wlan0 show 2>/dev/null | grep "Connected network" | awk '{print $3}')
+if [ -z "$wifi_ssid" ]; then
+    wifi_ssid=$(nmcli -t -f active,ssid dev wifi | grep '^yes' | cut -d: -f2)
+fi
+[ -z "$wifi_ssid" ] && wifi_ssid="Disconnected"
+
+# Volume
+vol=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | awk '{print int($2*100)}')
+mute=$(wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | grep -q MUTED && echo " [MUTED]")
+
+# Time
+time=$(date "+%a %b %d  %H:%M")
+
+# GPU mode
+gpu=$(envycontrol --status 2>/dev/null | head -1 || echo "unknown")
+
+notify-send -t 5000 "System Status" "\
+$bat_icon Battery: ${bat_capacity}% ${bat_status}
+📶 WiFi: ${wifi_ssid}
+🔊 Volume: ${vol}%${mute}
+🖥️ GPU: ${gpu}
+🕐 ${time}"

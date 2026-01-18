@@ -1,9 +1,19 @@
+# OS
+.DS_Store
+Thumbs.db
+
+# Editor
+*.swp
+*.swo
+*~
+
+# Sensitive
+.env
+.env.local
+*.pem
+*.key
+
 # Devenv
 .devenv*
 devenv.local.nix
-
-# direnv
 .direnv
-
-# pre-commit
-.pre-commit-config.yaml

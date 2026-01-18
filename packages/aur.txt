@@ -1,0 +1,26 @@
+# AUR helper (install first manually)
+paru
+
+# NVIDIA hybrid graphics switching
+envycontrol
+
+# River layout generator
+wideriver
+
+# Power menu
+wlogout
+
+# Logitech MX Master support
+solaar
+
+# Microsoft Teams
+teams-for-linux
+
+# VS Code (optional)
+visual-studio-code-bin
+
+# Bluetooth TUI
+bluetuith
+
+# Wifi TUI
+impala

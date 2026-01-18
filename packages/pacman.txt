@@ -1,0 +1,115 @@
+# Core system
+base-devel
+git
+stow
+
+# Desktop (River WM - no bar)
+river
+mako
+fuzzel
+foot
+xdg-desktop-portal-wlr
+xdg-desktop-portal-gtk
+polkit-gnome
+pipewire
+pipewire-pulse
+wireplumber
+pulsemixer
+
+# Development
+neovim
+tmux
+gcc
+clang
+gdb
+valgrind
+cmake
+make
+binutils
+strace
+ltrace
+qemu-full
+llvm
+lld
+nasm
+rustup
+go
+python
+python-pip
+nodejs
+npm
+docker
+docker-compose
+lazygit
+
+# CLI tools
+ripgrep
+fd
+bat
+eza
+fzf
+zoxide
+yazi
+ffmpegthumbnailer
+unar
+jq
+poppler
+imagemagick
+htop
+btop
+curl
+wget
+httpie
+unzip
+zip
+p7zip
+man-db
+man-pages
+openssh
+direnv
+starship
+delta
+libnotify
+playerctl
+
+# System
+networkmanager
+nm-connection-editor
+iwd
+bluez
+bluez-utils
+blueman
+brightnessctl
+power-profiles-daemon
+gammastep
+
+# Graphics (NVIDIA)
+nvidia
+nvidia-utils
+nvidia-settings
+
+# Wayland tools
+wl-clipboard
+grim
+slurp
+kanshi
+wlr-randr
+wdisplays
+swaylock
+swayidle
+wf-recorder
+wl-mirror
+cliphist
+
+# Fonts
+ttf-jetbrains-mono-nerd
+noto-fonts
+noto-fonts-emoji
+
+# Browsers
+firefox
+
+# ZSH
+zsh
+zsh-autosuggestions
+zsh-syntax-highlighting

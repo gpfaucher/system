@@ -1,0 +1,62 @@
+#!/bin/bash
+# River keybind cheatsheet via fuzzel
+
+cat << 'EOF' | fuzzel --dmenu --prompt "Keybinds: "
+━━━ WINDOWS ━━━
+Super + H/J/K/L       Focus left/down/up/right
+Super + Shift + HJKL  Swap window
+Super + Q             Close window
+Super + F             Fullscreen
+Super + Space         Toggle float
+
+━━━ LAYOUT ━━━
+Super + Ctrl + H/L    Shrink/grow master
+Super + M             Monocle layout
+Super + T             Tiled layout
+Super + Tab           Toggle layout
+
+━━━ WORKSPACES ━━━
+Super + 1-9           Switch workspace
+Super + Shift + 1-9   Move to workspace
+Super + 0             View all
+Super + P             Scratchpad
+Super + Shift + P     Move to scratchpad
+
+━━━ APPS ━━━
+Super + Return        Terminal (foot)
+Super + A/D           App launcher (fuzzel)
+Super + B             Firefox
+Super + E             File manager (yazi)
+Super + Shift + B     btop (system monitor)
+Super + Shift + T     bluetuith (bluetooth)
+Super + Shift + I     impala (wifi)
+Super + Shift + N     NVIDIA toggle
+Super + Shift + A     pulsemixer (audio)
+
+━━━ SCREENSHOTS ━━━
+Print                 Area → clipboard
+Ctrl + Print          Screen → clipboard
+Shift + Print         Area → save
+Super + Shift + S     Area → clipboard
+
+━━━ RECORDING ━━━
+Super + R             Area → GIF clipboard (toggle)
+Super + Ctrl + R      Screen → GIF clipboard (toggle)
+Super + Shift + R     Area → save MP4 (toggle)
+
+━━━ SYSTEM ━━━
+Super + S             System status (battery/wifi/vol/time)
+Super + V             Clipboard history
+Super + Escape        Lock screen
+Super + Shift + E     Power menu (lock/logout/suspend/reboot/shutdown)
+Super + N             Dismiss notification
+Super + Ctrl + N      Dismiss all notifications
+Super + Ctrl + D      Display settings
+Super + Ctrl + M      Reload kanshi
+Super + /             This cheatsheet
+
+━━━ MOUSE ━━━
+Super + Left Click    Move window
+Super + Right Click   Resize window
+Super + Middle Click  Toggle float
+EOF

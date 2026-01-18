@@ -1,0 +1,18 @@
+#!/bin/bash
+# Toggle full screen recording - outputs GIF to clipboard
+
+pid=$(pgrep -x wf-recorder)
+if [ -n "$pid" ]; then
+    kill -SIGINT $pid
+    wait $pid 2>/dev/null
+    sleep 0.5
+    ffmpeg -y -i /tmp/recording.mp4 \
+        -vf "fps=15,scale=720:-1:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse" \
+        -loop 0 /tmp/recording.gif
+    wl-copy -t image/gif < /tmp/recording.gif
+    notify-send "Recording" "GIF copied to clipboard"
+    rm -f /tmp/recording.mp4 /tmp/recording.gif
+else
+    notify-send "Recording" "Recording screen... Press again to stop"
+    wf-recorder -f /tmp/recording.mp4
+fi

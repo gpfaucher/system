@@ -1,0 +1,5 @@
+#!/bin/bash
+# Screenshot full screen to clipboard
+
+grim - | wl-copy
+notify-send "Screenshot" "Screen copied to clipboard"

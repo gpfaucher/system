@@ -1,0 +1,18 @@
+#!/bin/bash
+# Toggle area recording - saves MP4 to file
+
+pid=$(pgrep -x wf-recorder)
+if [ -n "$pid" ]; then
+    kill -SIGINT $pid
+    wait $pid 2>/dev/null
+    sleep 0.5
+    mkdir -p ~/Videos/Recordings
+    mv /tmp/recording.mp4 ~/Videos/Recordings/$(date +%Y%m%d-%H%M%S).mp4
+    notify-send "Recording" "Saved to ~/Videos/Recordings"
+else
+    area=$(slurp)
+    if [ -n "$area" ]; then
+        notify-send "Recording" "Recording area... Press again to stop"
+        wf-recorder -g "$area" -f /tmp/recording.mp4
+    fi
+fi

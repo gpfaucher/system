@@ -1,8 +1,0 @@
-[flags]
-ignore-empty-password = true
-
-[colors]
-# Gruvbox Dark Medium
-init-color = "282828"
-input-color = "83a598"
-fail-color = "fb4934"
