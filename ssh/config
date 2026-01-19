@@ -1,0 +1,7 @@
+# SSH Configuration
+# Copy to ~/.ssh/config (chmod 600)
+
+Host github.com
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
