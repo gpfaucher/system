@@ -25,7 +25,7 @@
       ];
       trusted-public-keys = [
         "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "ghostty.cachix.org-1:QB389yTa6gTyneuj30ibrX4L90Z2bNJb7dkic+EfwRE="
+        "ghostty.cachix.org-1:QB389yTa6gTyneehvqG58y0WnHjQOqgnA+wBnpWWxns="
       ];
     };
     gc = {

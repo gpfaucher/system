@@ -50,12 +50,17 @@
 
   # Additional packages
   home.packages = with pkgs; [
+    # GUI
+    jetbrains.datagrip
+
     # Browsers
     firefox
     neovim
     claude-code
 
     # Development tools
+    opentofu
+    awscli2
     gh
     git
     gnumake
