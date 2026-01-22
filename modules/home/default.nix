@@ -70,6 +70,7 @@
     tabby-agent  # AI code completion agent
     fd         # For telescope find_files
     ripgrep    # For telescope live_grep
+    docker-compose  # Docker Compose
 
     # System utilities
     unzip

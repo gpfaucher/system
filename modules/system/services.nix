@@ -30,4 +30,13 @@
       };
     };
   };
+
+  # Rootless Docker
+  virtualisation.docker = {
+    enable = true;
+    rootless = {
+      enable = true;
+      setSocketVariable = true;  # Sets DOCKER_HOST for the user
+    };
+  };
 }
