@@ -1,6 +1,9 @@
 { config, lib, pkgs, ... }:
 
 {
+  # dconf for GTK/GNOME settings (required by stylix)
+  programs.dconf.enable = true;
+
   # CUPS printing service
   services.printing.enable = true;
 
@@ -16,16 +19,14 @@
   xdg.portal = {
     enable = true;
     wlr.enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
     config = {
       common = {
-        default = [ "gtk" ];
+        default = [ "wlr" ];
       };
       river = {
-        default = [ "wlr" "gtk" ];
+        default = [ "wlr" ];
         "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
         "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-        "org.freedesktop.impl.portal.FileChooser" = [ "gtk" ];
       };
     };
   };

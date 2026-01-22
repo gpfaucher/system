@@ -26,9 +26,41 @@
       neovim.enable = false;
       fish.enable = true;
       gtk.enable = true;
-      fuzzel.enable = true;
+      fuzzel.enable = false; # Use custom minimal config below
+      firefox.profileNames = [ "default" ];
     };
   };
+
+  # Minimal fuzzel launcher config - centered floating, no bar, gruvbox themed
+  xdg.configFile."fuzzel/fuzzel.ini".text = ''
+    [main]
+    font=JetBrainsMono Nerd Font:size=12
+    prompt=""
+    icon-theme=Adwaita
+    icons-enabled=no
+    fields=name,generic,comment,categories,filename,keywords
+    terminal=ghostty -e
+    layer=overlay
+    lines=12
+    width=40
+    horizontal-pad=20
+    vertical-pad=12
+    inner-pad=8
+
+    [colors]
+    # Gruvbox Dark Medium - minimal theme
+    background=282828ee
+    text=d5c4a1ff
+    match=83a598ff
+    selection=3c3836ff
+    selection-text=ebdbb2ff
+    selection-match=83a598ff
+    border=504945ff
+
+    [border]
+    width=2
+    radius=0
+  '';
 
   # fnott notification daemon config with Gruvbox colors
   xdg.configFile."fnott/fnott.ini".text = ''

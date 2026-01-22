@@ -1,27 +1,30 @@
 { config, pkgs, lib, ... }:
 
 {
-  # Enable graphics (AMD as primary GPU)
+  # Enable graphics
   hardware.graphics.enable = true;
+
+  # Load both GPU drivers
+  services.xserver.videoDrivers = [ "amdgpu" "nvidia" ];
 
   # NVIDIA configuration for hybrid graphics (PRIME offload)
   hardware.nvidia = {
+    open = true;
     modesetting.enable = true;
     powerManagement.enable = true;
 
-    # PRIME offload mode - AMD as primary, NVIDIA on-demand
+    # PRIME offload mode - AMD primary, NVIDIA on-demand for better battery
     prime = {
       offload = {
         enable = true;
-        # Provides the `nvidia-offload` command to run apps on NVIDIA GPU
         enableOffloadCmd = true;
       };
 
-      # Bus IDs - find with: lspci | grep -E 'VGA|3D'
-      # Example output: "01:00.0 VGA compatible controller: AMD..."
-      # Convert to format: "PCI:1:0:0"
-      # amdgpuBusId = "PCI:X:X:X";   # TODO: Fill from lspci
-      # nvidiaBusId = "PCI:X:X:X";   # TODO: Fill from lspci
+      # Bus IDs from: lspci | grep -E 'VGA|3D'
+      # AMD Phoenix1 at c6:00.0 (c6 hex = 198 decimal)
+      # NVIDIA RTX 2000 Ada at 01:00.0
+      amdgpuBusId = "PCI:198:0:0";
+      nvidiaBusId = "PCI:1:0:0";
     };
   };
 

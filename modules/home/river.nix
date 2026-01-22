@@ -38,6 +38,10 @@ let
     export XCURSOR_SIZE=24
     export XCURSOR_THEME=Adwaita
 
+    # === Export environment to systemd/dbus for portals ===
+    dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+    systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+
     # === Mod Key ===
     mod="Super"
 
@@ -130,6 +134,7 @@ let
     # === Floating TUI Apps ===
     riverctl map normal $mod+Shift B spawn "${cfg.terminal} --title=btop -e btop"
     riverctl map normal $mod+Shift T spawn "${cfg.terminal} --title=bluetuith -e bluetuith"
+    riverctl map normal $mod+Shift W spawn "${cfg.terminal} --title=impala -e impala"
 
     # === Display Management ===
     riverctl map normal $mod+Control D spawn wdisplays
@@ -162,6 +167,7 @@ let
     # === Window Rules ===
     riverctl rule-add -app-id 'btop' float
     riverctl rule-add -app-id 'bluetuith' float
+    riverctl rule-add -app-id 'impala' float
     riverctl rule-add -app-id 'pavucontrol' float
     riverctl rule-add -app-id 'nm-connection-editor' float
     riverctl rule-add -app-id '.blueman-*' float
@@ -236,7 +242,7 @@ in {
   config = mkIf cfg.enable {
     home.packages = with pkgs; [
       # River and layout manager
-      river
+      river-classic
       wideriver
       wlr-randr
 
@@ -260,10 +266,9 @@ in {
       polkit_gnome
       networkmanagerapplet
       blueman
-
-      # Desktop portals
-      xdg-desktop-portal
-      xdg-desktop-portal-wlr
+      impala        # TUI wifi manager
+      bluetuith     # TUI bluetooth manager
+      pavucontrol   # PulseAudio volume control
 
       # Additional dependencies for keybindings
       playerctl

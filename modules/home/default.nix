@@ -15,6 +15,12 @@
     username = username;
     homeDirectory = "/home/${username}";
     stateVersion = "24.11";
+
+    # Set neovim as default editor
+    sessionVariables = {
+      EDITOR = "nvim";
+      VISUAL = "nvim";
+    };
   };
 
   # Enable Home Manager
@@ -33,9 +39,9 @@
   # Git configuration
   programs.git = {
     enable = true;
-    userName = "Gabriel";
-    userEmail = "gabriel@example.com";  # TODO: Update with actual email
-    extraConfig = {
+    settings = {
+      user.name = "Gabriel Faucher";
+      user.email = "gpfaucher@gmail.com";  # TODO: Update with actual email
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
@@ -46,12 +52,19 @@
   home.packages = with pkgs; [
     # Browsers
     firefox
+    neovim
+    claude-code
 
     # Development tools
     gh
     git
     gnumake
     gcc
+    tree-sitter
+    nodejs_22
+    tabby-agent  # AI code completion agent
+    fd         # For telescope find_files
+    ripgrep    # For telescope live_grep
 
     # System utilities
     unzip
@@ -62,24 +75,33 @@
 
     # Fonts
     nerd-fonts.jetbrains-mono
+    nerd-fonts.symbols-only
+    noto-fonts
   ];
 
   # XDG directories
   xdg = {
     enable = true;
     userDirs = {
-      enable = true;
-      createDirectories = true;
+      enable = false;
     };
   };
 
-  # Wallpaper configuration
-  xdg.configFile."wpaperd/config.toml".text = ''
-    [default]
-    path = "${../../../assets/wallpaper.png}"
-    duration = "30m"
-    mode = "center"
+  # Tabby agent configuration
+  # Get token from tabby server web UI or ~/.tabby/config.toml
+  home.file.".tabby-client/agent/config.toml".text = ''
+    [server]
+    endpoint = "http://localhost:8080"
+    token = "auth_872164f40d10473e861c75db73842900"
   '';
+
+  # # Wallpaper configuration
+  # xdg.configFile."wpaperd/config.toml".text = ''
+  #   [default]
+  #   path = "${../../../assets/wallpaper.png}"
+  #   duration = "30m"
+  #   mode = "center"
+  # '';
 
   # Screenshot and screenrecord scripts
   home.file.".local/bin/screenshot-area" = {
@@ -135,6 +157,71 @@
         mkdir -p ~/Videos/Recordings
         mv /tmp/recording.mp4 ~/Videos/Recordings/$(date +%Y%m%d_%H%M%S).mp4
       fi
+    '';
+  };
+
+  # Firefox configuration for Teams always-available status
+  programs.firefox = {
+    enable = true;
+    profiles.default = {
+      isDefault = true;
+      settings = {
+        # Disable visibility API to prevent Teams from detecting tab/window switches
+        "dom.visibilityAPI.enabled" = false;
+      };
+      # Userscript to keep Teams status always available
+      # Inject into Teams to prevent away status
+      userChrome = ''
+        /* Teams presence fix - loaded via userChrome */
+      '';
+      # Enable userChrome.css
+      extraConfig = ''
+        user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
+      '';
+    };
+  };
+
+  # Greasemonkey/Tampermonkey userscript for Teams - install in browser
+  home.file.".local/share/userscripts/teams-always-available.user.js" = {
+    text = ''
+      // ==UserScript==
+      // @name         Teams Always Available
+      // @namespace    http://tampermonkey.net/
+      // @version      1.0
+      // @description  Keep Microsoft Teams status as Available
+      // @match        https://teams.microsoft.com/*
+      // @match        https://*.teams.microsoft.com/*
+      // @grant        none
+      // @run-at       document-start
+      // ==/UserScript==
+
+      (function() {
+        'use strict';
+
+        // Override visibility API to always report visible
+        Object.defineProperty(document, 'hidden', { value: false, writable: false });
+        Object.defineProperty(document, 'visibilityState', { value: 'visible', writable: false });
+
+        // Block visibility change events
+        document.addEventListener('visibilitychange', function(e) {
+          e.stopImmediatePropagation();
+        }, true);
+
+        // Override hasFocus to always return true
+        Document.prototype.hasFocus = function() { return true; };
+
+        // Simulate activity every 30 seconds to prevent idle timeout
+        setInterval(function() {
+          document.dispatchEvent(new MouseEvent('mousemove', {
+            bubbles: true,
+            cancelable: true,
+            clientX: Math.random() * 100,
+            clientY: Math.random() * 100
+          }));
+        }, 30000);
+
+        console.log('[Teams Always Available] Active - status will remain Available');
+      })();
     '';
   };
 }

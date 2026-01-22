@@ -10,10 +10,11 @@
     settings = {
       vim = {
         # Gruvbox dark theme with hard contrast
+        # Use mkForce to override stylix theme
         theme = {
-          enable = true;
-          name = "gruvbox";
-          style = "dark";
+          enable = lib.mkForce true;
+          name = lib.mkForce "gruvbox";
+          style = lib.mkForce "dark";
         };
 
         # Leader key configuration
@@ -70,21 +71,22 @@
           virtualedit = "block";
         };
 
+        # Global LSP enable
+        lsp.enable = true;
+
         # Languages with LSP
         languages = {
-          enableLSP = true;
           enableTreesitter = true;
 
           lua = {
             enable = true;
             lsp.enable = true;
-            lsp.server = "lua_ls";
           };
 
           ts = {
             enable = true;
             lsp.enable = true;
-            lsp.server = "ts_ls";
+            lsp.servers = ["ts_ls"];
           };
 
           rust = {
@@ -101,7 +103,7 @@
             enable = true;
             lsp = {
               enable = true;
-              server = "basedpyright";
+              servers = ["basedpyright"];
             };
           };
 
@@ -114,7 +116,7 @@
         # Treesitter configuration
         treesitter = {
           enable = true;
-          autoInstall = true;
+          # autoInstall = true;
           highlight.enable = true;
           indent.enable = true;
         };
@@ -125,30 +127,30 @@
         };
 
         # Autocomplete via blink-cmp
-        autocomplete = {
-          blink-cmp = {
-            enable = true;
-            friendly-snippets.enable = true;
-            settings = {
-              keymap = {
-                preset = "enter";
-                "<Tab>" = ["select_next" "fallback"];
-                "<S-Tab>" = ["select_prev" "fallback"];
-              };
-              appearance = {
-                nerd_font_variant = "mono";
-              };
-              sources = {
-                default = ["lsp" "path" "snippets" "buffer"];
-              };
-              completion = {
-                documentation = {
-                  auto_show = true;
-                };
-              };
-            };
-          };
-        };
+        # autocomplete = {
+        #   blink-cmp = {
+        #     enable = true;
+        #     friendly-snippets.enable = true;
+        #     settings = {
+        #       keymap = {
+        #         preset = "enter";
+        #         "<Tab>" = ["select_next" "fallback"];
+        #         "<S-Tab>" = ["select_prev" "fallback"];
+        #       };
+        #       appearance = {
+        #         nerd_font_variant = "mono";
+        #       };
+        #       sources = {
+        #         default = ["lsp" "path" "snippets" "buffer"];
+        #       };
+        #       completion = {
+        #         documentation = {
+        #           auto_show = true;
+        #         };
+        #       };
+        #     };
+        #   };
+        # };
 
         # Git integration
         git = {
@@ -164,15 +166,16 @@
         statusline = {
           lualine = {
             enable = true;
+            theme = lib.mkForce "gruvbox";
           };
         };
 
         # Which-key for keybind hints
-        utility = {
-          which-key = {
-            enable = true;
-          };
-        };
+        # utility = {
+        #   which-key = {
+        #     enable = true;
+        #   };
+        # };
 
         # Keymaps
         keymaps = [
@@ -181,25 +184,25 @@
             key = "<C-h>";
             mode = "n";
             action = "<C-w>h";
-            options.desc = "Focus left window";
+            desc = "Focus left window";
           }
           {
             key = "<C-j>";
             mode = "n";
             action = "<C-w>j";
-            options.desc = "Focus below window";
+            desc = "Focus below window";
           }
           {
             key = "<C-k>";
             mode = "n";
             action = "<C-w>k";
-            options.desc = "Focus above window";
+            desc = "Focus above window";
           }
           {
             key = "<C-l>";
             mode = "n";
             action = "<C-w>l";
-            options.desc = "Focus right window";
+            desc = "Focus right window";
           }
 
           # Buffer navigation
@@ -207,19 +210,19 @@
             key = "<S-h>";
             mode = "n";
             action = "<cmd>bprevious<cr>";
-            options.desc = "Previous buffer";
+            desc = "Previous buffer";
           }
           {
             key = "<S-l>";
             mode = "n";
             action = "<cmd>bnext<cr>";
-            options.desc = "Next buffer";
+            desc = "Next buffer";
           }
           {
             key = "<leader>bd";
             mode = "n";
             action = "<cmd>bdelete<cr>";
-            options.desc = "Delete buffer";
+            desc = "Delete buffer";
           }
 
           # Quick save
@@ -227,7 +230,7 @@
             key = "<C-s>";
             mode = ["n" "i" "v"];
             action = "<cmd>w<cr>";
-            options.desc = "Save file";
+            desc = "Save file";
           }
 
           # Better escape
@@ -235,7 +238,7 @@
             key = "jk";
             mode = "i";
             action = "<Esc>";
-            options.desc = "Exit insert mode";
+            desc = "Exit insert mode";
           }
 
           # Center after movements
@@ -243,25 +246,25 @@
             key = "<C-d>";
             mode = "n";
             action = "<C-d>zz";
-            options.desc = "Scroll down centered";
+            desc = "Scroll down centered";
           }
           {
             key = "<C-u>";
             mode = "n";
             action = "<C-u>zz";
-            options.desc = "Scroll up centered";
+            desc = "Scroll up centered";
           }
           {
             key = "n";
             mode = "n";
             action = "nzzzv";
-            options.desc = "Next search centered";
+            desc = "Next search centered";
           }
           {
             key = "N";
             mode = "n";
             action = "Nzzzv";
-            options.desc = "Previous search centered";
+            desc = "Previous search centered";
           }
 
           # Quickfix
@@ -269,25 +272,25 @@
             key = "]q";
             mode = "n";
             action = "<cmd>cnext<cr>";
-            options.desc = "Next quickfix";
+            desc = "Next quickfix";
           }
           {
             key = "[q";
             mode = "n";
             action = "<cmd>cprev<cr>";
-            options.desc = "Previous quickfix";
+            desc = "Previous quickfix";
           }
           {
             key = "<leader>qq";
             mode = "n";
             action = "<cmd>copen<cr>";
-            options.desc = "Open quickfix";
+            desc = "Open quickfix";
           }
           {
             key = "<leader>qc";
             mode = "n";
             action = "<cmd>cclose<cr>";
-            options.desc = "Close quickfix";
+            desc = "Close quickfix";
           }
 
           # Clear search highlight
@@ -295,7 +298,7 @@
             key = "<Esc>";
             mode = "n";
             action = "<cmd>nohlsearch<cr>";
-            options.desc = "Clear search highlight";
+            desc = "Clear search highlight";
           }
 
           # Telescope keymaps
@@ -303,43 +306,43 @@
             key = "<leader>sf";
             mode = "n";
             action = "<cmd>Telescope find_files<cr>";
-            options.desc = "Find files";
+            desc = "Find files";
           }
           {
             key = "<leader>sg";
             mode = "n";
             action = "<cmd>Telescope live_grep<cr>";
-            options.desc = "Live grep";
+            desc = "Live grep";
           }
           {
             key = "<leader>sb";
             mode = "n";
             action = "<cmd>Telescope current_buffer_fuzzy_find<cr>";
-            options.desc = "Search buffer";
+            desc = "Search buffer";
           }
           {
             key = "<leader>sh";
             mode = "n";
             action = "<cmd>Telescope help_tags<cr>";
-            options.desc = "Help tags";
+            desc = "Help tags";
           }
           {
             key = "<leader><space>";
             mode = "n";
             action = "<cmd>Telescope buffers<cr>";
-            options.desc = "Buffers";
+            desc = "Buffers";
           }
           {
             key = "<leader>gc";
             mode = "n";
             action = "<cmd>Telescope git_commits<cr>";
-            options.desc = "Git commits";
+            desc = "Git commits";
           }
           {
             key = "<leader>gs";
             mode = "n";
             action = "<cmd>Telescope git_status<cr>";
-            options.desc = "Git status";
+            desc = "Git status";
           }
 
           # Oil file browser
@@ -347,7 +350,7 @@
             key = "<leader>f";
             mode = "n";
             action = "<cmd>Oil --float<cr>";
-            options.desc = "File browser";
+            desc = "File browser";
           }
 
           # Lazygit
@@ -355,26 +358,18 @@
             key = "<leader>gg";
             mode = "n";
             action = "<cmd>LazyGit<cr>";
-            options.desc = "LazyGit";
+            desc = "LazyGit";
           }
 
-          # Venv selector
-          {
-            key = "<leader>vs";
-            mode = "n";
-            action = "<cmd>VenvSelect<cr>";
-            options.desc = "Select venv";
-          }
-          {
-            key = "<leader>vc";
-            mode = "n";
-            action = "<cmd>VenvSelectCached<cr>";
-            options.desc = "Select cached venv";
-          }
         ];
 
         # Extra plugins not in nvf
         extraPlugins = with pkgs.vimPlugins; {
+          # Base16 colorscheme (needed for stylix integration)
+          nvim-base16 = {
+            package = base16-nvim;
+          };
+
           # Oil - file browser
           oil-nvim = {
             package = oil-nvim;
@@ -420,39 +415,34 @@
             '';
           };
 
-          # Venv selector for Python
-          venv-selector = {
-            package = venv-selector;
+          # nvim-lspconfig (required by vim-tabby)
+          nvim-lspconfig = {
+            package = nvim-lspconfig;
             setup = ''
-              require("venv-selector").setup({
-                settings = {
-                  search = {
-                    monorepo = {
-                      command = "fd 'python$' apps functions --type x --full-path",
-                      type = "anaconda",
-                    },
-                  },
-                },
-              })
+              -- Just load the module so vim-tabby can use it
+              require("lspconfig")
             '';
+          };
+
+          # Tabby AI completion (vim-tabby)
+          vim-tabby = {
+            package = vim-tabby;
           };
         };
 
-        # LSP keymaps and basedpyright settings via luaConfigRC
+        # LSP keymaps and settings via luaConfigRC
         luaConfigRC = {
-          # Basedpyright specific settings
-          basedpyright-settings = ''
-            vim.lsp.config("basedpyright", {
-              settings = {
-                basedpyright = {
-                  analysis = {
-                    autoSearchPaths = true,
-                    useLibraryCodeForTypes = true,
-                    diagnosticMode = "openFilesOnly",
-                  },
-                },
-              },
-            })
+          # Add nvf site directory to runtimepath for treesitter
+          nvf-runtimepath = ''
+            vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/nvf/site")
+          '';
+
+          # Tabby vim-tabby configuration
+          tabby-config = ''
+            vim.g.tabby_agent_start_command = {"tabby-agent", "--stdio"}
+            vim.g.tabby_inline_completion_trigger = "auto"
+            vim.g.tabby_inline_completion_keybinding_accept = "<Tab>"
+            vim.g.tabby_inline_completion_keybinding_trigger_or_dismiss = "<C-\\>"
           '';
 
           # LSP attach keymaps
@@ -477,18 +467,6 @@
             vim.keymap.set("n", "<leader>dn", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
             vim.keymap.set("n", "<leader>dp", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
             vim.keymap.set("n", "<leader>df", vim.diagnostic.open_float, { desc = "Float diagnostic" })
-          '';
-
-          # Lua LS settings
-          lua-ls-settings = ''
-            vim.lsp.config("lua_ls", {
-              settings = {
-                Lua = {
-                  telemetry = { enable = false },
-                  workspace = { checkThirdParty = false },
-                },
-              },
-            })
           '';
         };
       };

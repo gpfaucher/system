@@ -1,11 +1,22 @@
 { config, pkgs, lib, ... }:
 
 {
-  # rEFInd bootloader
-  boot.loader.refind.enable = true;
-
-  # EFI support
+  boot.loader.systemd-boot.enable = true;
+  boot.loader.systemd-boot.configurationLimit = 10;
   boot.loader.efi.canTouchEfiVariables = true;
+
+  # Timeout to allow boot menu selection for dual-boot
+  boot.loader.timeout = 5;
+
+  # Mount Windows EFI partition for dual-boot auto-detection
+  # systemd-boot auto-detects Windows when its EFI partition is accessible
+  # Find Windows EFI UUID with: lsblk -o NAME,FSTYPE,UUID,MOUNTPOINT
+  # Then add to hardware.nix:
+  #   fileSystems."/boot/efi-windows" = {
+  #     device = "/dev/disk/by-uuid/XXXX-XXXX";
+  #     fsType = "vfat";
+  #     options = [ "ro" "nofail" ];
+  #   };
 
   # Clean boot - hide firmware logo
   boot.kernelParams = [ "video=efifb:nobgrt" ];

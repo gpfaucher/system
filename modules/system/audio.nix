@@ -2,7 +2,7 @@
 
 {
   # Disable PulseAudio (using PipeWire instead)
-  hardware.pulseaudio.enable = false;
+  services.pulseaudio.enable = false;
 
   # Enable rtkit for realtime scheduling (required for low-latency audio)
   security.rtkit.enable = true;
