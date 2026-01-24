@@ -111,6 +111,11 @@
             enable = true;
             lsp.enable = true;
           };
+
+          markdown = {
+            enable = true;
+            lsp.enable = true;
+          };
         };
 
         # Treesitter configuration
@@ -353,6 +358,32 @@
             desc = "File browser";
           }
 
+          # Notes keybindings
+          {
+            key = "<leader>ni";
+            mode = "n";
+            action = "<cmd>edit ~/notes/inbox.md<cr>";
+            desc = "Notes inbox";
+          }
+          {
+            key = "<leader>nt";
+            mode = "n";
+            action = "<cmd>edit ~/notes/todo.md<cr>";
+            desc = "Notes todo";
+          }
+          {
+            key = "<leader>nf";
+            mode = "n";
+            action = "<cmd>Telescope find_files cwd=~/notes<cr>";
+            desc = "Find notes";
+          }
+          {
+            key = "<leader>ng";
+            mode = "n";
+            action = "<cmd>Telescope live_grep cwd=~/notes<cr>";
+            desc = "Grep notes";
+          }
+
           # Lazygit
           {
             key = "<leader>gg";
@@ -467,6 +498,37 @@
             vim.keymap.set("n", "<leader>dn", vim.diagnostic.goto_next, { desc = "Next diagnostic" })
             vim.keymap.set("n", "<leader>dp", vim.diagnostic.goto_prev, { desc = "Previous diagnostic" })
             vim.keymap.set("n", "<leader>df", vim.diagnostic.open_float, { desc = "Float diagnostic" })
+          '';
+
+          # Notes: quick capture to inbox
+          notes-capture = ''
+            vim.keymap.set("n", "<leader>nc", function()
+              local line = vim.fn.input("Capture: ")
+              if line ~= "" then
+                local file = io.open(os.getenv("HOME") .. "/notes/inbox.md", "a")
+                if file then
+                  file:write("- " .. line .. "\n")
+                  file:close()
+                  print(" Captured to inbox")
+                end
+              end
+            end, { desc = "Capture to inbox" })
+          '';
+
+          # Notes: toggle checkbox
+          notes-checkbox = ''
+            vim.keymap.set("n", "<leader>nx", function()
+              local line = vim.api.nvim_get_current_line()
+              local new_line
+              if line:match("%- %[ %]") then
+                new_line = line:gsub("%- %[ %]", "- [x]", 1)
+              elseif line:match("%- %[x%]") then
+                new_line = line:gsub("%- %[x%]", "- [ ]", 1)
+              else
+                return
+              end
+              vim.api.nvim_set_current_line(new_line)
+            end, { desc = "Toggle checkbox" })
           '';
         };
       };

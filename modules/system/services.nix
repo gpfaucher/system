@@ -11,6 +11,10 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
+  
+  # Ensure Bluetooth service starts automatically
+  systemd.user.services.pipewire.wantedBy = [ "default.target" ];
+  systemd.user.services.pipewire-pulse.wantedBy = [ "default.target" ];
 
   # Polkit for authentication dialogs
   security.polkit.enable = true;

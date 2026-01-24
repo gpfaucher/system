@@ -8,7 +8,23 @@
     ./terminal.nix
     ./services.nix
     ./theme.nix
+    ./opencode.nix
+    ./beads.nix
   ];
+
+  # Enable Beads for persistent agent task memory
+  programs.beads = {
+    enable = true;
+    enableDaemon = false;  # Opt-in for daemon (auto-sync)
+    
+    # Auto-initialize Beads in all git repositories
+    autoInit = true;
+    autoInitPaths = [
+      "~/projects"        # Your main projects directory
+      "~/work"            # Work projects (if any)
+      # Add more paths as needed
+    ];
+  };
 
   # Home Manager configuration
   home = {
@@ -52,6 +68,7 @@
   home.packages = with pkgs; [
     # GUI
     jetbrains.datagrip
+    zed-editor-fhs
 
     # Browsers
     firefox
@@ -59,6 +76,7 @@
     claude-code
 
     # Development tools
+    opencode
     opentofu
     awscli2
     gh

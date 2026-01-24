@@ -1,8 +1,14 @@
 { config, pkgs, lib, ... }:
 
 {
-  boot.loader.systemd-boot.enable = true;
-  boot.loader.systemd-boot.configurationLimit = 10;
+  # Systemd-boot configuration
+  boot.loader.systemd-boot = {
+    enable = true;
+    configurationLimit = 10;
+    editor = false;           # Disable editor for security and faster boot
+    consoleMode = "auto";     # Auto-detect best console mode
+  };
+
   boot.loader.efi.canTouchEfiVariables = true;
 
   # Timeout to allow boot menu selection for dual-boot
@@ -18,8 +24,26 @@
   #     options = [ "ro" "nofail" ];
   #   };
 
-  # Clean boot - hide firmware logo
-  boot.kernelParams = [ "video=efifb:nobgrt" ];
+  # Initrd optimization - use systemd in initrd for faster boot
+  boot.initrd = {
+    verbose = false;          # Less logging for faster boot
+    systemd.enable = true;    # Systemd-based initrd (faster than scripted)
+  };
+
+  # Kernel parameters for faster/quieter boot
+  boot.kernelParams = [
+    "video=efifb:nobgrt"      # Hide firmware logo
+    "quiet"                   # Reduce kernel messages
+    "loglevel=3"              # Only show errors
+    "systemd.show_status=auto" # Show status only on slow boot
+    "rd.udev.log_level=3"     # Reduce udev logging in initrd
+  ];
+
+  # Console log level
+  boot.consoleLogLevel = 3;   # Only show errors and warnings
+
+  # Faster entropy generation for crypto operations
+  services.haveged.enable = true;
 
   # HiDPI console configuration
   console = {

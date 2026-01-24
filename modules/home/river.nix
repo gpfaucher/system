@@ -84,6 +84,24 @@ let
     riverctl map normal $mod T send-layout-cmd wideriver "--layout left"
     riverctl map normal $mod Tab send-layout-cmd wideriver "--layout-toggle"
 
+    # === Multi-Monitor Navigation ===
+    # River uses global tags (not per-monitor workspaces like Sway/i3)
+    # Recommended workflow for dual-monitor setup:
+    #   Tags 1-5: Primary monitor (HDMI-A-1 ultrawide)
+    #   Tags 6-9: Secondary monitor (DP-2 portrait)
+    # 
+    # Focus next/previous monitor
+    riverctl map normal $mod Comma focus-output previous
+    riverctl map normal $mod Period focus-output next
+
+    # Send focused window to next/previous monitor (and follow it)
+    riverctl map normal $mod+Shift Comma send-to-output previous
+    riverctl map normal $mod+Shift Period send-to-output next
+
+    # Send window to monitor without following (stay on current monitor)
+    riverctl map normal $mod+Control Comma send-to-output --current-tags previous
+    riverctl map normal $mod+Control Period send-to-output --current-tags next
+
     # === Tags (Workspaces 1-9) ===
     for i in $(seq 1 9); do
         tags=$((1 << ($i - 1)))
@@ -175,7 +193,7 @@ let
 
     # === Autostart ===
     # Layout generator (wideriver - dwm/xmonad style)
-    riverctl spawn "wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 --border-width 2 --border-width-monocle 0 --inner-gap 4 --outer-gap 4"
+    riverctl spawn "wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 --border-width 2 --border-width-monocle 0 --inner-gap 0 --outer-gap 0"
 
     # Wallpaper
     riverctl spawn wpaperd

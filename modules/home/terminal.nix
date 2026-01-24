@@ -31,7 +31,7 @@
       copy-on-select = "clipboard";
       confirm-close-surface = false;
       mouse-hide-while-typing = true;
-      scrollback-limit = 100000;
+      scrollback-limit = 1000000000;
     };
 
     # keybindings = {

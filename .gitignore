@@ -2,3 +2,9 @@
 *.bak
 .DS_Store
 result
+
+# Beads cache and temporary files (local-only)
+# Note: .beads/ directory itself IS committed to git
+.beads/cache/
+.beads/db/
+*.beads.lock

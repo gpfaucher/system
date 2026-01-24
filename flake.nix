@@ -19,26 +19,47 @@
     ghostty = {
       url = "github:ghostty-org/ghostty";
     };
+
+    # Beads - Git-backed issue tracker for AI agents
+    # Provides persistent task memory across agent sessions
+    # Task memory: .beads/issues/ (committed to git)
+    # Cache: .beads/cache/ (local only, gitignored)
+    beads = {
+      url = "github:steveyegge/beads";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   
 
-  outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inputs:
     let
       system = "x86_64-linux";
       username = "gabriel";
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
+        # Add beads overlay for easy package access
+        overlays = [
+          (final: prev: {
+            beads = beads.packages.${system}.default;
+          })
+        ];
       };
     in
     {
       nixosConfigurations.laptop = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs username; };
+        specialArgs = { inherit inputs username self; };
         modules = [
           {
             nixpkgs.hostPlatform = system;
             nixpkgs.config.allowUnfree = true;
+            # Add beads overlay for system-level access
+            nixpkgs.overlays = [
+              (final: prev: {
+                beads = beads.packages.${system}.default;
+              })
+            ];
           }
           stylix.nixosModules.stylix
           ./hosts/laptop
@@ -47,7 +68,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
-              extraSpecialArgs = { inherit inputs username; };
+              extraSpecialArgs = { inherit inputs username self; };
               sharedModules = [
                 inputs.nvf.homeManagerModules.default
                 inputs.stylix.homeModules.stylix
