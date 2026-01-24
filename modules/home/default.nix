@@ -184,6 +184,21 @@
         $DRY_RUN_CMD chmod 600 $HOME/.tabby-client/agent/config.toml
   '';
 
+  # AWS configuration
+  # Credentials are encrypted with agenix and decrypted directly to ~/.aws/credentials
+  # This just sets up the non-secret config file
+  home.file.".aws/config".text = ''
+    [default]
+    region = eu-central-1
+    output = json
+  '';
+
+  # Ensure .aws directory exists with proper permissions
+  home.activation.awsDir = lib.hm.dag.entryBefore [ "writeBoundary" ] ''
+    $DRY_RUN_CMD mkdir -p $HOME/.aws
+    $DRY_RUN_CMD chmod 700 $HOME/.aws
+  '';
+
   # # Wallpaper configuration
   # xdg.configFile."wpaperd/config.toml".text = ''
   #   [default]

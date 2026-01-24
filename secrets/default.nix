@@ -11,4 +11,13 @@
     group = "users";
     mode = "0400";
   };
+
+  age.secrets.aws-credentials = {
+    file = ./aws-credentials.age;
+    owner = "gabriel";
+    group = "users";
+    mode = "0400";
+    # Decrypt directly to ~/.aws/credentials
+    path = "/home/gabriel/.aws/credentials";
+  };
 }

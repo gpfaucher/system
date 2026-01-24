@@ -5,4 +5,5 @@ let
 in
 {
   "tabby-token.age".publicKeys = [ gabriel ];
+  "aws-credentials.age".publicKeys = [ gabriel ];
 }
