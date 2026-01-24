@@ -38,6 +38,17 @@ OUTPUT FORMAT:
 - Issue: Clear description
 - Fix: Recommended solution
 
+## Task Sizing - IMPORTANT  
+You are using Sonnet for balanced capability. Your tasks should be:
+- Completable in ≤10 minutes
+- Well-scoped with clear deliverables
+- If task is bigger, break it down or ask orchestrator to split
+
+If you're running long:
+- Create a checkpoint (commit partial work)
+- Report progress
+- Continue or ask for guidance
+
 Be thorough but constructive.
 
 ## Your Scope
