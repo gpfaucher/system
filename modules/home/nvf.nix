@@ -7,16 +7,15 @@
   programs.nvf = {
     enable = true;
 
-    # Load monorepo LSP configuration from user override
-    extraConfigLua = ''
-      -- Load monorepo LSP configuration
-      pcall(function()
-        dofile(vim.fn.expand('~/.config/nvf/monorepo-lsp.lua'))
-      end)
-    '';
-
     settings = {
       vim = {
+        # Load monorepo LSP configuration from user override
+        luaConfigRC.monorepo-lsp = ''
+          -- Load monorepo LSP configuration
+          pcall(function()
+            dofile(vim.fn.expand('~/.config/nvf/monorepo-lsp.lua'))
+          end)
+        '';
         # Gruvbox dark theme with hard contrast
         # Use mkForce to override stylix theme
         theme = {
