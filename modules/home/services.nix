@@ -15,6 +15,21 @@
     Service = {
       ExecStart = "${pkgs.tabby}/bin/tabby serve --model StarCoder-1B --device cuda";
       Restart = "always";
+      
+      # Security hardening
+      PrivateTmp = true;
+      ProtectSystem = "strict";
+      ProtectHome = "read-only"; # Needs to write to ~/.tabby
+      NoNewPrivileges = true;
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      RestrictNamespaces = true;
+      RestrictRealtime = true;
+      RestrictSUIDSGID = true;
+      LockPersonality = true;
+      # Note: MemoryDenyWriteExecute not set - may conflict with CUDA/GPU
+      # Note: DeviceAllow needed for GPU access is handled by default in user services
     };
     Install = {
       WantedBy = [ "default.target" ];
@@ -188,6 +203,16 @@
     # Restart on failure (handles Wayland disconnections)
     Restart = lib.mkForce "on-failure";
     RestartSec = lib.mkForce 5; # 5 seconds
+    
+    # Security hardening (basic - needs Wayland display access)
+    PrivateTmp = true;
+    NoNewPrivileges = true;
+    ProtectKernelTunables = true;
+    ProtectKernelModules = true;
+    ProtectControlGroups = true;
+    RestrictRealtime = true;
+    RestrictSUIDSGID = true;
+    LockPersonality = true;
   };
 
   # River WM Resume Hook - Reconnect layout manager after suspend
@@ -210,6 +235,19 @@
         "${pkgs.river-classic}/bin/riverctl focus-output previous"
       ];
       RemainAfterExit = false;
+      
+      # Security hardening (needs IPC access to River WM and display server)
+      PrivateTmp = true;
+      ProtectSystem = "strict";
+      ProtectHome = "read-only";
+      NoNewPrivileges = true;
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      RestrictRealtime = true;
+      RestrictSUIDSGID = true;
+      MemoryDenyWriteExecute = true;
+      LockPersonality = true;
     };
     Install = {
       WantedBy = [ "graphical-session.target" ];
