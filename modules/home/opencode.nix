@@ -23,7 +23,9 @@ let
 in
 {
   # OpenCode global configuration
-  home.file.".config/opencode/opencode.json".text = builtins.toJSON {
+  home.file.".config/opencode/opencode.json" = {
+    force = true;  # Allow overwriting existing config
+    text = builtins.toJSON {
     "$schema" = "https://opencode.ai/config.json";
     
     model = "anthropic/claude-sonnet-4-5";
@@ -277,6 +279,7 @@ in
         };
       };
     };
+  };
   };
 
   # Install all agent prompts as markdown files
