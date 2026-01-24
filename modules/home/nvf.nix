@@ -511,10 +511,10 @@
             package = pkgs.vimPlugins.vim-markdown;
             setup = ''
               -- Folding settings
-              vim.g.vim_markdown_folding_disabled = 1  -- Disable folding (can be confusing)
+              vim.g.vim_markdown_folding_disabled = 1
               
-              -- Concealment - use level 1 for safety (shows chars, doesn't hide)
-              vim.g.vim_markdown_conceal = 1
+              -- Let render-markdown.nvim handle concealment
+              vim.g.vim_markdown_conceal = 0
               vim.g.vim_markdown_conceal_code_blocks = 0
               
               -- Syntax highlighting
@@ -573,6 +573,64 @@
               
               -- Keybinding
               vim.keymap.set('n', '<leader>mp', ':MarkdownPreviewToggle<CR>', { desc = 'Toggle markdown preview' })
+            '';
+          };
+
+          # 6. render-markdown.nvim - Beautiful markdown rendering
+          render-markdown-nvim = {
+            package = pkgs.vimPlugins.render-markdown-nvim;
+            setup = ''
+              require('render-markdown').setup({
+                -- Rendered headings with icons
+                heading = {
+                  enabled = true,
+                  icons = { '󰲡 ', '󰲣 ', '󰲥 ', '󰲧 ', '󰲩 ', '󰲫 ' },
+                  backgrounds = {
+                    'RenderMarkdownH1Bg',
+                    'RenderMarkdownH2Bg',
+                    'RenderMarkdownH3Bg',
+                    'RenderMarkdownH4Bg',
+                    'RenderMarkdownH5Bg',
+                    'RenderMarkdownH6Bg',
+                  },
+                  foregrounds = {
+                    'RenderMarkdownH1',
+                    'RenderMarkdownH2',
+                    'RenderMarkdownH3',
+                    'RenderMarkdownH4',
+                    'RenderMarkdownH5',
+                    'RenderMarkdownH6',
+                  },
+                },
+                -- Checkbox icons (not raw [ ] and [x])
+                checkbox = {
+                  enabled = true,
+                  unchecked = { icon = '󰄱 ' },
+                  checked = { icon = '󰱒 ' },
+                },
+                -- Code block backgrounds
+                code = {
+                  enabled = true,
+                  style = 'full',
+                  left_pad = 1,
+                  right_pad = 1,
+                  width = 'block',
+                  border = 'thin',
+                },
+                -- List bullet icons
+                bullet = {
+                  enabled = true,
+                  icons = { '●', '○', '◆', '◇' },
+                },
+                -- Table rendering
+                pipe_table = {
+                  enabled = true,
+                  style = 'full',
+                },
+                -- Gruvbox-compatible colors
+                -- The plugin will inherit most colors from the theme
+                -- We just need to ensure it's enabled for markdown files
+              })
             '';
           };
         };
@@ -647,20 +705,16 @@
             end, { desc = "Toggle checkbox" })
           '';
           
-          # Markdown: Better visual rendering
+          # Markdown: Settings for markdown files
           markdown-visual = ''
-            -- Enable concealment for markdown files (level 1 = safe, shows chars)
             vim.api.nvim_create_autocmd("FileType", {
               pattern = "markdown",
               callback = function()
-                -- conceallevel 1: conceal with replacement char if defined, else show original
-                vim.opt_local.conceallevel = 1
-                vim.opt_local.concealcursor = ""  -- Don't conceal on current line
+                -- Enable concealment for render-markdown.nvim
+                vim.opt_local.conceallevel = 2
                 vim.opt_local.wrap = true
                 vim.opt_local.linebreak = true
-                
-                -- Custom conceal highlighting (gruvbox cyan)
-                vim.api.nvim_set_hl(0, "Conceal", { fg = "#83a598", bg = "NONE" })
+                vim.opt_local.spell = false
               end,
             })
           '';
