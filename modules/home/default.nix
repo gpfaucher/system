@@ -54,6 +54,14 @@
       pull.rebase = true;
       push.autoSetupRemote = true;
     };
+    delta = {
+      enable = true;
+      options = {
+        navigate = true;
+        side-by-side = true;
+        line-numbers = true;
+      };
+    };
   };
 
   # Additional packages
@@ -81,6 +89,49 @@
     fd         # For telescope find_files
     ripgrep    # For telescope live_grep
     docker-compose  # Docker Compose
+    python312  # Python runtime for LSP
+    tmux       # Terminal multiplexer
+
+    # Modern CLI tools
+    delta      # Git diff viewer with syntax highlighting
+    eza        # Modern ls replacement
+    zoxide     # Smart cd with 'z' command
+    atuin      # Database-backed shell history
+    bat        # Better cat with syntax highlighting
+    fzf        # Fuzzy finder
+    jq         # JSON processor
+    yq-go      # YAML processor
+    tldr       # Simplified man pages
+    duf        # Better df
+    du-dust    # Better du
+    procs      # Better ps
+    bottom     # btm - better top/htop
+
+    # Debuggers
+    gdb
+    lldb
+
+    # Kubernetes tools
+    kubectl    # Kubernetes CLI
+    k9s        # Kubernetes TUI
+    kubernetes-helm  # Kubernetes package manager
+
+    # Database clients
+    postgresql  # psql client
+    mariadb     # mysql client
+    redis       # redis-cli
+    mongosh     # MongoDB shell
+
+    # Cloud tools
+    google-cloud-sdk  # gcloud
+    azure-cli         # az
+
+    # Formatters/Linters
+    nodePackages.prettier
+    black      # Python formatter
+    ruff       # Python linter
+    shellcheck # Shell script linter
+    shfmt      # Shell script formatter
 
     # System utilities
     unzip

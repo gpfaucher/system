@@ -19,6 +19,12 @@
       set -gx GOPATH ~/.local/share/go
       fish_add_path -g $GOPATH/bin
 
+      # Initialize zoxide (smart cd)
+      zoxide init fish | source
+
+      # Initialize atuin (shell history)
+      atuin init fish | source
+
       # Start River on tty1
       if test (tty) = "/dev/tty1"
         exec river
@@ -26,11 +32,20 @@
     '';
 
     shellAbbrs = {
+      # Git
       ga = "git add";
       gc = "git commit";
       gd = "git diff";
       gs = "git status";
       lg = "lazygit";
+
+      # Modern CLI replacements
+      ls = "eza";
+      ll = "eza -l";
+      la = "eza -la";
+      lt = "eza --tree";
+      cat = "bat";
+      cd = "z";  # zoxide
     };
 
     functions = {
@@ -154,14 +169,9 @@
     config.global.hide_env_diff = true;
   };
 
-  # Shell utilities
+  # Shell utilities (managed in default.nix, these are shell-specific)
   home.packages = with pkgs; [
     yazi
     lazygit
-    btop
-    fd
-    ripgrep
-    fzf
-    jq
   ];
 }
