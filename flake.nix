@@ -141,23 +141,22 @@
       };
 
       # Development shell with pre-commit hooks
-      devShells.${system}.default = pkgs.mkShell {
-        packages = with pkgs; [
-          nil # Nix LSP
-          nixfmt # Nix formatter
-        ];
-        shellHook = ''
-          ${pre-commit-hooks.lib.${system}.run
-            {
-              src = ./.;
-              hooks = {
-                nixfmt.enable = true;
-                shellcheck.enable = true;
-              };
-            }
-            .shellHook
-          }
-        '';
-      };
+      devShells.${system}.default =
+        let
+          pre-commit = pre-commit-hooks.lib.${system}.run {
+            src = ./.;
+            hooks = {
+              nixfmt.enable = true;
+              shellcheck.enable = true;
+            };
+          };
+        in
+        pkgs.mkShell {
+          packages = with pkgs; [
+            nil # Nix LSP
+            nixfmt # Nix formatter
+          ];
+          shellHook = pre-commit.shellHook;
+        };
     };
 }
