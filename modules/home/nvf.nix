@@ -7,6 +7,14 @@
   programs.nvf = {
     enable = true;
 
+    # Load monorepo LSP configuration from user override
+    extraConfigLua = ''
+      -- Load monorepo LSP configuration
+      pcall(function()
+        dofile(vim.fn.expand('~/.config/nvf/monorepo-lsp.lua'))
+      end)
+    '';
+
     settings = {
       vim = {
         # Gruvbox dark theme with hard contrast
