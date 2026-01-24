@@ -186,28 +186,17 @@
     };
     Service = {
       Type = "oneshot";
-      ExecStart = ''
-        ${pkgs.bash}/bin/bash -c '
-          # Wait for GPU to fully wake up after suspend
-          sleep 1.5
-          
-          # Send notification
-          ${pkgs.libnotify}/bin/notify-send -u low "River" "Restoring tiling layout..." 2>/dev/null || true
-          
-          # Force wideriver reconnection by re-setting default layout
-          ${pkgs.river-classic}/bin/riverctl default-layout wideriver 2>/dev/null || true
-          
-          # Reload display configuration (Kanshi profiles)
-          ${pkgs.kanshi}/bin/kanshictl reload 2>/dev/null || true
-          
-          # Trigger layout refresh by bouncing focus between outputs
-          sleep 0.2
-          ${pkgs.river-classic}/bin/riverctl focus-output next 2>/dev/null || true
-          sleep 0.1
-          ${pkgs.river-classic}/bin/riverctl focus-output previous 2>/dev/null || true
-        '
-      '';
-      RemainAfterExit = "no";
+      ExecStartPre = "${pkgs.coreutils}/bin/sleep 1.5";
+      ExecStart = "${pkgs.libnotify}/bin/notify-send -u low 'River' 'Restoring tiling layout...'";
+      ExecStartPost = [
+        "${pkgs.river-classic}/bin/riverctl default-layout wideriver"
+        "${pkgs.kanshi}/bin/kanshictl reload"
+        "${pkgs.coreutils}/bin/sleep 0.2"
+        "${pkgs.river-classic}/bin/riverctl focus-output next"
+        "${pkgs.coreutils}/bin/sleep 0.1"
+        "${pkgs.river-classic}/bin/riverctl focus-output previous"
+      ];
+      RemainAfterExit = false;
     };
     Install = {
       WantedBy = [ "graphical-session.target" ];
