@@ -79,6 +79,7 @@
 
     # Browsers
     firefox
+    inputs.zen-browser.packages.${pkgs.system}.twilight
     neovim
     claude-code
 

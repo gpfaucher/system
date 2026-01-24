@@ -46,6 +46,12 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    # Zen Browser - Privacy-focused Firefox-based browser
+    zen-browser = {
+      url = "github:0xc000022070/zen-browser-flake";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
     treefmt-nix = {
       url = "github:numtide/treefmt-nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -69,6 +75,7 @@
       agenix,
       impermanence,
       disko,
+      zen-browser,
       treefmt-nix,
       pre-commit-hooks,
       ...
