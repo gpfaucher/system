@@ -175,7 +175,7 @@
     }
   '';
 
-  # wlogout style with Gruvbox colors and Unicode symbols
+  # wlogout style with Gruvbox colors and Nerd Font icons
   xdg.configFile."wlogout/style.css".text = ''
     * {
         background-image: none;
@@ -206,7 +206,7 @@
         outline-style: none;
     }
 
-    /* Unicode symbol buttons */
+    /* Nerd Font icon buttons */
     #lock {
         background-image: none;
     }
@@ -214,7 +214,7 @@
         font-size: 48px;
     }
     #lock label:before {
-        content: "🔒\A";
+        content: "󰌾\A";
         white-space: pre;
     }
 
@@ -225,7 +225,7 @@
         font-size: 48px;
     }
     #logout label:before {
-        content: "🚪\A";
+        content: "󰍃\A";
         white-space: pre;
     }
 
@@ -236,7 +236,7 @@
         font-size: 48px;
     }
     #suspend label:before {
-        content: "💤\A";
+        content: "󰤄\A";
         white-space: pre;
     }
 
@@ -247,7 +247,7 @@
         font-size: 48px;
     }
     #hibernate label:before {
-        content: "❄\A";
+        content: "󰋊\A";
         white-space: pre;
     }
 
@@ -258,7 +258,7 @@
         font-size: 48px;
     }
     #reboot label:before {
-        content: "🔄\A";
+        content: "󰜉\A";
         white-space: pre;
     }
 
@@ -269,7 +269,7 @@
         font-size: 48px;
     }
     #shutdown label:before {
-        content: "⏻\A";
+        content: "󰐥\A";
         white-space: pre;
     }
   '';
