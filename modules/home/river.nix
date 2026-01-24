@@ -195,8 +195,8 @@ let
     # Layout generator (wideriver - dwm/xmonad style)
     riverctl spawn "wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 --border-width 2 --border-width-monocle 0 --inner-gap 0 --outer-gap 0"
 
-    # Wallpaper
-    riverctl spawn wpaperd
+    # Wallpaper - Solid gruvbox background color (#282828)
+    riverctl spawn "swaybg -c '#282828'"
 
     # Notifications
     riverctl spawn fnott
@@ -277,7 +277,7 @@ in {
       fnott
       waylock
       wlogout
-      wpaperd
+      swaybg      # Solid color wallpaper
       gammastep
 
       # System utilities
