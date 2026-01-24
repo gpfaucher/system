@@ -19,6 +19,9 @@
   # Polkit for authentication dialogs
   security.polkit.enable = true;
 
+  # PAM service for waylock screen locker
+  security.pam.services.waylock = {};
+
   # XDG portal configuration for Wayland/wlroots
   xdg.portal = {
     enable = true;
@@ -43,4 +46,10 @@
       setSocketVariable = true;  # Sets DOCKER_HOST for the user
     };
   };
+
+  # River WM suspend/resume fix - Trigger layout restoration after resume
+  powerManagement.resumeCommands = ''
+    # Trigger the user service to restore River tiling layout
+    ${pkgs.systemd}/bin/systemctl --user -M gabriel@ start river-resume-hook.service 2>/dev/null || true
+  '';
 }

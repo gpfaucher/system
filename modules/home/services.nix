@@ -21,6 +21,34 @@
     enable = true;
     systemdTarget = "graphical-session.target";
     settings = [
+      # Dual external monitors: Portrait + Ultrawide (laptop disabled)
+      {
+        profile.name = "dual-portrait-ultrawide";
+        profile.outputs = [
+          {
+            criteria = "DP-2";
+            mode = "2560x1440@60Hz";
+            position = "0,0";
+            scale = 1.0;
+            transform = "90";
+            status = "enable";
+          }
+          {
+            criteria = "HDMI-A-1";
+            mode = "3440x1440@100Hz";
+            position = "1440,0";
+            scale = 1.0;
+            status = "enable";
+          }
+          {
+            criteria = "eDP-1";
+            status = "disable";
+          }
+        ];
+        profile.exec = [ 
+          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Dual monitor: Portrait + Ultrawide'" 
+        ];
+      }
       # Laptop only (no external monitors)
       {
         profile.name = "laptop";
@@ -146,6 +174,43 @@
         adjustment-method = "wayland";
         fade = 1;
       };
+    };
+  };
+
+  # River WM Resume Hook - Reconnect layout manager after suspend
+  systemd.user.services.river-resume-hook = {
+    Unit = {
+      Description = "River WM Resume Hook";
+      PartOf = [ "graphical-session.target" ];
+      After = [ "graphical-session.target" ];
+    };
+    Service = {
+      Type = "oneshot";
+      ExecStart = ''
+        ${pkgs.bash}/bin/bash -c '
+          # Wait for GPU to fully wake up after suspend
+          sleep 1.5
+          
+          # Send notification
+          ${pkgs.libnotify}/bin/notify-send -u low "River" "Restoring tiling layout..." 2>/dev/null || true
+          
+          # Force wideriver reconnection by re-setting default layout
+          ${pkgs.river-classic}/bin/riverctl default-layout wideriver 2>/dev/null || true
+          
+          # Reload display configuration (Kanshi profiles)
+          ${pkgs.kanshi}/bin/kanshictl reload 2>/dev/null || true
+          
+          # Trigger layout refresh by bouncing focus between outputs
+          sleep 0.2
+          ${pkgs.river-classic}/bin/riverctl focus-output next 2>/dev/null || true
+          sleep 0.1
+          ${pkgs.river-classic}/bin/riverctl focus-output previous 2>/dev/null || true
+        '
+      '';
+      RemainAfterExit = "no";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
     };
   };
 }
