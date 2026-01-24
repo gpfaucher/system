@@ -12,6 +12,9 @@
   # CUPS printing service
   services.printing.enable = true;
 
+  # UPower service for battery/power management info
+  services.upower.enable = true;
+
   # Bluetooth support
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
