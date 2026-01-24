@@ -104,11 +104,26 @@
   };
 
   # Tabby agent configuration
-  # Get token from tabby server web UI or ~/.tabby/config.toml
-  home.file.".tabby-client/agent/config.toml".text = ''
-    [server]
-    endpoint = "http://localhost:8080"
-    token = "auth_872164f40d10473e861c75db73842900"
+  # Token is encrypted using agenix and decrypted to /run/agenix/tabby-token
+  # The config file is generated at activation time to read the decrypted token
+  home.activation.tabbyConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
+    $DRY_RUN_CMD mkdir -p $HOME/.tabby-client/agent
+    
+    # Read token from agenix-decrypted file, or use a placeholder if not available yet
+    if [ -f /run/agenix/tabby-token ]; then
+      TOKEN=$(cat /run/agenix/tabby-token)
+    else
+      TOKEN="TOKEN_NOT_DECRYPTED_YET"
+      echo "Warning: /run/agenix/tabby-token not found. Run 'sudo nixos-rebuild switch' first."
+    fi
+    
+    $DRY_RUN_CMD cat > $HOME/.tabby-client/agent/config.toml << EOF
+[server]
+endpoint = "http://localhost:8080"
+token = "$TOKEN"
+EOF
+    
+    $DRY_RUN_CMD chmod 600 $HOME/.tabby-client/agent/config.toml
   '';
 
   # # Wallpaper configuration

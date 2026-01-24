@@ -28,11 +28,17 @@
       url = "github:steveyegge/beads";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Agenix - Age-encrypted secrets for NixOS
+    agenix = {
+      url = "github:ryantm/agenix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   
 
-  outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inputs:
+  outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, agenix, ... }@inputs:
     let
       system = "x86_64-linux";
       username = "gabriel";
@@ -62,7 +68,9 @@
             ];
           }
           stylix.nixosModules.stylix
+          agenix.nixosModules.default
           ./hosts/laptop
+          ./secrets  # Agenix secrets configuration
           home-manager.nixosModules.home-manager
           {
             home-manager = {
