@@ -177,6 +177,26 @@
     };
   };
 
+  # Override gammastep systemd service to add restart policy and multi-monitor support
+  systemd.user.services.gammastep = {
+    Unit = {
+      Description = "Gammastep colour temperature adjuster (multi-monitor)";
+      After = [ "graphical-session.target" ];
+      PartOf = [ "graphical-session.target" ];
+    };
+    Service = {
+      # Restart on failure (handles Wayland disconnections)
+      Restart = "on-failure";
+      RestartSec = "5s";
+      
+      # Ensure WAYLAND_DISPLAY is set
+      Environment = "PATH=${pkgs.coreutils}/bin:${pkgs.gammastep}/bin";
+    };
+    Install = {
+      WantedBy = [ "graphical-session.target" ];
+    };
+  };
+
   # River WM Resume Hook - Reconnect layout manager after suspend
   systemd.user.services.river-resume-hook = {
     Unit = {

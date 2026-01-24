@@ -65,6 +65,10 @@
           splitbelow = true;
           list = true;
           termguicolors = true;
+          
+          # Concealment (for markdown rendering)
+          conceallevel = 2;
+          concealcursor = "nc";
 
           # Performance
           updatetime = 250;
@@ -509,8 +513,8 @@
               vim.g.vim_markdown_folding_level = 6
               vim.g.vim_markdown_folding_style_pythonic = 1
               
-              -- Concealment
-              vim.g.vim_markdown_conceal = 1
+              -- Concealment (render checkboxes, emphasis, etc visually)
+              vim.g.vim_markdown_conceal = 2
               vim.g.vim_markdown_conceal_code_blocks = 0
               
               -- Syntax highlighting
@@ -522,6 +526,7 @@
               
               -- Link following
               vim.g.vim_markdown_follow_anchor = 1
+              vim.g.vim_markdown_edit_url_in = 'current'
               
               -- TOC
               vim.g.vim_markdown_toc_autofit = 1
@@ -529,6 +534,9 @@
               -- Don't require .md extension for links
               vim.g.vim_markdown_no_extensions_in_markdown = 1
               vim.g.vim_markdown_autowrite = 1
+              
+              -- Enable checkboxes with nice symbols
+              vim.g.vim_markdown_checkbox_states = {' ', 'x', '-'}
             '';
           };
 
@@ -640,6 +648,30 @@
               end
               vim.api.nvim_set_current_line(new_line)
             end, { desc = "Toggle checkbox" })
+          '';
+          
+          # Markdown: Better visual rendering
+          markdown-visual = ''
+            -- Enable concealment for markdown files
+            vim.api.nvim_create_autocmd("FileType", {
+              pattern = "markdown",
+              callback = function()
+                vim.opt_local.conceallevel = 2
+                vim.opt_local.concealcursor = "nc"
+                
+                -- Custom conceal highlighting for better visibility
+                vim.api.nvim_set_hl(0, "Conceal", { fg = "#83a598", bg = "NONE" })
+              end,
+            })
+            
+            -- Treesitter-based markdown highlighting improvements
+            vim.api.nvim_create_autocmd("FileType", {
+              pattern = "markdown",
+              callback = function()
+                -- Enhanced list and checkbox rendering
+                vim.treesitter.language.register("markdown", "md")
+              end,
+            })
           '';
         };
       };
