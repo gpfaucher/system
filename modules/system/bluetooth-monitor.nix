@@ -64,7 +64,7 @@ let
     
     # Main monitoring loop
     log "Bluetooth monitor started"
-    notify "Bluetooth Monitor" "Multipoint call handling active"
+    # notify "Bluetooth Monitor" "Multipoint call handling active"  # Disabled - too annoying
     
     # Monitor PipeWire/WirePlumber events via wpctl
     ${pkgs.wireplumber}/bin/wpctl status --monitor | while read -r line; do

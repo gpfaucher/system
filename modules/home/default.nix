@@ -16,14 +16,6 @@
   programs.beads = {
     enable = true;
     enableDaemon = false;  # Opt-in for daemon (auto-sync)
-    
-    # Auto-initialize Beads in all git repositories
-    autoInit = true;
-    autoInitPaths = [
-      "~/projects"        # Your main projects directory
-      "~/work"            # Work projects (if any)
-      # Add more paths as needed
-    ];
   };
 
   # Home Manager configuration
@@ -184,6 +176,16 @@
     '';
   };
 
+  home.file.".local/bin/display-info" = {
+    executable = true;
+    text = ''
+      #!/bin/sh
+      # Display current monitor configuration summary
+      echo "=== Current Display Configuration ==="
+      wlr-randr | grep -E "(^[A-Z]|Enabled:|Position:|Mode:|Scale:|Transform:)"
+    '';
+  };
+
   # Firefox configuration for Teams always-available status
   programs.firefox = {
     enable = true;
@@ -193,10 +195,49 @@
         # Disable visibility API to prevent Teams from detecting tab/window switches
         "dom.visibilityAPI.enabled" = false;
       };
-      # Userscript to keep Teams status always available
-      # Inject into Teams to prevent away status
+      # Full gruvbox theme for Firefox UI
       userChrome = ''
-        /* Teams presence fix - loaded via userChrome */
+        /* Gruvbox Dark Theme */
+        :root {
+          --bg0: #282828;
+          --bg1: #3c3836;
+          --bg2: #504945;
+          --fg: #ebdbb2;
+          --blue: #83a598;
+          --red: #fb4934;
+          --green: #b8bb26;
+        }
+        
+        /* Tab styling */
+        .tabbrowser-tab {
+          background-color: var(--bg1) !important;
+          color: var(--fg) !important;
+        }
+        .tabbrowser-tab[selected] {
+          background-color: var(--bg2) !important;
+        }
+        
+        /* Address bar */
+        #urlbar {
+          background-color: var(--bg1) !important;
+          color: var(--fg) !important;
+          border: 1px solid var(--bg2) !important;
+        }
+        
+        /* Toolbar */
+        #navigator-toolbox {
+          background-color: var(--bg0) !important;
+        }
+      '';
+      # Gruvbox theme for about: pages
+      userContent = ''
+        /* Style about: pages */
+        @-moz-document url-prefix(about:) {
+          body {
+            background-color: #282828 !important;
+            color: #ebdbb2 !important;
+          }
+        }
       '';
       # Enable userChrome.css
       extraConfig = ''

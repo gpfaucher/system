@@ -170,7 +170,7 @@
     }
   '';
 
-  # wlogout style with Gruvbox colors
+  # wlogout style with Gruvbox colors and Unicode symbols
   xdg.configFile."wlogout/style.css".text = ''
     * {
         background-image: none;
@@ -189,10 +189,10 @@
         background-color: #3c3836;
         border: 2px solid #504945;
         border-radius: 0;
-        background-repeat: no-repeat;
-        background-position: center;
-        background-size: 25%;
         margin: 5px;
+        padding: 20px;
+        min-width: 120px;
+        min-height: 120px;
     }
 
     button:focus, button:active, button:hover {
@@ -201,23 +201,71 @@
         outline-style: none;
     }
 
+    /* Unicode symbol buttons */
     #lock {
-        background-image: image(url("/usr/share/wlogout/icons/lock.png"));
+        background-image: none;
     }
+    #lock label {
+        font-size: 48px;
+    }
+    #lock label:before {
+        content: "🔒\A";
+        white-space: pre;
+    }
+
     #logout {
-        background-image: image(url("/usr/share/wlogout/icons/logout.png"));
+        background-image: none;
     }
+    #logout label {
+        font-size: 48px;
+    }
+    #logout label:before {
+        content: "🚪\A";
+        white-space: pre;
+    }
+
     #suspend {
-        background-image: image(url("/usr/share/wlogout/icons/suspend.png"));
+        background-image: none;
     }
+    #suspend label {
+        font-size: 48px;
+    }
+    #suspend label:before {
+        content: "💤\A";
+        white-space: pre;
+    }
+
     #hibernate {
-        background-image: image(url("/usr/share/wlogout/icons/hibernate.png"));
+        background-image: none;
     }
+    #hibernate label {
+        font-size: 48px;
+    }
+    #hibernate label:before {
+        content: "❄\A";
+        white-space: pre;
+    }
+
     #reboot {
-        background-image: image(url("/usr/share/wlogout/icons/reboot.png"));
+        background-image: none;
     }
+    #reboot label {
+        font-size: 48px;
+    }
+    #reboot label:before {
+        content: "🔄\A";
+        white-space: pre;
+    }
+
     #shutdown {
-        background-image: image(url("/usr/share/wlogout/icons/shutdown.png"));
+        background-image: none;
+    }
+    #shutdown label {
+        font-size: 48px;
+    }
+    #shutdown label:before {
+        content: "⏻\A";
+        white-space: pre;
     }
   '';
 }

@@ -467,6 +467,110 @@
           vim-tabby = {
             package = vim-tabby;
           };
+
+          # ============ MARKDOWN PLUGINS (Option 3: Lightweight) ============
+          
+          # 1. markdown.nvim - Modern inline editing tools
+          markdown-nvim = {
+            package = pkgs.vimPlugins.markdown-nvim;
+            setup = ''
+              require("markdown").setup({
+                mappings = {
+                  inline_surround_toggle = "gs",
+                  inline_surround_delete = "ds",
+                  inline_surround_change = "cs",
+                  link_add = "gl",
+                  link_follow = "gx",
+                  go_curr_heading = "]c",
+                  go_parent_heading = "]p",
+                  go_next_heading = "]]",
+                  go_prev_heading = "[[",
+                },
+                on_attach = function(bufnr)
+                  local map = vim.keymap.set
+                  local opts = { buffer = bufnr, silent = true }
+                  
+                  -- Checkbox toggle
+                  map("n", "<leader>mc", "<Cmd>MDTaskToggle<CR>", vim.tbl_extend("force", opts, { desc = "Toggle markdown checkbox" }))
+                  
+                  -- List operations
+                  map("i", "<C-x>", "<Cmd>MDListItemBelow<CR>", vim.tbl_extend("force", opts, { desc = "New list item below" }))
+                  map("i", "<CR>", "<Cmd>MDListItemBelow<CR>", vim.tbl_extend("force", opts, { desc = "New list item" }))
+                end,
+              })
+            '';
+          };
+
+          # 2. vim-markdown - Traditional syntax highlighting and folding
+          vim-markdown = {
+            package = pkgs.vimPlugins.vim-markdown;
+            setup = ''
+              -- Folding settings
+              vim.g.vim_markdown_folding_disabled = 0
+              vim.g.vim_markdown_folding_level = 6
+              vim.g.vim_markdown_folding_style_pythonic = 1
+              
+              -- Concealment
+              vim.g.vim_markdown_conceal = 1
+              vim.g.vim_markdown_conceal_code_blocks = 0
+              
+              -- Syntax highlighting
+              vim.g.vim_markdown_frontmatter = 1
+              vim.g.vim_markdown_toml_frontmatter = 1
+              vim.g.vim_markdown_json_frontmatter = 1
+              vim.g.vim_markdown_math = 1
+              vim.g.vim_markdown_strikethrough = 1
+              
+              -- Link following
+              vim.g.vim_markdown_follow_anchor = 1
+              
+              -- TOC
+              vim.g.vim_markdown_toc_autofit = 1
+              
+              -- Don't require .md extension for links
+              vim.g.vim_markdown_no_extensions_in_markdown = 1
+              vim.g.vim_markdown_autowrite = 1
+            '';
+          };
+
+          # 3. tabular - Dependency for vim-markdown
+          tabular = {
+            package = pkgs.vimPlugins.tabular;
+          };
+
+          # 4. vim-table-mode - Smart table formatting
+          vim-table-mode = {
+            package = pkgs.vimPlugins.vim-table-mode;
+            setup = ''
+              -- Use markdown-compatible tables
+              vim.g.table_mode_corner = '|'
+              vim.g.table_mode_corner_corner = '|'
+              vim.g.table_mode_header_fillchar = '-'
+              
+              -- Keybindings
+              vim.keymap.set('n', '<leader>mt', ':TableModeToggle<CR>', { desc = 'Toggle table mode' })
+              vim.keymap.set('n', '<leader>mtr', ':TableModeRealign<CR>', { desc = 'Realign table' })
+              vim.keymap.set('n', '<leader>mts', ':Tableize<CR>', { desc = 'Convert to table' })
+            '';
+          };
+
+          # 5. markdown-preview.nvim - Live browser preview
+          markdown-preview-nvim = {
+            package = pkgs.vimPlugins.markdown-preview-nvim;
+            setup = ''
+              -- Preview settings
+              vim.g.mkdp_auto_start = 0
+              vim.g.mkdp_auto_close = 1
+              vim.g.mkdp_refresh_slow = 0
+              vim.g.mkdp_command_for_global = 0
+              vim.g.mkdp_open_to_the_world = 0
+              vim.g.mkdp_browser = ""
+              vim.g.mkdp_theme = "dark"
+              
+              -- Keybinding
+              vim.keymap.set('n', '<leader>mp', ':MarkdownPreviewToggle<CR>', { desc = 'Toggle markdown preview' })
+            '';
+          };
         };
 
         # LSP keymaps and settings via luaConfigRC
