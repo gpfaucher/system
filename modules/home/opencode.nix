@@ -29,6 +29,8 @@ in
     model = "anthropic/claude-sonnet-4-5";
     small_model = "anthropic/claude-haiku-4-5";
     
+    theme = "gruvbox";
+    
     autoupdate = true;
     
     # Agent configuration
