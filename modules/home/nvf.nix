@@ -17,11 +17,10 @@
             dofile(vim.fn.expand('~/.config/nvf/monorepo-lsp.lua'))
           end)
         '';
-        # Gruvbox dark theme with hard contrast
-        # Use mkForce to override stylix theme
+        # Use base16 theme (inherits Stylix's ayu-dark colors)
         theme = {
           enable = lib.mkForce true;
-          name = lib.mkForce "gruvbox";
+          name = lib.mkForce "base16";
           style = lib.mkForce "dark";
         };
 
@@ -179,16 +178,11 @@
         statusline = {
           lualine = {
             enable = true;
-            theme = lib.mkForce "gruvbox";
+            theme = lib.mkForce "auto";
           };
         };
 
-        # Which-key for keybind hints
-        # utility = {
-        #   which-key = {
-        #     enable = true;
-        #   };
-        # };
+        # Which-key for keybind hints (configured as extra plugin below)
 
         # Keymaps
         keymaps = [
@@ -413,6 +407,56 @@
             package = base16-nvim;
           };
 
+          # Which-key for keybind hints
+          which-key-nvim = {
+            package = which-key-nvim;
+            setup = ''
+              require("which-key").setup({
+                plugins = {
+                  marks = true,
+                  registers = true,
+                  spelling = {
+                    enabled = false,
+                  },
+                  presets = {
+                    operators = true,
+                    motions = true,
+                    text_objects = true,
+                    windows = true,
+                    nav = true,
+                    z = true,
+                    g = true,
+                  },
+                },
+                win = {
+                  border = "rounded",
+                  padding = { 1, 2 },
+                },
+                layout = {
+                  spacing = 3,
+                  align = "center",
+                },
+                show_help = true,
+                show_keys = true,
+              })
+
+              -- Register which-key group descriptions
+              local wk = require("which-key")
+              wk.add({
+                { "<leader>b", group = "Buffer" },
+                { "<leader>c", group = "Code" },
+                { "<leader>d", group = "Diagnostics" },
+                { "<leader>f", group = "File" },
+                { "<leader>g", group = "Git" },
+                { "<leader>h", group = "Harpoon" },
+                { "<leader>m", group = "Markdown" },
+                { "<leader>n", group = "Notes" },
+                { "<leader>q", group = "Quickfix" },
+                { "<leader>s", group = "Search" },
+              })
+            '';
+          };
+
           # Oil - file browser
           oil-nvim = {
             package = oil-nvim;
@@ -632,8 +676,7 @@
                   enabled = true,
                   style = 'full',
                 },
-                -- Gruvbox-compatible colors
-                -- The plugin will inherit most colors from the theme
+                -- Colors inherited from theme (ayu-dark)
                 -- We just need to ensure it's enabled for markdown files
               })
             '';
@@ -669,6 +712,39 @@
                 map("<leader>r", vim.lsp.buf.rename, "Rename")
                 map("<leader>ca", vim.lsp.buf.code_action, "Code action")
               end,
+            })
+          '';
+
+          # Diagnostic configuration
+          diagnostic-config = ''
+            -- Configure diagnostic display
+            vim.diagnostic.config({
+              virtual_text = true,
+              signs = true,
+              underline = true,
+              update_in_insert = false,
+              severity_sort = true,
+              float = {
+                border = "rounded",
+                source = "always",
+                header = "",
+                prefix = "",
+              },
+            })
+
+            -- Show diagnostics on hover (CursorHold)
+            vim.api.nvim_create_autocmd("CursorHold", {
+              callback = function()
+                local opts = {
+                  focusable = false,
+                  close_events = { "BufLeave", "CursorMoved", "InsertEnter", "FocusLost" },
+                  border = "rounded",
+                  source = "always",
+                  prefix = " ",
+                  scope = "cursor",
+                }
+                vim.diagnostic.open_float(nil, opts)
+              end
             })
           '';
 
