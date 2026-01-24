@@ -75,6 +75,79 @@ bd list --label knowledge
 bd show system-abc  # Get all the research details
 ```
 
+## Task Sizing Rules - Preventing Stuck Agents
+
+All agents have built-in task sizing limits to prevent getting stuck or spinning indefinitely.
+
+### Fast Agents (Haiku) - ≤3 Minutes
+**Agents**: `explore`, `research`, `fix`, `plan`
+
+**Rules**:
+- Tasks must be completable in **3 minutes or less**
+- Focus on **ONE specific thing**
+- If task is bigger, **STOP and report back** with breakdown
+
+**Examples of good tasks**:
+- "Find all files matching pattern X"
+- "Search for usage of function Y"
+- "Fix this specific null pointer error"
+- "Break down this feature into 3-5 subtasks"
+
+**What to do if stuck**:
+1. Stop working after 3 minutes
+2. Report what you've found so far
+3. Suggest how to break down the remaining work
+4. Don't try to force completion
+
+### Balanced Agents (Sonnet) - ≤10 Minutes
+**Agents**: `general`, `build`, `test`, `review`, `refactor`, `debug`, `document`, `optimize`, `nix-specialist`, `security`, `architect`
+
+**Rules**:
+- Tasks should complete in **10 minutes or less**
+- Well-scoped with clear deliverables
+- If bigger, break down or ask orchestrator to split
+
+**Examples of good tasks**:
+- "Implement function X with error handling"
+- "Write unit tests for module Y"
+- "Review security of authentication flow"
+- "Document the API for feature Z"
+
+**What to do if running long**:
+1. Create a checkpoint (commit partial work)
+2. Report progress and what remains
+3. Continue if close to done, or ask for re-scoping
+
+### Complex Orchestration (Opus) - ≤15 Minutes per Phase
+**Agent**: `orchestrator`
+
+**Rules**:
+- Break large workflows into **phases of ≤15 minutes**
+- Each delegated task should be ≤10 min for subagents
+- Monitor subagent progress actively
+
+**Examples of good orchestration**:
+- Phase 1: Research and design (parallel: research + architect)
+- Phase 2: Implementation (parallel: build + test)
+- Phase 3: Quality (parallel: review + security + optimize)
+
+**What to do if subagent is stuck**:
+1. Intervene after reasonable time
+2. Re-scope the task into smaller pieces
+3. Try different approach or different agent
+4. Don't let subagents spin indefinitely
+
+### General Principles
+
+**For ALL agents**:
+- ✅ Break down large tasks proactively
+- ✅ Report progress regularly
+- ✅ Ask for help when stuck
+- ✅ Commit partial work to avoid losing progress
+- ❌ Don't try to force completion of oversized tasks
+- ❌ Don't spin indefinitely on unclear problems
+- ❌ Don't guess at requirements - ask for clarification
+
 ## Landing the Plane (Session Completion)
 
 **When ending a work session**, you MUST complete ALL steps below. Work is NOT complete until `git push` succeeds.
