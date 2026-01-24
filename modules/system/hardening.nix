@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # ============================================================================
@@ -14,7 +19,7 @@
   # ----------------------------------------------------------------------------
   # Kernel parameters to restrict access to sensitive information and harden
   # the system against various attack vectors.
-  
+
   boot.kernel.sysctl = {
     # Kernel pointer protection - hide kernel pointers from unprivileged users
     # 0 = no restriction, 1 = hide from unprivileged, 2 = always hide
@@ -44,7 +49,7 @@
     # ----------------------------------------------------------------------------
     # NETWORK HARDENING
     # ----------------------------------------------------------------------------
-    
+
     # Enable reverse path filtering (helps prevent IP spoofing)
     # 0 = disabled, 1 = strict mode, 2 = loose mode
     "net.ipv4.conf.all.rp_filter" = 1;
@@ -67,25 +72,25 @@
   # SUDO HARDENING
   # ----------------------------------------------------------------------------
   # Enhanced sudo security configuration to reduce privilege escalation risks.
-  
+
   security.sudo = {
     # Only allow sudo execution for users in the wheel group
     execWheelOnly = true;
-    
+
     # Additional sudo hardening options
     extraConfig = ''
       # Always show the sudo lecture (security reminder)
       Defaults lecture = always
-      
+
       # Set password timeout to 1 minute (fail fast on slow password entry)
       Defaults passwd_timeout = 1
-      
+
       # Require password re-entry after 15 minutes of inactivity
       Defaults timestamp_timeout = 15
-      
+
       # Reset environment variables to prevent privilege escalation via env vars
       Defaults env_reset
-      
+
       # Send mail notification on bad password attempts (requires mail setup)
       Defaults mail_badpass
     '';
@@ -95,24 +100,24 @@
   # APPARMOR MANDATORY ACCESS CONTROL
   # ----------------------------------------------------------------------------
   # AppArmor provides mandatory access control to confine programs.
-  
+
   security.apparmor = {
     enable = true;
-    
+
     # When set to true, kills processes that should be confined but aren't
     # Start with false and monitor logs before enabling
-    killUnconfinedConfinables = false;  # TODO: Set to true after testing profiles
+    killUnconfinedConfinables = false; # TODO: Set to true after testing profiles
   };
 
   # ----------------------------------------------------------------------------
   # AUDIT LOGGING
   # ----------------------------------------------------------------------------
   # Comprehensive audit logging to track security-relevant events.
-  
+
   security.auditd.enable = true;
   security.audit = {
     enable = true;
-    
+
     # Audit rules to track process execution
     # This logs all execve system calls (program executions) on 64-bit systems
     rules = [
@@ -124,11 +129,21 @@
   # PAM HARDENING AND LIMITS
   # ----------------------------------------------------------------------------
   # Configure PAM (Pluggable Authentication Modules) resource limits.
-  
+
   security.pam.loginLimits = [
     # File descriptor limits (prevents DoS via file descriptor exhaustion)
-    { domain = "*"; type = "soft"; item = "nofile"; value = "65536"; }
-    { domain = "*"; type = "hard"; item = "nofile"; value = "65536"; }
+    {
+      domain = "*";
+      type = "soft";
+      item = "nofile";
+      value = "65536";
+    }
+    {
+      domain = "*";
+      type = "hard";
+      item = "nofile";
+      value = "65536";
+    }
   ];
 
   # ----------------------------------------------------------------------------

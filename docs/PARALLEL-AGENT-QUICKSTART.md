@@ -5,6 +5,7 @@ This guide provides step-by-step instructions to enable aggressive parallel exec
 ## 5-Minute Implementation
 
 ### Step 1: Update Orchestrator Prompt
+
 **File**: `prompts/orchestrator.txt`
 
 Add this section after line 37 (after "Optimize for speed and quality"):
@@ -34,6 +35,7 @@ Orchestrate, don't implement. Coordinate, don't do.
 ```
 
 ### Step 2: Update Build Prompt
+
 **File**: `prompts/build.txt`
 
 Replace entire content with:
@@ -73,9 +75,11 @@ Build it right. Use your specialists.
 ```
 
 ### Step 3: Add Settings
+
 **File**: `.opencode.json` - Update the `settings` section (lines 300-305)
 
 Replace:
+
 ```json
 "settings": {
   "auto_invoke_architect": true,
@@ -86,19 +90,20 @@ Replace:
 ```
 
 With:
+
 ```json
 "settings": {
   "auto_invoke_architect": true,
   "auto_review_before_commit": true,
   "parallel_subagents": true,
   "max_parallel_agents": 4,
-  
+
   "orchestrator": {
     "prefer_delegation": true,
     "delegation_target": "80%",
     "aggressive_parallelization": true
   },
-  
+
   "build_agent": {
     "delegates_testing": true,
     "delegates_review": true,
@@ -117,6 +122,7 @@ opencode --agent orchestrator "Implement a new API endpoint with tests, security
 ```
 
 Expected behavior:
+
 - Orchestrator creates a plan
 - Delegates testing, security, and documentation in parallel
 - Returns comprehensive results
@@ -126,6 +132,7 @@ Expected behavior:
 ## What Changes
 
 ### Before (Sequential)
+
 ```
 Orchestrator → thinks → sequential workflow
   1. Architect designs
@@ -138,6 +145,7 @@ Orchestrator → thinks → sequential workflow
 **Result**: 1-2 hours for a complete feature
 
 ### After (Parallel)
+
 ```
 Orchestrator → orchestrates → parallel execution
   1. Architect designs
@@ -147,7 +155,7 @@ Orchestrator → orchestrates → parallel execution
   4. Test writes tests       5. Document writes docs       6. Security analyzes
   [Then in parallel]
   7. Review checks code      8. Optimize performance
-  
+
   Results synthesized → complete feature
 ```
 
@@ -158,17 +166,20 @@ Orchestrator → orchestrates → parallel execution
 ## Key Changes Explained
 
 ### 1. The "task" Tool
+
 - **What**: Mechanism for orchestrator to invoke subagents
 - **Where**: Only available to orchestrator (`"task": true` in config)
 - **Why**: Enables parallel execution
 - **How**: `task.invoke({ agents: [...], parallel: true })`
 
 ### 2. Delegation Framework
+
 - Build agent now actively delegates to specialists
 - Reduces build agent workload from 100% to 20%
 - Specialists handle their domains better than generalists
 
 ### 3. Parallel Settings
+
 - Signals to orchestrator that parallelization is encouraged
 - Provides explicit configuration for delegation behavior
 - Makes orchestrator more aggressive about using subagents
@@ -262,22 +273,28 @@ Working with Plan Agent:
 ## Troubleshooting
 
 ### Agents Still Sequential?
+
 **Cause**: Prompt hasn't taken effect or orchestrator isn't using task tool
-**Fix**: 
+**Fix**:
+
 1. Verify prompt was updated
 2. Restart OpenCode
 3. Try explicit orchestrator invocation
 
 ### Build Agent Not Delegating?
+
 **Cause**: Prompt change not applied
 **Fix**:
+
 1. Check `prompts/build.txt` was updated
 2. Verify settings include delegation config
 3. Test with explicit delegation request
 
 ### Configuration Not Applied?
+
 **Cause**: JSON syntax error in `.opencode.json`
 **Fix**:
+
 1. Validate JSON: `cat .opencode.json | jq empty`
 2. Check for trailing commas
 3. Ensure proper nesting
@@ -298,13 +315,13 @@ Working with Plan Agent:
 
 **Expected improvements:**
 
-| Metric | Before | After | Improvement |
-|--------|--------|-------|------------|
-| Time to complete feature | 60-120 min | 15-45 min | 2-4x faster |
-| Code quality | Good | Better | +20-30% (more reviews) |
-| Test coverage | Partial | Comprehensive | More complete |
-| Security review | Manual | Automatic | Always included |
-| Documentation | Often missing | Always included | 100% coverage |
+| Metric                   | Before        | After           | Improvement            |
+| ------------------------ | ------------- | --------------- | ---------------------- |
+| Time to complete feature | 60-120 min    | 15-45 min       | 2-4x faster            |
+| Code quality             | Good          | Better          | +20-30% (more reviews) |
+| Test coverage            | Partial       | Comprehensive   | More complete          |
+| Security review          | Manual        | Automatic       | Always included        |
+| Documentation            | Often missing | Always included | 100% coverage          |
 
 ---
 

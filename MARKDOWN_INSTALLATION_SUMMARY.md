@@ -40,9 +40,11 @@ All markdown editing plugins have been configured in your NixOS system. You just
 ## 🔧 Configuration Details
 
 ### File Modified
+
 - `modules/home/nvf.nix` - Added markdown plugins to `extraPlugins` section
 
 ### Keybindings Configured
+
 - `<leader>mp` → Toggle markdown preview
 - `<leader>mt` → Toggle table mode
 - `<leader>mtr` → Realign table
@@ -54,6 +56,7 @@ All markdown editing plugins have been configured in your NixOS system. You just
 - `]c` / `]p` → Current/parent heading
 
 ### Settings Applied
+
 - Folding: Enabled, 6 levels, pythonic style
 - Concealment: Enabled for links, disabled for code blocks
 - Preview: Dark theme, auto-close, sync scroll
@@ -99,6 +102,7 @@ cd ~/projects/system
 ```
 
 **This will:**
+
 - Download and install all 5 markdown plugins
 - Configure Neovim with new settings
 - Make keybindings available
@@ -112,6 +116,7 @@ nvim test-markdown.md
 ```
 
 **Test checklist:**
+
 - [ ] Syntax highlighting works
 - [ ] `<leader>mp` opens preview in browser
 - [ ] `<leader>mt` enables table mode
@@ -163,6 +168,7 @@ git push
 ## 🎯 Why This Stack?
 
 **Balanced approach:** Not too minimal, not overwhelming
+
 - ✅ Live preview for visual feedback
 - ✅ Table support (common need)
 - ✅ Syntax highlighting and folding
@@ -179,12 +185,14 @@ git push
 ## 📊 Before & After
 
 ### Before
+
 - Basic markdown editing
 - No preview
 - Manual table formatting
 - No folding support
 
 ### After
+
 - ✅ Live browser preview with math/diagrams
 - ✅ Auto-formatting tables
 - ✅ Smart checkbox toggling
@@ -198,12 +206,14 @@ git push
 ## 🔍 Technical Details
 
 ### NixOS Integration
+
 - Declarative configuration in nvf.nix
 - Plugins from nixpkgs.vimPlugins
 - Atomic updates with rollback support
 - Reproducible across machines
 
 ### Plugin Architecture
+
 ```
 nvf (neovim-flake)
 ├── markdown.nvim (Lua, inline editing)
@@ -214,6 +224,7 @@ nvf (neovim-flake)
 ```
 
 ### Dependencies
+
 - Node.js ✅ (already installed, v22.22.0)
 - npm ✅ (already installed, v10.9.4)
 - Neovim ✅ (v0.11.5)
@@ -242,18 +253,21 @@ All requirements met:
 ## 📚 Resources
 
 ### Quick Access
+
 - Test file: `test-markdown.md`
 - Quick reference: `MARKDOWN_QUICK_REFERENCE.md`
 - Install guide: `MARKDOWN_PLUGINS_INSTALL.md`
 - Full summary: `MARKDOWN_SETUP_COMPLETE.md`
 
 ### Plugin Documentation
+
 - markdown.nvim: https://github.com/tadmccorkle/markdown.nvim
 - vim-markdown: https://github.com/preservim/vim-markdown
 - vim-table-mode: https://github.com/dhruvasagar/vim-table-mode
 - markdown-preview.nvim: https://github.com/iamcco/markdown-preview.nvim
 
 ### Research
+
 - Full analysis: `docs/research/MARKDOWN_PLUGINS_SUMMARY.md`
 - Research report: `docs/research/neovim-markdown-plugins-research.md` (if exists)
 

@@ -24,17 +24,22 @@ This document presents a comprehensive design for 8 improvements to your NixOS c
 **Effort:** 1.5-2 hours
 
 ### Problem Statement
+
 After waking from suspend, River window tiling stops working. Windows float randomly instead of following the wideriver layout. This breaks the fundamental window management workflow.
 
 ### Root Cause
+
 The wideriver daemon loses IPC connection to River after suspend because:
+
 1. GPU/display go offline during suspend
 2. Wayland protocol state becomes corrupted
 3. Wideriver's file descriptors become invalid
 4. IPC communication between River ↔ Wideriver breaks
 
 ### Design Solution
+
 Add a systemd user service that triggers on `suspend.target`:
+
 1. Detects system wake from suspend
 2. Waits 1.5s for GPU initialization
 3. Runs `riverctl default-layout wideriver` to reconnect
@@ -62,12 +67,14 @@ systemd.user.services.river-resume-fix = {
 ```
 
 ### Acceptance Criteria
+
 - [ ] After suspend → wake, windows tile correctly
 - [ ] No manual intervention required
 - [ ] Kanshi display config is restored
 - [ ] Service runs reliably on every wake
 
 ### Documentation
+
 Complete research in: `docs/research/RIVER-SUSPEND-*.md` (4 documents, 1,050 lines)
 
 ---
@@ -79,21 +86,26 @@ Complete research in: `docs/research/RIVER-SUSPEND-*.md` (4 documents, 1,050 lin
 **Effort:** 2 minutes
 
 ### Problem Statement
+
 User physically switched monitors around. Need to update kanshi configuration to match new layout.
 
 ### Current Physical Layout (from wlr-randr)
+
 - **Monitor 1 (LEFT):** Portrait 2560x1440@60Hz rotated 90° (DP-2) - actual width after rotation: 1440px
 - **Monitor 2 (RIGHT):** Ultrawide 3440x1440@100Hz (HDMI-A-1)
 - **Laptop Display:** Disabled (eDP-1)
 
 ### Design Solution
+
 Update the `dual-portrait-ultrawide` profile to reflect new positions:
 
 **Old Configuration:**
+
 - HDMI-A-1 (Ultrawide) at position 0,0
 - DP-2 (Portrait) at position 3440,0
 
 **New Configuration:**
+
 - DP-2 (Portrait rotated 90°) at position 0,0 → actual width = 1440px
 - HDMI-A-1 (Ultrawide) at position 1440,0 → starts after portrait monitor
 
@@ -130,6 +142,7 @@ Update the `dual-portrait-ultrawide` profile to reflect new positions:
 ```
 
 ### Why position = "1440,0" for ultrawide?
+
 When DP-2 is rotated 90°, its 2560x1440 resolution becomes 1440x2560 (width x height). So the ultrawide needs to start at x=1440 (after the portrait monitor's width).
 
 ### Testing & Verification
@@ -151,6 +164,7 @@ wlr-randr
 ```
 
 ### Acceptance Criteria
+
 - [ ] Portrait monitor (DP-2) is positioned on the left
 - [ ] Ultrawide monitor (HDMI-A-1) is positioned on the right
 - [ ] No gaps between monitors in the desktop space
@@ -158,6 +172,7 @@ wlr-randr
 - [ ] Windows can be moved between monitors without issues
 
 ### Documentation
+
 Complete research in: `docs/kanshi-configuration-research.md` (377 lines)
 
 ---
@@ -169,14 +184,17 @@ Complete research in: `docs/kanshi-configuration-research.md` (377 lines)
 **Effort:** 2 minutes
 
 ### Problem Statement
+
 Remove all gaps (inner and outer) from River window manager for a more compact layout.
 
 ### Current Configuration
+
 - **File:** `~/.config/river/init` (line 187)
 - **Inner Gap:** 4 pixels
 - **Outer Gap:** 4 pixels
 
 ### Design Solution - Option A (Immediate)
+
 Apply live without restart:
 
 ```bash
@@ -185,6 +203,7 @@ riverctl send-layout-cmd wideriver "--outer-gaps 0"
 ```
 
 ### Design Solution - Option B (Permanent)
+
 Edit configuration file (requires River restart):
 
 **File:** `~/.config/river/init` (line 187)
@@ -200,15 +219,18 @@ wideriver --inner-gap 0 --outer-gap 0 &
 Then restart River: `killall river`
 
 ### Recommendation
+
 Use **Option A** first to test, then apply **Option B** for persistence.
 
 ### Acceptance Criteria
+
 - [ ] No gaps between windows
 - [ ] No gaps from windows to screen edges
 - [ ] Layout remains functional
 - [ ] Changes persist after River restart (Option B only)
 
 ### Documentation
+
 Complete research in: Beads issue `system-2s0` (comprehensive analysis)
 
 ---
@@ -220,11 +242,13 @@ Complete research in: Beads issue `system-2s0` (comprehensive analysis)
 **Effort:** 15 minutes
 
 ### Problem Statement
+
 OpenCode (TUI app) and Firefox are not fully themed with gruvbox. User wants EVERYTHING gruvbox.
 
 ### Current State Analysis
 
 **Already Themed (✅):**
+
 - Stylix framework (system-wide)
 - Neovim (gruvbox-material)
 - River WM borders
@@ -233,6 +257,7 @@ OpenCode (TUI app) and Firefox are not fully themed with gruvbox. User wants EVE
 - All UI components (fuzzel, fnott, waylock, wlogout)
 
 **Missing Gruvbox (❌):**
+
 - **OpenCode:** Not configured to use gruvbox theme
 - **Firefox:** Partially themed, needs enhanced CSS
 
@@ -245,9 +270,9 @@ OpenCode has a built-in gruvbox theme! Just configure it in the JSON config.
 ```nix
 home.file.".config/opencode/opencode.json".text = builtins.toJSON {
   "$schema" = "https://opencode.ai/config.json";
-  
+
   theme = "gruvbox";  # ← ADD THIS LINE
-  
+
   model = "anthropic/claude-sonnet-4-5";
   small_model = "anthropic/claude-haiku-4-5";
   # ... rest of config
@@ -279,7 +304,7 @@ programs.firefox = {
         --red: #fb4934;
         --green: #b8bb26;
       }
-      
+
       /* Tab styling */
       .tabbrowser-tab {
         background-color: var(--bg1) !important;
@@ -288,20 +313,20 @@ programs.firefox = {
       .tabbrowser-tab[selected] {
         background-color: var(--bg2) !important;
       }
-      
+
       /* Address bar */
       #urlbar {
         background-color: var(--bg1) !important;
         color: var(--fg) !important;
         border: 1px solid var(--bg2) !important;
       }
-      
+
       /* Toolbar */
       #navigator-toolbox {
         background-color: var(--bg0) !important;
       }
     '';
-    
+
     userContent = ''
       /* Style about: pages */
       @-moz-document url-prefix(about:) {
@@ -325,6 +350,7 @@ Accents:      #83a598 (blue), #fb4934 (red), #b8bb26 (green)
 ```
 
 ### Acceptance Criteria
+
 - [ ] OpenCode uses gruvbox theme
 - [ ] OpenCode UI elements use gruvbox colors
 - [ ] Firefox tabs are gruvbox themed
@@ -333,7 +359,9 @@ Accents:      #83a598 (blue), #fb4934 (red), #b8bb26 (green)
 - [ ] All UI elements consistent with gruvbox palette
 
 ### Documentation
-Complete research in: 
+
+Complete research in:
+
 - OpenCode: `docs/OPENCODE_GRUVBOX_THEMING.md`
 - Firefox: Beads issue `system-h49` + `/tmp/gruvbox_research.md`
 
@@ -346,16 +374,20 @@ Complete research in:
 **Effort:** 30 minutes
 
 ### Problem Statement
+
 LSP (TypeScript Language Server) doesn't work in monorepos like `~/projects/paddock-app`. Autocompletion, diagnostics, and navigation are broken.
 
 ### Root Cause
+
 Neovim LSP uses static root markers (`package.json`, `.git`) that can't distinguish between:
+
 - Monorepo workspace root (paddock-app/)
 - Project-specific root (paddock-app/apps/ui/)
 
 LSP anchors to the workspace root instead of the project root, breaking TypeScript features.
 
 ### Design Solution
+
 Add a custom `root_dir` function with priority-based marker detection:
 
 **File:** `~/.config/nvf/monorepo-lsp.lua`
@@ -364,30 +396,30 @@ Add a custom `root_dir` function with priority-based marker detection:
 -- Priority-based root detection for monorepos
 local function monorepo_root_dir(bufnr, on_dir)
   local fname = vim.api.nvim_buf_get_name(bufnr)
-  
+
   -- Priority 1: tsconfig.json (project-specific)
   local root = vim.fs.root(fname, 'tsconfig.json')
-  
+
   -- Priority 2: jsconfig.json (JavaScript projects)
   if not root then
     root = vim.fs.root(fname, 'jsconfig.json')
   end
-  
+
   -- Priority 3: package.json (workspace)
   if not root then
     root = vim.fs.root(fname, 'package.json')
   end
-  
+
   -- Priority 4: .git (repository root)
   if not root then
     root = vim.fs.root(fname, '.git')
   end
-  
+
   -- Fallback: current working directory
   if not root then
     root = vim.fn.getcwd()
   end
-  
+
   on_dir(root)
 end
 
@@ -409,6 +441,7 @@ end, {})
 **Integration:** Load via `~/.config/nvim/init.lua` or Home Manager
 
 ### Testing Procedure
+
 ```bash
 # 1. Apply configuration
 nvim ~/.config/nvf/monorepo-lsp.lua
@@ -428,6 +461,7 @@ nvim src/components/Button.tsx
 ```
 
 ### Acceptance Criteria
+
 - [ ] LSP attaches in monorepo projects
 - [ ] Root directory is project-specific (apps/ui/), not workspace root
 - [ ] TypeScript completion works
@@ -436,6 +470,7 @@ nvim src/components/Button.tsx
 - [ ] Works for all projects in paddock-app
 
 ### Documentation
+
 Complete research in: `MONOREPO_LSP_*.md` (4 documents, 1,070 lines)
 
 ---
@@ -447,9 +482,11 @@ Complete research in: `MONOREPO_LSP_*.md` (4 documents, 1,070 lines)
 **Effort:** 1-2 hours
 
 ### Problem Statement
+
 User wants quality-of-life plugins for working with markdown notes in Neovim.
 
 ### Current State
+
 - Neovim v0.11.5 installed
 - No markdown plugins configured
 - Fresh start opportunity
@@ -459,6 +496,7 @@ User wants quality-of-life plugins for working with markdown notes in Neovim.
 Based on workflow analysis, here are the top 4 plugins:
 
 #### 1. **markdown-preview.nvim** (Essential)
+
 Live browser preview with KaTeX math and Mermaid diagrams.
 
 ```lua
@@ -473,6 +511,7 @@ Live browser preview with KaTeX math and Mermaid diagrams.
 ```
 
 #### 2. **markdown.nvim** (Essential)
+
 Modern inline editing tools (lists, checkboxes, tables).
 
 ```lua
@@ -491,6 +530,7 @@ Modern inline editing tools (lists, checkboxes, tables).
 ```
 
 #### 3. **vim-table-mode** (Highly Recommended)
+
 Smart table creation and formatting.
 
 ```lua
@@ -505,6 +545,7 @@ Smart table creation and formatting.
 ```
 
 #### 4. **obsidian.nvim** (Optional - If using Obsidian)
+
 Full Obsidian vault integration.
 
 ```lua
@@ -525,6 +566,7 @@ Full Obsidian vault integration.
 ```
 
 ### Alternative: Telekasten for Zettelkasten
+
 If you prefer Zettelkasten workflow over Obsidian:
 
 ```lua
@@ -549,6 +591,7 @@ end, { desc = "Toggle Checkbox" })
 ```
 
 ### Acceptance Criteria
+
 - [ ] Live preview opens in browser
 - [ ] Tables format automatically
 - [ ] Checkboxes toggle with keybind
@@ -557,6 +600,7 @@ end, { desc = "Toggle Checkbox" })
 - [ ] Wiki-links work (if using Obsidian/Telekasten)
 
 ### Documentation
+
 Complete research in: `docs/research/MARKDOWN_*.md` (3 documents, 1,233 lines)
 
 ---
@@ -568,9 +612,11 @@ Complete research in: `docs/research/MARKDOWN_*.md` (3 documents, 1,233 lines)
 **Effort:** 4-6 hours (phased approach)
 
 ### Problem Statement
+
 User wants general quality-of-life improvements for Neovim, including better VSCode integration.
 
 ### Current State
+
 - Neovim v0.11.5 installed
 - No plugins configured
 - Fresh start opportunity
@@ -580,6 +626,7 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 #### **Phase 1: Essential Core (2-3 hours)**
 
 **1. Telescope.nvim** - Fuzzy Finder
+
 ```lua
 {
   "nvim-telescope/telescope.nvim",
@@ -593,6 +640,7 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 ```
 
 **2. Gitsigns.nvim** - Git Integration
+
 ```lua
 {
   "lewis6991/gitsigns.nvim",
@@ -607,6 +655,7 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 ```
 
 **3. Which-Key.nvim** - Keybinding Discovery
+
 ```lua
 {
   "folke/which-key.nvim",
@@ -618,6 +667,7 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 ```
 
 **4. Flash.nvim** - Fast Navigation
+
 ```lua
 {
   "folke/flash.nvim",
@@ -630,6 +680,7 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 #### **Phase 2: Quality of Life (1-2 hours, Week 2)**
 
 **5. Harpoon** - Quick File Marks
+
 ```lua
 {
   "ThePrimeagen/harpoon",
@@ -639,6 +690,7 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 ```
 
 **6. Dressing.nvim** - Better UI
+
 ```lua
 {
   "stevearc/dressing.nvim",
@@ -647,6 +699,7 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 ```
 
 **7. Persistence.nvim** - Session Management
+
 ```lua
 {
   "folke/persistence.nvim",
@@ -664,10 +717,12 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 ### VSCode Integration Design
 
 **Recommended Approach:** Multi-Monitor Setup
+
 - **Monitor 1:** VSCode for IDE features (debugging, extensions, terminal)
 - **Monitor 2:** Neovim for editing (superior modal editing)
 
 **Alternative:** vscode-neovim Extension
+
 ```json
 // VSCode settings.json
 {
@@ -678,12 +733,14 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 ```
 
 ### Productivity Timeline
+
 - **Week 1:** -10% (learning curve)
 - **Week 2:** +0% (catching up)
 - **Week 3:** +15% (faster than before)
 - **Month 2+:** +30-50% (expert productivity)
 
 ### Acceptance Criteria
+
 - [ ] Phase 1 plugins installed and working
 - [ ] Telescope searches files/grep
 - [ ] Git signs show in gutter
@@ -692,6 +749,7 @@ User wants general quality-of-life improvements for Neovim, including better VSC
 - [ ] (Optional) VSCode integration works
 
 ### Documentation
+
 Complete research in: `/tmp/nvim_research_report.md` (25,000 words)
 
 ---
@@ -703,9 +761,11 @@ Complete research in: `/tmp/nvim_research_report.md` (25,000 words)
 **Effort:** 0 minutes (no changes needed)
 
 ### Problem Statement
+
 User wants blue light filter like redshift.
 
 ### Current State Analysis
+
 Your system is **already perfectly configured** with Gammastep:
 
 - **Tool:** Gammastep (Wayland-native redshift fork)
@@ -715,18 +775,20 @@ Your system is **already perfectly configured** with Gammastep:
 - **Status:** Active and working correctly
 
 ### Design Decision
+
 **NO CHANGES NEEDED** - Gammastep is the best solution for River/Wayland and is already properly configured.
 
 ### Comparison with Alternatives
 
-| Tool | Wayland | Status | Recommendation |
-|------|---------|--------|----------------|
-| **Gammastep** | ✅ Native | ✅ Active | ✅ BEST (YOU HAVE THIS) |
-| Wlsunset | ✅ Native | ⚠️ Archived | ❌ Old |
-| wl-gammarelay | ✅ Protocol | ✅ Active | ⚠️ Complex |
-| Redshift | ❌ X11 Only | ✅ Active | ❌ Incompatible |
+| Tool          | Wayland     | Status      | Recommendation          |
+| ------------- | ----------- | ----------- | ----------------------- |
+| **Gammastep** | ✅ Native   | ✅ Active   | ✅ BEST (YOU HAVE THIS) |
+| Wlsunset      | ✅ Native   | ⚠️ Archived | ❌ Old                  |
+| wl-gammarelay | ✅ Protocol | ✅ Active   | ⚠️ Complex              |
+| Redshift      | ❌ X11 Only | ✅ Active   | ❌ Incompatible         |
 
 ### Optional Enhancements
+
 If you want manual control, add River keybindings:
 
 ```bash
@@ -738,18 +800,21 @@ riverctl map normal Super+Control B spawn "gammastep-indicator"
 ```
 
 ### Verification Commands
+
 ```bash
 systemctl --user status gammastep  # Check if running
 pgrep gammastep                     # Verify process
 ```
 
 ### Acceptance Criteria
+
 - [x] Gammastep is running
 - [x] Screen warms at night (3500K)
 - [x] Screen is neutral during day (6500K)
 - [x] Location-based scheduling works
 
 ### Documentation
+
 Complete research in: `docs/research/BLUE-LIGHT-FILTER-*.md` (5 documents, 2,355 lines)
 
 ---
@@ -757,15 +822,18 @@ Complete research in: `docs/research/BLUE-LIGHT-FILTER-*.md` (5 documents, 2,355
 ## Implementation Plan
 
 ### Phase 1: Critical Fixes (2-3 hours)
+
 1. **River Suspend Fix** (system-eik) - 1.5 hours
 2. **LSP Monorepo Fix** (system-3sc) - 30 minutes
 3. **Remove River Gaps** (system-nau) - 2 minutes
 
 ### Phase 2: Theming (15 minutes)
+
 4. **OpenCode Gruvbox Theme** (system-8hr) - 5 minutes
 5. **Firefox Gruvbox CSS** (system-8hr) - 10 minutes
 
 ### Phase 3: Neovim Enhancement (4-6 hours, can be spread over weeks)
+
 Quality-of-life improvements (optional, can be done incrementally):
 
 7. **Markdown Plugins** (system-giq) - 1 hour
@@ -784,6 +852,7 @@ Quality-of-life improvements (optional, can be done incrementally):
    - Set up VSCode integration if desired
 
 ### Phase 4: Verification (0 minutes)
+
 This is already perfect:
 
 10. **Blue Light Filter** (system-26n) - Already optimal, no changes
@@ -792,16 +861,16 @@ This is already perfect:
 
 ## Risk Assessment
 
-| Change | Risk | Mitigation |
-|--------|------|------------|
-| River suspend fix | LOW | Additive only, can disable service |
-| LSP monorepo fix | LOW | Isolated to LSP config, easily reverted |
-| Remove gaps | NONE | Live command can be reversed |
-| VSCode theme | NONE | Just settings change |
-| Firefox CSS | LOW | Can delete userChrome.css |
-| Neovim plugins | LOW | Plugin manager allows easy removal |
-| Kanshi | NONE | No changes |
-| Gammastep | NONE | No changes |
+| Change            | Risk | Mitigation                              |
+| ----------------- | ---- | --------------------------------------- |
+| River suspend fix | LOW  | Additive only, can disable service      |
+| LSP monorepo fix  | LOW  | Isolated to LSP config, easily reverted |
+| Remove gaps       | NONE | Live command can be reversed            |
+| VSCode theme      | NONE | Just settings change                    |
+| Firefox CSS       | LOW  | Can delete userChrome.css               |
+| Neovim plugins    | LOW  | Plugin manager allows easy removal      |
+| Kanshi            | NONE | No changes                              |
+| Gammastep         | NONE | No changes                              |
 
 **Overall Risk:** LOW - All changes are additive and easily reversible.
 
@@ -810,6 +879,7 @@ This is already perfect:
 ## Success Metrics
 
 After implementation, you should have:
+
 - ✅ River tiling works after suspend (automatic recovery)
 - ✅ LSP works in monorepo projects
 - ✅ No gaps in River window layout

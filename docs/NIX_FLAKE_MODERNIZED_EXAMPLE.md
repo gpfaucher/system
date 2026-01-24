@@ -12,7 +12,7 @@ This document provides concrete implementation examples for migrating to flake-p
   inputs = {
     # Core dependencies
     nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-    
+
     # Flake composition framework
     flake-parts = {
       url = "github:hercules-ci/flake-parts";
@@ -257,6 +257,7 @@ This document provides concrete implementation examples for migrating to flake-p
 ```
 
 **Benefits:**
+
 - ✅ Automatic system evaluation
 - ✅ Less boilerplate
 - ✅ Clearer separation of concerns
@@ -291,6 +292,7 @@ nixosConfigurations = {
 ## Migration Checklist
 
 ### Step 1: Backup & Branch
+
 ```bash
 cd /home/gabriel/projects/system
 git checkout -b refactor/flake-parts-migration
@@ -298,11 +300,13 @@ git add -A && git commit -m "backup: before flake-parts migration"
 ```
 
 ### Step 2: Update flake.nix
+
 - Copy the modernized version above
 - Verify all inputs are present
 - Check system configuration paths
 
 ### Step 3: Test Build
+
 ```bash
 # This will take time on first run (no cache)
 nix flake check                                      # Check syntax
@@ -311,12 +315,14 @@ nix build '.#homeConfigurations."gabriel@laptop"'   # Build home config
 ```
 
 ### Step 4: Format & Validate
+
 ```bash
 nix fmt                    # Auto-format
 nix flake check           # Validate everything
 ```
 
 ### Step 5: Merge & Deploy
+
 ```bash
 git add flake.nix flake.lock
 git commit -m "refactor: modernize to flake-parts with treefmt & pre-commit"
@@ -347,8 +353,7 @@ packages:
   - shellcheck
   - jq
 
-scripts:
-  fmt.exec = "nix fmt"
+scripts: fmt.exec = "nix fmt"
   check.exec = "nix flake check"
   lint.exec = "statix check"
   build.exec = "nix build '.#nixosConfigurations.laptop'"
@@ -366,6 +371,7 @@ tasks:
 ```
 
 **Usage:**
+
 ```bash
 cd /home/gabriel/projects/system
 devenv shell
@@ -396,6 +402,7 @@ watch_file modules
 ```
 
 **Setup:**
+
 ```bash
 cd /home/gabriel/projects/system
 echo 'use flake' > .envrc
@@ -407,22 +414,27 @@ direnv allow
 ## Troubleshooting Common Issues
 
 ### Issue: "attribute 'systemPackages' missing"
+
 **Cause:** Overlays not properly applied
 **Fix:** Ensure beads overlay is in correct module context
 
 ### Issue: flake-parts version conflict
+
 **Cause:** Different versions of flake-parts in transitive deps
 **Fix:** Explicitly follow versions:
+
 ```nix
 nvf.inputs.flake-parts.follows = "flake-parts";
 stylix.inputs.flake-parts.follows = "flake-parts";
 ```
 
 ### Issue: home-manager module not found
+
 **Cause:** HM not imported before nvf/stylix modules
 **Fix:** Check import order in nixosConfigurations modules list
 
 ### Issue: nix fmt fails
+
 **Cause:** Some code patterns not supported by nixfmt
 **Fix:** Use `# nixfmt: off/on` to disable formatting for specific sections
 
@@ -431,6 +443,7 @@ stylix.inputs.flake-parts.follows = "flake-parts";
 ## Module Organization with flake-parts
 
 ### Recommended Directory Structure
+
 ```
 .
 ├── flake.nix                    # flake-parts configuration
@@ -480,13 +493,16 @@ stylix.inputs.flake-parts.follows = "flake-parts";
 ## Performance Implications
 
 ### Build Time
+
 - ✅ No difference (evaluation is negligible)
 - ✅ Cache hits improved with better organization
 
 ### Disk Space
+
 - ➖ Negligible increase (~1-2% for metadata)
 
 ### System Complexity
+
 - ✅ Decreased (flake-parts reduces boilerplate by 30%)
 
 ---
@@ -494,6 +510,7 @@ stylix.inputs.flake-parts.follows = "flake-parts";
 ## Version Compatibility
 
 This modernized configuration requires:
+
 - **Nix:** 2.4+ (flakes)
 - **nixpkgs-unstable:** 2024-01-01+
 - **flake-parts:** 0.1.0+ (any version works)
@@ -529,14 +546,14 @@ Current system has all of these. ✅
 
 ## Summary of Changes
 
-| Feature | Before | After | Benefit |
-|---------|--------|-------|---------|
-| Boilerplate | 91 lines | ~65 lines | -30% |
-| Multi-system | Manual | Automatic | ✅ Scalable |
-| Formatting | None | Integrated | ✅ Consistency |
-| Pre-commit | None | Integrated | ✅ Quality |
-| Dev shell | None | Auto | ✅ Better DX |
-| Documentation | Implicit | Explicit | ✅ Clarity |
+| Feature       | Before   | After      | Benefit        |
+| ------------- | -------- | ---------- | -------------- |
+| Boilerplate   | 91 lines | ~65 lines  | -30%           |
+| Multi-system  | Manual   | Automatic  | ✅ Scalable    |
+| Formatting    | None     | Integrated | ✅ Consistency |
+| Pre-commit    | None     | Integrated | ✅ Quality     |
+| Dev shell     | None     | Auto       | ✅ Better DX   |
+| Documentation | Implicit | Explicit   | ✅ Clarity     |
 
 ---
 
@@ -553,4 +570,3 @@ A: Yes - homeConfigurations still work standalone with `home-manager switch --fl
 
 **Q: Does this require learning flake-parts deeply?**
 A: No - for single machine, the template above is sufficient. Complexity only arises with advanced features.
-

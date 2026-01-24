@@ -1,6 +1,7 @@
 # River Tiling Manager - Suspend/Resume Issue Research
 
 ## Investigation Summary
+
 Research into river (wayland compositor/tiling manager) behavior after system suspend in NixOS.
 
 ---
@@ -8,18 +9,22 @@ Research into river (wayland compositor/tiling manager) behavior after system su
 ## 1. CURRENT RIVER CONFIGURATION ANALYSIS
 
 ### Location & Structure
+
 - **Primary config:** `/home/gabriel/projects/system/modules/home/river.nix` (304 lines)
 - **Shell integration:** `/home/gabriel/projects/system/modules/home/shell.nix` (lines 22-25)
 - **System services:** `/home/gabriel/projects/system/modules/home/services.nix` (kanshi, gammastep)
 
 ### Startup Method (CRITICAL - TTY-based)
+
 ```fish
 # From shell.nix - lines 22-25
 if test (tty) = "/dev/tty1"
   exec river
 end
 ```
+
 **Issue:** River is started directly from Fish shell via `exec river` on tty1.
+
 - No systemd user service manages River
 - River exits = user logged out completely
 - Suspend doesn't directly kill River, but may cause:
@@ -28,15 +33,18 @@ end
   3. Input device state loss
 
 ### Key Components in Init Script (river.nix, lines 9-223)
+
 1. **Environment setup** (lines 25-43)
    - Wayland environment variables properly exported
    - dbus-update-activation-environment called (line 42)
    - systemctl --user import-environment (line 43)
 
 2. **Layout manager** (line 196)
+
    ```bash
    riverctl spawn "wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 --border-width 2 --border-width-monocle 0 --inner-gap 4 --outer-gap 4"
    ```
+
    - **wideriver** handles window tiling layout
    - This is a separate process that may crash/disconnect after suspend
 
@@ -50,7 +58,9 @@ end
    - kanshi (display manager)
 
 ### GPU Configuration
+
 From `modules/system/graphics.nix`:
+
 - Hybrid NVIDIA/AMD setup (PRIME offload)
 - AMD primary (amdgpuBusId = "PCI:198:0:0")
 - NVIDIA secondary (nvidiaBusId = "PCI:1:0:0")
@@ -61,10 +71,12 @@ From `modules/system/graphics.nix`:
 ## 2. ROOT CAUSE ANALYSIS: WHY TILING BREAKS AFTER SUSPEND
 
 ### The Core Problem
+
 River is a **Wayland compositor** (technically a tiling manager on top of wlroots).
 After suspend-resume cycle:
 
 #### A. **Wideriver Layout Manager Disconnection** (PRIMARY CAUSE)
+
 ```
 River ←→ wideriver (layout daemon)
          │
@@ -76,23 +88,27 @@ River ←→ wideriver (layout daemon)
 ```
 
 **Why this happens:**
+
 - Suspend triggers device state reset
 - Display server might briefly go offline
 - wideriver process may not properly reconnect
 - IPC socket or connection lost
 
 #### B. **GPU/Display State Corruption** (SECONDARY)
+
 - AMD GPU state not properly restored
 - Wayland display server state inconsistent
 - Output connectivity information stale
 - drm/kms state mismatch
 
 #### C. **System Service Dependencies**
+
 - Kanshi (display profiles) may not re-trigger properly
 - Output hotplug events might not fire
 - No systemd restart mechanism for River components
 
 #### D. **Input Device State Loss**
+
 - Keyboard/mouse state not preserved
 - Device descriptors potentially stale
 - Cursor rendering issues (WLR_NO_HARDWARE_CURSORS)
@@ -139,6 +155,7 @@ Based on configuration analysis, symptoms likely include:
    - Fixes: Re-run display configuration (wlr-randr, kanshi)
 
 ### Specific wideriver Issues
+
 - No built-in suspend hook
 - Doesn't auto-reconnect to River IPC
 - May crash on GPU memory pressure
@@ -149,17 +166,21 @@ Based on configuration analysis, symptoms likely include:
 ## 5. SOLUTION APPROACHES - PROS & CONS
 
 ### SOLUTION A: Manual River Restart (Quick Fix)
+
 **Command:** Bind `Super+Ctrl+R` to restart river
+
 ```nix
 riverctl map normal $mod+Control R spawn "pkill -9 wideriver; pkill -9 river; exec river"
 ```
 
 **Pros:**
+
 - Immediate fix after suspend
 - No configuration changes needed initially
 - User-controlled
 
 **Cons:**
+
 - Manual, not automatic
 - Loses window state
 - All windows closed/reset
@@ -170,13 +191,16 @@ riverctl map normal $mod+Control R spawn "pkill -9 wideriver; pkill -9 river; ex
 ---
 
 ### SOLUTION B: Systemd User Service with Restart Hook (BEST)
+
 Create `/etc/systemd/user/river-resume.service` that:
+
 1. Monitors `sleep.target` (suspend start)
 2. On resume, runs restart hook
 3. Reconnects wideriver to River
 4. Re-applies display configuration
 
 **Implementation:**
+
 ```nix
 # In modules/home/services.nix
 
@@ -225,6 +249,7 @@ systemd.user.targets.sleep = {
 ```
 
 **Pros:**
+
 - Automatic on suspend/resume
 - Preserves window state (restart is minimal)
 - Uses proper systemd hooks
@@ -233,6 +258,7 @@ systemd.user.targets.sleep = {
 - Non-disruptive to user
 
 **Cons:**
+
 - Requires careful timing (sleep delays)
 - May not catch all edge cases
 - Complex systemd setup
@@ -243,7 +269,9 @@ systemd.user.targets.sleep = {
 ---
 
 ### SOLUTION C: Logind Integration (systemd-logind hooks)
+
 Use `systemd-logind` sleep hooks at system level:
+
 ```bash
 # /etc/systemd/system-sleep/river-resume.sh
 #!/bin/bash
@@ -256,11 +284,13 @@ esac
 ```
 
 **Pros:**
+
 - Fires at system level before user session fully initialized
 - More reliable than user service
 - Can control timing of all services together
 
 **Cons:**
+
 - Requires root/sudo setup
 - Must be in /etc/systemd/system-sleep/ (not declarative in NixOS easily)
 - Less portable
@@ -270,7 +300,9 @@ esac
 ---
 
 ### SOLUTION D: River Daemon with Health Check
+
 Modify river init script to include wideriver health monitoring:
+
 ```bash
 # In river init script
 (
@@ -285,11 +317,13 @@ Modify river init script to include wideriver health monitoring:
 ```
 
 **Pros:**
+
 - Survives partial crashes
 - Auto-restarts failed components
 - Transparent to user
 
 **Cons:**
+
 - Not specific to suspend (always running check)
 - Wastes CPU cycles
 - Restart loop if wideriver broken
@@ -300,16 +334,20 @@ Modify river init script to include wideriver health monitoring:
 ---
 
 ### SOLUTION E: Logind Inhibitor (Prevent Suspend in Critical States)
+
 Tell systemd NOT to suspend if river is in critical state:
+
 ```bash
 systemd-inhibit --why="River WM updating" sleep
 ```
 
 **Pros:**
+
 - Prevents suspend during layout changes
 - User gets notification
 
 **Cons:**
+
 - Doesn't fix the core issue
 - Annoying for user
 - Delays sleep
@@ -321,6 +359,7 @@ systemd-inhibit --why="River WM updating" sleep
 ## 6. RECOMMENDED IMPLEMENTATION: SOLUTION B + D
 
 ### Step 1: Add Resume Hook Service
+
 ```nix
 # modules/home/services.nix
 
@@ -336,16 +375,16 @@ systemd.user.services.river-resume-hook = {
       ${pkgs.bash}/bin/bash -c '
         # Wait for GPU to fully wake up
         sleep 1.5
-        
+
         # Reconnect wideriver to River
         ${pkgs.libnotify}/bin/notify-send -u low "River" "Restoring tiling layout..."
-        
+
         # Force wideriver reconnection
         riverctl default-layout wideriver 2>/dev/null || true
-        
+
         # Reload display configuration
         ${pkgs.kanshi}/bin/kanshictl reload 2>/dev/null || true
-        
+
         # Bounce focus to trigger layout refresh
         sleep 0.2
         riverctl focus-output next 2>/dev/null || true
@@ -361,6 +400,7 @@ systemd.user.services.river-resume-hook = {
 ```
 
 ### Step 2: Add Wideriver Health Monitor
+
 ```nix
 # In river init script (in river.nix)
 
@@ -377,12 +417,13 @@ riverctl spawn "bash -c '
 ```
 
 ### Step 3: Improve GPU Wake-up Handling
+
 ```nix
 # In shell.nix - modify River startup
 
 interactiveShellInit = ''
   # ... existing code ...
-  
+
   if test (tty) = "/dev/tty1"
     # Give GPU time to initialize after boot
     sleep 0.5
@@ -392,6 +433,7 @@ interactiveShellInit = ''
 ```
 
 ### Step 4: Add Manual Recovery Keybinding
+
 ```nix
 # In river.nix init script
 
@@ -411,23 +453,29 @@ riverctl map normal $mod+Control+Shift R spawn "bash -c '
 ### Key Changes to Files
 
 #### A. `modules/home/services.nix`
+
 Add resume hook service (see implementation above)
 
 #### B. `modules/home/river.nix`
+
 1. Add health monitoring process (see above)
 2. Update init script Autostart section with process monitoring
 
 #### C. `modules/home/shell.nix`
+
 1. Add sleep delay before River exec
 2. Add post-resume recovery hint
 
 #### D. `modules/system/graphics.nix` (Optional)
+
 Consider adding NVIDIA runtime suspend handling:
+
 ```nix
 hardware.nvidia.powerManagement.finegrained = true;
 ```
 
 ### Testing Strategy
+
 1. **Cold boot:** Verify tiling works normally
 2. **Single suspend:** systemctl suspend, wake up, check tiling
 3. **Multiple suspends:** Back-to-back suspends, verify recovery each time
@@ -441,11 +489,13 @@ hardware.nvidia.powerManagement.finegrained = true;
 ## 8. KNOWN WLROOTS/RIVER ISSUES
 
 ### Related GitHub Issues
+
 - wlroots: GPU state not restored after suspend (search: "resume wlroots")
 - River: Multi-process coordination after suspend
 - wideriver: No suspend hook, IPC reconnection issues
 
 ### Upstream Status
+
 - No official River suspend handling (as of Jan 2026)
 - Workaround necessary at user level
 - Similar issues in sway, hyprland
@@ -455,23 +505,27 @@ hardware.nvidia.powerManagement.finegrained = true;
 ## 9. ALTERNATIVE ARCHITECTURES (Not Recommended)
 
 ### Why NOT to switch compositors?
-| Compositor | Status | Suspend Support |
-|------------|--------|-----------------|
-| River      | Stable | Needs hook (this PR) |
-| Sway       | Mature | Same wlroots issues |
-| Hyprland   | Stable | Better but slow |
-| GNOME      | Heavy  | Better suspend, but defeats purpose |
-| i3+Xwayland| Legacy | Not Wayland |
+
+| Compositor  | Status | Suspend Support                     |
+| ----------- | ------ | ----------------------------------- |
+| River       | Stable | Needs hook (this PR)                |
+| Sway        | Mature | Same wlroots issues                 |
+| Hyprland    | Stable | Better but slow                     |
+| GNOME       | Heavy  | Better suspend, but defeats purpose |
+| i3+Xwayland | Legacy | Not Wayland                         |
 
 ---
 
 ## 10. SUMMARY & RECOMMENDATION
 
 ### Root Cause
+
 **Wideriver (layout manager) loses IPC connection to River after suspend**, causing windows to stop tiling.
 
 ### Quick Diagnosis
+
 After suspend, run:
+
 ```bash
 pgrep -a wideriver  # Check if running
 riverctl default-layout wideriver  # Try to restore
@@ -480,7 +534,9 @@ journalctl -xe  # Check for errors
 ```
 
 ### Recommended Solution
+
 **Implement Solution B: Systemd resume hook + health monitor**
+
 - Automatic recovery on wake
 - Non-disruptive to user
 - Handles edge cases with health monitoring
@@ -488,11 +544,13 @@ journalctl -xe  # Check for errors
 - Aligns with expected Wayland best practices
 
 ### Priority
+
 **HIGH** - Core functionality (window tiling) broken after suspend
 
 ### Effort
+
 **Medium** - ~2 hours to implement and test fully
 
 ### Risk
-**Low** - Adds services, doesn't modify core River/wideriver code
 
+**Low** - Adds services, doesn't modify core River/wideriver code

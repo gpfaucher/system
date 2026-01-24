@@ -55,11 +55,13 @@ Use this as an **operational playbook** for each agent role.
 #### Detailed Steps
 
 **Step 1: Receive Request**
+
 - User describes desired feature/fix
 - Orchestrator asks clarifying questions
 - Determines complexity level
 
 **Step 2: Analyze Scope**
+
 ```bash
 # Check existing work
 bd list --search "authentication"
@@ -72,15 +74,17 @@ bd list --tag feature --status in-progress
 ```
 
 **Step 3: Create Epic (for complex work)**
+
 ```bash
 bd create "Epic: Add two-factor authentication" \
   --priority P1 \
   --tag epic,feature,security \
-  --description "User request: Enable 2FA for all accounts. 
+  --description "User request: Enable 2FA for all accounts.
   Requirements: SMS and TOTP support, backup codes, admin controls."
 ```
 
 **Step 4: Break Into Subtasks**
+
 ```bash
 # Design phase
 bd create "Design 2FA architecture and flow" \
@@ -153,6 +157,7 @@ bd create "Document 2FA setup and usage" \
 ```
 
 **Step 5: Set Dependencies**
+
 ```bash
 # Design + Research must complete first
 bd dep add 101 --blocks 103 104 105
@@ -169,6 +174,7 @@ bd ready 101 102
 ```
 
 **Step 6: Delegate to Specialists**
+
 ```bash
 # Already done via --assign in create commands
 # Verify assignments
@@ -178,6 +184,7 @@ bd show 100
 ```
 
 **Step 7: Monitor Progress**
+
 ```bash
 # Check epic status
 bd show 100
@@ -195,12 +202,13 @@ bd list --epic 100 --status in-progress
 ```
 
 **Step 8: Resolve Blockers**
+
 ```bash
 # Scenario: Security agent finds issue during audit
 
 # Security creates blocker task
 bd show 106 --comments
-# Comment: "Found SQL injection vulnerability in SMS flow. 
+# Comment: "Found SQL injection vulnerability in SMS flow.
 #           Created fix task #109."
 
 # Orchestrator re-prioritizes
@@ -213,6 +221,7 @@ bd ready --assign build --priority P0
 ```
 
 **Step 9: Synthesize Results**
+
 ```bash
 # When all subtasks done, review completeness
 bd show 100
@@ -228,6 +237,7 @@ bd show 108 --comments  # Documentation location
 ```
 
 **Step 10: Verify & Close**
+
 ```bash
 # Update epic status
 bd update 100 --status done
@@ -243,10 +253,12 @@ echo "2FA feature complete. See task #100 for details."
 #### Decision Points
 
 **Q: When to create an epic vs standalone task?**
+
 - Epic: 3+ agents, multiple phases, >4 hours total work
 - Standalone: 1-2 agents, single phase, <4 hours
 
 **Q: How to handle changing requirements mid-epic?**
+
 ```bash
 # User: "Actually, also add hardware key support"
 bd create "Add hardware key (WebAuthn) support" \
@@ -257,6 +269,7 @@ bd dep add 105 --blocks 110  # After login flow integration
 ```
 
 **Q: What if an agent is blocked on external dependency?**
+
 ```bash
 # Mark task as blocked with reason
 bd update 104 --status backlog \
@@ -296,6 +309,7 @@ bd dep add 111 --blocks 104
 #### Detailed Steps
 
 **Step 1: Get Design Task**
+
 ```bash
 # Check for design work
 bd ready --assign architect
@@ -308,6 +322,7 @@ bd update 101 --status in-progress
 ```
 
 **Step 2: Research Context**
+
 ```bash
 # Read epic description
 bd show 100
@@ -329,6 +344,7 @@ bd create "Research existing auth architecture" \
 ```
 
 **Step 3: Design Solution**
+
 ```
 Design considerations:
 - Architecture patterns
@@ -342,6 +358,7 @@ Create: docs/architecture/2fa-design.md
 ```
 
 **Step 4: Document Architecture**
+
 ```bash
 # Create architecture document
 # File: docs/architecture/2fa-design.md
@@ -369,6 +386,7 @@ Estimated: 8-10 hours total implementation"
 ```
 
 **Step 5: Create Implementation Tasks**
+
 ```bash
 # Often done by Orchestrator, but Architect can refine
 # Add implementation notes to existing tasks
@@ -390,6 +408,7 @@ Required:
 ```
 
 **Step 6: Mark Design Complete**
+
 ```bash
 bd done 101 --comment "Architecture design complete.
 Document: docs/architecture/2fa-design.md
@@ -411,6 +430,7 @@ Ready for implementation. All implementation tasks updated with specs."
 #### Decision Points
 
 **Q: What if requirements are unclear?**
+
 ```bash
 # Create clarification task for orchestrator
 bd create "Clarify 2FA requirements: mandatory vs optional?" \
@@ -423,9 +443,10 @@ bd update 101 --status backlog
 ```
 
 **Q: Design reveals new complexity?**
+
 ```bash
 # Update epic with findings
-bd update 100 --description "Epic scope increased: 
+bd update 100 --description "Epic scope increased:
 Need to add account recovery flow for lost 2FA devices.
 Creating additional task."
 
@@ -436,6 +457,7 @@ bd create "Design 2FA account recovery process" \
 ```
 
 **Q: Multiple design approaches - which to choose?**
+
 ```
 Document alternatives in architecture doc:
 - Approach A: [pros/cons]
@@ -472,6 +494,7 @@ Record in task comments for transparency.
 #### Detailed Steps
 
 **Step 1: Query Ready Tasks**
+
 ```bash
 # Check for ready implementation work
 bd ready --assign build --priority P0,P1
@@ -483,6 +506,7 @@ bd ready --assign build --priority P0,P1
 ```
 
 **Step 2: Pick Highest Priority**
+
 ```bash
 # Check dependencies
 bd show 103 --deps
@@ -498,6 +522,7 @@ bd update 103 --status in-progress
 ```
 
 **Step 3: Read Design Specs**
+
 ```bash
 # Read design doc
 bd show 101 --comments
@@ -513,6 +538,7 @@ bd show 105  # Login flow integration
 ```
 
 **Step 4: Implement Code**
+
 ```
 Implement:
 - lib/auth/totp.rs (TOTP logic)
@@ -526,6 +552,7 @@ Test locally:
 ```
 
 **Step 5: Create Follow-Up Tasks**
+
 ```bash
 # Delegate testing
 bd create "Unit tests for TOTP implementation" \
@@ -557,6 +584,7 @@ bd dep add 103 --blocks 115
 ```
 
 **Step 6: Mark Complete**
+
 ```bash
 bd done 103 --comment "TOTP backend implementation complete.
 
@@ -594,6 +622,7 @@ Ready for security review (#106)."
 #### Decision Points
 
 **Q: Blocker discovered during implementation?**
+
 ```bash
 # Example: Need database migration approved
 bd create "DBA review: 2FA table schema" \
@@ -606,6 +635,7 @@ bd update 103 --status backlog \
 ```
 
 **Q: Implementation reveals design flaw?**
+
 ```bash
 # Alert architect
 bd create "Architecture issue: TOTP secret regeneration" \
@@ -620,6 +650,7 @@ bd update 103 --status backlog
 ```
 
 **Q: Found bug in existing code?**
+
 ```bash
 # Create fix task
 bd create "Fix auth session expiration bug" \
@@ -641,6 +672,7 @@ bd create "Fix auth session expiration bug" \
 **Focus**: Breaking epics into actionable tasks
 
 **Workflow**:
+
 ```
 1. GET PLANNING TASK → bd ready --assign plan
 2. ANALYZE EPIC → bd show <epic-id>
@@ -652,6 +684,7 @@ bd create "Fix auth session expiration bug" \
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign plan
 # Output: 120: Break down export feature epic
@@ -682,6 +715,7 @@ bd done 120 --comment "Broken into 5 tasks. Estimated 6-8 hours total."
 **Focus**: Code review, quality checks
 
 **Workflow**:
+
 ```
 1. GET REVIEW TASK → bd ready --assign review
 2. REVIEW CODE → Check implementation quality
@@ -690,6 +724,7 @@ bd done 120 --comment "Broken into 5 tasks. Estimated 6-8 hours total."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign review
 # Output: 126: Code review for 2FA implementation
@@ -730,6 +765,7 @@ Re-review after #127 complete."
 **Focus**: Writing and running tests
 
 **Workflow**:
+
 ```
 1. GET TEST TASK → bd ready --assign test
 2. READ IMPLEMENTATION → Understand what to test
@@ -739,6 +775,7 @@ Re-review after #127 complete."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign test
 # Output: 107: Test 2FA flows end-to-end
@@ -780,6 +817,7 @@ All tests passing. Ready for production."
 **Focus**: Finding vulnerabilities, security review
 
 **Workflow**:
+
 ```
 1. GET SECURITY TASK → bd ready --assign security
 2. SECURITY AUDIT → Check for vulnerabilities
@@ -788,6 +826,7 @@ All tests passing. Ready for production."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign security
 # Output: 106: Security audit 2FA implementation
@@ -836,6 +875,7 @@ Re-audit after fix complete."
 **Focus**: Creating clear, comprehensive docs
 
 **Workflow**:
+
 ```
 1. GET DOCS TASK → bd ready --assign document
 2. READ IMPLEMENTATION → Understand what to document
@@ -845,6 +885,7 @@ Re-audit after fix complete."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign document
 # Output: 108: Document 2FA setup and usage
@@ -890,6 +931,7 @@ Added to main docs index."
 **Focus**: Root cause analysis
 
 **Workflow**:
+
 ```
 1. GET BUG REPORT → bd ready --assign debug
 2. REPRODUCE ISSUE → Verify bug exists
@@ -900,6 +942,7 @@ Added to main docs index."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign debug
 # Output: 131: Debug: 2FA tokens sometimes fail validation
@@ -946,6 +989,7 @@ Created fix task #132."
 **Focus**: Quick discovery and fact-finding
 
 **Workflow**:
+
 ```
 1. GET RESEARCH TASK → bd ready --assign research
 2. EXPLORE CODEBASE → Find relevant files/patterns
@@ -954,6 +998,7 @@ Created fix task #132."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign research
 # Output: 102: Research 2FA libraries and best practices
@@ -1000,6 +1045,7 @@ RECOMMENDATION: Use totp-rs library, integrate at lib/auth/ level."
 **Focus**: Improving speed, reducing resource usage
 
 **Workflow**:
+
 ```
 1. GET OPTIMIZATION TASK → bd ready --assign optimize
 2. BENCHMARK CURRENT → Measure baseline
@@ -1010,6 +1056,7 @@ RECOMMENDATION: Use totp-rs library, integrate at lib/auth/ level."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign optimize
 # Output: 133: Optimize 2FA database queries
@@ -1056,6 +1103,7 @@ Performance target met."
 **Focus**: Improving code structure
 
 **Workflow**:
+
 ```
 1. GET REFACTOR TASK → bd ready --assign refactor
 2. ANALYZE CODE → Identify tech debt
@@ -1066,6 +1114,7 @@ Performance target met."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign refactor
 # Output: 134: Refactor 2FA code for better testability
@@ -1111,6 +1160,7 @@ All tests passing. No behavior changes."
 **Focus**: NixOS modules, system configuration
 
 **Workflow**:
+
 ```
 1. GET NIXOS TASK → bd ready --assign nix-specialist
 2. DESIGN MODULE → Plan module structure
@@ -1120,6 +1170,7 @@ All tests passing. No behavior changes."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign nix-specialist
 # Output: 135: Create NixOS module for 2FA service
@@ -1174,6 +1225,7 @@ USAGE:
 **Focus**: Quick, targeted fixes
 
 **Workflow**:
+
 ```
 1. GET FIX TASK → bd ready --assign fix --priority P0,P1
 2. READ BUG ANALYSIS → Understand root cause
@@ -1183,6 +1235,7 @@ USAGE:
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign fix --priority P0
 # Output: 127: Fix: TOTP secrets not cryptographically random
@@ -1222,6 +1275,7 @@ Ready for security re-review."
 **Focus**: Quick file/pattern discovery
 
 **Workflow**:
+
 ```
 1. GET EXPLORATION TASK → bd ready --assign explore
 2. SEARCH CODEBASE → Find relevant files
@@ -1230,6 +1284,7 @@ Ready for security re-review."
 ```
 
 **Example**:
+
 ```bash
 bd ready --assign explore
 # Output: 136: Find all authentication-related files
@@ -1280,6 +1335,7 @@ TOTAL: 23 files related to authentication"
 **Focus**: Miscellaneous work
 
 **Workflow**:
+
 ```
 1. GET UNASSIGNED TASK → bd ready --assignee none
 2. ASSESS TASK → Determine what's needed
@@ -1288,6 +1344,7 @@ TOTAL: 23 files related to authentication"
 ```
 
 **Example**:
+
 ```bash
 bd ready --assignee none
 # Output: 137: Update project README with 2FA feature
@@ -1315,6 +1372,7 @@ File: README.md"
 ## Cross-Agent Coordination Patterns
 
 ### Pattern 1: Hand-off Chain
+
 ```
 Architect designs → Build implements → Test verifies → Document writes
 
@@ -1326,6 +1384,7 @@ Each agent:
 ```
 
 ### Pattern 2: Parallel Split
+
 ```
 Orchestrator creates epic
 ├─→ Build task 1 (ready)
@@ -1336,6 +1395,7 @@ All 3 build tasks can progress simultaneously.
 ```
 
 ### Pattern 3: Review Cycle
+
 ```
 1. Build completes task
 2. bd create "Review task #X" --assign review
@@ -1347,6 +1407,7 @@ All 3 build tasks can progress simultaneously.
 ```
 
 ### Pattern 4: Emergency Escalation
+
 ```
 1. User reports P0 bug
 2. bd create "CRITICAL: ..." --priority P0 --assign debug
@@ -1393,6 +1454,7 @@ All 3 build tasks can progress simultaneously.
 ---
 
 **Related Docs**:
+
 - [Main Guide](./BEADS_AGENT_GUIDE.md) - Core concepts
 - [Examples](./BEADS_EXAMPLES.md) - Real-world scenarios
 - [Hierarchy](./BEADS_HIERARCHY.md) - Task structure patterns

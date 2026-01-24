@@ -3,19 +3,22 @@
 ## ✅ What's Been Done
 
 ### Analysis Complete (4,712 lines of documentation)
+
 1. **FLAKE-ANALYSIS.md** - Comprehensive architecture review
 2. **DEV_ENV_ANALYSIS.md** - Development tools inventory
 3. **STABILITY-ANALYSIS-REPORT.md** - Service reliability audit
 4. **COMPREHENSIVE-ANALYSIS-SUMMARY.md** - Executive overview
 
 ### Bugs Fixed (Committed to Git)
+
 1. ✅ **Gammastep multi-monitor** - Auto-restart on Wayland disconnect
 2. ✅ **Neovim markdown rendering** - Visual concealment working
 
 ### Git Status
+
 - **Commits**: 4 new commits pushed to master
   - `c424b5f` - Flake analysis documents
-  - `28066b3` - Dev environment analysis  
+  - `28066b3` - Dev environment analysis
   - `dc79f38` - Gammastep + markdown fixes
   - `d0a048d` - Fix RestartSec type error
 - **Branch**: master (up to date with origin)
@@ -26,6 +29,7 @@
 ## 🚀 Apply the Fixes NOW (5 minutes)
 
 ### Step 1: Rebuild Your System
+
 ```bash
 cd ~/projects/system
 
@@ -37,6 +41,7 @@ sudo nixos-rebuild switch --flake .#laptop
 ```
 
 **What this does:**
+
 - Applies gammastep restart policy (auto-recovers from crashes)
 - Enables markdown visual rendering in neovim
 - Updates all system packages
@@ -69,14 +74,16 @@ nvim ~/notes/todo.md
 ```
 
 **What you should see:**
+
 - `- [ ]` renders as **☐** (empty checkbox symbol)
 - `- [x]` renders as **☑** (checked symbol)
 - `**bold text**` appears **bold** (not raw asterisks)
-- `*italic*` appears *italic*
+- `*italic*` appears _italic_
 - Headers are visually distinct
 - Concealment color: gruvbox blue (#83a598)
 
 **Test checkbox toggle:**
+
 - Press `<leader>nx` on a checkbox line
 - Should toggle between `[ ]` and `[x]`
 
@@ -91,7 +98,7 @@ Edit `modules/home/default.nix` and add these packages to the `home.packages` li
 ```nix
 home.packages = with pkgs; [
   # ... existing packages ...
-  
+
   # CRITICAL ADDITIONS (debuggers, runtimes, k8s)
   python312        # Python runtime (LSP configured but missing)
   tmux            # Terminal multiplexer
@@ -99,17 +106,17 @@ home.packages = with pkgs; [
   gdb             # GNU debugger
   lldb            # LLVM debugger
   delve           # Go debugger
-  
+
   # DATABASE TOOLS
   postgresql      # PostgreSQL client (psql)
   mysql80         # MySQL client
   redis           # Redis CLI
   mongosh         # MongoDB shell
-  
+
   # CLOUD TOOLS
   google-cloud-sdk  # GCP CLI (gcloud)
   azure-cli         # Azure CLI
-  
+
   # FORMATTERS & LINTERS
   prettier        # JavaScript/TypeScript formatter
   eslint_d        # ESLint daemon
@@ -117,7 +124,7 @@ home.packages = with pkgs; [
   ruff            # Python linter
   shellcheck      # Shell script linter
   shfmt           # Shell script formatter
-  
+
   # MODERN CLI TOOLS
   bat             # Better cat
   eza             # Better ls
@@ -129,6 +136,7 @@ home.packages = with pkgs; [
 ```
 
 Then rebuild:
+
 ```bash
 sudo nixos-rebuild switch --flake .#laptop
 ```
@@ -161,10 +169,12 @@ done' &"
 ## 📖 Deep Dive Reading (Optional)
 
 ### For Understanding Current State
+
 1. **COMPREHENSIVE-ANALYSIS-SUMMARY.md** - Start here (20 min read)
 2. **FIXES-APPLIED.md** - What was fixed and why
 
 ### For Implementation Details
+
 1. **STABILITY-QUICK-FIXES.md** - Copy-paste ready fixes (1-2 hrs work)
 2. **DEV_ENV_ANALYSIS.md** - Missing tools detailed breakdown
 3. **FLAKE-ANALYSIS.md** - Architecture deep dive (1 hr read)
@@ -176,18 +186,21 @@ done' &"
 After rebuilding, you should have:
 
 ### Immediate (Today)
+
 - [x] Gammastep working reliably across all monitors
 - [x] Markdown files rendering beautifully in neovim
 - [x] No build errors
 - [x] System stable
 
 ### This Week (After Quick Wins)
+
 - [ ] All debugging tools installed (gdb, lldb, delve)
 - [ ] Python3 in PATH and working
 - [ ] kubectl, tmux, database CLIs available
 - [ ] Services auto-restart on failure
 
 ### This Month (Full Implementation)
+
 - [ ] 95%+ system uptime
 - [ ] All 14 services with restart policies
 - [ ] Backup strategy in place
@@ -198,6 +211,7 @@ After rebuilding, you should have:
 ## 🆘 If Something Breaks
 
 ### Build Fails
+
 ```bash
 # Check for syntax errors
 nix flake check
@@ -207,6 +221,7 @@ sudo nixos-rebuild switch --flake .#laptop --show-trace
 ```
 
 ### Service Won't Start
+
 ```bash
 # Check service status
 systemctl --user status <service-name>
@@ -216,6 +231,7 @@ journalctl --user -u <service-name> -xe
 ```
 
 ### Markdown Still Shows Raw Syntax
+
 ```bash
 # Check conceallevel in neovim
 nvim ~/notes/todo.md
@@ -231,6 +247,7 @@ nvim ~/notes/todo.md
 ## 📊 Progress Tracker
 
 ### Analysis Phase ✅ COMPLETE
+
 - [x] Flake structure analyzed
 - [x] Dev environment analyzed
 - [x] Stability analyzed
@@ -238,11 +255,13 @@ nvim ~/notes/todo.md
 - [x] Immediate bugs fixed
 
 ### Implementation Phase (YOU ARE HERE)
+
 - [ ] Apply fixes (5 minutes) ← **DO THIS NOW**
 - [ ] Install dev tools (30 minutes)
 - [ ] Add restart policies (1-2 hours)
 
 ### Perfection Phase (Next Month)
+
 - [ ] Fix all critical flake issues (40 minutes)
 - [ ] Implement full stability recommendations (3-5 hours)
 - [ ] Security audit
@@ -263,11 +282,13 @@ Target: **9.5/10** (PERFECT system)
 ---
 
 **Next Command to Run:**
+
 ```bash
 sudo nixos-rebuild switch --flake .#laptop
 ```
 
 Then verify with:
+
 ```bash
 systemctl --user status gammastep
 nvim ~/notes/todo.md

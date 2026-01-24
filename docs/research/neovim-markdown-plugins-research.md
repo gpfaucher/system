@@ -1,6 +1,7 @@
 # Neovim Markdown Plugins Research Report
 
 ## Current Setup
+
 - **Neovim Version**: v0.11.5
 - **Status**: No existing neovim configuration found at `~/.config/nvim/`
 - **Opportunity**: Clean slate to build an optimized markdown editing workflow
@@ -10,11 +11,13 @@
 ## Top 7 Markdown Quality-of-Life Plugins for Neovim
 
 ### 1. **obsidian.nvim** ⭐ (5.9k stars)
+
 **Category**: Vault Management & Note-Taking  
 **Language**: Lua  
 **Minimal Version**: Neovim 0.8.0+
 
 #### Features
+
 - **Wiki-style linking**: `[[note-title]]` with auto-completion
 - **Obsidian vault integration**: Full sync with Obsidian app vaults
 - **Completion system**: Ultra-fast wiki links, tags, and markdown link completion via `nvim-cmp`
@@ -27,6 +30,7 @@
 - **UI enhancements**: Syntax highlighting for checkboxes, tags, links
 
 #### Configuration Example
+
 ```lua
 {
   "epwalsh/obsidian.nvim",
@@ -63,23 +67,27 @@
 ```
 
 #### Best For
+
 - Obsidian vault users (best-in-class)
 - Knowledge base & wiki management
 - Zettelkasten-style note taking
 - Multi-vault setups
 
 #### Dependencies
+
 - **Required**: plenary.nvim, ripgrep
 - **Recommended**: nvim-cmp (completion), telescope.nvim (search), nvim-treesitter (syntax)
 
 ---
 
 ### 2. **markdown-preview.nvim** ⭐ (7.7k stars)
+
 **Category**: Preview & Rendering  
 **Language**: JavaScript/TypeScript/Vim Script  
 **Minimal Version**: Vim 8.1+, Neovim 0.4.0+
 
 #### Features
+
 - **Live preview**: Markdown rendered in browser with synchronized scrolling
 - **Math support**: KaTeX for inline and block math equations
 - **Diagrams**: Mermaid, PlantUML, Flowchart.js support
@@ -90,6 +98,7 @@
 - **Dark/Light theme**: System preference-aware with toggle button
 
 #### Configuration Example
+
 ```lua
 {
   "iamcco/markdown-preview.nvim",
@@ -107,12 +116,14 @@
 ```
 
 #### Keybindings Example
+
 ```lua
 vim.keymap.set("n", "<C-s>", "<Plug>MarkdownPreview")
 vim.keymap.set("n", "<C-p>", "<Plug>MarkdownPreviewToggle")
 ```
 
 #### Best For
+
 - Technical documentation
 - Blog writing
 - Presentations with rendered output
@@ -121,11 +132,13 @@ vim.keymap.set("n", "<C-p>", "<Plug>MarkdownPreviewToggle")
 ---
 
 ### 3. **telekasten.nvim** ⭐ (1.6k stars)
+
 **Category**: Zettelkasten & Journal Management  
 **Language**: Lua  
 **Minimal Version**: Neovim 0.6.0+
 
 #### Features
+
 - **Zettelkasten workflow**: Permanent notes with auto-linking
 - **Multi-vault support**: Manage multiple separate note collections
 - **Journal integration**: Daily, weekly, monthly, quarterly, yearly notes
@@ -138,6 +151,7 @@ vim.keymap.set("n", "<C-p>", "<Plug>MarkdownPreviewToggle")
 - **TODOs**: Toggle checkbox status with custom symbols
 
 #### Configuration Example
+
 ```lua
 {
   "renerocksai/telekasten.nvim",
@@ -169,23 +183,27 @@ vim.keymap.set("n", "<C-p>", "<Plug>MarkdownPreviewToggle")
 ```
 
 #### Best For
+
 - Zettelkasten practitioners
 - Journal/Daily log writers
 - Researchers with cross-referenced notes
 - Structured knowledge management
 
 #### Dependencies
+
 - **Required**: telescope.nvim, plenary.nvim
 - **Recommended**: calendar-vim (date picker), telescope-media-files.nvim (image preview)
 
 ---
 
 ### 4. **neorg** ⭐ (7.2k stars)
+
 **Category**: Advanced Organization & Project Management  
 **Language**: Lua  
 **Minimal Version**: Neovim 0.10.0+
 
 #### Features
+
 - **Org-mode alternative**: Structured document format (.norg)
 - **GTD system**: Built-in Getting Things Done workflow
 - **Time tracking**: Pomodoro timers and time management
@@ -198,6 +216,7 @@ vim.keymap.set("n", "<C-p>", "<Plug>MarkdownPreviewToggle")
 - **Links**: Bidirectional linking system
 
 #### Configuration Example (Lazy.nvim)
+
 ```lua
 {
   "nvim-neorg/neorg",
@@ -212,6 +231,7 @@ vim.keymap.set("n", "<C-p>", "<Plug>MarkdownPreviewToggle")
 ```
 
 #### Best For
+
 - Comprehensive life organization
 - Project tracking (not just notes)
 - Time management and GTD
@@ -219,17 +239,20 @@ vim.keymap.set("n", "<C-p>", "<Plug>MarkdownPreviewToggle")
 - Heavy-weight organization systems
 
 #### Learning Curve
+
 - **Steeper learning curve**: Requires understanding `.norg` format
 - **More powerful**: Significantly more features than simple markdown
 
 ---
 
 ### 5. **vim-table-mode** ⭐ (2.2k stars)
+
 **Category**: Table Creation & Formatting  
 **Language**: Vim Script  
 **Works With**: Vim 8+, Neovim
 
 #### Features
+
 - **Live table editing**: Type `|` to auto-format tables on the fly
 - **Markdown compatibility**: Supports both GitHub and ReST tables
 - **Spreadsheet formulas**: `$2 = $1 * 2` style cell formulas
@@ -240,6 +263,7 @@ vim.keymap.set("n", "<C-p>", "<Plug>MarkdownPreviewToggle")
 - **Easy activation**: Toggle with `:TableModeToggle`
 
 #### Configuration Example
+
 ```lua
 {
   "dhruvasagar/vim-table-mode",
@@ -255,6 +279,7 @@ vim.keymap.set("n", "<C-p>", "<Plug>MarkdownPreviewToggle")
 ```
 
 #### Example Usage
+
 ```
 Type this:          Creates this:
 | Name | Age |      | Name | Age |
@@ -263,6 +288,7 @@ Type this:          Creates this:
 ```
 
 #### Best For
+
 - Markdown tables (GitHub, documentation)
 - Data entry into tables
 - Quick table creation
@@ -271,11 +297,13 @@ Type this:          Creates this:
 ---
 
 ### 6. **markdown.nvim** ⭐ (223 stars, modern)
+
 **Category**: Markdown Editing Tools  
 **Language**: Lua  
 **Minimal Version**: Neovim 0.10.0+
 
 #### Features
+
 - **Inline styling**: Toggle bold, italic, code, strikethrough
 - **Link management**: Add/follow links, URL pasting as links
 - **Table of contents**: Auto-generate or display in location list
@@ -286,6 +314,7 @@ Type this:          Creates this:
 - **Emphasis control**: Line-wise and motion-based toggling
 
 #### Configuration Example
+
 ```lua
 {
   "tadmccorkle/markdown.nvim",
@@ -321,6 +350,7 @@ Type this:          Creates this:
 ```
 
 #### Best For
+
 - Lightweight markdown editing
 - Inline formatting without heavy features
 - Vim-style keybinding preference
@@ -329,11 +359,13 @@ Type this:          Creates this:
 ---
 
 ### 7. **vim-markdown** ⭐ (4.8k stars, traditional)
+
 **Category**: Syntax & Navigation  
 **Language**: Vim Script  
 **Works With**: Vim 7.4+, Neovim
 
 #### Features
+
 - **Syntax highlighting**: Complete markdown syntax support
 - **Folding**: Header-based code folding (customizable)
 - **Concealing**: Hide markdown syntax for cleaner display
@@ -346,6 +378,7 @@ Type this:          Creates this:
 - **Front matter**: YAML, TOML, JSON front matter support
 
 #### Configuration Example
+
 ```lua
 {
   "preservim/vim-markdown",
@@ -364,6 +397,7 @@ Type this:          Creates this:
 ```
 
 #### Key Mappings
+
 ```
 ]]  - go to next header
 [[  - go to previous header
@@ -376,6 +410,7 @@ gx  - open URL under cursor
 ```
 
 #### Best For
+
 - Traditional markdown editing
 - Header-focused navigation
 - Code folding workflows
@@ -386,6 +421,7 @@ gx  - open URL under cursor
 ## Recommended Plugin Combinations for Different Workflows
 
 ### 🎯 **Workflow 1: Obsidian Vault User**
+
 ```lua
 -- Best Stack for Obsidian users
 {
@@ -395,9 +431,11 @@ gx  - open URL under cursor
   "tadmccorkle/markdown.nvim",
 }
 ```
+
 **Why**: Obsidian integration + preview + table support + quick editing
 
 ### 📚 **Workflow 2: Zettelkasten Researcher**
+
 ```lua
 -- Best Stack for knowledge work
 {
@@ -407,9 +445,11 @@ gx  - open URL under cursor
   "tadmccorkle/markdown.nvim",
 }
 ```
+
 **Why**: Zettelkasten workflow + robust syntax + table management + editing
 
 ### 📊 **Workflow 3: Technical Writer/Blogger**
+
 ```lua
 -- Best Stack for documentation
 {
@@ -419,9 +459,11 @@ gx  - open URL under cursor
   "preservim/vim-markdown",
 }
 ```
+
 **Why**: Live preview + inline editing + tables + syntax highlighting
 
 ### 🚀 **Workflow 4: Advanced Organization (GTD)**
+
 ```lua
 -- Best Stack for life organization
 {
@@ -430,9 +472,11 @@ gx  - open URL under cursor
   "dhruvasagar/vim-table-mode",
 }
 ```
+
 **Why**: Comprehensive org system + preview + table support
 
 ### 🎨 **Workflow 5: Lightweight Markdown Only**
+
 ```lua
 -- Minimal Stack for pure markdown
 {
@@ -440,31 +484,33 @@ gx  - open URL under cursor
   "preservim/vim-markdown",
 }
 ```
+
 **Why**: Fast, no overhead, vim-native styling
 
 ---
 
 ## Plugin Comparison Matrix
 
-| Feature | obsidian.nvim | telekasten.nvim | neorg | markdown-preview | vim-table-mode | markdown.nvim | vim-markdown |
-|---------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Wiki-style links | ✅ | ✅ | ⚠️ | ❌ | ❌ | ❌ | ❌ |
-| Live preview | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
-| Vault sync | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Table creation | ⚠️ | ⚠️ | ⚠️ | ❌ | ✅ | ⚠️ | ❌ |
-| Daily notes | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Header folding | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Inline formatting | ⚠️ | ⚠️ | ✅ | ❌ | ❌ | ✅ | ⚠️ |
-| Search/ripgrep | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Math support | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
-| Time tracking | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ | ❌ |
-| Easy setup | ✅ | ✅ | ❌ | ✅ | ✅ | ✅ | ✅ |
+| Feature           | obsidian.nvim | telekasten.nvim | neorg | markdown-preview | vim-table-mode | markdown.nvim | vim-markdown |
+| ----------------- | :-----------: | :-------------: | :---: | :--------------: | :------------: | :-----------: | :----------: |
+| Wiki-style links  |      ✅       |       ✅        |  ⚠️   |        ❌        |       ❌       |      ❌       |      ❌      |
+| Live preview      |      ❌       |       ❌        |  ❌   |        ✅        |       ❌       |      ❌       |      ❌      |
+| Vault sync        |      ✅       |       ❌        |  ❌   |        ❌        |       ❌       |      ❌       |      ❌      |
+| Table creation    |      ⚠️       |       ⚠️        |  ⚠️   |        ❌        |       ✅       |      ⚠️       |      ❌      |
+| Daily notes       |      ✅       |       ✅        |  ❌   |        ❌        |       ❌       |      ❌       |      ❌      |
+| Header folding    |      ❌       |       ❌        |  ❌   |        ❌        |       ❌       |      ❌       |      ✅      |
+| Inline formatting |      ⚠️       |       ⚠️        |  ✅   |        ❌        |       ❌       |      ✅       |      ⚠️      |
+| Search/ripgrep    |      ✅       |       ✅        |  ❌   |        ❌        |       ❌       |      ❌       |      ❌      |
+| Math support      |      ❌       |       ❌        |  ❌   |        ✅        |       ❌       |      ❌       |      ✅      |
+| Time tracking     |      ❌       |       ❌        |  ✅   |        ❌        |       ❌       |      ❌       |      ❌      |
+| Easy setup        |      ✅       |       ✅        |  ❌   |        ✅        |       ✅       |      ✅       |      ✅      |
 
 ---
 
 ## Installation Paths
 
 ### For Lazy.nvim Users
+
 ```lua
 -- Add to ~/.config/nvim/init.lua or plugins directory
 require("lazy").setup({
@@ -474,6 +520,7 @@ require("lazy").setup({
 ```
 
 ### For Packer.nvim Users
+
 ```lua
 -- Add to ~/.config/nvim/init.lua
 return require('packer').startup(function(use)
@@ -486,6 +533,7 @@ end)
 ## Additional Quality-of-Life Plugins to Consider
 
 ### Supporting Plugins
+
 - **nvim-treesitter**: Better syntax highlighting
 - **telescope.nvim**: Fuzzy search and picker (used by obsidian, telekasten)
 - **plenary.nvim**: Required for obsidian and telekasten
@@ -495,6 +543,7 @@ end)
 - **mini.nvim**: Lightweight utility functions
 
 ### Text Manipulation
+
 - **vim-surround**: Easy surround operations
 - **nvim-autopairs**: Auto-closing pairs
 - **Comment.nvim**: Quick commenting
@@ -503,21 +552,22 @@ end)
 
 ## Performance Considerations
 
-| Plugin | Load Time | Memory | Dependencies |
-|--------|-----------|--------|--------------|
-| obsidian.nvim | Medium | Medium | 1 required |
-| telekasten.nvim | Medium | Medium | 2 required |
-| neorg | High | High | Multiple |
-| markdown-preview.nvim | Low | Medium | Node.js required |
-| vim-table-mode | Very low | Low | None |
-| markdown.nvim | Low | Low | None |
-| vim-markdown | Very low | Low | 1 suggested |
+| Plugin                | Load Time | Memory | Dependencies     |
+| --------------------- | --------- | ------ | ---------------- |
+| obsidian.nvim         | Medium    | Medium | 1 required       |
+| telekasten.nvim       | Medium    | Medium | 2 required       |
+| neorg                 | High      | High   | Multiple         |
+| markdown-preview.nvim | Low       | Medium | Node.js required |
+| vim-table-mode        | Very low  | Low    | None             |
+| markdown.nvim         | Low       | Low    | None             |
+| vim-markdown          | Very low  | Low    | 1 suggested      |
 
 ---
 
 ## Configuration Tips
 
 ### Lazy-loading Recommendations
+
 ```lua
 -- Load markdown plugins on markdown filetype
 ft = { "markdown" }
@@ -530,6 +580,7 @@ event = { "BufReadPre *.md", "BufNewFile *.md" }
 ```
 
 ### Performance Optimization
+
 ```lua
 -- Disable features you don't use in vim-markdown
 vim.g.vim_markdown_folding_disabled = 1
@@ -613,9 +664,9 @@ return {
 6. **Heavy table usage?** → `vim-table-mode` (pairs with any combo)
 
 ### Next Steps
+
 1. Choose workflow that matches your use case
 2. Install supporting dependencies (treesitter, telescope, etc.)
 3. Configure keybindings to match your vim style
 4. Test with sample markdown files
 5. Iterate and customize as needed
-

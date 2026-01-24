@@ -15,19 +15,22 @@
           # EFI Boot Partition
           boot = {
             size = "1G";
-            type = "EF00";  # EFI System partition
+            type = "EF00"; # EFI System partition
             content = {
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
-              mountOptions = [ "fmask=0077" "dmask=0077" ];
+              mountOptions = [
+                "fmask=0077"
+                "dmask=0077"
+              ];
             };
           };
 
           # Root filesystem (Btrfs with subvolumes)
           root = {
             size = "100%";
-            type = "8300";  # Linux filesystem
+            type = "8300"; # Linux filesystem
             content = {
               type = "btrfs";
               format = "btrfs";
@@ -36,11 +39,11 @@
                 "@" = {
                   mountpoint = "/";
                   mountOptions = [
-                    "compress=zstd"        # Optional: enable compression
-                    "noatime"              # Faster access (no atime updates)
-                    "ssd"                  # SSD optimizations
-                    "discard=async"        # Async TRIM
-                    "space_cache=v2"       # Modern space cache
+                    "compress=zstd" # Optional: enable compression
+                    "noatime" # Faster access (no atime updates)
+                    "ssd" # SSD optimizations
+                    "discard=async" # Async TRIM
+                    "space_cache=v2" # Modern space cache
                   ];
                 };
 
@@ -98,7 +101,12 @@
       "/boot/efi-windows" = {
         fsType = "vfat";
         device = "/dev/disk/by-uuid/F41B-3E96";
-        options = [ "ro" "nofail" "fmask=0077" "dmask=0077" ];
+        options = [
+          "ro"
+          "nofail"
+          "fmask=0077"
+          "dmask=0077"
+        ];
       };
     };
   };

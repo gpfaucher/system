@@ -19,12 +19,14 @@ Your system is already **very good** but missing several advanced NixOS patterns
 ### 1. SECURITY: Hardcoded Token Exposed
 
 **CRITICAL SECURITY ISSUE**:
+
 - **File**: `modules/home/default.nix:111`
 - **Token**: `auth_872164f40d10473e861c75db73842900` (Tabby AI)
 - **Risk**: HIGH - Anyone with repo access can authenticate
 - **Beads Issue**: `system-cla` (P0)
 
 **Immediate Action Required**:
+
 ```bash
 # 1. Rotate token in Tabby web UI
 # 2. Implement agenix for secrets
@@ -41,14 +43,15 @@ Your system is already **very good** but missing several advanced NixOS patterns
 **Recommendation**: Implement **agenix**  
 **Documents**: `SECRETS_MANAGEMENT_ANALYSIS.md`, `SECRETS_RESEARCH_SUMMARY.md`
 
-| Feature | agenix | sops-nix |
-|---------|--------|----------|
-| Encryption | SSH keys | GPG/Age/Cloud KMS |
-| Complexity | Minimal (300 LOC) | Feature-rich |
-| Setup Time | 2-3 hours | 3-4 hours |
-| **Recommendation** | **USE THIS** | For teams |
+| Feature            | agenix            | sops-nix          |
+| ------------------ | ----------------- | ----------------- |
+| Encryption         | SSH keys          | GPG/Age/Cloud KMS |
+| Complexity         | Minimal (300 LOC) | Feature-rich      |
+| Setup Time         | 2-3 hours         | 3-4 hours         |
+| **Recommendation** | **USE THIS**      | For teams         |
 
 **Secrets to Encrypt**:
+
 - SSH keys
 - Tabby auth token
 - Git signing key
@@ -57,6 +60,7 @@ Your system is already **very good** but missing several advanced NixOS patterns
 - VPN configs
 
 **Implementation** (2-3 hours):
+
 ```bash
 # 1. Add agenix to flake inputs
 # 2. Generate age key from SSH: ssh-keygen -t ed25519
@@ -74,6 +78,7 @@ Your system is already **very good** but missing several advanced NixOS patterns
 **Documents**: `docs/research/IMPERMANENCE-ANALYSIS.md`, `IMPERMANENCE-SUMMARY.md`
 
 **Why Your System is Perfect for Impermanence**:
+
 - Already using Btrfs with subvolumes
 - Stateless boot chain (systemd-boot)
 - NixOS declaratively manages /etc
@@ -81,12 +86,14 @@ Your system is already **very good** but missing several advanced NixOS patterns
 - 875GB free disk space
 
 **Benefits**:
+
 - Boot time: +500ms to +2.5s faster
 - State cleanliness: Old configs auto-deleted
 - Reliability: tmpfs can't corrupt
 - Security: Ephemeral state = smaller attack surface
 
 **Critical Directories to Persist**:
+
 ```
 ~/.ssh/          # SSH keys (CRITICAL)
 ~/.aws/          # AWS credentials
@@ -106,6 +113,7 @@ Your system is already **very good** but missing several advanced NixOS patterns
 **Documents**: `docs/NIX_FLAKE_PATTERNS_ANALYSIS.md`, `NIX_FLAKE_MODERNIZED_EXAMPLE.md`
 
 **Current Issues**:
+
 - Hardcoded to x86_64-linux only
 - No treefmt-nix (manual formatting)
 - No pre-commit hooks
@@ -113,14 +121,15 @@ Your system is already **very good** but missing several advanced NixOS patterns
 
 **Recommended Additions**:
 
-| Tool | Purpose | Time |
-|------|---------|------|
-| **flake-parts** | Modern flake composition | 45 min |
-| **treefmt-nix** | Unified code formatting | 30 min |
-| **pre-commit-hooks** | Automated quality gates | 30 min |
-| **devenv** | Development environments | 30 min |
+| Tool                 | Purpose                  | Time   |
+| -------------------- | ------------------------ | ------ |
+| **flake-parts**      | Modern flake composition | 45 min |
+| **treefmt-nix**      | Unified code formatting  | 30 min |
+| **pre-commit-hooks** | Automated quality gates  | 30 min |
+| **devenv**           | Development environments | 30 min |
 
 **Example Modern flake.nix**:
+
 ```nix
 {
   inputs = {
@@ -151,18 +160,21 @@ Your system is already **very good** but missing several advanced NixOS patterns
 **Documents**: `docs/disk-analysis.md`, `docs/DISK-MANAGEMENT-INDEX.md`
 
 **Current Setup**:
+
 - Btrfs on 931.5 GB primary drive (6% used)
 - EFI boot + Windows dual-boot
 - zram swap (30.7 GB with zstd)
 - No LUKS encryption
 
 **Disko Benefits**:
+
 - Reproducible disk setup
 - Easy reinstallation
 - Version-controlled partitions
 - Encryption integration
 
 **Recommended Enhancements**:
+
 - Add LUKS encryption
 - Add Btrfs snapshots (snapper)
 - More subvolumes (7 instead of 2)
@@ -177,6 +189,7 @@ Your system is already **very good** but missing several advanced NixOS patterns
 **Documents**: `docs/DEPLOYMENT-ANALYSIS.md`, `DEPLOYMENT-SETUP-EXAMPLE.md`
 
 **Recommended Stack**:
+
 ```
                     ┌─────────────────┐
                     │  GitHub Actions │
@@ -197,6 +210,7 @@ Your system is already **very good** but missing several advanced NixOS patterns
 ```
 
 **Implementation** (2-3 hours):
+
 1. Add deploy-rs to flake
 2. Create `deploy.nix` configuration
 3. Add GitHub Actions workflow
@@ -212,16 +226,17 @@ Your system is already **very good** but missing several advanced NixOS patterns
 
 **Issues Found** (7 beads issues created):
 
-| Priority | Issue | Beads |
-|----------|-------|-------|
-| **P0** | Hardcoded Tabby token | `system-cla` |
-| **P1** | No kernel hardening | `system-aye` |
-| **P1** | Firewall too open | `system-4o8` |
-| **P1** | Weak sudo config | `system-cmx` |
-| **P2** | No AppArmor | `system-178` |
-| **P2** | Services unhardened | `system-394` |
+| Priority | Issue                 | Beads        |
+| -------- | --------------------- | ------------ |
+| **P0**   | Hardcoded Tabby token | `system-cla` |
+| **P1**   | No kernel hardening   | `system-aye` |
+| **P1**   | Firewall too open     | `system-4o8` |
+| **P1**   | Weak sudo config      | `system-cmx` |
+| **P2**   | No AppArmor           | `system-178` |
+| **P2**   | Services unhardened   | `system-394` |
 
 **Hardening Module Template**:
+
 ```nix
 # modules/system/hardening.nix
 {
@@ -256,6 +271,7 @@ Your system is already **very good** but missing several advanced NixOS patterns
 **Documents**: `MODERN_WORKSTATION_ANALYSIS.md`, `QUICK_WINS.md`
 
 **What's Already Great**:
+
 - Exceptional Neovim setup (nvf)
 - Modern terminal (Ghostty + Fish + Starship)
 - Excellent git integration (LazyGit, Gitsigns)
@@ -264,15 +280,16 @@ Your system is already **very good** but missing several advanced NixOS patterns
 
 **Missing Tier-1 Tools** (Add ASAP):
 
-| Tool | Purpose | ROI |
-|------|---------|-----|
-| **delta** | Syntax-highlighted diffs | 10x better git diff |
-| **eza** | Modern ls replacement | Daily use |
-| **zoxide** | Smart cd (z command) | 50+ keystrokes/day |
-| **atuin** | Database-backed history | Never lose commands |
-| **pre-commit** | Git hooks | Automated quality |
+| Tool           | Purpose                  | ROI                 |
+| -------------- | ------------------------ | ------------------- |
+| **delta**      | Syntax-highlighted diffs | 10x better git diff |
+| **eza**        | Modern ls replacement    | Daily use           |
+| **zoxide**     | Smart cd (z command)     | 50+ keystrokes/day  |
+| **atuin**      | Database-backed history  | Never lose commands |
+| **pre-commit** | Git hooks                | Automated quality   |
 
 **Add to `modules/home/default.nix`**:
+
 ```nix
 home.packages = with pkgs; [
   delta
@@ -333,17 +350,19 @@ sudo nixos-rebuild switch --flake .#laptop
 ## Documents Created (28,000+ lines)
 
 ### Research Documents
-| Document | Lines | Focus |
-|----------|-------|-------|
-| `SECRETS_MANAGEMENT_ANALYSIS.md` | 424 | agenix implementation |
-| `IMPERMANENCE-ANALYSIS.md` | 500+ | Ephemeral root setup |
+
+| Document                         | Lines | Focus                 |
+| -------------------------------- | ----- | --------------------- |
+| `SECRETS_MANAGEMENT_ANALYSIS.md` | 424   | agenix implementation |
+| `IMPERMANENCE-ANALYSIS.md`       | 500+  | Ephemeral root setup  |
 | `NIX_FLAKE_PATTERNS_ANALYSIS.md` | 2,200 | Modern flake patterns |
-| `DEPLOYMENT-ANALYSIS.md` | 1,055 | deploy-rs/colmena |
-| `SECURITY_AUDIT_2026-01-24.md` | 300+ | Security hardening |
-| `MODERN_WORKSTATION_ANALYSIS.md` | 400+ | Missing tools |
-| `DISK-MANAGEMENT-INDEX.md` | 300+ | disko configuration |
+| `DEPLOYMENT-ANALYSIS.md`         | 1,055 | deploy-rs/colmena     |
+| `SECURITY_AUDIT_2026-01-24.md`   | 300+  | Security hardening    |
+| `MODERN_WORKSTATION_ANALYSIS.md` | 400+  | Missing tools         |
+| `DISK-MANAGEMENT-INDEX.md`       | 300+  | disko configuration   |
 
 ### Beads Issues Created
+
 - `system-zem` - Epic: Advanced NixOS Analysis
 - `system-cla` - P0: Remove hardcoded token
 - `system-1bc` - P1: Create hardening.nix
@@ -391,17 +410,17 @@ cat docs/research/IMPERMANENCE-SUMMARY.md
 
 This is a **comprehensive analysis** covering everything needed for a perfect NixOS system:
 
-| Area | Status | Priority |
-|------|--------|----------|
-| Secrets (agenix) | ❌ Missing | **CRITICAL** |
-| Impermanence | ❌ Missing | HIGH |
-| flake-parts | ❌ Missing | HIGH |
-| treefmt-nix | ❌ Missing | MEDIUM |
-| pre-commit | ❌ Missing | MEDIUM |
-| disko | ❌ Missing | MEDIUM |
-| deploy-rs | ❌ Missing | LOW |
-| Security hardening | ⚠️ Partial | HIGH |
-| Modern tools | ⚠️ Partial | MEDIUM |
+| Area               | Status     | Priority     |
+| ------------------ | ---------- | ------------ |
+| Secrets (agenix)   | ❌ Missing | **CRITICAL** |
+| Impermanence       | ❌ Missing | HIGH         |
+| flake-parts        | ❌ Missing | HIGH         |
+| treefmt-nix        | ❌ Missing | MEDIUM       |
+| pre-commit         | ❌ Missing | MEDIUM       |
+| disko              | ❌ Missing | MEDIUM       |
+| deploy-rs          | ❌ Missing | LOW          |
+| Security hardening | ⚠️ Partial | HIGH         |
+| Modern tools       | ⚠️ Partial | MEDIUM       |
 
 **Total Implementation Time**: ~20-25 hours over 2 months  
 **Result**: Professional-grade, enterprise-ready NixOS workstation

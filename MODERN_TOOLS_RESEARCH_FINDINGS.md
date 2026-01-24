@@ -12,6 +12,7 @@
 The NixOS workstation is **exceptionally well-configured for 2024+ development standards** but is missing 5 critical modern tools and could benefit from 10+ additional quality-of-life improvements.
 
 ### Key Finding
+
 - **Current State:** ~85% of a perfect professional workstation
 - **Missing Essentials:** 5 tools (delta, eza, zoxide, atuin, pre-commit)
 - **Time to Perfect:** 2-3 focused sessions (~3-4 hours implementation)
@@ -24,6 +25,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ### Current State: EXCELLENT ✅
 
 **What's working perfectly:**
+
 - NixOS with Nix flakes: Reproducible, declarative everything
 - Home Manager: Seamless config management
 - Direnv + nix-direnv: Automatic dev environment activation
@@ -31,6 +33,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 - Starship prompt: Beautiful, fast, fully configured
 
 **What's available but underutilized:**
+
 - devenv.sh could be added for even more ergonomic dev shells
 - Pre-commit hooks not configured (despite framework available)
 
@@ -43,6 +46,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ### Current State: EXCELLENT ✅
 
 **What's installed and working:**
+
 ```
 ✅ Ghostty       - GPU-accelerated terminal (modern)
 ✅ Fish          - Modern shell with Vi keybindings
@@ -57,6 +61,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ```
 
 **Critical Missing:**
+
 ```
 ❌ Delta         - Syntax-highlighted diffs (0.18.2 in nixpkgs)
 ❌ Eza           - Modern ls replacement (0.23.4 in nixpkgs)
@@ -65,6 +70,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ```
 
 **Why these matter:**
+
 - **Delta**: Makes git diffs beautiful and readable - saves time reading code changes
 - **Eza**: 50% faster than ls, better colors, better defaults
 - **Zoxide**: Learns your navigation patterns, reduces typing by 50%
@@ -79,6 +85,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ### Current State: EXCEPTIONAL ✅✅
 
 **Neovim (nvf) Configuration Quality:**
+
 ```
 ✅ Languages:     Lua, TypeScript, Rust, Go, Python, Nix, Markdown
 ✅ LSP Servers:   ts_ls, basedpyright, gopls, rust-analyzer, nil, etc.
@@ -98,6 +105,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ```
 
 **Missing but valuable:**
+
 ```
 ❌ DAP            - Debug Adapter Protocol (can debug in editor)
 ❌ Which-key      - Keybind discovery (commented out, easy to enable)
@@ -106,6 +114,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ```
 
 **Assessment:**
+
 - This is one of the best configured Neovim setups using nvf
 - The markdown support is particularly thorough
 - Tabby integration for AI coding is excellent
@@ -120,6 +129,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ### Current State: VERY GOOD ✅
 
 **What's configured:**
+
 ```
 ✅ Git settings:   User info, rebase by default, auto remote tracking
 ✅ LazyGit:        Fully integrated, keybind at <leader>gg
@@ -128,6 +138,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ```
 
 **Critical Missing:**
+
 ```
 ❌ Delta          - Syntax-highlighted diffs (in nixpkgs)
 ❌ Git aliases:   Only basic abbreviations, should expand
@@ -146,6 +157,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ### Current State: GOOD ✅
 
 **What's installed:**
+
 ```
 ✅ Docker:        Available in nixpkgs
 ✅ Docker-Compose: Already installed
@@ -154,6 +166,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ```
 
 **Missing but valuable:**
+
 ```
 ❌ Lazydocker    - Docker TUI for container management (0.24.4)
 ❌ K8s tooling:   See section 6
@@ -170,6 +183,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ### Current State: ADEQUATE ✅
 
 **What's installed:**
+
 ```
 ✅ AWS CLI:       Installed (awscli2)
 ✅ OpenTofu:      Installed (Terraform alternative)
@@ -177,6 +191,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ```
 
 **Missing (Available in nixpkgs):**
+
 ```
 ❌ kubectl       - Kubernetes CLI (should verify installed)
 ❌ k9s           - Kubernetes TUI (0.50.18)
@@ -195,6 +210,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 ### Current State: EXCELLENT ✅
 
 **What's configured:**
+
 ```
 ✅ Beads:         Git-backed issue tracker for agent persistence
 ✅ Notes system:  ~/notes/{inbox.md, todo.md} with telescope integration
@@ -205,6 +221,7 @@ The NixOS workstation is **exceptionally well-configured for 2024+ development s
 
 **Assessment:**
 This is surprisingly well thought out:
+
 - Note files are simple markdown (portable)
 - Telescope integration means searchable without extra tools
 - Capture mechanism is lightweight
@@ -219,6 +236,7 @@ This is surprisingly well thought out:
 ### Current State: GOOD ✅
 
 **What's configured:**
+
 ```
 ✅ Btop:          System resource monitoring (installed)
 ✅ Gammastep:     Blue light filter with Wayland support
@@ -227,6 +245,7 @@ This is surprisingly well thought out:
 ```
 
 **Missing (nice-to-have):**
+
 ```
 ❓ GPU Monitor:   AMD/NVIDIA GPU stats
 ❓ Network:       Network bandwidth monitoring
@@ -241,27 +260,28 @@ This is surprisingly well thought out:
 
 ## Research Results: Tool Availability Matrix
 
-| Tool | Version | In nixpkgs | Status | Category |
-|------|---------|-----------|--------|----------|
-| delta | 0.18.2 | ✅ | Missing | Terminal |
-| eza | 0.23.4 | ✅ | Missing | Terminal |
-| zoxide | 0.9.8 | ✅ | Missing | Terminal |
-| atuin | 18.11.0 | ✅ | Missing | Terminal |
-| k9s | 0.50.18 | ✅ | Missing | Kubernetes |
-| lazydocker | 0.24.4 | ✅ | Missing | Containers |
-| pre-commit | 4.5.1 | ✅ | Not configured | Dev Tools |
-| devenv | 1.11.2 | ✅ | Not integrated | Dev Tools |
-| starship | 1.24.2 | ✅ | Configured | Shell |
-| direnv | recent | ✅ | Configured | Shell |
-| fd | recent | ✅ | Configured | Shell |
-| ripgrep | recent | ✅ | Configured | Shell |
-| fzf | 0.67.0 | ✅ | Configured | Shell |
+| Tool       | Version | In nixpkgs | Status         | Category   |
+| ---------- | ------- | ---------- | -------------- | ---------- |
+| delta      | 0.18.2  | ✅         | Missing        | Terminal   |
+| eza        | 0.23.4  | ✅         | Missing        | Terminal   |
+| zoxide     | 0.9.8   | ✅         | Missing        | Terminal   |
+| atuin      | 18.11.0 | ✅         | Missing        | Terminal   |
+| k9s        | 0.50.18 | ✅         | Missing        | Kubernetes |
+| lazydocker | 0.24.4  | ✅         | Missing        | Containers |
+| pre-commit | 4.5.1   | ✅         | Not configured | Dev Tools  |
+| devenv     | 1.11.2  | ✅         | Not integrated | Dev Tools  |
+| starship   | 1.24.2  | ✅         | Configured     | Shell      |
+| direnv     | recent  | ✅         | Configured     | Shell      |
+| fd         | recent  | ✅         | Configured     | Shell      |
+| ripgrep    | recent  | ✅         | Configured     | Shell      |
+| fzf        | 0.67.0  | ✅         | Configured     | Shell      |
 
 ---
 
 ## Critical Implementation Gaps
 
 ### Tier 1: MUST-HAVE (30 min implementation)
+
 These are in nixpkgs, zero integration overhead, massive productivity impact.
 
 1. **Delta** - Git syntax highlighting
@@ -290,6 +310,7 @@ These are in nixpkgs, zero integration overhead, massive productivity impact.
    - Used: On every commit
 
 ### Tier 2: HIGHLY-RECOMMENDED (1 hour)
+
 Less critical but valuable for specific workflows.
 
 1. **k9s** - Kubernetes UI
@@ -308,6 +329,7 @@ Less critical but valuable for specific workflows.
    - Used: When learning editor
 
 ### Tier 3: NICE-TO-HAVE (1-2 hours)
+
 Quality-of-life improvements.
 
 1. **Zellij** - Terminal multiplexer (if River isn't sufficient)
@@ -323,12 +345,14 @@ Quality-of-life improvements.
 ### Current State: 85/100
 
 **What's excellent (35/40 points):**
+
 - Declarative Nix configuration ✅✅ (8/10)
 - Home Manager setup ✅✅ (8/10)
 - Neovim configuration ✅✅ (10/10)
 - Shell setup ✅✅ (9/10)
 
 **What's good (35/45 points):**
+
 - Git setup ✅ (7/10)
 - Productivity tools ✅ (8/10)
 - System monitoring ✅ (8/10)
@@ -336,6 +360,7 @@ Quality-of-life improvements.
 - Container/Cloud setup ✅ (4/10) - Missing K8s
 
 **What's missing (15/25 points):**
+
 - Modern shell tools (delta, eza, zoxide, atuin) (3/10)
 - Pre-commit hooks (2/10)
 - DAP/debugging in nvim (3/5)
@@ -347,6 +372,7 @@ Quality-of-life improvements.
 ## Specific Implementation Recommendations
 
 ### Priority 1: Add Delta
+
 ```nix
 # In modules/home/default.nix
 programs.git = {
@@ -361,9 +387,11 @@ programs.git = {
   };
 };
 ```
+
 **Rationale:** Already in nixpkgs, one of the most used tools daily.
 
 ### Priority 2: Add Eza + Zoxide + Atuin
+
 ```nix
 # In modules/home/shell.nix
 home.packages = with pkgs; [
@@ -389,10 +417,13 @@ shellAbbrs = {
   llt = "eza --tree";
 };
 ```
+
 **Rationale:** These are used constantly, provide massive time savings.
 
 ### Priority 3: Pre-commit
+
 Create new file `modules/home/pre-commit.nix`:
+
 ```nix
 { pkgs, lib, ... }:
 {
@@ -407,9 +438,11 @@ Create new file `modules/home/pre-commit.nix`:
   };
 }
 ```
+
 **Rationale:** Prevents bad commits before they happen.
 
 ### Priority 4: K9s (if using Kubernetes)
+
 ```nix
 # In modules/home/default.nix packages:
 home.packages = with pkgs; [
@@ -419,6 +452,7 @@ home.packages = with pkgs; [
   helm       # Package manager
 ];
 ```
+
 **Rationale:** Essential for any Kubernetes workflow.
 
 ---
@@ -426,6 +460,7 @@ home.packages = with pkgs; [
 ## Architectural Observations
 
 ### What's Done Right
+
 1. **Modular Nix structure**: Each concern (river, shell, nvf, etc.) is separate
 2. **Fish over Bash/Zsh**: Modern choice with better completions
 3. **Starship + Direnv**: Industry standard combo
@@ -434,6 +469,7 @@ home.packages = with pkgs; [
 6. **Beads integration**: Clever use of git-backed task tracking for agent persistence
 
 ### What Could Be Improved
+
 1. **Missing modern shell tools**: delta, eza, zoxide, atuin
 2. **Pre-commit not configured**: Available but not enabled
 3. **No DAP for debugging**: Nvim is powerful but lacks in-editor debugging
@@ -444,15 +480,15 @@ home.packages = with pkgs; [
 
 ## Time-to-Value Analysis
 
-| Tool | Install Time | Value | First Use Savings | Monthly Savings |
-|------|--------------|-------|-------------------|-----------------|
-| delta | 3 min | High | 5 min | 60 min |
-| eza | 3 min | High | 10 min | 120 min |
-| zoxide | 2 min | High | 5 min | 100 min |
-| atuin | 2 min | Medium | 5 min | 60 min |
-| pre-commit | 10 min | Medium | 10 min | 120 min |
-| k9s | 2 min | High (if K8s) | 20 min | 240 min |
-| **TOTAL** | **22 min** | **Massive** | **55 min** | **700 min** (11.7 hrs) |
+| Tool       | Install Time | Value         | First Use Savings | Monthly Savings        |
+| ---------- | ------------ | ------------- | ----------------- | ---------------------- |
+| delta      | 3 min        | High          | 5 min             | 60 min                 |
+| eza        | 3 min        | High          | 10 min            | 120 min                |
+| zoxide     | 2 min        | High          | 5 min             | 100 min                |
+| atuin      | 2 min        | Medium        | 5 min             | 60 min                 |
+| pre-commit | 10 min       | Medium        | 10 min            | 120 min                |
+| k9s        | 2 min        | High (if K8s) | 20 min            | 240 min                |
+| **TOTAL**  | **22 min**   | **Massive**   | **55 min**        | **700 min** (11.7 hrs) |
 
 **ROI:** 22 minutes of work saves 11.7 hours per month (32:1 ratio).
 
@@ -461,17 +497,20 @@ home.packages = with pkgs; [
 ## Recommendation Summary
 
 ### For Immediate Implementation (Next Session)
+
 1. Add delta (git highlighting)
 2. Add eza (modern ls)
 3. Add zoxide (smart cd)
 4. Add atuin (shell history)
 
 ### For Second Session
+
 1. Configure pre-commit hooks
 2. Add which-key plugin
 3. Add k9s if using Kubernetes
 
 ### For Future Enhancement
+
 1. DAP integration for debugging
 2. Advanced editor plugins
 3. GPU/network monitoring
@@ -489,4 +528,3 @@ This workstation is **already in the 85th percentile** of professional developme
 - ✅ Cost only 20-30 minutes of work
 
 **Next steps:** Implement Tier 1 tools immediately (they'll pay for themselves in 1-2 weeks).
-

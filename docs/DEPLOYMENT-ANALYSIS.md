@@ -1,4 +1,5 @@
 # Deployment & Multi-Machine Management Analysis
+
 ## NixOS System Configuration Research Report
 
 **Date:** 2026-01-24  
@@ -14,23 +15,23 @@ The current system is a **single-machine development laptop** using NixOS with h
 
 ### Current State Assessment
 
-| Aspect | Status | Details |
-|--------|--------|---------|
-| **Machines** | 1 | Laptop only (x86_64-linux) |
-| **Flake Outputs** | 2 | `nixosConfigurations.laptop`, `homeConfigurations` |
-| **Deployment Tool** | None | Manual `nixos-rebuild switch` |
-| **Remote Deployment** | None | No infrastructure |
-| **Multi-host Coordination** | None | Not applicable yet |
-| **CI/CD Pipeline** | None | No GitHub Actions workflow |
-| **Version Control** | ✅ Git | GitHub repository (gpfaucher/system) |
-| **Rollback Capability** | ✅ Automatic | NixOS boot menu supports rollback |
-| **Build System** | ✅ Flakes | Modern Nix flakes (24.11) |
+| Aspect                      | Status       | Details                                            |
+| --------------------------- | ------------ | -------------------------------------------------- |
+| **Machines**                | 1            | Laptop only (x86_64-linux)                         |
+| **Flake Outputs**           | 2            | `nixosConfigurations.laptop`, `homeConfigurations` |
+| **Deployment Tool**         | None         | Manual `nixos-rebuild switch`                      |
+| **Remote Deployment**       | None         | No infrastructure                                  |
+| **Multi-host Coordination** | None         | Not applicable yet                                 |
+| **CI/CD Pipeline**          | None         | No GitHub Actions workflow                         |
+| **Version Control**         | ✅ Git       | GitHub repository (gpfaucher/system)               |
+| **Rollback Capability**     | ✅ Automatic | NixOS boot menu supports rollback                  |
+| **Build System**            | ✅ Flakes    | Modern Nix flakes (24.11)                          |
 
 ### Key Metrics
 
 - **Configuration Size:** 3,062 lines of Nix code
 - **Configuration Files:** 18 .nix files
-- **Modules:** 
+- **Modules:**
   - System: 6 modules (audio, bluetooth, bootloader, graphics, networking, services)
   - Home: Multiple modules (shell, terminal, neovim, services, etc.)
 - **Dependencies:** nixpkgs, home-manager, nvf, stylix, ghostty, beads
@@ -42,6 +43,7 @@ The current system is a **single-machine development laptop** using NixOS with h
 ### 1.1 Local Deployment Current State
 
 #### Build Process
+
 ```bash
 #!/usr/bin/env bash
 # Current method: /home/gabriel/projects/system/scripts/rebuild.sh
@@ -50,6 +52,7 @@ sudo nixos-rebuild switch --flake .#laptop
 ```
 
 **Characteristics:**
+
 - ✅ Simple and straightforward
 - ❌ Requires local machine access
 - ❌ No remote capability
@@ -57,6 +60,7 @@ sudo nixos-rebuild switch --flake .#laptop
 - ❌ No version tracking of deployments
 
 #### Current Flake Structure
+
 ```nix
 outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inputs:
   nixosConfigurations.laptop = nixpkgs.lib.nixosSystem {
@@ -66,6 +70,7 @@ outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inpu
 ```
 
 **Observations:**
+
 - Uses `nixosConfigurations` attribute (standard pattern)
 - Passes `self` as specialArg (allows configuration to reference itself)
 - Currently only `laptop` host defined
@@ -73,6 +78,7 @@ outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inpu
 - System version: 24.11 (recent, stable)
 
 #### Current Rollback Capability
+
 - ✅ **Automatic:** NixOS boot menu shows all previous generations
 - ✅ **Safe:** Generations kept for 30 days (per host config)
 - ❌ **Remote:** Cannot rollback remotely without manual access
@@ -80,12 +86,14 @@ outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inpu
 ### 1.2 Single vs Multi-Machine Considerations
 
 **Single Machine (Current):**
+
 - Simple configuration
 - All testing local
 - Easy iteration
 - No coordination needed
 
 **Path to Multi-Machine:**
+
 1. Add second host to flake (e.g., `server`, `vm`)
 2. Set up deploy-rs or colmena
 3. Implement CI/CD for validation
@@ -98,6 +106,7 @@ outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inpu
 ### 2.1 What is deploy-rs?
 
 **Deploy-rs** is a lightweight deployment tool designed specifically for NixOS systems. It:
+
 - Builds configurations on local machine
 - Deploys to remote machines via SSH
 - Supports rollback
@@ -108,24 +117,24 @@ outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inpu
 
 ### 2.2 deploy-rs Advantages
 
-| Advantage | Details |
-|-----------|---------|
-| **Simple** | Minimal configuration, easy to understand |
-| **SSH-based** | Leverages standard SSH infrastructure |
-| **Fast** | Builds locally, fast deploy |
-| **NixOS-native** | Designed by/for NixOS community |
-| **Single binary** | No complex dependencies |
-| **Rollback support** | Built-in rollback capability |
-| **Activation scripts** | Supports arbitrary activation scripts |
+| Advantage              | Details                                   |
+| ---------------------- | ----------------------------------------- |
+| **Simple**             | Minimal configuration, easy to understand |
+| **SSH-based**          | Leverages standard SSH infrastructure     |
+| **Fast**               | Builds locally, fast deploy               |
+| **NixOS-native**       | Designed by/for NixOS community           |
+| **Single binary**      | No complex dependencies                   |
+| **Rollback support**   | Built-in rollback capability              |
+| **Activation scripts** | Supports arbitrary activation scripts     |
 
 ### 2.3 deploy-rs Disadvantages
 
-| Disadvantage | Impact |
-|-------------|--------|
+| Disadvantage               | Impact                                    |
+| -------------------------- | ----------------------------------------- |
 | **No multi-host ordering** | Must deploy machines manually in sequence |
-| **Limited state mgmt** | No shared state between hosts |
-| **Basic auth** | SSH key-based only (no secrets mgmt) |
-| **Small ecosystem** | Fewer integrations than alternatives |
+| **Limited state mgmt**     | No shared state between hosts             |
+| **Basic auth**             | SSH key-based only (no secrets mgmt)      |
+| **Small ecosystem**        | Fewer integrations than alternatives      |
 
 ### 2.4 Recommended Configuration Structure
 
@@ -191,6 +200,7 @@ ssh root@server.example.com -- nixos-rebuild list-generations
 ### 3.1 What is Colmena?
 
 **Colmena** is a multi-host deployment tool for NixOS systems. It:
+
 - Focuses on cluster/fleet management
 - Supports parallel and sequential deployment
 - Better orchestration than deploy-rs
@@ -201,24 +211,24 @@ ssh root@server.example.com -- nixos-rebuild list-generations
 
 ### 3.2 Colmena Advantages
 
-| Advantage | Details |
-|-----------|---------|
-| **Multi-host orchestration** | Deploy to many hosts efficiently |
-| **Parallel execution** | Deploy multiple hosts simultaneously |
-| **Tagging system** | Group hosts for selective deployment |
-| **Better UI** | Progress tracking, cleaner output |
-| **Richer ecosystem** | More plugins and integrations |
-| **State sharing** | Better support for shared state |
-| **Dry-run evaluation** | Preview changes before deploy |
+| Advantage                    | Details                              |
+| ---------------------------- | ------------------------------------ |
+| **Multi-host orchestration** | Deploy to many hosts efficiently     |
+| **Parallel execution**       | Deploy multiple hosts simultaneously |
+| **Tagging system**           | Group hosts for selective deployment |
+| **Better UI**                | Progress tracking, cleaner output    |
+| **Richer ecosystem**         | More plugins and integrations        |
+| **State sharing**            | Better support for shared state      |
+| **Dry-run evaluation**       | Preview changes before deploy        |
 
 ### 3.3 Colmena Disadvantages
 
-| Disadvantage | Impact |
-|-------------|--------|
-| **More complex** | Steeper learning curve |
-| **More dependencies** | Heavier than deploy-rs |
+| Disadvantage            | Impact                           |
+| ----------------------- | -------------------------------- |
+| **More complex**        | Steeper learning curve           |
+| **More dependencies**   | Heavier than deploy-rs           |
 | **Different structure** | Requires rethinking flake layout |
-| **Less minimal** | More features = more complexity |
+| **Less minimal**        | More features = more complexity  |
 
 ### 3.4 Colmena Configuration Example
 
@@ -274,16 +284,16 @@ ssh root@server.example.com -- nixos-rebuild switch --rollback
 
 ### 3.6 Comparison Matrix
 
-| Feature | deploy-rs | colmena | Notes |
-|---------|-----------|---------|-------|
-| **Single host** | ✅ | ✅ | Both work |
-| **Multi-host** | ⚠️ Manual | ✅ | Colmena superior |
-| **Parallel deploy** | ❌ | ✅ | Important for scale |
-| **Orchestration** | None | ✅ | Colmena has good support |
-| **Complexity** | Low | Medium | deploy-rs simpler |
-| **Performance** | Fast | Fast | Both good |
-| **Rollback** | ✅ | ⚠️ Manual | deploy-rs better |
-| **Community** | Good | Growing | Both active |
+| Feature             | deploy-rs | colmena   | Notes                    |
+| ------------------- | --------- | --------- | ------------------------ |
+| **Single host**     | ✅        | ✅        | Both work                |
+| **Multi-host**      | ⚠️ Manual | ✅        | Colmena superior         |
+| **Parallel deploy** | ❌        | ✅        | Important for scale      |
+| **Orchestration**   | None      | ✅        | Colmena has good support |
+| **Complexity**      | Low       | Medium    | deploy-rs simpler        |
+| **Performance**     | Fast      | Fast      | Both good                |
+| **Rollback**        | ✅        | ⚠️ Manual | deploy-rs better         |
+| **Community**       | Good      | Growing   | Both active              |
 
 ---
 
@@ -292,11 +302,13 @@ ssh root@server.example.com -- nixos-rebuild switch --rollback
 ### 4.1 Current Usage
 
 The system uses `nixos-rebuild` with remote flags available:
+
 ```bash
 nixos-rebuild switch --flake .#laptop --target-host server.example.com --build-host localhost
 ```
 
 **Key Flags:**
+
 - `--target-host`: Machine to deploy to
 - `--build-host`: Machine to build on (for cross-compilation)
 - `--use-remote-sudo`: Use sudo on remote machine
@@ -320,11 +332,13 @@ nixos-rebuild switch --flake .#laptop --target-host server.example.com --build-h
 ### 4.2 Recommendation
 
 **Use for:**
+
 - Single machine deployments
 - Initial setup
 - One-off remote machines
 
 **Don't use for:**
+
 - Multiple coordinated machines
 - Complex deployment workflows
 - Production fleet management
@@ -336,6 +350,7 @@ nixos-rebuild switch --flake .#laptop --target-host server.example.com --build-h
 ### 5.1 What is nixos-anywhere?
 
 **nixos-anywhere** enables remote, unattended installation of NixOS via:
+
 - SSH into live environment
 - No physical access needed
 - Handles partitioning and installation
@@ -345,12 +360,12 @@ nixos-rebuild switch --flake .#laptop --target-host server.example.com --build-h
 
 ### 5.2 Use Cases
 
-| Use Case | Fit | Notes |
-|----------|-----|-------|
-| **VPS installation** | ✅ Excellent | Perfect for cloud providers |
-| **Bare metal in DC** | ✅ Great | If you have SSH to installer |
-| **Home lab** | ⚠️ If SSH | Needs SSH access to bootable system |
-| **Local machine** | ❌ Not applicable | No remote access needed |
+| Use Case             | Fit               | Notes                               |
+| -------------------- | ----------------- | ----------------------------------- |
+| **VPS installation** | ✅ Excellent      | Perfect for cloud providers         |
+| **Bare metal in DC** | ✅ Great          | If you have SSH to installer        |
+| **Home lab**         | ⚠️ If SSH         | Needs SSH access to bootable system |
+| **Local machine**    | ❌ Not applicable | No remote access needed             |
 
 ### 5.3 Installation Flow
 
@@ -369,7 +384,8 @@ nixos-anywhere --flake .#server root@server-ip
 
 ### 5.4 For This Project
 
-**Recommendation:** 
+**Recommendation:**
+
 - Not immediately needed (single laptop)
 - Valuable when deploying to cloud/remote servers
 - Integrate later when scaling to production
@@ -390,6 +406,7 @@ nix run github:nix-community/nixos-generators -- \
 ```
 
 **Supported Formats:**
+
 - ISO (bootable images)
 - VirtualBox images
 - KVM images
@@ -399,6 +416,7 @@ nix run github:nix-community/nixos-generators -- \
 - QEMU images
 
 **Use Cases:**
+
 - Rapid testing (boot from ISO)
 - Cloud deployment (generate AMI)
 - Container deployment (generate Docker image)
@@ -417,6 +435,7 @@ inputs.microvm.url = "github:astro/microvm.nix";
 ```
 
 **Benefits:**
+
 - Lightweight compared to full VMs
 - Instant boot
 - Minimal resource overhead
@@ -441,6 +460,7 @@ nixos-container root-login mycontainer
 ```
 
 **Benefits:**
+
 - Integrated with NixOS
 - No Docker needed
 - Lightweight
@@ -449,6 +469,7 @@ nixos-container root-login mycontainer
 ### 6.4 Recommendation for This Project
 
 **Immediate (for testing):**
+
 ```bash
 # Test configuration without affecting system
 nix run github:nix-community/nixos-generators -- \
@@ -458,6 +479,7 @@ nix run github:nix-community/nixos-generators -- \
 ```
 
 **Later (multi-host testing):**
+
 ```bash
 # Use microvm or containers to test cluster setup
 nixos-container create test-server --flake .#server
@@ -484,31 +506,31 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: DeterminateSystems/nix-installer-action@main
-      
+
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      
+
       - name: Check flake
         run: nix flake check
-      
+
       - name: Check build for laptop
         run: nix build .#nixosConfigurations.laptop.config.system.build.toplevel
-      
+
       - name: Check home configuration
         run: nix build .#homeConfigurations.gabriel@laptop.activationPackage
-      
+
   deploy-dryrun:
     runs-on: ubuntu-latest
     needs: flake-check
     if: github.ref == 'refs/heads/master'
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: DeterminateSystems/nix-installer-action@main
-      
+
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      
+
       - name: Create deployment dryrun script
         run: |
           nix build .#nixosConfigurations.laptop.config.system.build.toplevel
@@ -551,18 +573,21 @@ secrets:
 ### 7.4 Recommended CI/CD Approach
 
 **Phase 1 (Immediate):**
+
 - ✅ Flake check on PRs
 - ✅ Build validation
 - ✅ Configuration lint
 - ❌ No automatic deploy
 
 **Phase 2 (When multi-host):**
+
 - ✅ Multi-host build matrix
 - ✅ Deploy staging environment
 - ✅ Dry-run validation
 - ❌ Production auto-deploy
 
 **Phase 3 (Production ready):**
+
 - ✅ Approval-gated deployment
 - ✅ Staged rollout
 - ✅ Automated rollback on failure
@@ -575,6 +600,7 @@ secrets:
 ### 8.1 Current State
 
 **Good:**
+
 - ✅ Immutable deployments (NixOS)
 - ✅ Boot menu with generations
 - ✅ 30-day generation retention
@@ -582,6 +608,7 @@ secrets:
 - ✅ Declarative configuration
 
 **Gaps:**
+
 - ❌ No off-machine backup
 - ❌ No remote state backup
 - ❌ No automated recovery
@@ -590,6 +617,7 @@ secrets:
 ### 8.2 Recommended Disaster Recovery Plan
 
 #### Tier 1: Local Rollback (Current)
+
 ```bash
 # At boot menu: Select previous generation
 # OR via SSH:
@@ -600,6 +628,7 @@ nixos-rebuild switch --rollback
 **Data Loss:** None (only configs)
 
 #### Tier 2: Configuration Recovery
+
 ```bash
 # Source of truth: Git repository
 git clone https://github.com/gpfaucher/system.git
@@ -611,6 +640,7 @@ sudo nixos-rebuild switch --flake .
 **Requirements:** Git access, another machine
 
 #### Tier 3: Full System Recovery
+
 ```bash
 # Option A: ISO boot from USB
 nix run github:nix-community/nixos-generators -- -f iso
@@ -690,12 +720,12 @@ nix run github:nix-community/nixos-generators -- -f iso
 
 ### 8.4 Backup Strategy Matrix
 
-| Strategy | RPO | RTO | Cost | Effort |
-|----------|-----|-----|------|--------|
-| **Git only** | 0 (instant) | 30 min | Free | Low |
-| **Backup server** | 1 day | 15 min | Low | Medium |
-| **S3 backup** | 1 day | 10 min | Minimal | Medium |
-| **Full mirror** | Real-time | 2 min | Medium | High |
+| Strategy          | RPO         | RTO    | Cost    | Effort |
+| ----------------- | ----------- | ------ | ------- | ------ |
+| **Git only**      | 0 (instant) | 30 min | Free    | Low    |
+| **Backup server** | 1 day       | 15 min | Low     | Medium |
+| **S3 backup**     | 1 day       | 10 min | Minimal | Medium |
+| **Full mirror**   | Real-time   | 2 min  | Medium  | High   |
 
 **Recommendation for this project:** Start with Git + daily S3 backup
 
@@ -704,6 +734,7 @@ nix run github:nix-community/nixos-generators -- -f iso
 ## 9. IMPLEMENTATION ROADMAP
 
 ### Phase 1: Immediate (Week 1-2)
+
 **Objective:** Single-machine CI/CD with validation
 
 ```bash
@@ -719,11 +750,13 @@ mkdir -p .github/workflows
 ```
 
 **Deliverables:**
+
 - CI/CD workflow for validation
 - Local deployment testing
 - Rollback documentation
 
 ### Phase 2: Multi-Machine Ready (Week 3-4)
+
 **Objective:** Add second host to configuration
 
 ```bash
@@ -742,11 +775,13 @@ nixos-container create test-server --flake .#server
 ```
 
 **Deliverables:**
+
 - Second host configuration
 - deploy-rs setup
 - Container testing
 
 ### Phase 3: Production Deployment (Month 2)
+
 **Objective:** Deploy infrastructure code
 
 ```bash
@@ -767,11 +802,13 @@ nix run github:serokell/deploy-rs -- --skip-checks .#server
 ```
 
 **Deliverables:**
+
 - Remote deployment working
 - Runbooks documented
 - Monitoring in place
 
 ### Phase 4: Advanced (Month 3+)
+
 **Objective:** Full fleet management and automation
 
 ```bash
@@ -805,7 +842,7 @@ inputs.deploy-rs.url = "github:serokell/deploy-rs";
 # Add to outputs
 deploy.nodes.laptop = {
   hostname = "localhost";
-  profiles.system.path = deploy-rs.lib.x86_64-linux.activate.nixos 
+  profiles.system.path = deploy-rs.lib.x86_64-linux.activate.nixos
     self.nixosConfigurations.laptop;
 };
 ```
@@ -813,6 +850,7 @@ deploy.nodes.laptop = {
 ### 10.2 Medium Term (When multi-host)
 
 **Use deploy-rs with coordination:**
+
 - Manually control deployment order
 - Use Git branches for staging
 - Simple bash wrapper for orchestration
@@ -820,6 +858,7 @@ deploy.nodes.laptop = {
 ### 10.3 Long Term (If fleet grows)
 
 **Consider migrating to colmena:**
+
 - Better parallelization
 - More sophisticated orchestration
 - Tagging system for selective deployments
@@ -837,6 +876,7 @@ deploy.nodes.laptop = {
 ### 11.1 Add deploy-rs to Current Setup
 
 **Step 1: Update flake.nix**
+
 ```nix
 inputs.deploy-rs = {
   url = "github:serokell/deploy-rs";
@@ -845,27 +885,29 @@ inputs.deploy-rs = {
 ```
 
 **Step 2: Add deploy output**
+
 ```nix
 outputs = { self, nixpkgs, deploy-rs, ... }@inputs:
   {
     # ... existing configs ...
-    
+
     deploy.nodes.laptop = {
       hostname = "localhost";
       profiles.system = {
         user = "root";
-        path = deploy-rs.lib.x86_64-linux.activate.nixos 
+        path = deploy-rs.lib.x86_64-linux.activate.nixos
           self.nixosConfigurations.laptop;
       };
     };
 
-    checks = builtins.mapAttrs 
+    checks = builtins.mapAttrs
       (system: deployLib: deployLib.deployChecks self.deploy)
       deploy-rs.lib;
   };
 ```
 
 **Step 3: Test**
+
 ```bash
 # Check deployment would work
 nix run github:serokell/deploy-rs -- --checks .
@@ -877,6 +919,7 @@ nix run github:serokell/deploy-rs -- --skip-checks .#laptop
 ### 11.2 Add GitHub Actions
 
 **Create: .github/workflows/flake-check.yml**
+
 ```yaml
 name: Flake Check
 on: [push, pull_request]
@@ -895,6 +938,7 @@ jobs:
 ### 11.3 Documentation
 
 **Create: docs/DEPLOYMENT.md**
+
 - Deployment procedures
 - Rollback procedures
 - Troubleshooting guide
@@ -923,32 +967,40 @@ RECOMMENDATION: deploy-rs (current) → colmena (if scaling)
 ## 13. RISKS AND MITIGATION
 
 ### Risk 1: Configuration Breaking Change
+
 **Risk:** Deploy configuration that breaks system  
-**Mitigation:** 
+**Mitigation:**
+
 - Dry-run before deploy (`--dry-activate`)
 - Test in container first
 - Keep 30-day rollback window
 - Git history for recovery
 
 ### Risk 2: Lost Network During Deploy
+
 **Risk:** Remote deploy interrupted mid-way  
 **Mitigation:**
+
 - Use timeout-protected SSH
 - Ensure activation scripts are idempotent
 - Pre-build all dependencies
 - Can always SSH in and fix manually
 
 ### Risk 3: Disk Failure Without Backup
+
 **Risk:** Physical disk failure = total data loss  
 **Mitigation:**
+
 - Configuration in Git (recoverable in 30 min)
 - Home data can be recovered from backup
 - Implement automated daily backup
 - Keep USB recovery disk
 
 ### Risk 4: SSH Key Compromise
+
 **Risk:** Attacker can deploy malicious config  
 **Mitigation:**
+
 - Use signed commits (enforce in GitHub)
 - Require code review for deployment
 - Limit SSH key permissions
@@ -1011,9 +1063,10 @@ systemd.services.deployment-health-check = {
 
 ## CONCLUSION
 
-The current system is well-positioned for single-machine NixOS development. The flake-based configuration is modern and extensible. 
+The current system is well-positioned for single-machine NixOS development. The flake-based configuration is modern and extensible.
 
 **Recommendation:** Adopt **deploy-rs** as the next deployment framework. It provides:
+
 - Minimal complexity overhead
 - Strong NixOS integration
 - Easy path to multi-host (via colmena)
@@ -1035,7 +1088,7 @@ nix run github:serokell/deploy-rs -- --help
 # Install colmena
 nix run github:zhaofengli/colmena -- --version
 
-# Install nixos-generators  
+# Install nixos-generators
 nix run github:nix-community/nixos-generators -- --help
 
 # Install nixos-anywhere

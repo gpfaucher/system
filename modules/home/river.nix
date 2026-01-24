@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 with lib;
 
@@ -222,7 +227,8 @@ let
     riverctl default-layout wideriver
   '';
 
-in {
+in
+{
   options.programs.river = {
     enable = mkEnableOption "River Wayland compositor";
 
@@ -277,21 +283,21 @@ in {
       fnott
       waylock
       wlogout
-      swaybg      # Solid color wallpaper
+      swaybg # Solid color wallpaper
       gammastep
 
       # System utilities
       polkit_gnome
       networkmanagerapplet
       blueman
-      impala        # TUI wifi manager
-      bluetuith     # TUI bluetooth manager
-      pavucontrol   # PulseAudio volume control
+      impala # TUI wifi manager
+      bluetuith # TUI bluetooth manager
+      pavucontrol # PulseAudio volume control
 
       # Additional dependencies for keybindings
       playerctl
       brightnessctl
-      wireplumber  # for wpctl
+      wireplumber # for wpctl
       kanshi
     ];
 

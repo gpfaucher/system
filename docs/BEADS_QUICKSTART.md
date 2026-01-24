@@ -5,6 +5,7 @@
 ## Setup (One-Time)
 
 ### 1. Apply NixOS Configuration
+
 ```bash
 cd ~/projects/system
 sudo nixos-rebuild switch --flake .#laptop
@@ -13,6 +14,7 @@ sudo nixos-rebuild switch --flake .#laptop
 This installs the `bd` command.
 
 ### 2. Initialize All Repositories
+
 ```bash
 cd ~/projects/system
 ./scripts/init-all-beads.sh
@@ -21,6 +23,7 @@ cd ~/projects/system
 This initializes Beads in all git repos under `~/projects` and `~/work`.
 
 ### 3. Verify
+
 ```bash
 # Check any repo
 cd ~/projects/any-repo
@@ -74,6 +77,7 @@ bd done <task-id> "Completed implementation. Tests passing."
 ## Stealth Mode Details
 
 **All .beads/ directories are gitignored globally:**
+
 - Tasks are **local-only** to your machine
 - Never committed to git
 - Won't pollute work/client repositories
@@ -110,18 +114,21 @@ git status  # Won't show .beads/
 ## Troubleshooting
 
 ### bd command not found
+
 ```bash
 # Re-apply NixOS config
 sudo nixos-rebuild switch --flake .#laptop
 ```
 
 ### Repository not initialized
+
 ```bash
 cd ~/projects/repo
 bd init
 ```
 
 ### Want to check if tasks are gitignored
+
 ```bash
 # Should return ".beads" (meaning it's ignored)
 git check-ignore .beads
@@ -136,16 +143,16 @@ git check-ignore .beads
 
 ## Quick Reference
 
-| Command | Description |
-|---------|-------------|
-| `bd init` | Initialize Beads in current repo |
-| `bd create "Title" -p 0` | Create high-priority task |
-| `bd ready` | List tasks ready to work on |
-| `bd show <id>` | View task details |
-| `bd update <id> --status in-progress` | Mark task as in progress |
-| `bd done <id> "Summary"` | Complete task with notes |
-| `bd list` | List all tasks |
-| `bd dep add <parent> <child>` | Create dependency |
+| Command                               | Description                      |
+| ------------------------------------- | -------------------------------- |
+| `bd init`                             | Initialize Beads in current repo |
+| `bd create "Title" -p 0`              | Create high-priority task        |
+| `bd ready`                            | List tasks ready to work on      |
+| `bd show <id>`                        | View task details                |
+| `bd update <id> --status in-progress` | Mark task as in progress         |
+| `bd done <id> "Summary"`              | Complete task with notes         |
+| `bd list`                             | List all tasks                   |
+| `bd dep add <parent> <child>`         | Create dependency                |
 
 ---
 

@@ -1,47 +1,52 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 let
   # Bluetooth monitor script for automatic multipoint device management
   bluetooth-monitor = pkgs.writeShellScript "bluetooth-monitor.sh" ''
     #!/usr/bin/env bash
-    
+
     # Bluetooth Multipoint Call Monitor
     # Handles device suspension/reconnection during VoIP calls
-    
+
     set -euo pipefail
-    
+
     # Configuration
     FALLBACK_TIMEOUT=5  # Seconds before falling back to laptop audio
     RECONNECT_DELAY=2   # Seconds to wait before reconnecting other devices
-    
+
     # Logging
     log() {
       echo "[$(date '+%Y-%m-%d %H:%M:%S')] $*" | ${pkgs.systemd}/bin/systemd-cat -t bluetooth-monitor
     }
-    
+
     # Notification helper
     notify() {
       local title="$1"
       local message="$2"
       ${pkgs.libnotify}/bin/notify-send -u normal -t 3000 "$title" "$message"
     }
-    
+
     # Get currently connected Bluetooth audio devices
     get_connected_audio_devices() {
       ${pkgs.bluez}/bin/bluetoothctl devices Connected | \
         grep -E "(Headphone|Headset|Speaker)" || true
     }
-    
+
     # Get device MAC address from device info line
     get_device_mac() {
       echo "$1" | awk '{print $2}'
     }
-    
+
     # Get device name from device info line
     get_device_name() {
       echo "$1" | cut -d' ' -f3-
     }
-    
+
     # Check if device is using HSP/HFP profile (headset mode)
     is_using_headset_profile() {
       local mac="$1"
@@ -50,7 +55,7 @@ let
         grep -q "headset-head-unit" || \
         grep -q "headset_head_unit"
     }
-    
+
     # Get primary audio sink (active device)
     get_active_sink() {
       ${pkgs.wireplumber}/bin/wpctl status | \
@@ -58,14 +63,14 @@ let
         grep "*" | \
         head -n1 || true
     }
-    
+
     # Track suspended devices for reconnection
     declare -A suspended_devices
-    
+
     # Main monitoring loop
     log "Bluetooth monitor started"
     # notify "Bluetooth Monitor" "Multipoint call handling active"  # Disabled - too annoying
-    
+
     # Monitor PipeWire/WirePlumber events via wpctl
     ${pkgs.wireplumber}/bin/wpctl status --monitor | while read -r line; do
       # Get all connected audio devices
@@ -157,18 +162,25 @@ in
   systemd.user.services.bluetooth-monitor = {
     description = "Bluetooth Multipoint Call Monitor";
     documentation = [ "Handles automatic device switching during VoIP calls" ];
-    
-    after = [ "pipewire.service" "wireplumber.service" "bluetooth.service" ];
-    requires = [ "pipewire.service" "wireplumber.service" ];
+
+    after = [
+      "pipewire.service"
+      "wireplumber.service"
+      "bluetooth.service"
+    ];
+    requires = [
+      "pipewire.service"
+      "wireplumber.service"
+    ];
     partOf = [ "graphical-session.target" ];
     wantedBy = [ "graphical-session.target" ];
-    
+
     serviceConfig = {
       Type = "simple";
       ExecStart = "${bluetooth-monitor}";
       Restart = "on-failure";
       RestartSec = 5;
-      
+
       # Security hardening
       PrivateTmp = true;
       NoNewPrivileges = true;
@@ -176,11 +188,11 @@ in
       ProtectHome = "read-only";
     };
   };
-  
+
   # Required packages for the monitor script
   environment.systemPackages = with pkgs; [
-    bluez           # bluetoothctl
-    wireplumber     # wpctl
-    libnotify       # notify-send
+    bluez # bluetoothctl
+    wireplumber # wpctl
+    libnotify # notify-send
   ];
 }

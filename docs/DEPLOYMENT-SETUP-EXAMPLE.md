@@ -31,13 +31,13 @@ Edit `flake.nix` and add to inputs section:
 inputs = {
   nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
   home-manager = { ... };
-  
+
   # ADD THIS:
   deploy-rs = {
     url = "github:serokell/deploy-rs";
     inputs.nixpkgs.follows = "nixpkgs";
   };
-  
+
   # ... rest of inputs ...
 };
 ```
@@ -68,25 +68,25 @@ outputs = { self, nixpkgs, home-manager, deploy-rs, ... }@inputs:
         hostname = "localhost";  # For local deployment, or "actual-hostname" for remote
         profiles.system = {
           user = "root";
-          path = deploy-rs.lib.${system}.activate.nixos 
+          path = deploy-rs.lib.${system}.activate.nixos
             self.nixosConfigurations.laptop;
         };
       };
-      
+
       # OPTIONAL: Add more nodes for multi-host
       # server = {
       #   hostname = "server.example.com";
       #   profiles.system = {
       #     user = "root";
-      #     path = deploy-rs.lib.${system}.activate.nixos 
+      #     path = deploy-rs.lib.${system}.activate.nixos
       #       self.nixosConfigurations.server;
       #   };
       # };
     };
 
     # Add deployment checks
-    checks = builtins.mapAttrs 
-      (system: deployLib: deployLib.deployChecks self.deploy) 
+    checks = builtins.mapAttrs
+      (system: deployLib: deployLib.deployChecks self.deploy)
       deploy-rs.lib;
   };
 ```
@@ -112,7 +112,7 @@ outputs = { self, nixpkgs, home-manager, deploy-rs, ... }@inputs:
 
     stylix.url = "github:danth/stylix";
     ghostty.url = "github:ghostty-org/ghostty";
-    
+
     beads = {
       url = "github:steveyegge/beads";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -186,15 +186,15 @@ outputs = { self, nixpkgs, home-manager, deploy-rs, ... }@inputs:
           hostname = "localhost";
           profiles.system = {
             user = "root";
-            path = deploy-rs.lib.${system}.activate.nixos 
+            path = deploy-rs.lib.${system}.activate.nixos
               self.nixosConfigurations.laptop;
           };
         };
       };
 
       # NEW: Deployment checks
-      checks = builtins.mapAttrs 
-        (system: deployLib: deployLib.deployChecks self.deploy) 
+      checks = builtins.mapAttrs
+        (system: deployLib: deployLib.deployChecks self.deploy)
         deploy-rs.lib;
     };
 }
@@ -237,20 +237,20 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: DeterminateSystems/nix-installer-action@main
-      
+
       - uses: DeterminateSystems/magic-nix-cache-action@main
-      
+
       - name: Check flake syntax
         run: nix flake check
-      
+
       - name: Build laptop NixOS system
         run: nix build .#nixosConfigurations.laptop.config.system.build.toplevel
-      
+
       - name: Build home-manager configuration
         run: nix build .#homeConfigurations.gabriel@laptop.activationPackage
-      
+
       - name: Check deploy-rs configuration
         run: nix run github:serokell/deploy-rs -- --checks .
 
@@ -258,12 +258,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
-      
+
       - uses: DeterminateSystems/nix-installer-action@main
-      
+
       - name: Check Nix formatting
         run: nix fmt -- --check .
-      
+
       - name: Shellcheck any shell scripts
         run: |
           find . -name "*.sh" -type f ! -path "./.git/*" \
@@ -289,6 +289,7 @@ nix flake show
 ```
 
 Should show:
+
 ```
 deploy.nodes.laptop
 nixosConfigurations.laptop
@@ -299,31 +300,35 @@ checks
 ## Step 7: Usage Examples
 
 ### Local Deployment
+
 ```bash
 # Deploy changes to current system
 sudo nix run github:serokell/deploy-rs -- --skip-checks .#laptop
 ```
 
 ### Dry Run (see what would change)
+
 ```bash
 # Preview changes
 nix run github:serokell/deploy-rs -- --dry-activate .#laptop
 ```
 
 ### Rollback
+
 ```bash
 # Revert to previous generation
 sudo nixos-rebuild switch --rollback
 ```
 
 ### Multiple Hosts (Future)
+
 ```bash
 # Add to deploy.nodes in flake.nix
 server = {
   hostname = "192.168.1.100";
   profiles.system = {
     user = "root";
-    path = deploy-rs.lib.${system}.activate.nixos 
+    path = deploy-rs.lib.${system}.activate.nixos
       self.nixosConfigurations.server;
   };
 };
@@ -348,13 +353,16 @@ This prevents broken configurations from being merged.
 ## Troubleshooting
 
 ### "nix: command not found"
+
 Make sure Nix is installed and flakes are enabled:
+
 ```bash
 nix --version  # Should be >= 2.4
 nix flake show  # Should show flake outputs
 ```
 
 ### Deploy fails with permission denied
+
 ```bash
 # Most deployment requires root
 sudo nix run github:serokell/deploy-rs -- .#laptop
@@ -363,6 +371,7 @@ sudo nix run github:serokell/deploy-rs -- .#laptop
 ```
 
 ### Flake lock conflicts
+
 ```bash
 # Reset lock file to original
 git checkout flake.lock
@@ -372,7 +381,9 @@ nix flake update --override-input nixpkgs github:NixOS/nixpkgs/nixos-unstable
 ```
 
 ### SSH key authentication issues
+
 For remote deployment, ensure:
+
 ```bash
 # SSH key is in ~/.ssh/id_ed25519 or ssh-add
 ssh-add ~/.ssh/id_ed25519
@@ -384,6 +395,7 @@ ssh root@server.example.com nixos-rebuild list-generations
 ## Performance Tips
 
 ### Speed up builds
+
 ```nix
 # In hosts/laptop/default.nix, already optimized:
 nix.settings = {
@@ -395,6 +407,7 @@ nix.settings = {
 ```
 
 ### Cache artifacts locally
+
 ```bash
 # Build once, reuse
 nix build .#nixosConfigurations.laptop.config.system.build.toplevel

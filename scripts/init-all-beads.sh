@@ -19,17 +19,17 @@ for base_path in "${SEARCH_PATHS[@]}"; do
     echo "⚠️  Path not found: $base_path (skipping)"
     continue
   fi
-  
+
   echo "📁 Scanning: $base_path"
-  
+
   # Find all git repositories (max depth 3)
   while IFS= read -r git_dir; do
     repo_dir=$(dirname "$git_dir")
     total_repos=$((total_repos + 1))
-    
+
     cd "$repo_dir"
     repo_name=$(basename "$repo_dir")
-    
+
     if [ -d ".beads" ]; then
       echo "  ⏭️  $repo_name - already initialized (skipped)"
       skipped=$((skipped + 1))

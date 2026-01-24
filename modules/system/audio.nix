@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Disable PulseAudio (using PipeWire instead)
@@ -13,7 +18,7 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    jack.enable = true;  # Enable JACK support for better Bluetooth audio
+    jack.enable = true; # Enable JACK support for better Bluetooth audio
     wireplumber = {
       enable = true;
       # Custom WirePlumber configuration for Bluetooth multipoint handling
@@ -21,7 +26,7 @@
         (pkgs.writeTextDir "share/wireplumber/main.lua.d/51-bluetooth-policy.lua" ''
           -- Bluetooth Multipoint Call Handling Policy
           -- Optimizes HSP/HFP profile switching for VoIP calls
-          
+
           -- Configure Bluetooth policy
           bluetooth_policy = {
             ["policy.bluetooth"] = {
@@ -46,7 +51,7 @@
               ["bluez5.reconnect-delay"] = 2000,  -- 2 second delay before reconnecting
             },
           }
-          
+
           -- Load the configuration
           table.insert(alsa_monitor.rules, bluetooth_policy)
         '')

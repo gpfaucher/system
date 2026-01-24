@@ -3,13 +3,16 @@
 ## 1. Current Configuration File Locations
 
 ### Configuration File
+
 - **Primary Location**: `~/.config/kanshi/config` (symlink managed by home-manager)
 - **Actual Location**: `/nix/store/yhfmw8wmgkgk4987fghpa8cdw8ccrkvi-home-manager-files/.config/kanshi/config`
 - **Systemd Service**: `~/.config/systemd/user/kanshi.service`
 - **Source (Home Manager)**: `/home/gabriel/projects/system/modules/home/services.nix` (lines 19-160)
 
 ### Configuration Source in Home Manager
+
 The kanshi configuration is declaratively defined in the Nix home-manager configuration as:
+
 ```nix
 services.kanshi = {
   enable = true;
@@ -21,9 +24,11 @@ services.kanshi = {
 ## 2. Current Monitor Setup (Live Status)
 
 ### Currently Active Profile
+
 **Profile Name**: `dual-portrait-ultrawide`
 
 ### Detected Hardware
+
 ```
 HDMI-A-1: Microstep MSI MAG342CQR (Ultrawide)
   - Make: Microstep
@@ -51,7 +56,9 @@ eDP-1: BOE 0x0B22 (Laptop Display)
 ```
 
 ### Monitor Identification Methods
+
 Kanshi can identify outputs via:
+
 1. **Output Name** (kernel driver dependent): `HDMI-A-1`, `DP-2`, `eDP-1`
 2. **Output Description** (recommended for stability): `"Make Model Serial"`
    - Example: `"Microstep MSI MAG342CQR DB6H261C02187"`
@@ -60,12 +67,14 @@ Kanshi can identify outputs via:
 ## 3. Kanshi Configuration File Format
 
 ### File Location
+
 ```
 $XDG_CONFIG_HOME/kanshi/config
 (defaults to ~/.config/kanshi/config)
 ```
 
 ### Basic Structure
+
 ```
 profile [name] {
   output <criteria> <directives>
@@ -75,11 +84,13 @@ profile [name] {
 ```
 
 ### Output Criteria Options
+
 1. **Output Name**: `HDMI-A-1`, `DP-2`, `eDP-1`
 2. **Output Description**: `"Manufacturer Model Serial"`
 3. **Wildcards**: `HDMI-A-*`, `DP-*`, `*` (matches any single output)
 
 ### Output Directives
+
 ```
 enable|disable                    # Enable or disable output
 mode <width>x<height>[@<rate>Hz]  # Resolution and refresh
@@ -91,6 +102,7 @@ alias $<name>                     # Define alias for output
 ```
 
 ### Profile Directives
+
 ```
 exec <command>                    # Run command when profile activates
 ```
@@ -98,6 +110,7 @@ exec <command>                    # Run command when profile activates
 ## 4. Current Kanshi Profiles
 
 ### Profile 1: `dual-portrait-ultrawide` (Active)
+
 ```
 - HDMI-A-1: 3440x1440@100Hz at (0,0), scale 1.0
 - DP-2: 2560x1440@60Hz at (3440,0), scale 1.0, rotated 90°
@@ -106,6 +119,7 @@ exec <command>                    # Run command when profile activates
 ```
 
 ### Profile 2: `laptop`
+
 ```
 - eDP-1: 3840x2400@60Hz at (0,0), scale 2.0
 - HDMI-A-1: (not mentioned = disabled)
@@ -113,6 +127,7 @@ exec <command>                    # Run command when profile activates
 ```
 
 ### Profile 3: `docked-dp`
+
 ```
 - DP-2: 3440x1440@100Hz at (0,0), scale 1.0
 - eDP-1: DISABLED
@@ -120,6 +135,7 @@ exec <command>                    # Run command when profile activates
 ```
 
 ### Profile 4: `docked-hdmi`
+
 ```
 - HDMI-A-1: 3440x1440@100Hz at (0,0), scale 1.0
 - eDP-1: DISABLED
@@ -127,6 +143,7 @@ exec <command>                    # Run command when profile activates
 ```
 
 ### Profile 5: `docked-dual`
+
 ```
 - DP-2: 3440x1440@100Hz at (0,0), scale 1.0
 - eDP-1: 3840x2400@60Hz at (3440,0), scale 2.0
@@ -134,6 +151,7 @@ exec <command>                    # Run command when profile activates
 ```
 
 ### Profile 6: `presentation-hdmi`
+
 ```
 - eDP-1: 3840x2400@60Hz at (0,0), scale 2.0
 - HDMI-A-*: position (1920,0), scale 1.0 [any HDMI connector]
@@ -141,6 +159,7 @@ exec <command>                    # Run command when profile activates
 ```
 
 ### Profile 7: `presentation-dp`
+
 ```
 - eDP-1: 3840x2400@60Hz at (0,0), scale 2.0
 - DP-*: position (1920,0), scale 1.0 [any DP connector]
@@ -150,6 +169,7 @@ exec <command>                    # Run command when profile activates
 ## 5. How Kanshi Works
 
 ### Activation Logic
+
 - Kanshi reads all profiles at startup
 - When outputs connect/disconnect, it matches against all profiles
 - **A profile activates when ALL outputs specified in it are currently connected**
@@ -157,6 +177,7 @@ exec <command>                    # Run command when profile activates
 - If no profiles match perfectly, kanshi waits until one does
 
 ### Matching Rules
+
 - Outputs explicitly listed in profile must all be connected
 - Outputs NOT listed in profile are ignored (can be enabled/disabled as needed)
 - Using wildcards (`*`) matches one output; cannot use multiple wildcards in same profile
@@ -164,16 +185,20 @@ exec <command>                    # Run command when profile activates
 ## 6. Tools for Detecting Monitor Configuration
 
 ### 1. `wlr-randr` (Primary Tool)
+
 ```bash
 wlr-randr
 ```
+
 Shows:
+
 - All connected outputs with names
 - Supported resolutions and refresh rates
 - Current mode, position, scale, transform
 - Can be used to check what modes are available
 
 ### 2. `kanshictl` (Kanshi Control)
+
 ```bash
 kanshictl status          # Show current active profile as JSON
 kanshictl reload          # Reload config file
@@ -181,6 +206,7 @@ kanshictl switch <name>   # Switch to specific profile
 ```
 
 ### 3. Manual Inspection
+
 ```bash
 cat ~/.config/kanshi/config  # View current config file
 ```
@@ -192,6 +218,7 @@ cat ~/.config/kanshi/config  # View current config file
 Edit: `/home/gabriel/projects/system/modules/home/services.nix`
 
 The structure is:
+
 ```nix
 services.kanshi = {
   enable = true;
@@ -216,6 +243,7 @@ services.kanshi = {
 ```
 
 Then rebuild:
+
 ```bash
 cd /home/gabriel/projects/system
 # Edit modules/home/services.nix
@@ -227,6 +255,7 @@ cd /home/gabriel/projects/system
 Edit: `~/.config/kanshi/config` directly
 
 Format:
+
 ```
 profile profile-name {
   output HDMI-A-1 enable mode 3440x1440@100Hz position 0,0 scale 1.000000
@@ -237,6 +266,7 @@ profile profile-name {
 ```
 
 Then reload:
+
 ```bash
 kanshictl reload
 # or systemctl restart --user kanshi
@@ -247,6 +277,7 @@ kanshictl reload
 ## 8. Step-by-Step Process to Add Current Monitor Setup
 
 ### Current Setup (as of Jan 24, 2026)
+
 - **Status**: Already captured as `dual-portrait-ultrawave` profile
 - **Primary Display**: Microstep MSI MAG342CQR (3440x1440 ultrawide)
 - **Secondary Display**: Microstep G272QPF E2 (2560x1440 portrait rotated)
@@ -255,23 +286,27 @@ kanshictl reload
 ### To Add a New Profile
 
 **Step 1**: Verify current monitor setup
+
 ```bash
 wlr-randr
 kanshictl status
 ```
 
 **Step 2**: Determine output identifiers
+
 ```bash
 wlr-randr  # Get NAME, Model, Serial
 ```
 
 **Step 3**: Identify all available modes
+
 ```bash
 wlr-randr | grep -A 50 "OUTPUT_NAME"
 # Look for desired resolution and refresh rate
 ```
 
 **Step 4**: Calculate position coordinates
+
 - Position is in pixels in global coordinate space
 - Format: `position X,Y` where (0,0) is top-left
 - Place monitors side-by-side or stacked accordingly
@@ -281,6 +316,7 @@ wlr-randr | grep -A 50 "OUTPUT_NAME"
 
 **Step 5**: Add to home-manager config
 Edit `/home/gabriel/projects/system/modules/home/services.nix`:
+
 ```nix
 {
   profile.name = "my-setup";
@@ -305,6 +341,7 @@ Edit `/home/gabriel/projects/system/modules/home/services.nix`:
 ```
 
 **Step 6**: Rebuild and apply
+
 ```bash
 # For testing with direct config edit:
 kanshictl reload
@@ -314,6 +351,7 @@ home-manager switch
 ```
 
 **Step 7**: Verify
+
 ```bash
 kanshictl status
 wlr-randr
@@ -322,6 +360,7 @@ wlr-randr
 ## 9. Kanshi Helper Tools
 
 ### Available Commands
+
 - **kanshi**: Main daemon process
 - **kanshictl**: Control utility with commands:
   - `status` - Show current profile (JSON format)
@@ -329,6 +368,7 @@ wlr-randr
   - `switch <profile>` - Manually switch to profile
 
 ### Integration Points
+
 - **River WM**: Mapped to `Super+Ctrl+M` to reload kanshi config
 - **Systemd**: Runs as user service on graphical-session-target
 - **Signal Handling**: Responds to SIGHUP to reload config

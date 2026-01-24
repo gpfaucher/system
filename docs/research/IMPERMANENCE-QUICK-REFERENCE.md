@@ -3,6 +3,7 @@
 ## What to Persist vs Discard
 
 ### 🔴 MUST PERSIST (Critical)
+
 ```
 /persist/var/lib/
   ├── nixos/              # NixOS metadata
@@ -22,6 +23,7 @@
 ```
 
 ### 🟡 SHOULD PERSIST (Important)
+
 ```
 ~/.config/               # River, neovim configs
 ~/.local/state/          # App state databases
@@ -31,6 +33,7 @@
 ```
 
 ### 🟢 SAFE TO DISCARD (Regenerated)
+
 ```
 ~/.cache/                (5.1GB - regenerated)
 ~/.npm/                  (290MB - regenerated)
@@ -42,24 +45,26 @@
 ## System Breakdown
 
 **Total /home size:** ~15GB
+
 - **Keep:** ~3GB (configs, state, credentials)
 - **Can delete:** ~12GB (caches, regenerated)
 
 **Total /var size:** ~185MB
+
 - **Keep:** ~30MB (metadata, configs)
 - **Can discard:** ~155MB (logs, can use journald)
 
 ## Implementation Impact
 
-| Aspect | Impact |
-|--------|--------|
-| Boot speed | ⬆️ Faster (skip fsck, cleanup) |
-| Runtime performance | ➡️ Same or slightly faster |
-| Disk I/O | ⬇️ Less (tmpfs for /var/run) |
-| First boot setup | ⬆️ Slightly slower (copy state) |
-| Maintenance | ⬇️ Easier (clean state) |
-| Debugging | ⬇️ Harder (logs cleared on reboot) |
-| Backup complexity | ⬆️ Need to include /persist |
+| Aspect              | Impact                             |
+| ------------------- | ---------------------------------- |
+| Boot speed          | ⬆️ Faster (skip fsck, cleanup)     |
+| Runtime performance | ➡️ Same or slightly faster         |
+| Disk I/O            | ⬇️ Less (tmpfs for /var/run)       |
+| First boot setup    | ⬆️ Slightly slower (copy state)    |
+| Maintenance         | ⬇️ Easier (clean state)            |
+| Debugging           | ⬇️ Harder (logs cleared on reboot) |
+| Backup complexity   | ⬆️ Need to include /persist        |
 
 ## Why This System is Perfect for Impermanence
 
@@ -68,7 +73,7 @@
 ✅ Excellent disk space (875GB free)  
 ✅ NixOS philosophy aligns with stateless  
 ✅ Development workflow benefits from clean /var  
-✅ Docker/Bluetooth state is well-defined  
+✅ Docker/Bluetooth state is well-defined
 
 ## Quick Start (after reading full analysis)
 
@@ -120,4 +125,3 @@ sudo systemctl status bluetooth
 # Check mount points
 mount | grep persist  # Should show binds to /var/lib
 ```
-

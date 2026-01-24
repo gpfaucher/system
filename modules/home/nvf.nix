@@ -3,7 +3,8 @@
   pkgs,
   lib,
   ...
-}: {
+}:
+{
   programs.nvf = {
     enable = true;
 
@@ -93,7 +94,7 @@
           ts = {
             enable = true;
             lsp.enable = true;
-            lsp.servers = ["ts_ls"];
+            lsp.servers = [ "ts_ls" ];
           };
 
           rust = {
@@ -110,7 +111,7 @@
             enable = true;
             lsp = {
               enable = true;
-              servers = ["basedpyright"];
+              servers = [ "basedpyright" ];
             };
           };
 
@@ -240,7 +241,11 @@
           # Quick save
           {
             key = "<C-s>";
-            mode = ["n" "i" "v"];
+            mode = [
+              "n"
+              "i"
+              "v"
+            ];
             action = "<cmd>w<cr>";
             desc = "Save file";
           }
@@ -468,7 +473,7 @@
           };
 
           # ============ MARKDOWN PLUGINS (Option 3: Lightweight) ============
-          
+
           # 1. markdown.nvim - Modern inline editing tools
           markdown-nvim = {
             package = pkgs.vimPlugins.markdown-nvim;
@@ -512,25 +517,25 @@
             setup = ''
               -- Folding settings
               vim.g.vim_markdown_folding_disabled = 1
-              
+
               -- Let render-markdown.nvim handle concealment
               vim.g.vim_markdown_conceal = 0
               vim.g.vim_markdown_conceal_code_blocks = 0
-              
+
               -- Syntax highlighting
               vim.g.vim_markdown_frontmatter = 1
               vim.g.vim_markdown_toml_frontmatter = 1
               vim.g.vim_markdown_json_frontmatter = 1
               vim.g.vim_markdown_math = 1
               vim.g.vim_markdown_strikethrough = 1
-              
+
               -- Link following
               vim.g.vim_markdown_follow_anchor = 1
               vim.g.vim_markdown_edit_url_in = 'current'
-              
+
               -- TOC
               vim.g.vim_markdown_toc_autofit = 1
-              
+
               -- Don't require .md extension for links
               vim.g.vim_markdown_no_extensions_in_markdown = 1
               vim.g.vim_markdown_autowrite = 1
@@ -550,7 +555,7 @@
               vim.g.table_mode_corner = '|'
               vim.g.table_mode_corner_corner = '|'
               vim.g.table_mode_header_fillchar = '-'
-              
+
               -- Keybindings
               vim.keymap.set('n', '<leader>mt', ':TableModeToggle<CR>', { desc = 'Toggle table mode' })
               vim.keymap.set('n', '<leader>mtr', ':TableModeRealign<CR>', { desc = 'Realign table' })
@@ -570,7 +575,7 @@
               vim.g.mkdp_open_to_the_world = 0
               vim.g.mkdp_browser = ""
               vim.g.mkdp_theme = "dark"
-              
+
               -- Keybinding
               vim.keymap.set('n', '<leader>mp', ':MarkdownPreviewToggle<CR>', { desc = 'Toggle markdown preview' })
             '';
@@ -704,7 +709,7 @@
               vim.api.nvim_set_current_line(new_line)
             end, { desc = "Toggle checkbox" })
           '';
-          
+
           # Markdown: Settings for markdown files
           markdown-visual = ''
             vim.api.nvim_create_autocmd("FileType", {

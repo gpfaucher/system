@@ -1,6 +1,7 @@
 # Neovim Markdown Plugins - Executive Summary
 
 ## Current Environment
+
 - **Neovim**: v0.11.5 (latest stable)
 - **Configuration**: Not yet set up at `~/.config/nvim/`
 - **Opportunity**: Fresh start for optimal configuration
@@ -10,42 +11,49 @@
 ## Top 7 Recommended Plugins (by category)
 
 ### 1️⃣ **obsidian.nvim** (5.9k ⭐)
+
 - **Best for**: Obsidian vault users
 - **Key features**: Wiki links `[[...]]`, vault sync, daily notes, completion
 - **Setup**: Easy, one dependency (plenary.nvim)
 - **Performance**: Medium load, medium memory
 
 ### 2️⃣ **markdown-preview.nvim** (7.7k ⭐)
+
 - **Best for**: Live preview, technical docs, math/diagrams
 - **Key features**: Browser preview, KaTeX, Mermaid, synchronized scrolling
 - **Setup**: Requires Node.js build
 - **Performance**: Low load, responsive
 
 ### 3️⃣ **telekasten.nvim** (1.6k ⭐)
+
 - **Best for**: Zettelkasten, journaling, research
 - **Key features**: Zettelkasten workflow, daily/weekly/monthly notes, calendar
 - **Setup**: Moderate, requires telescope.nvim
 - **Performance**: Medium load, good with large vaults
 
 ### 4️⃣ **neorg** (7.2k ⭐)
+
 - **Best for**: Comprehensive org-mode alternative, GTD, project management
 - **Key features**: .norg format, time tracking, slideshows, advanced
 - **Setup**: Complex, worth it for power users
 - **Performance**: Higher overhead but feature-rich
 
 ### 5️⃣ **vim-table-mode** (2.2k ⭐)
+
 - **Best for**: Creating and editing markdown tables
 - **Key features**: Live table editing, formulas, auto-align, ReST support
 - **Setup**: Very easy, no dependencies
 - **Performance**: Negligible impact
 
 ### 6️⃣ **markdown.nvim** (223 ⭐, modern)
+
 - **Best for**: Lightweight inline editing, modern Lua implementation
 - **Key features**: Bold/italic toggle, list management, navigation, TOC
 - **Setup**: Easy, zero dependencies
 - **Performance**: Very low load
 
 ### 7️⃣ **vim-markdown** (4.8k ⭐)
+
 - **Best for**: Traditional markdown editing, folding, syntax
 - **Key features**: Header folding, TOC generation, link navigation, math
 - **Setup**: Very easy with tabular dependency
@@ -76,51 +84,61 @@ START: "What's my primary markdown workflow?"
 ## Plugin Stacks by Use Case
 
 ### 🎯 **Obsidian User**
+
 ```
 obsidian.nvim + markdown-preview.nvim + vim-table-mode + markdown.nvim
 ```
+
 Dependencies: plenary.nvim, nvim-cmp (optional), telescope.nvim (optional)
 
 ### 📚 **Knowledge Worker / Researcher**
+
 ```
 telekasten.nvim + vim-markdown + vim-table-mode + markdown.nvim
 ```
+
 Dependencies: telescope.nvim, plenary.nvim, calendar-vim (optional)
 
 ### 📝 **Technical Writer / Blogger**
+
 ```
 markdown-preview.nvim + markdown.nvim + vim-table-mode + vim-markdown
 ```
+
 Dependencies: Node.js (for preview), tabular (for markdown)
 
 ### 🚀 **Power User / GTD**
+
 ```
 neorg + markdown-preview.nvim + vim-table-mode
 ```
+
 Dependencies: nvim-treesitter, plenary.nvim, luarocks
 
 ### 🎨 **Minimalist**
+
 ```
 markdown.nvim + vim-markdown
 ```
+
 Dependencies: tabular (for markdown plugin)
 
 ---
 
 ## Feature Comparison at a Glance
 
-| Feature | obsidian | telekasten | neorg | preview | table-mode | markdown.nvim | vim-markdown |
-|---------|:---:|:---:|:---:|:---:|:---:|:---:|:---:|
-| Wiki links `[[...]]` | ✅ | ✅ | ⚠️ | ❌ | ❌ | ❌ | ❌ |
-| Live browser preview | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ❌ |
-| Vault integration | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Markdown tables | ⚠️ | ⚠️ | ⚠️ | ❌ | ✅ | ⚠️ | ❌ |
-| Daily/Journal | ✅ | ✅ | ❌ | ❌ | ❌ | ❌ | ❌ |
-| Code folding | ❌ | ❌ | ❌ | ❌ | ❌ | ❌ | ✅ |
-| Inline editing | ⚠️ | ⚠️ | ✅ | ❌ | ❌ | ✅ | ⚠️ |
-| Full-text search | ✅ | ✅ | ⚠️ | ❌ | ❌ | ❌ | ❌ |
-| Math/KaTeX | ❌ | ❌ | ❌ | ✅ | ❌ | ❌ | ✅ |
-| GTD/Task mgmt | ❌ | ⚠️ | ✅ | ❌ | ❌ | ⚠️ | ❌ |
+| Feature              | obsidian | telekasten | neorg | preview | table-mode | markdown.nvim | vim-markdown |
+| -------------------- | :------: | :--------: | :---: | :-----: | :--------: | :-----------: | :----------: |
+| Wiki links `[[...]]` |    ✅    |     ✅     |  ⚠️   |   ❌    |     ❌     |      ❌       |      ❌      |
+| Live browser preview |    ❌    |     ❌     |  ❌   |   ✅    |     ❌     |      ❌       |      ❌      |
+| Vault integration    |    ✅    |     ❌     |  ❌   |   ❌    |     ❌     |      ❌       |      ❌      |
+| Markdown tables      |    ⚠️    |     ⚠️     |  ⚠️   |   ❌    |     ✅     |      ⚠️       |      ❌      |
+| Daily/Journal        |    ✅    |     ✅     |  ❌   |   ❌    |     ❌     |      ❌       |      ❌      |
+| Code folding         |    ❌    |     ❌     |  ❌   |   ❌    |     ❌     |      ❌       |      ✅      |
+| Inline editing       |    ⚠️    |     ⚠️     |  ✅   |   ❌    |     ❌     |      ✅       |      ⚠️      |
+| Full-text search     |    ✅    |     ✅     |  ⚠️   |   ❌    |     ❌     |      ❌       |      ❌      |
+| Math/KaTeX           |    ❌    |     ❌     |  ❌   |   ✅    |     ❌     |      ❌       |      ✅      |
+| GTD/Task mgmt        |    ❌    |     ⚠️     |  ✅   |   ❌    |     ❌     |      ⚠️       |      ❌      |
 
 **Legend**: ✅ = Excellent, ⚠️ = Partial support, ❌ = Not available
 
@@ -188,6 +206,7 @@ return {
 ```
 
 **Why this combination**:
+
 - ✅ Zero learning curve - just works
 - ✅ Good syntax + inline editing + tables + preview
 - ✅ Lazy-loaded - minimal startup impact
@@ -230,4 +249,3 @@ return {
 6. **Best table support**: Add `vim-table-mode` to any combo
 
 **Pro tip**: Start with a balanced combo, expand as needed. All plugins are well-maintained and production-ready.
-

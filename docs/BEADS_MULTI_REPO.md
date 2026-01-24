@@ -16,11 +16,13 @@ bd ready  # Check for tasks
 ## Three Modes
 
 ### 1. Standard Mode (Default - Recommended for Your Projects)
+
 - `.beads/` **committed to git**
 - Tasks shared across machines via git
 - Full team collaboration support
 
 **Use when:**
+
 - Your personal projects
 - Team projects where you control git
 - Want task history in version control
@@ -28,11 +30,13 @@ bd ready  # Check for tasks
 **Setup:** Automatic with auto-init, or `bd init`
 
 ### 2. Stealth Mode (Private Planning)
+
 - `.beads/` **gitignored** (local only)
 - Tasks never committed
 - Personal planning on shared repos
 
 **Use when:**
+
 - Work/client repositories
 - Can't modify project git
 - Contributing to projects where you don't want task tracking visible
@@ -40,11 +44,13 @@ bd ready  # Check for tasks
 **Setup:** `bd init --stealth`
 
 ### 3. Contributor Mode (Separate Planning Repo)
+
 - Tasks stored in `~/.beads-planning/<project>/`
 - Project repo stays completely clean
 - Multiple forks get separate task spaces
 
 **Use when:**
+
 - Open source contributions
 - Forked repositories
 - Want to keep planning completely separate from project
@@ -67,6 +73,7 @@ programs.beads = {
 ```
 
 **What this does:**
+
 - On every `home-manager switch`, scans these directories
 - Finds all git repos (max depth 3 subdirectories)
 - Runs `bd init` in any repo without `.beads/`
@@ -90,13 +97,17 @@ bd init --contributor   # For separate planning repo
 ## Recommended Strategy
 
 ### Your Personal Projects (~/projects)
+
 ✅ **Use Standard Mode** (auto-init does this)
+
 - Tasks committed to git
 - Sync across machines
 - Full history
 
 ### Work Projects (~/work)
+
 ⚠️ **Convert to Stealth Mode**
+
 ```bash
 # One-time conversion for work repos
 for repo in ~/work/*; do
@@ -109,7 +120,9 @@ done
 ```
 
 ### Open Source Contributions
+
 🔀 **Use Contributor Mode**
+
 ```bash
 cd ~/projects/nixpkgs
 bd init --contributor
@@ -120,7 +133,9 @@ bd init --contributor
 ## Multi-Machine Sync
 
 ### Standard Mode (Your Projects)
+
 Tasks sync automatically via git:
+
 ```bash
 # Machine 1
 bd create "Feature: Add API" -p 0
@@ -134,7 +149,9 @@ bd ready  # Task appears automatically
 ```
 
 ### Stealth Mode (Work Projects)
+
 Export/import manually:
+
 ```bash
 # Machine 1
 bd export > tasks.json
@@ -159,6 +176,7 @@ Do you control the git repository?
 ## Common Scenarios
 
 ### Scenario 1: Your NixOS Config (This Repo)
+
 ```bash
 cd ~/projects/system
 # Already initialized (auto-init)
@@ -166,9 +184,11 @@ bd create "Feature: Add new module" -p 0
 git add .beads/
 git commit -m "Add task"
 ```
+
 **Mode:** Standard ✅
 
 ### Scenario 2: Work Project
+
 ```bash
 cd ~/work/client-app
 # Auto-initialized, but convert to stealth
@@ -177,9 +197,11 @@ bd init --stealth
 bd create "Fix: Login bug" -p 0
 # Never shows in git status
 ```
+
 **Mode:** Stealth ✅
 
 ### Scenario 3: Open Source PR
+
 ```bash
 cd ~/projects/beads
 git clone https://github.com/steveyegge/beads
@@ -188,6 +210,7 @@ bd create "PR: Fix issue #123" -p 0
 # Tasks in ~/.beads-planning/beads/
 # Your fork stays pristine
 ```
+
 **Mode:** Contributor ✅
 
 ## Verification Commands
@@ -223,18 +246,19 @@ bd ready
 
 ## Quick Reference
 
-| Command | Purpose |
-|---------|---------|
-| `bd init` | Standard mode (commits to git) |
-| `bd init --stealth` | Stealth mode (gitignored) |
+| Command                 | Purpose                          |
+| ----------------------- | -------------------------------- |
+| `bd init`               | Standard mode (commits to git)   |
+| `bd init --stealth`     | Stealth mode (gitignored)        |
 | `bd init --contributor` | Contributor mode (separate repo) |
-| `bd ready` | List available tasks |
-| `bd export > file.json` | Export tasks (backup/transfer) |
-| `bd import file.json` | Import tasks |
+| `bd ready`              | List available tasks             |
+| `bd export > file.json` | Export tasks (backup/transfer)   |
+| `bd import file.json`   | Import tasks                     |
 
 ## Agent Considerations
 
 Agents automatically detect Beads when working in any repo:
+
 - Check for `.beads/` directory
 - Use `bd ready` to find work
 - Create tasks with `bd create`

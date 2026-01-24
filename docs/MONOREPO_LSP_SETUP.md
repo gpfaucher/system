@@ -37,6 +37,7 @@ Inside neovim, run:
 ```
 
 Expected output:
+
 ```
 LSP Root Detection Debug:
   tsconfig.json -> /home/gabriel/projects/paddock-app/apps/ui
@@ -54,6 +55,7 @@ Active LSP Clients:
 ```
 
 Should show:
+
 - Client: `ts_ls` (active)
 - Root directory: `<monorepo>/apps/ui` (not the workspace root)
 - File type: `typescript`, `typescriptreact`, etc.
@@ -87,11 +89,13 @@ Then restart neovim to load the new configuration.
 ### Configuration Not Loading
 
 Check if the config file exists:
+
 ```bash
 ls -la ~/.config/nvf/monorepo-lsp.lua
 ```
 
 Verify it loads in neovim:
+
 ```vim
 :messages
 ```

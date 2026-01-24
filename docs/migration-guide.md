@@ -196,20 +196,24 @@ reboot
 For this specific system (dual-boot, 62GB RAM):
 
 ### Immediate Changes (disko)
+
 - ✅ Add disko configuration to version control
 - ✅ Document current disk layout (disko_current.nix)
 
 ### Short-term (< 3 months)
+
 - ✅ Enable Btrfs compression (zstd:3)
 - ✅ Add @snapshots subvolume
 - ✅ Test snapshot tooling (snapper)
 
 ### Medium-term (3-6 months)
+
 - 🔄 Add LUKS encryption (requires reinstall)
 - 🔄 Add disk swap partition (16GB)
 - 🔄 Reorganize into more subvolumes
 
 ### Long-term (6+ months)
+
 - 🤔 Evaluate RAID if adding more disks
 - 🤔 Consider LVM for flexibility
 - 🤔 Automate backup snapshots
@@ -221,6 +225,7 @@ For this specific system (dual-boot, 62GB RAM):
 If something goes wrong:
 
 ### If Import Fails
+
 ```bash
 # Remove disko from imports
 # Revert flake.nix changes
@@ -229,6 +234,7 @@ nixos-rebuild switch
 ```
 
 ### If System Won't Boot (Post-Format)
+
 ```bash
 # Boot NixOS installer USB
 # Mount root filesystem
@@ -236,6 +242,7 @@ nixos-rebuild switch
 ```
 
 ### If Disko Configuration is Wrong
+
 ```bash
 # Boot into recovery mode
 # Fix disko.nix
@@ -248,6 +255,7 @@ nixos-rebuild switch
 ## Troubleshooting
 
 ### Issue: "disko not found"
+
 ```bash
 # Make sure flake.nix includes disko and modules import it
 # Update flake lock
@@ -255,6 +263,7 @@ nix flake update
 ```
 
 ### Issue: Partition UUIDs don't match
+
 ```bash
 # After formatting with disko, UUIDs will change
 # Update disko.nix with new UUIDs:
@@ -263,6 +272,7 @@ lsblk -o NAME,UUID
 ```
 
 ### Issue: Dual-boot broken after disko
+
 ```bash
 # Disko shouldn't touch Windows partitions
 # Verify disko.nix only references nvme0n1
@@ -272,11 +282,13 @@ lsblk -o NAME,UUID
 ### Issue: Data loss
 
 **PREVENTION:**
+
 - Always backup first
 - Test on secondary drive first
 - Use dry-run mode
 
 **RECOVERY:**
+
 ```bash
 # If using timeshift backup
 sudo timeshift --restore
@@ -331,4 +343,3 @@ After migration, verify:
 **Phase 4 (Ongoing):** Configure snapshots, compression, automation
 
 This approach is **non-disruptive** and allows you to migrate at your own pace.
-

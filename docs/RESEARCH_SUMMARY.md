@@ -1,6 +1,7 @@
 # Declarative Disk Management - Research Complete ✅
 
 ## Research Summary Report
+
 **Date:** January 24, 2026  
 **System:** NixOS Laptop (gabrieljensen/system)  
 **Researcher:** RESEARCH Agent  
@@ -19,6 +20,7 @@ Completed comprehensive analysis of declarative disk management for Gabriel's Ni
 ## What Was Analyzed
 
 ### 1. Current Hardware Setup ✅
+
 - **Storage:** 2x NVMe SSDs (931.5 GB + 953.9 GB)
 - **RAM:** ~62 GB (detected via zram sizing)
 - **CPU:** AMD Ryzen with KVM support
@@ -26,40 +28,48 @@ Completed comprehensive analysis of declarative disk management for Gabriel's Ni
 - **Dual-Boot:** Windows (NTFS) + NixOS
 
 ### 2. Current Disk Configuration ✅
+
 **Primary Drive (nvme0n1):**
+
 - Partition 1: 1 GB EFI boot partition (FAT32)
 - Partition 2: 930.5 GB Btrfs root filesystem
   - Subvolume @: mounted at /
   - Subvolume @home: mounted at /home
 
 **Secondary Drive (nvme1n1):**
+
 - Windows OS + recovery partitions (NTFS)
 - Windows EFI partition mounted at /boot/efi-windows for dual-boot
 
 **Swap:** zram0 (30.7 GB, 50% of RAM, zstd compression)
 
 ### 3. Btrfs Configuration ✅
+
 **UUID:** 388ac5b1-433c-46d2-8c1f-88cfdfae5297  
 **Mount Options:** rw,relatime,ssd,discard=async,space_cache=v2
 
 **Strengths:**
+
 - ✅ SSD-aware (async discard, space_cache=v2)
 - ✅ Zram swap with zstd compression
 - ✅ Proper EFI setup for dual-boot
 
 **Gaps:**
+
 - ⚠️ No compression on filesystem
 - ⚠️ No snapshots configured
 - ⚠️ No LUKS encryption
 - ⚠️ Only 2 subvolumes (could be 7)
 
 ### 4. Boot Configuration ✅
+
 - systemd-boot with 10-generation limit
 - 5-second boot menu timeout
 - Auto-detection of Windows for dual-boot
 - Secure EFI permissions (fmask/dmask 0077)
 
 ### 5. Encryption Status ✅
+
 - **Current:** None (unencrypted)
 - **Risk Level:** Medium (no protection against physical theft)
 - **Recommendation:** Add LUKS in Phase 4 of migration
@@ -71,7 +81,9 @@ Completed comprehensive analysis of declarative disk management for Gabriel's Ni
 ### 6 Research Documents (41 KB Total)
 
 #### 1. **disk-analysis.md** (7.1 KB)
+
 Detailed technical analysis of current system:
+
 - Partition table with UUIDs
 - Btrfs subvolume structure
 - Swap analysis
@@ -81,7 +93,9 @@ Detailed technical analysis of current system:
 - Hardware capabilities
 
 #### 2. **quick-reference.md** (9.2 KB)
+
 Quick-access operational guide:
+
 - System overview diagram
 - Command reference
 - Troubleshooting checklist
@@ -90,14 +104,18 @@ Quick-access operational guide:
 - Next steps checklist
 
 #### 3. **disko-current.nix** (3.1 KB)
+
 Ready-to-use Nix configuration:
+
 - Replicates current partitioning
 - 5 subvolumes for organization
 - Non-destructive (safe for git)
 - Good for testing and learning
 
 #### 4. **disko-enhanced.nix** (4.2 KB)
+
 Production-ready enhanced configuration:
+
 - LUKS encryption
 - 7 subvolumes (organized)
 - Compression (zstd:3)
@@ -106,7 +124,9 @@ Production-ready enhanced configuration:
 - 2GB EFI partition
 
 #### 5. **migration-guide.md** (6.8 KB)
+
 Comprehensive migration planning:
+
 - 5 phases with timelines
 - Low-risk to production steps
 - Testing procedures
@@ -115,7 +135,9 @@ Comprehensive migration planning:
 - Validation checklist
 
 #### 6. **backup-strategy.md** (11 KB)
+
 Multi-level backup procedures:
+
 - Level 1: Git configuration backup
 - Level 2A: Btrfs snapshots (snapper)
 - Level 2B: Cloud backups (Duplicacy/Nextcloud/Backblaze)
@@ -125,7 +147,9 @@ Multi-level backup procedures:
 - Recovery testing procedures
 
 #### 7. **DISK-MANAGEMENT-INDEX.md** (Master Document)
+
 Navigation guide for all documents:
+
 - Document overview and use cases
 - Quick navigation by audience
 - Implementation roadmap
@@ -140,6 +164,7 @@ Navigation guide for all documents:
 ### System Health: ✅ EXCELLENT
 
 **Positive Indicators:**
+
 - SSD optimizations properly configured
 - Zram swap intelligently sized (50% RAM)
 - Zstd compression for swap
@@ -153,6 +178,7 @@ Navigation guide for all documents:
 ### Modernization Opportunities: 🔄 HIGH PRIORITY
 
 **Recommended Enhancements:**
+
 1. **Add Disko** → Reproducible disk layouts, version control
 2. **Enable Compression** → ~20 GB space savings (36% of usage)
 3. **Add Snapshots** → Quick recovery from accidental changes
@@ -163,6 +189,7 @@ Navigation guide for all documents:
 ### Risk Assessment: ⚠️ MEDIUM
 
 **Current Vulnerabilities:**
+
 - No encryption (physical threat)
 - Single backup location (git only)
 - No snapshots (data loss from mistakes)
@@ -177,27 +204,32 @@ Navigation guide for all documents:
 ### Phased Approach: LOW RISK
 
 **Phase 1 (Week 1):** Preparation
+
 - Add disko to flake.nix
 - Create disko.nix configurations
 - Create system backup
 
 **Phase 2 (Weeks 2-4):** Testing
+
 - Dry-run tests
 - VM testing
 - USB drive testing
 
 **Phase 3 (Month 2):** Enhancement Planning
+
 - Create enhanced configuration
 - Plan LUKS encryption
 - Plan backup strategy
 
 **Phase 4 (Month 3):** Deployment
+
 - Full system backup
 - Run disko format
 - Install enhanced system
 - Verify all systems work
 
 **Phase 5 (Ongoing):** Operations
+
 - Enable snapper (daily snapshots)
 - Configure cloud backups
 - Monthly recovery drills
@@ -286,24 +318,28 @@ Backup Capacity:
 ## Next Steps
 
 ### Immediate (This Week)
+
 - [ ] Review disk-analysis.md
 - [ ] Understand current system state
 - [ ] Create full system backup
 - [ ] Read quick-reference.md
 
 ### Short-term (Weeks 2-4)
+
 - [ ] Read migration-guide.md
 - [ ] Add disko to flake.nix
 - [ ] Test disko import (dry-build)
 - [ ] Understand backup-strategy.md
 
 ### Medium-term (Month 2)
+
 - [ ] Finalize enhanced disko.nix
 - [ ] Plan LUKS encryption
 - [ ] Create external backup
 - [ ] Test recovery procedures
 
 ### Long-term (Month 3+)
+
 - [ ] Execute Phase 4 deployment
 - [ ] Enable snapper for snapshots
 - [ ] Configure cloud backups
@@ -314,6 +350,7 @@ Backup Capacity:
 ## Documents Delivered
 
 All documents created and stored in:
+
 ```
 /home/gabriel/projects/system/docs/
 ├── DISK-MANAGEMENT-INDEX.md        [Master navigation]
@@ -330,6 +367,7 @@ All documents created and stored in:
 ## Quality Assurance
 
 ### Research Verification ✅
+
 - [x] Analyzed actual system (lsblk, mount, btrfs commands)
 - [x] Reviewed current configuration (hardware.nix, bootloader.nix)
 - [x] Cross-referenced against Disko documentation
@@ -337,6 +375,7 @@ All documents created and stored in:
 - [x] Tested commands before documentation
 
 ### Configuration Validation ✅
+
 - [x] disko-current.nix syntax correct
 - [x] disko-enhanced.nix ready for testing
 - [x] UUID mappings accurate
@@ -344,6 +383,7 @@ All documents created and stored in:
 - [x] Compression settings optimized
 
 ### Documentation Quality ✅
+
 - [x] All sections complete and detailed
 - [x] Code examples provided and tested
 - [x] Troubleshooting procedures included
@@ -355,6 +395,7 @@ All documents created and stored in:
 ## Research Completion Status
 
 ### Analysis Complete ✅
+
 - Current disk layout: ANALYZED
 - Btrfs configuration: ANALYZED
 - Swap setup: ANALYZED
@@ -364,17 +405,20 @@ All documents created and stored in:
 - Disko benefits: DOCUMENTED
 
 ### Configurations Provided ✅
+
 - Current setup (disko-current.nix): READY
 - Enhanced setup (disko-enhanced.nix): READY
 - Backup automation (nix config): PROVIDED
 
 ### Procedures Documented ✅
+
 - Migration steps: COMPLETE (5 phases)
 - Backup procedures: COMPLETE (4 levels)
 - Recovery procedures: COMPLETE (4 scenarios)
 - Troubleshooting: COMPLETE
 
 ### Guidance Provided ✅
+
 - Implementation timeline: PROVIDED (3-4 months)
 - Phase breakdown: DETAILED
 - Risk assessment: COMPLETED
@@ -387,7 +431,9 @@ All documents created and stored in:
 Comprehensive research complete. System is healthy with excellent optimization already in place. Clear path forward to migrate to declarative disk management using Disko within 3-4 months using phased approach.
 
 ### Ready for Next Phase
+
 The documentation provides:
+
 1. ✅ **Complete understanding** of current system
 2. ✅ **Ready-to-use configurations** for Disko
 3. ✅ **Step-by-step migration guide** (low risk)
@@ -395,10 +441,10 @@ The documentation provides:
 5. ✅ **Reference guides** for ongoing operations
 
 ### Recommendation
+
 Proceed with Phase 1 (Preparation) when ready. Follow phased timeline for minimal risk and maximum learning.
 
 ---
 
 **Research completed and delivered by RESEARCH Agent**  
 **All documentation and configurations ready for implementation**
-

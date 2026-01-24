@@ -45,7 +45,7 @@
       la = "eza -la";
       lt = "eza --tree";
       cat = "bat";
-      cd = "z";  # zoxide
+      cd = "z"; # zoxide
     };
 
     functions = {

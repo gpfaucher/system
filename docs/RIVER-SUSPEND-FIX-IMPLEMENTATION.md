@@ -23,6 +23,7 @@ Implemented a two-part systemd-based solution:
 #### 1. `modules/home/services.nix`
 
 Added `systemd.user.services.river-resume-hook`:
+
 - **Type:** oneshot service
 - **Trigger:** Part of graphical-session.target, called by system resume hook
 - **Actions:**
@@ -35,6 +36,7 @@ Added `systemd.user.services.river-resume-hook`:
 #### 2. `modules/system/services.nix`
 
 Added `powerManagement.resumeCommands`:
+
 - Triggers the user service after system resume
 - Uses `systemctl --user -M gabriel@ start river-resume-hook.service`
 - Suppresses errors with `|| true` for robustness
@@ -114,6 +116,7 @@ Run the provided test script:
 ```
 
 Test scenarios:
+
 - [ ] Single suspend/resume cycle
 - [ ] Multiple suspend cycles (3-5 times)
 - [ ] Suspend with multiple windows open
@@ -124,12 +127,14 @@ Test scenarios:
 ## Expected Behavior
 
 ### Before Fix
+
 - Windows float after resume
 - Layout commands (Super+T, Super+M) don't work
 - Manual River restart required: `pkill river && exec river`
 - Full session logout/login needed
 
 ### After Fix
+
 - Windows remain tiled after resume
 - Low-priority notification appears: "River - Restoring tiling layout..."
 - All layout commands work immediately
@@ -180,21 +185,25 @@ journalctl --user -u river-resume-hook -n 20
 ## Future Improvements (Optional Phases)
 
 ### Phase 2: Health Monitor
+
 Add a background process that monitors wideriver connectivity every 45 seconds and automatically restarts if crashed.
 
 **Location:** `modules/home/river.nix` autostart section
 
 ### Phase 3: Manual Recovery Keybinding
+
 Add emergency tiling refresh keybinding: `Super+Ctrl+Shift+R`
 
 **Location:** `modules/home/river.nix` keybindings section
 
 ### Phase 4: GPU Wake-up Delay
+
 Add small delay before River startup on cold boot.
 
 **Location:** `modules/home/shell.nix` River startup section
 
 ### Phase 5: Fine-Grained NVIDIA Power Management
+
 Enable better suspend/resume handling for NVIDIA GPUs.
 
 **Location:** `modules/system/graphics.nix`
@@ -250,5 +259,5 @@ sudo nixos-rebuild switch --flake .#laptop
 ---
 
 **Implementation By:** nix-specialist agent  
-**Based On:** Research by research agent (docs/research/RIVER-SUSPEND-*.md)  
+**Based On:** Research by research agent (docs/research/RIVER-SUSPEND-\*.md)  
 **Next Step:** User testing and validation

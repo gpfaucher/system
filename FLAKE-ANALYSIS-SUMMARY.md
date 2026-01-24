@@ -5,6 +5,7 @@
 Comprehensive analysis of the NixOS flake configuration at `/home/gabriel/projects/system` completed on 2026-01-24.
 
 **Analysis Scope:**
+
 - 91-line flake.nix entry point
 - 16 Nix modules (~2,811 lines total)
 - 2 host configurations (hardware + system)
@@ -28,45 +29,42 @@ Comprehensive analysis of the NixOS flake configuration at `/home/gabriel/projec
 ### ⚠️ 11 Issues Identified
 
 **Critical (0-40 min fixes):**
+
 1. 🔴 Stylix & Ghostty inputs diverge from root nixpkgs (breaking change risk)
 2. 🔴 Bluetooth monitor script has logic errors in grep chains
 3. 🔴 Hardcoded geographic coordinates (Amsterdam) not portable
 
-**High Priority (1-2 hour improvements):**
-4. 🟠 45+ undocumented packages in home.packages (maintenance nightmare)
-5. 🟠 Duplicate neovim (in nvf module AND home.packages)
-6. 🟠 No multi-machine support pattern (only "laptop" config)
-7. 🟠 Tabby auth token exposed in world-readable /nix/store
+**High Priority (1-2 hour improvements):** 4. 🟠 45+ undocumented packages in home.packages (maintenance nightmare) 5. 🟠 Duplicate neovim (in nvf module AND home.packages) 6. 🟠 No multi-machine support pattern (only "laptop" config) 7. 🟠 Tabby auth token exposed in world-readable /nix/store
 
-**Medium (2-6 hour improvements):**
-8. 🟡 Missing flake.nix documentation and metadata
-9. 🟡 No input update strategy documented
-10. 🟡 No per-module READMEs explaining purpose/options
-11. 🟡 No validation/testing layer (flake checks missing)
+**Medium (2-6 hour improvements):** 8. 🟡 Missing flake.nix documentation and metadata 9. 🟡 No input update strategy documented 10. 🟡 No per-module READMEs explaining purpose/options 11. 🟡 No validation/testing layer (flake checks missing)
 
 ---
 
 ## PRIORITY ROADMAP
 
 ### Week 1: Critical Fixes (40 minutes)
+
 - [ ] Add `.follows = "nixpkgs"` to stylix and ghostty inputs
 - [ ] Fix bluetooth-monitor.nix grep logic (stderr handling)
 - [ ] Move coordinates from hardcoded to specialArgs
 
 ### Week 2: Documentation (2.5 hours)
+
 - [ ] Group and document packages by category
 - [ ] Remove duplicate neovim from home.packages
 - [ ] Add comprehensive flake.nix header comments
-- [ ] Create per-module READMEs (template for modules/system/*, modules/home/*)
+- [ ] Create per-module READMEs (template for modules/system/_, modules/home/_)
 - [ ] Document input update strategy in README
 
 ### Month 1: Architecture (5.5 hours)
+
 - [ ] Add multi-machine support via mkConfig helper
 - [ ] Integrate agenix/sops for secrets (Tabby token)
 - [ ] Add flake checks (nixos, home-manager, critical-tools)
 - [ ] Support environment overrides (location, hostname)
 
 ### Month 2: CI/CD (2+ hours)
+
 - [ ] Pre-commit hooks for nix fmt, deadcode
 - [ ] GitHub Actions for flake check, build tests
 - [ ] Automatic dependency update PRs
@@ -76,17 +74,21 @@ Comprehensive analysis of the NixOS flake configuration at `/home/gabriel/projec
 ## DETAILED ISSUE BREAKDOWN
 
 ### Issue #1: Input Pinning Divergence (CRITICAL)
+
 **Files:** `flake.nix` lines 17-21  
 **Fix:** 4 lines changed
+
 ```nix
 # Add to stylix and ghostty inputs:
 inputs.nixpkgs.follows = "nixpkgs";
 ```
+
 **Impact:** Prevents breaking changes when stylix/ghostty update independently
 
 ---
 
 ### Issue #2: Bluetooth Monitor Script (CRITICAL)
+
 **File:** `modules/system/bluetooth-monitor.nix` lines 84-100  
 **Problem:** Grep on line 91 doesn't receive piped input (logic error)
 **Fix:** Consolidate into single grep with -E flag
@@ -95,6 +97,7 @@ inputs.nixpkgs.follows = "nixpkgs";
 ---
 
 ### Issue #3: Hardcoded Coordinates (CRITICAL)
+
 **File:** `modules/home/services.nix` lines 166-167  
 **Current:** `latitude = 52.37; longitude = 4.90;` (hardcoded Amsterdam)
 **Fix:** Pass via specialArgs from flake.nix
@@ -103,9 +106,11 @@ inputs.nixpkgs.follows = "nixpkgs";
 ---
 
 ### Issue #4: Undocumented Packages (HIGH)
+
 **File:** `modules/home/default.nix` lines 60-96  
 **Problem:** 45+ packages with only generic comments
 **Fix:** Organize by category with explanation of purpose
+
 ```nix
 let
   guiApps = [ jetbrains.datagrip zed-editor-fhs firefox ];
@@ -113,11 +118,13 @@ let
   # ... etc
 in { home.packages = guiApps ++ devTools ++ ...; }
 ```
+
 **Impact:** 3x easier to maintain, audit dependencies
 
 ---
 
 ### Issue #5: Duplicate Neovim (HIGH)
+
 **Files:** `nvf.nix` line 7 + `default.nix` line 67  
 **Problem:** Neovim managed via nvf AND explicitly in packages
 **Fix:** Remove from home.packages (nvf provides it)
@@ -126,6 +133,7 @@ in { home.packages = guiApps ++ devTools ++ ...; }
 ---
 
 ### Issue #6: No Multi-Machine Support (HIGH)
+
 **File:** `flake.nix` structure  
 **Current:** Only `nixosConfigurations.laptop` available
 **Fix:** Use mkConfig helper to generate configs for multiple hosts
@@ -134,6 +142,7 @@ in { home.packages = guiApps ++ devTools ++ ...; }
 ---
 
 ### Issue #7: Exposed Auth Token (HIGH - SECURITY)
+
 **File:** `modules/home/services.nix` line 111  
 **Problem:** Tabby auth token visible in `/nix/store` (world-readable)
 **Fix:** Use agenix/sops for secrets management
@@ -142,6 +151,7 @@ in { home.packages = guiApps ++ devTools ++ ...; }
 ---
 
 ### Issue #8: Missing Flake Metadata (MEDIUM)
+
 **File:** `flake.nix` line 2  
 **Current:** `description = "NixOS system configuration";`
 **Fix:** Add detailed header with usage, components, hardware
@@ -150,6 +160,7 @@ in { home.packages = guiApps ++ devTools ++ ...; }
 ---
 
 ### Issue #9: No Update Strategy (MEDIUM)
+
 **File:** README (missing)  
 **Add:** Document update frequency, testing, rollback process
 **Impact:** Prevents unexpected breakage from dependency updates
@@ -157,13 +168,16 @@ in { home.packages = guiApps ++ devTools ++ ...; }
 ---
 
 ### Issue #10: Missing Module Documentation (MEDIUM)
+
 **Add:** Per-module READMEs explaining:
+
 - Purpose (what does it do)
 - Dependencies (what does it require)
 - Configuration (what options are available)
 - Troubleshooting (what can go wrong)
 
 **Example for audio.nix:**
+
 - Purpose: PipeWire audio with Bluetooth multipoint
 - Dependencies: rtkit, wireplumber, bluez
 - Options: sample rates, codecs, HSP/HFP handling
@@ -174,8 +188,10 @@ in { home.packages = guiApps ++ devTools ++ ...; }
 ---
 
 ### Issue #11: No Validation Layer (MEDIUM)
+
 **File:** `flake.nix` (missing checks output)
 **Add:** Flake checks for:
+
 - System builds successfully
 - Home-manager activates
 - Critical tools exist (river, nvim, fish)
@@ -243,12 +259,14 @@ Transitive: 40+ packages
 ## SECURITY CONSIDERATIONS
 
 ### Current Risks
+
 1. **Auth Token Exposure** - Tabby token in /nix/store (world-readable)
 2. **No Secrets Rotation** - Hardcoded token, no expiry mechanism
 3. **Backup Leakage** - Token visible in git history (if committed)
 4. **Container Exposure** - Would leak token if containerized
 
 ### Recommendations
+
 1. Implement agenix for encrypted secrets
 2. Rotate Tabby token
 3. Add .gitignore for secrets files
@@ -259,16 +277,19 @@ Transitive: 40+ packages
 ## MAINTENANCE RECOMMENDATIONS
 
 ### Monthly
+
 - [ ] Review flake.lock for security updates
 - [ ] Test `nix flake update` on staging machine
 - [ ] Check if nvf/stylix have breaking changes
 
 ### Quarterly
+
 - [ ] Full system rebuild test
 - [ ] Review package list for unused entries
 - [ ] Update documentation
 
 ### As-Needed
+
 - [ ] Add new packages with documented reasons
 - [ ] Update Gruvbox colors if preferences change
 - [ ] Adjust Bluetooth profiles for new devices
@@ -277,18 +298,18 @@ Transitive: 40+ packages
 
 ## COMPARISON TO BEST PRACTICES
 
-| Best Practice | Status | Notes |
-|---------------|--------|-------|
-| Input pinning | ⚠️ Partial | stylix/ghostty diverge |
-| Module organization | ✅ Yes | Clean separation |
-| Documentation | ⚠️ Minimal | Needs READMEs and comments |
-| Error handling | ⚠️ Weak | Bluetooth script has issues |
-| Secrets management | ❌ No | Tokens in plain text |
-| Testing/validation | ❌ No | No flake checks |
-| CI/CD pipeline | ❌ No | Manual deployment only |
-| Multi-machine support | ❌ No | Single "laptop" config |
-| Environment variables | ⚠️ Some | Only username/self/inputs |
-| Version pinning | ✅ Yes | flake.lock well-maintained |
+| Best Practice         | Status     | Notes                       |
+| --------------------- | ---------- | --------------------------- |
+| Input pinning         | ⚠️ Partial | stylix/ghostty diverge      |
+| Module organization   | ✅ Yes     | Clean separation            |
+| Documentation         | ⚠️ Minimal | Needs READMEs and comments  |
+| Error handling        | ⚠️ Weak    | Bluetooth script has issues |
+| Secrets management    | ❌ No      | Tokens in plain text        |
+| Testing/validation    | ❌ No      | No flake checks             |
+| CI/CD pipeline        | ❌ No      | Manual deployment only      |
+| Multi-machine support | ❌ No      | Single "laptop" config      |
+| Environment variables | ⚠️ Some    | Only username/self/inputs   |
+| Version pinning       | ✅ Yes     | flake.lock well-maintained  |
 
 ---
 
@@ -316,4 +337,3 @@ Transitive: 40+ packages
 This is a **well-crafted NixOS configuration** that successfully implements a modern, reproducible system setup. The architecture is sound and follows most Nix idioms correctly. The 11 identified issues are primarily around documentation, edge cases, and security rather than fundamental design flaws.
 
 **Key Takeaway:** With ~11 hours of focused work, this can become a reference implementation for NixOS flakes, suitable for sharing with the community.
-

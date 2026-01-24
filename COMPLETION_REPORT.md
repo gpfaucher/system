@@ -10,6 +10,7 @@
 ## Executive Summary
 
 Successfully configured 5 markdown editing plugins in your NixOS system configuration. The plugins provide:
+
 - Live browser preview with math/diagram support
 - Smart table auto-formatting
 - Checkbox toggling and task management
@@ -61,20 +62,21 @@ Added 5 plugins to the `extraPlugins` section:
 
 Created 6 comprehensive documentation files:
 
-| File | Purpose | Lines |
-|------|---------|-------|
-| `TODO-MARKDOWN-SETUP.md` | **START HERE** - Action checklist | 120 |
-| `MARKDOWN_QUICK_REFERENCE.md` | One-page keybinding cheat sheet | 180 |
-| `MARKDOWN_PLUGINS_INSTALL.md` | Detailed installation guide | 200 |
-| `MARKDOWN_INSTALLATION_SUMMARY.md` | Complete technical summary | 380 |
-| `MARKDOWN_SETUP_COMPLETE.md` | Success criteria & verification | 340 |
-| `test-markdown.md` | Comprehensive test file | 280 |
+| File                               | Purpose                           | Lines |
+| ---------------------------------- | --------------------------------- | ----- |
+| `TODO-MARKDOWN-SETUP.md`           | **START HERE** - Action checklist | 120   |
+| `MARKDOWN_QUICK_REFERENCE.md`      | One-page keybinding cheat sheet   | 180   |
+| `MARKDOWN_PLUGINS_INSTALL.md`      | Detailed installation guide       | 200   |
+| `MARKDOWN_INSTALLATION_SUMMARY.md` | Complete technical summary        | 380   |
+| `MARKDOWN_SETUP_COMPLETE.md`       | Success criteria & verification   | 340   |
+| `test-markdown.md`                 | Comprehensive test file           | 280   |
 
 **Total documentation:** ~1,500 lines
 
 ### 3. Test File Created ✅
 
 Created `test-markdown.md` with examples of:
+
 - Syntax highlighting
 - Headings and navigation
 - Tables (to test table mode)
@@ -155,13 +157,13 @@ za              Toggle fold
 
 ## Plugin Details
 
-| Plugin | Stars | Type | Size | Purpose |
-|--------|-------|------|------|---------|
-| markdown-preview.nvim | 7.7k | Node.js | Medium | Live browser preview |
-| vim-markdown | 4.8k | VimScript | Small | Syntax + folding |
-| vim-table-mode | 2.2k | VimScript | Small | Table formatting |
-| markdown-nvim | 223 | Lua | Tiny | Inline editing |
-| tabular | 1.6k | VimScript | Tiny | Dependency |
+| Plugin                | Stars | Type      | Size   | Purpose              |
+| --------------------- | ----- | --------- | ------ | -------------------- |
+| markdown-preview.nvim | 7.7k  | Node.js   | Medium | Live browser preview |
+| vim-markdown          | 4.8k  | VimScript | Small  | Syntax + folding     |
+| vim-table-mode        | 2.2k  | VimScript | Small  | Table formatting     |
+| markdown-nvim         | 223   | Lua       | Tiny   | Inline editing       |
+| tabular               | 1.6k  | VimScript | Tiny   | Dependency           |
 
 **Total:** 16k+ combined stars, all well-maintained
 
@@ -223,22 +225,26 @@ git push
 ## Troubleshooting
 
 ### Preview Won't Open
+
 - Check Node.js: `node --version`
 - Try manual: `:MarkdownPreview`
 - Check `:messages` for errors
 - Verify browser not blocking popup
 
 ### Table Mode Not Working
+
 - Press `<leader>mt` first to enable
 - Start line with `|` character
 - Check `:TableModeToggle` output
 
 ### Syntax Highlighting Missing
+
 - Run `:TSUpdate markdown`
 - Restart Neovim
 - Check `:checkhealth treesitter`
 
 ### Rebuild Fails
+
 - Read error message carefully
 - Ensure in `~/projects/system` directory
 - Try: `nix flake update` then rebuild
@@ -250,6 +256,7 @@ git push
 **User Decision:** Option 3 - Lightweight without knowledge management
 
 **Rationale:**
+
 - ✅ Balanced features (not too minimal, not overwhelming)
 - ✅ Works with any markdown files (no vault required)
 - ✅ Fast startup and responsive
@@ -259,6 +266,7 @@ git push
 - ❌ No Zettelkasten workflow (by design)
 
 **Alternative options available:**
+
 - Option 1: Obsidian vault users → obsidian.nvim
 - Option 2: Knowledge workers → telekasten.nvim
 - Option 4: Power users → neorg
@@ -268,6 +276,7 @@ git push
 ## Before & After Comparison
 
 ### Before
+
 - Basic markdown editing
 - No live preview
 - Manual table formatting
@@ -276,6 +285,7 @@ git push
 - No math rendering
 
 ### After
+
 - ✅ Live browser preview
 - ✅ KaTeX math rendering
 - ✅ Mermaid diagram support
@@ -291,6 +301,7 @@ git push
 ## Success Metrics
 
 ### Configuration Quality
+
 - ✅ All 4 requested plugins installed
 - ✅ All keybindings configured
 - ✅ Nix syntax validated
@@ -298,6 +309,7 @@ git push
 - ✅ Settings optimized
 
 ### Documentation Quality
+
 - ✅ 6 comprehensive guides created
 - ✅ Quick reference card
 - ✅ Test file with examples
@@ -305,6 +317,7 @@ git push
 - ✅ Clear next steps
 
 ### Code Quality
+
 - ✅ 104 lines added, clean and organized
 - ✅ Comments for each section
 - ✅ Follows nvf conventions
@@ -320,22 +333,26 @@ git push
 **Context:** Markdown plugins configured but not yet installed.
 
 **Immediate tasks:**
+
 1. User must run `./scripts/rebuild.sh` (requires sudo)
 2. Test with `nvim test-markdown.md`
 3. Close beads issue system-giq
 4. Commit and push changes
 
 **Related files:**
+
 - `TODO-MARKDOWN-SETUP.md` - Start here
 - `MARKDOWN_QUICK_REFERENCE.md` - Keybinding reference
 - `test-markdown.md` - Test file
 
 **Potential issues:**
+
 - Preview requires Node.js (already installed)
 - First preview may be slow (builds on first use)
 - Tables need `<leader>mt` before use
 
 **Future enhancements:**
+
 - Could add obsidian.nvim if user wants vault integration
 - Could add snippets for common markdown patterns
 - Could add custom folding expressions

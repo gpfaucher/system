@@ -11,6 +11,7 @@ All code examples for Wayland/River WM with NixOS/Home Manager.
 **Recommended for most users. Already implemented.**
 
 ### modules/home/services.nix
+
 ```nix
 { config, lib, pkgs, ... }:
 
@@ -36,6 +37,7 @@ All code examples for Wayland/River WM with NixOS/Home Manager.
 ```
 
 **Configuration Impact:**
+
 - ✅ Minimal resource usage
 - ✅ Reliable behavior
 - ✅ Good defaults
@@ -53,18 +55,18 @@ services.gammastep = {
   provider = "manual";
   latitude = 52.37;
   longitude = 4.90;
-  
+
   temperature = {
     day = 6500;
     night = 3500;
   };
-  
+
   # New: Brightness control
   brightness = {
     day = 1.0;
     night = 0.9;  # Slightly dimmer at night
   };
-  
+
   settings = {
     general = {
       adjustment-method = "wayland";
@@ -75,6 +77,7 @@ services.gammastep = {
 ```
 
 **Effect:**
+
 - Screen 10% dimmer at night
 - Reduces eye strain further
 - Helps with sleep transition
@@ -87,17 +90,17 @@ services.gammastep = {
   provider = "manual";
   latitude = 52.37;
   longitude = 4.90;
-  
+
   temperature = {
     day = 6500;
     night = 3500;
   };
-  
+
   brightness = {
     day = 1.0;
     night = 0.9;
   };
-  
+
   # New: Per-channel gamma adjustment
   settings = {
     general = {
@@ -110,6 +113,7 @@ services.gammastep = {
 ```
 
 **Effect:**
+
 - Fine-tunes color response
 - Values: 0.5 (very dark) to 1.0 (normal)
 - 0.95 is subtle, good starting point
@@ -128,23 +132,23 @@ services.gammastep = {
   provider = "manual";
   latitude = 52.37;
   longitude = 4.90;
-  
+
   temperature = {
     day = 6500;
     night = 3500;
   };
-  
+
   brightness = {
     day = 1.0;
     night = 0.9;
   };
-  
+
   settings = {
     general = {
       adjustment-method = "wayland";
       fade = 1;
       gamma = "0.95:0.95:0.95";
-      
+
       # New: Custom schedule
       dawn-time = "06:00-08:00";
       dusk-time = "18:00-20:00";
@@ -154,6 +158,7 @@ services.gammastep = {
 ```
 
 **Effect:**
+
 - Day mode: 08:00 to 18:00
 - Night mode: 20:00 to 06:00
 - Smooth transitions during dawn/dusk windows
@@ -186,6 +191,7 @@ lon=4.90
 ```
 
 **Usage:**
+
 - `~/.config/gammastep/config.ini` takes precedence
 - Reload: `systemctl --user restart gammastep`
 - Useful for quick adjustments without rebuild
@@ -197,6 +203,7 @@ lon=4.90
 ### Basic Spawn (Current)
 
 **river.nix line 209:**
+
 ```bash
 # Already configured, spawns at River startup
 riverctl spawn gammastep
@@ -288,12 +295,14 @@ notify-send --app-name=Gammastep "Temperature Adjusted" "${NEW}K"
 ```
 
 **Make executable:**
+
 ```bash
 chmod +x ~/.local/bin/toggle-nightlight
 chmod +x ~/.local/bin/adjust-temperature
 ```
 
 **Use in keybindings:**
+
 ```bash
 # Add to river.nix init script
 riverctl map normal $mod+Shift bracketleft spawn "~/.local/bin/adjust-temperature -300"
@@ -352,6 +361,7 @@ gdbus call --session \
 ## 6. Per-Location Configurations
 
 ### Amsterdam (Current)
+
 ```nix
 latitude = 52.37;
 longitude = 4.90;
@@ -360,30 +370,35 @@ longitude = 4.90;
 ### Other Locations
 
 **New York, USA:**
+
 ```nix
 latitude = 40.71;
 longitude = -74.00;
 ```
 
 **London, UK:**
+
 ```nix
 latitude = 51.51;
 longitude = -0.13;
 ```
 
 **Tokyo, Japan:**
+
 ```nix
 latitude = 35.68;
 longitude = 139.69;
 ```
 
 **Sydney, Australia:**
+
 ```nix
 latitude = -33.87;
 longitude = 151.21;
 ```
 
 **São Paulo, Brazil:**
+
 ```nix
 latitude = -23.55;
 longitude = -46.63;
@@ -394,39 +409,47 @@ longitude = -46.63;
 ## 7. Temperature Preset Configurations
 
 ### Relaxed/Warm Focus
+
 ```nix
 temperature = {
   day = 5500;    # Neutral-warm
   night = 4000;  # Very warm
 };
 ```
+
 **Best for:** Reading, relaxation, evening work
 
 ### Standard (Current - RECOMMENDED)
+
 ```nix
 temperature = {
   day = 6500;    # Neutral-cool
   night = 3500;  # Warm
 };
 ```
+
 **Best for:** General use, productivity, good sleep
 
 ### Bright/Cool Focus
+
 ```nix
 temperature = {
   day = 7000;    # Cool/bright
   night = 4500;  # Moderate warm
 };
 ```
+
 **Best for:** Programming, design work, morning
 
 ### Extreme Warm (Sleeping)
+
 ```nix
 temperature = {
   day = 6500;    # Normal day
   night = 2500;  # Very warm/red
 };
 ```
+
 **Best for:** Pre-sleep preparation, extreme sensitivity
 
 ---
@@ -440,6 +463,7 @@ For laptops moving between locations:
 ```
 
 **In services.nix:**
+
 ```nix
 services.gammastep = {
   enable = true;
@@ -458,6 +482,7 @@ services.gammastep = {
 ```
 
 **Trade-offs:**
+
 - ✅ Automatic sun times everywhere
 - ❌ Requires geoclue2 running
 - ❌ May drain battery (GPS/network queries)
@@ -472,6 +497,7 @@ services.gammastep = {
 If you need a custom systemd service (advanced):
 
 **~/.config/systemd/user/custom-gammastep.service:**
+
 ```ini
 [Unit]
 Description=Custom Gammastep Blue Light Filter
@@ -492,6 +518,7 @@ WantedBy=graphical-session.target
 ```
 
 **Enable:**
+
 ```bash
 systemctl --user daemon-reload
 systemctl --user enable custom-gammastep.service
@@ -551,13 +578,13 @@ gammastep -x       # Reset
 
 ## Summary of Configurations
 
-| Use Case | Temperature | Brightness | Gamma | Best For |
-|----------|-------------|-----------|-------|----------|
-| **Standard** (CURRENT) | 6500K:3500K | 1.0:1.0 | - | General use |
-| **Warm** | 6500K:4000K | 1.0:0.95 | - | Relaxation |
-| **Cool** | 7000K:4500K | 1.0:1.0 | - | Focus/design |
-| **Sleeping** | 6500K:2500K | 1.0:0.8 | 0.95 | Pre-sleep |
-| **Mobile** | Auto | 1.0:0.9 | - | Traveling |
+| Use Case               | Temperature | Brightness | Gamma | Best For     |
+| ---------------------- | ----------- | ---------- | ----- | ------------ |
+| **Standard** (CURRENT) | 6500K:3500K | 1.0:1.0    | -     | General use  |
+| **Warm**               | 6500K:4000K | 1.0:0.95   | -     | Relaxation   |
+| **Cool**               | 7000K:4500K | 1.0:1.0    | -     | Focus/design |
+| **Sleeping**           | 6500K:2500K | 1.0:0.8    | 0.95  | Pre-sleep    |
+| **Mobile**             | Auto        | 1.0:0.9    | -     | Traveling    |
 
 ---
 
@@ -579,6 +606,7 @@ Redshift: `~/.config/redshift/redshift.conf`
 Gammastep: `~/.config/gammastep/config.ini`
 
 Most options are compatible, just rename:
+
 - `redshift.conf` → `config.ini`
 - `[general]` stays same
 - `[redshift]` → `[manual]` (if using manual location)
@@ -588,12 +616,14 @@ Most options are compatible, just rename:
 ## Performance Notes
 
 **Resource Usage:**
+
 - Gammastep daemon: ~10-20 MB RAM
 - CPU: Negligible (updates only at period changes)
 - Battery: Minimal impact
 - Wayland protocol: Efficient (no polling)
 
 **Compared to alternatives:**
+
 - Gammastep: Balanced (features + efficiency)
 - wlsunset: Lighter (fewer features)
 - wl-gammarelay: Lighter (DBus overhead)

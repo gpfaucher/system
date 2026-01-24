@@ -24,7 +24,10 @@
               type = "filesystem";
               format = "vfat";
               mountpoint = "/boot";
-              mountOptions = [ "fmask=0077" "dmask=0077" ];
+              mountOptions = [
+                "fmask=0077"
+                "dmask=0077"
+              ];
             };
           };
 
@@ -32,10 +35,10 @@
           # Provides fallback when zram is exhausted
           swap = {
             size = "16G";
-            type = "8200";  # Linux swap
+            type = "8200"; # Linux swap
             content = {
               type = "swap";
-              priority = 0;  # Lower than zram (zram has priority 5)
+              priority = 0; # Lower than zram (zram has priority 5)
             };
           };
 
@@ -46,7 +49,7 @@
             content = {
               type = "luks";
               name = "luks-root";
-              passwordFile = "/tmp/luks-password";  # Provide at boot
+              passwordFile = "/tmp/luks-password"; # Provide at boot
               content = {
                 type = "btrfs";
                 format = "btrfs";
@@ -55,11 +58,11 @@
                   "@" = {
                     mountpoint = "/";
                     mountOptions = [
-                      "compress=zstd:3"    # zstd compression (level 3, good balance)
-                      "noatime"            # No access time updates
-                      "ssd"                # SSD optimizations
-                      "discard=async"      # Async TRIM
-                      "space_cache=v2"     # Modern space cache
+                      "compress=zstd:3" # zstd compression (level 3, good balance)
+                      "noatime" # No access time updates
+                      "ssd" # SSD optimizations
+                      "discard=async" # Async TRIM
+                      "space_cache=v2" # Modern space cache
                     ];
                   };
 

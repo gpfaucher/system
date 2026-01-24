@@ -159,6 +159,7 @@ stylix = {
 ```
 
 Manually themed (not supported by Stylix):
+
 - rEFInd bootloader
 - River borders
 - fnott notifications
@@ -246,6 +247,7 @@ programs.starship.enable = true;
 ### User Services
 
 **Tabby Server:**
+
 ```nix
 systemd.user.services.tabby = {
   Unit.Description = "Tabby AI completion server";
@@ -258,6 +260,7 @@ systemd.user.services.tabby = {
 ```
 
 **Kanshi (display profiles):**
+
 ```nix
 services.kanshi = {
   enable = true;
@@ -314,10 +317,12 @@ services.kanshi = {
 ## Packages Summary
 
 **System-level:**
+
 - rEFInd, CUPS, PipeWire, NetworkManager, Bluetooth
 - NVIDIA drivers, Mesa (AMD)
 
 **User-level:**
+
 - River, wideriver, kanshi, waylock, wlogout, fuzzel
 - Ghostty, Fish, Starship
 - Neovim (via nvf)

@@ -3,6 +3,7 @@
 ## Side-by-Side Comparison: Current vs Impermanent
 
 ### System State Management
+
 ```
 Current Setup (persistent /):
   - Everything persists across boots
@@ -20,6 +21,7 @@ Impermanent Setup (tmpfs / + /persist):
 ```
 
 ### Boot Performance
+
 ```
 Current Setup:
   ├─ Journal replay: ~500ms-2s (depends on log size)
@@ -38,6 +40,7 @@ Impermanent Setup:
 ### Storage Requirements
 
 **Current System:**
+
 ```
 /              = Btrfs @ subvolume
   ├─ /nix      = 55GB (packages)
@@ -46,13 +49,14 @@ Impermanent Setup:
   ├─ /usr      = symlinks to /nix
   ├─ /lib      = symlinks to /nix
   └─ /root     = ~1KB
-  
+
 Total disk used: 55GB
 Btrfs snapshots possible: Yes ✓
 Subvolume separation: Good (@home separate) ✓
 ```
 
 **With Impermanence:**
+
 ```
 tmpfs / (2GB) - ephemeral
 ├─ Fresh on every boot
@@ -80,6 +84,7 @@ Rebuild complexity: +1 subvolume (@persist)
 #### Critical Applications
 
 **NetworkManager:**
+
 ```
 Current:
   └─ /var/lib/NetworkManager (persists, but can grow with history)
@@ -92,6 +97,7 @@ Impermanent:
 ```
 
 **Docker:**
+
 ```
 Current:
   └─ /var/lib/docker (grows unbounded with images/containers)
@@ -105,6 +111,7 @@ Impermanent:
 ```
 
 **Systemd Journal:**
+
 ```
 Current:
   └─ /var/log/journal (grows to journald.MaxDiskSize)
@@ -112,7 +119,7 @@ Current:
 Impermanent:
   Option A) /persist/var/log/journal (keep last N days)
   Option B) /run/log/journal (tmpfs, lost on reboot)
-  
+
   Recommendation: Option A with 7-day retention
   ✓ Can debug boot issues with logs
   ✓ Bound by MaxDiskSize = 1GB
@@ -120,6 +127,7 @@ Impermanent:
 ```
 
 **SSH/AWS Credentials:**
+
 ```
 Current:
   ├─ ~/.ssh/ (in /home subvolume, persists) ✓
@@ -128,7 +136,7 @@ Current:
 Impermanent:
   ├─ /persist/home/gabriel/.ssh/ (MUST bind) ✓
   └─ /persist/home/gabriel/.aws/ (MUST bind) ✓
-  
+
   ⚠️ CRITICAL: These MUST be in /persist or backed up
   ✓ Consider agenix/sops-nix for encryption
 ```
@@ -174,31 +182,32 @@ Current assessment: ALL criteria met → RECOMMENDED
 
 ### Implementation Risks (Mitigated)
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|-----------|
-| SSH keys lost | Low | Critical | Backup /persist, use agenix |
-| Network won't work after reboot | Low | High | Pre-copy NM config, test |
-| Docker data lost | Low | High | Verify /persist mounted before docker.service |
-| System won't boot | Low | Critical | Keep @-backup, test each step |
-| /etc/machine-id issues | Medium | High | Pre-create with correct value |
-| App state lost unexpectedly | Low | Medium | Document what needs /persist |
-| /persist fills up | Low | Medium | Monitor with du, set MaxDiskSize |
-| Backup complexity forgotten | Medium | High | Document backup procedure before implementation |
+| Risk                            | Likelihood | Impact   | Mitigation                                      |
+| ------------------------------- | ---------- | -------- | ----------------------------------------------- |
+| SSH keys lost                   | Low        | Critical | Backup /persist, use agenix                     |
+| Network won't work after reboot | Low        | High     | Pre-copy NM config, test                        |
+| Docker data lost                | Low        | High     | Verify /persist mounted before docker.service   |
+| System won't boot               | Low        | Critical | Keep @-backup, test each step                   |
+| /etc/machine-id issues          | Medium     | High     | Pre-create with correct value                   |
+| App state lost unexpectedly     | Low        | Medium   | Document what needs /persist                    |
+| /persist fills up               | Low        | Medium   | Monitor with du, set MaxDiskSize                |
+| Backup complexity forgotten     | Medium     | High     | Document backup procedure before implementation |
 
 ### Operational Risks (Ongoing)
 
-| Risk | Likelihood | Impact | Mitigation |
-|------|-----------|--------|-----------|
-| Logs lost on crash | Medium | Low | Use systemd journal, keep persistent |
-| Old configs lingering | Low | Low | Automatic with ephemeral root |
-| Permissions issues on /persist | Low | Medium | Careful chown during setup |
-| Services starting before mounts ready | Low | High | Use systemd.tmpfiles.rules with correct ordering |
+| Risk                                  | Likelihood | Impact | Mitigation                                       |
+| ------------------------------------- | ---------- | ------ | ------------------------------------------------ |
+| Logs lost on crash                    | Medium     | Low    | Use systemd journal, keep persistent             |
+| Old configs lingering                 | Low        | Low    | Automatic with ephemeral root                    |
+| Permissions issues on /persist        | Low        | Medium | Careful chown during setup                       |
+| Services starting before mounts ready | Low        | High   | Use systemd.tmpfiles.rules with correct ordering |
 
 ---
 
 ## Timeline & Effort Breakdown
 
 ### Phase 1: Preparation (1 hour)
+
 ```
 - Document current /var/lib contents
 - Create /persist subvolume
@@ -207,6 +216,7 @@ Current assessment: ALL criteria met → RECOMMENDED
 ```
 
 ### Phase 2: State Migration (30 minutes)
+
 ```
 - Copy /var/lib/{systemd,docker,nm,bluetooth,nixos}
 - Copy user state (~3GB of .ssh, .aws, .config, .local)
@@ -215,6 +225,7 @@ Current assessment: ALL criteria met → RECOMMENDED
 ```
 
 ### Phase 3: NixOS Configuration (45 minutes)
+
 ```
 - Add impermanence flake input
 - Create impermanence.nix system module
@@ -223,6 +234,7 @@ Current assessment: ALL criteria met → RECOMMENDED
 ```
 
 ### Phase 4: Testing & Validation (1 hour)
+
 ```
 - Boot with new configuration
 - Verify mounts in place
@@ -235,6 +247,7 @@ Current assessment: ALL criteria met → RECOMMENDED
 ```
 
 ### Phase 5: Documentation & Cleanup (30 minutes)
+
 ```
 - Document any app-specific quirks discovered
 - Create backup/restore procedure
@@ -286,16 +299,19 @@ sudo nixos-rebuild switch --flake .#laptop --rollback
 ## Post-Implementation Monitoring
 
 ### Daily
+
 - Check network connectivity works
 - Verify Docker containers start
 - No unexpected boot failures
 
 ### Weekly
+
 - Check /persist disk usage: `du -sh /persist`
 - Review journald size: `du -sh /var/log/journal`
 - Look for any persistence-related errors in logs
 
 ### Monthly
+
 - Verify backup strategy still works
 - Check if any new apps need /persist entries
 - Review any permission issues
@@ -306,6 +322,7 @@ sudo nixos-rebuild switch --flake .#laptop --rollback
 ## Comparison to Alternatives
 
 ### Option A: No Change (Current Persistent /)
+
 ```
 Pros:  Simple, everything works as-is
 Cons:  /var grows, crashes can corrupt, messy state
@@ -314,6 +331,7 @@ Score: 3/10 for professional dev system
 ```
 
 ### Option B: Impermanence (Recommended)
+
 ```
 Pros:  Clean state, faster boot, alignment with NixOS,
        clear persistence model, reduces disk issues
@@ -324,14 +342,16 @@ Score: 9/10 for professional dev system
 ```
 
 ### Option C: Immutable OS (Like ostree)
+
 ```
 Pros:  Atomic updates, strong protection against config drift
 Cons:  Complete OS redesign, not NixOS, high complexity
-       
+
 Score: Not applicable (different architecture)
 ```
 
 ### Option D: Frequent Snapshots + LVM
+
 ```
 Pros:  Protection against corruption
 Cons:  Doesn't reduce state growth, slower boot,
@@ -347,6 +367,7 @@ Score: 5/10 for professional dev system
 **Status: ✅ STRONGLY RECOMMENDED FOR THIS SYSTEM**
 
 **Rationale:**
+
 1. System is naturally suited (Btrfs, NixOS, single-user)
 2. Benefits are substantial (cleaner state, faster boot, clearer mental model)
 3. Risks are well-understood and mitigatable
@@ -355,4 +376,3 @@ Score: 5/10 for professional dev system
 6. Professional development workflow benefits
 
 **Next Step:** Proceed with Phase 1 after securing a full filesystem backup.
-

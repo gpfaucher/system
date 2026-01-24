@@ -15,9 +15,10 @@
 **Risk**: Token accessible in git history to anyone with repo access
 
 **Immediate Actions Required**:
+
 1. Identify token exposure path (git history visible)
 2. Rotate the Tabby token immediately
-3. Implement agenix encryption 
+3. Implement agenix encryption
 4. Clean git history (optional but recommended)
 
 ---
@@ -25,9 +26,11 @@
 ## RESEARCH DELIVERABLES
 
 ### Full Report
+
 **File**: `SECRETS_MANAGEMENT_ANALYSIS.md` (424 lines, comprehensive)
 
 Contents:
+
 - Executive summary with findings
 - Current state analysis (what exists, what's exposed)
 - agenix deep dive (architecture, pros/cons)
@@ -46,34 +49,37 @@ Contents:
 
 ### Why agenix for this system?
 
-Criteria | Status
---------|--------
-SSH infrastructure | Already in place (ed25519 keys)
-Single machine | Primary use case
-Setup time | 2-3 hours
-Complexity | Minimal (300 lines of auditable code)
-Dependency management | Zero new dependencies (uses age + nix)
-Flake.nix integration | Native support via inputs
-Home-manager support | Built-in module
-Learning curve | Gentle
+| Criteria              | Status                                 |
+| --------------------- | -------------------------------------- |
+| SSH infrastructure    | Already in place (ed25519 keys)        |
+| Single machine        | Primary use case                       |
+| Setup time            | 2-3 hours                              |
+| Complexity            | Minimal (300 lines of auditable code)  |
+| Dependency management | Zero new dependencies (uses age + nix) |
+| Flake.nix integration | Native support via inputs              |
+| Home-manager support  | Built-in module                        |
+| Learning curve        | Gentle                                 |
 
 ---
 
 ## QUICK START: AGENIX IN 3 STEPS
 
 ### Step 1: Update flake.nix
+
 inputs.agenix.url = "github:ryantm/agenix";
 inputs.agenix.inputs.nixpkgs.follows = "nixpkgs";
 
 ### Step 2: Create secrets
+
 mkdir secrets && cd secrets
 Create secrets.nix with public keys
 nix run github:ryantm/agenix -- -e tabby-token.age
 
 ### Step 3: Use in modules
+
 age.secrets.tabby-token = {
-  file = ../../secrets/tabby-token.age;
-  mode = "0400";
+file = ../../secrets/tabby-token.age;
+mode = "0400";
 };
 
 **Total time**: ~30 minutes for basic setup
@@ -104,6 +110,7 @@ age.secrets.tabby-token = {
 ## NEXT STEPS
 
 ### Immediate (This Week)
+
 - Review full analysis document
 - Decide on agenix vs sops-nix (recommendation: agenix)
 - Create secrets directory structure
@@ -111,12 +118,14 @@ age.secrets.tabby-token = {
 - Test agenix implementation locally
 
 ### Short Term (Next 2 Weeks)
+
 - Identify all potential secrets in codebase
 - Create encrypted .age files for each
 - Update modules to reference encrypted secrets
 - Test full system rebuild with agenix
 
 ### Medium Term (Next Month)
+
 - Set up automated secret rotation
 - Add monitoring for failed decryptions
 - Clean git history of exposed tokens
@@ -128,6 +137,7 @@ age.secrets.tabby-token = {
 Complete implementation guide in: SECRETS_MANAGEMENT_ANALYSIS.md
 
 This 424-line document contains:
+
 - All configuration examples
 - Complete module reference
 - Per-host vs shared strategy

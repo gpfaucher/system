@@ -13,50 +13,58 @@ You have access to the "task" tool to spawn parallel subagents:
 TASK TOOL SYNTAX:
 Use this pattern for parallel execution:
 ```
+
 task.invoke({
-  agents: [
-    { agent: "agent_name", task: "description" },
-    { agent: "agent_name", task: "description" },
-    { agent: "agent_name", task: "description" }
-  ],
-  parallel: true,
-  max_concurrent: 4
+agents: [
+{ agent: "agent_name", task: "description" },
+{ agent: "agent_name", task: "description" },
+{ agent: "agent_name", task: "description" }
+],
+parallel: true,
+max_concurrent: 4
 })
+
 ```
 
 EXAMPLES OF PARALLELIZABLE WORK:
 
 Example 1: Parallel Documentation
 ```
+
 task.invoke({
-  agents: [
-    { agent: "document", task: "Write API documentation" },
-    { agent: "document", task: "Write user guide" },
-    { agent: "document", task: "Write architecture guide" }
-  ]
+agents: [
+{ agent: "document", task: "Write API documentation" },
+{ agent: "document", task: "Write user guide" },
+{ agent: "document", task: "Write architecture guide" }
+]
 })
+
 ```
 
 Example 2: Parallel Quality Assurance
 ```
+
 task.invoke({
-  agents: [
-    { agent: "review", task: "Code quality and maintainability review" },
-    { agent: "security", task: "Security analysis and threat modeling" },
-    { agent: "optimize", task: "Performance analysis and optimization" }
-  ]
+agents: [
+{ agent: "review", task: "Code quality and maintainability review" },
+{ agent: "security", task: "Security analysis and threat modeling" },
+{ agent: "optimize", task: "Performance analysis and optimization" }
+]
 })
+
 ```
 
 Example 3: Parallel Testing and Documentation
 ```
+
 task.invoke({
-  agents: [
-    { agent: "test", task: "Write unit tests" },
-    { agent: "test", task: "Write integration tests" },
-    { agent: "document", task: "Document API changes" }
-  ]
+agents: [
+{ agent: "test", task: "Write unit tests" },
+{ agent: "test", task: "Write integration tests" },
+{ agent: "document", task: "Document API changes" }
+]
 })
+
 ```
 
 DECISION FRAMEWORK:
@@ -168,21 +176,21 @@ Quality comes from specialization.
   "auto_review_before_commit": true,
   "parallel_subagents": true,
   "max_parallel_agents": 4,
-  
+
   "orchestrator_settings": {
     "prefer_delegation": true,
     "delegation_threshold": 3,
     "delegation_percentage_target": 80,
     "aggressive_parallelization": true
   },
-  
+
   "parallelism_settings": {
     "enabled": true,
     "max_concurrent_tasks": 4,
     "wait_for_completion": true,
     "aggressive_parallelization": true
   },
-  
+
   "delegation_settings": {
     "build_agent_delegates_testing": true,
     "build_agent_delegates_review": true,
@@ -229,6 +237,7 @@ COORDINATION WITH BUILD:
 After making changes, test with these commands:
 
 ### Test 1: Orchestrator Parallel Invocation
+
 ```bash
 opencode --agent orchestrator "Create a comprehensive authentication system with tests, security review, documentation, and performance optimization. Show how you would parallelize this."
 ```
@@ -236,6 +245,7 @@ opencode --agent orchestrator "Create a comprehensive authentication system with
 Expected: Orchestrator should describe using parallel agents with the task tool.
 
 ### Test 2: Build Delegation
+
 ```bash
 opencode --agent build "Implement a user registration API endpoint"
 ```
@@ -243,6 +253,7 @@ opencode --agent build "Implement a user registration API endpoint"
 Expected: Build should mention delegating testing, security review, and documentation.
 
 ### Test 3: Complex Feature Development
+
 ```bash
 opencode --agent orchestrator "Develop a new data export feature that needs implementation, testing, security review, documentation, and performance optimization"
 ```
@@ -265,31 +276,35 @@ cat .opencode.json | jq empty
 
 ## Summary of Changes
 
-| File | Change Type | Impact |
-|------|------------|--------|
-| `prompts/orchestrator.txt` | ADD 40+ lines | Enables parallel task invocation |
-| `prompts/build.txt` | REPLACE entire | Builds delegation into Build agent |
-| `.opencode.json` | EXPAND settings | Activates parallelism configuration |
-| `prompts/architect.txt` | ADD 15 lines | (Optional) Improves planning |
+| File                       | Change Type     | Impact                              |
+| -------------------------- | --------------- | ----------------------------------- |
+| `prompts/orchestrator.txt` | ADD 40+ lines   | Enables parallel task invocation    |
+| `prompts/build.txt`        | REPLACE entire  | Builds delegation into Build agent  |
+| `.opencode.json`           | EXPAND settings | Activates parallelism configuration |
+| `prompts/architect.txt`    | ADD 15 lines    | (Optional) Improves planning        |
 
 ---
 
 ## Expected Results After Implementation
 
 ### Parallelism Activated ✅
+
 - Orchestrator will invoke multiple agents simultaneously
 - Max 4 agents working in parallel
 
 ### Delegation Active ✅
+
 - Build agent delegates testing, review, security, docs
 - Specialists handle their domains
 
 ### Faster Development ✅
+
 - Complex features: 2-4x faster completion
 - Better quality through specialization
 - More comprehensive reviews and testing
 
 ### Better Resource Utilization ✅
+
 - Haiku agents (fast): Quick tasks
 - Sonnet agents (balanced): Main work
 - Opus agent (smart): Complex coordination
@@ -301,6 +316,7 @@ cat .opencode.json | jq empty
 If changes cause issues:
 
 1. Restore original files from git:
+
 ```bash
 git checkout -- prompts/orchestrator.txt prompts/build.txt .opencode.json
 ```

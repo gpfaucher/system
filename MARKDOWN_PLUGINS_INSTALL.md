@@ -42,6 +42,7 @@ cd ~/projects/system
 ```
 
 You will be prompted for your sudo password. This will:
+
 - Build the new system configuration
 - Install all markdown plugins via Nix
 - Update your Neovim setup
@@ -76,27 +77,30 @@ Then test each feature:
 
 ### 4. Common Keybindings
 
-| Keybinding | Action | Plugin |
-|------------|--------|--------|
+| Keybinding   | Action                  | Plugin                |
+| ------------ | ----------------------- | --------------------- |
 | `<leader>mp` | Toggle markdown preview | markdown-preview.nvim |
-| `<leader>mt` | Toggle table mode | vim-table-mode |
-| `<leader>mc` | Toggle checkbox | markdown.nvim |
-| `gs` | Toggle bold/italic | markdown.nvim |
-| `gx` | Follow link | markdown.nvim |
-| `]]` / `[[` | Next/prev heading | markdown.nvim |
-| `zc` / `zo` | Fold/unfold section | vim-markdown |
+| `<leader>mt` | Toggle table mode       | vim-table-mode        |
+| `<leader>mc` | Toggle checkbox         | markdown.nvim         |
+| `gs`         | Toggle bold/italic      | markdown.nvim         |
+| `gx`         | Follow link             | markdown.nvim         |
+| `]]` / `[[`  | Next/prev heading       | markdown.nvim         |
+| `zc` / `zo`  | Fold/unfold section     | vim-markdown          |
 
 ### 5. Troubleshooting
 
 #### Preview doesn't open
+
 - Check if Node.js is installed: `node --version`
 - The plugin builds on first use, may take a moment
 
 #### Table mode not working
+
 - Make sure you've pressed `<leader>mt` to enable it
 - Start typing `|` to begin a table
 
 #### Syntax highlighting missing
+
 - Run `:TSUpdate markdown` to update treesitter parser
 - Restart Neovim
 
@@ -107,6 +111,7 @@ Then test each feature:
 ## Configuration Details
 
 The plugins are configured with sensible defaults:
+
 - Markdown folding enabled (can fold by heading level)
 - Preview opens in dark theme
 - Table mode uses markdown-compatible corner characters
@@ -116,6 +121,7 @@ The plugins are configured with sensible defaults:
 ## Next Steps
 
 After installation:
+
 1. ✅ Rebuild system (`./scripts/rebuild.sh`)
 2. ✅ Test with `test-markdown.md`
 3. ✅ Mark beads issue as complete

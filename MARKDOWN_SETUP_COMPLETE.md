@@ -14,21 +14,17 @@ Modified `modules/home/nvf.nix` to add 5 markdown plugins in the `extraPlugins` 
    - Modern Lua-based inline editing
    - Checkbox toggles, link operations
    - Heading navigation
-   
 2. **vim-markdown** (preservim/vim-markdown)
    - Traditional syntax highlighting
    - Markdown folding by heading level
    - Frontmatter support (YAML, TOML, JSON)
    - Math syntax highlighting
-   
 3. **tabular** (godlygeek/tabular)
    - Dependency for vim-markdown
-   
 4. **vim-table-mode** (dhruvasagar/vim-table-mode)
    - Smart table auto-formatting
    - Live table editing
    - Markdown-compatible tables
-   
 5. **markdown-preview-nvim** (iamcco/markdown-preview.nvim)
    - Live browser preview
    - KaTeX math rendering
@@ -68,6 +64,7 @@ cd ~/projects/system
 ```
 
 This will:
+
 - Install all 5 markdown plugins via Nix
 - Configure them with the settings specified
 - Make them available in Neovim
@@ -81,6 +78,7 @@ nvim test-markdown.md
 ```
 
 Work through the test checklist in the file:
+
 - Try syntax highlighting
 - Test folding with `zc`/`zo`
 - Open preview with `<leader>mp`
@@ -116,6 +114,7 @@ git push
 ### NixOS Integration
 
 The plugins are installed via NixOS/home-manager:
+
 - Declarative configuration in `nvf.nix`
 - Plugins fetched from nixpkgs vimPlugins
 - All dependencies handled automatically
@@ -125,7 +124,7 @@ The plugins are installed via NixOS/home-manager:
 
 ```nix
 pkgs.vimPlugins.markdown-nvim       # markdown.nvim
-pkgs.vimPlugins.vim-markdown        # vim-markdown  
+pkgs.vimPlugins.vim-markdown        # vim-markdown
 pkgs.vimPlugins.tabular            # tabular (dependency)
 pkgs.vimPlugins.vim-table-mode     # vim-table-mode
 pkgs.vimPlugins.markdown-preview-nvim  # markdown-preview.nvim
@@ -146,7 +145,7 @@ You chose **Option 3: Lightweight without knowledge management** because:
 ✅ **No heavy dependencies** - No Obsidian vault required  
 ✅ **Fast and responsive** - Minimal startup impact  
 ✅ **Flexible** - Works with any markdown files  
-✅ **Extensible** - Can add obsidian.nvim later if needed  
+✅ **Extensible** - Can add obsidian.nvim later if needed
 
 ## Verification Checklist
 

@@ -1,4 +1,9 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 with lib;
 
@@ -68,15 +73,13 @@ in
     # Install beads package
     home.packages = [ cfg.package ];
 
-
-
     # Fish shell integration
     programs.fish = mkIf cfg.shellIntegration.enableFish {
       # Add aliases
       shellAbbrs = cfg.aliases;
 
       # Helper function for quick beads status
-      functions.bd-status = mkIf (cfg.aliases != {}) ''
+      functions.bd-status = mkIf (cfg.aliases != { }) ''
         # Show ready tasks in current repo
         if test -d .beads
           echo "Ready tasks:"
@@ -90,8 +93,8 @@ in
     # Bash shell integration
     programs.bash = mkIf cfg.shellIntegration.enableBash {
       shellAliases = cfg.aliases;
-      
-      initExtra = mkIf (cfg.aliases != {}) ''
+
+      initExtra = mkIf (cfg.aliases != { }) ''
         # Beads helper function for quick status
         bd-status() {
           if [ -d .beads ]; then
@@ -107,8 +110,8 @@ in
     # Zsh shell integration
     programs.zsh = mkIf cfg.shellIntegration.enableZsh {
       shellAliases = cfg.aliases;
-      
-      initExtra = mkIf (cfg.aliases != {}) ''
+
+      initExtra = mkIf (cfg.aliases != { }) ''
         # Beads helper function for quick status
         bd-status() {
           if [ -d .beads ]; then

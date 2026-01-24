@@ -14,10 +14,10 @@ sudo nixos-rebuild switch --flake .#laptop
 echo
 echo "[2/5] Verifying user service exists..."
 if systemctl --user list-unit-files | grep -q "river-resume-hook"; then
-    echo "✓ river-resume-hook.service found"
+  echo "✓ river-resume-hook.service found"
 else
-    echo "✗ river-resume-hook.service NOT found"
-    exit 1
+  echo "✗ river-resume-hook.service NOT found"
+  exit 1
 fi
 
 echo
@@ -42,4 +42,4 @@ echo "  4. Test layout switching: Super+T, Super+M"
 echo
 echo "To view logs after resume: journalctl --user -u river-resume-hook -n 20"
 echo
-echo "=== Test Complete ===" 
+echo "=== Test Complete ==="

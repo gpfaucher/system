@@ -1,4 +1,10 @@
-{ config, pkgs, lib, inputs, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  ...
+}:
 
 {
   imports = [
@@ -10,6 +16,7 @@
     ../../modules/system/services.nix
     ../../modules/system/bluetooth-monitor.nix
     ../../modules/system/hardening.nix
+    ../../modules/system/impermanence.nix
   ];
 
   # Hostname
@@ -18,22 +25,25 @@
   # Enable Nix flakes and experimental features
   nix = {
     settings = {
-      experimental-features = [ "nix-command" "flakes" ];
+      experimental-features = [
+        "nix-command"
+        "flakes"
+      ];
       auto-optimise-store = true;
 
       # Parallel build optimization
-      max-jobs = "auto";           # Use all available CPU cores for parallel builds
-      cores = 0;                   # Use all cores per individual build job
+      max-jobs = "auto"; # Use all available CPU cores for parallel builds
+      cores = 0; # Use all cores per individual build job
 
       # Download optimization
-      http-connections = 25;       # Parallel download connections (default is 25)
+      http-connections = 25; # Parallel download connections (default is 25)
 
       # Build caching optimization
-      keep-outputs = true;         # Keep build outputs for faster rebuilds
-      keep-derivations = true;     # Keep .drv files for better caching
+      keep-outputs = true; # Keep build outputs for faster rebuilds
+      keep-derivations = true; # Keep .drv files for better caching
 
       # Tarball caching
-      tarball-ttl = 300;           # Cache downloaded tarballs for 5 minutes
+      tarball-ttl = 300; # Cache downloaded tarballs for 5 minutes
 
       # Binary caches
       substituters = [
@@ -50,7 +60,7 @@
     gc = {
       automatic = true;
       dates = "weekly";
-      options = "--delete-older-than 30d";  # Extended retention for safer rollbacks
+      options = "--delete-older-than 30d"; # Extended retention for safer rollbacks
     };
   };
 
@@ -67,7 +77,13 @@
     isNormalUser = true;
     home = "/home/gabriel";
     shell = pkgs.fish;
-    extraGroups = [ "wheel" "video" "audio" "networkmanager" "input" ];
+    extraGroups = [
+      "wheel"
+      "video"
+      "audio"
+      "networkmanager"
+      "input"
+    ];
   };
 
   # Enable fish shell system-wide

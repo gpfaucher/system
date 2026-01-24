@@ -9,24 +9,28 @@ Successfully implemented monorepo LSP support for TypeScript/JavaScript in neovi
 ### 1. Created Configuration Files
 
 #### `~/.config/nvf/monorepo-lsp.lua`
+
 Custom LSP root detection function that uses priority-based marker detection:
 
 1. **tsconfig.json** (highest priority) - Project-specific TypeScript config
-2. **jsconfig.json** - JavaScript-only projects  
+2. **jsconfig.json** - JavaScript-only projects
 3. **package.json** - Workspace/package root
 4. **git** - Repository root (fallback)
 
 Features:
+
 - Overrides default `ts_ls` root_dir behavior
 - Ensures each monorepo project gets its own LSP instance
 - Adds `:LspDebugRoot` command for troubleshooting
 
 #### `~/.config/nvf/init-override.lua`
+
 Simple loader that sources the monorepo-lsp.lua configuration.
 
 ### 2. Updated NixOS Configuration
 
 #### `modules/home/nvf.nix`
+
 Added `extraConfigLua` to load the monorepo LSP configuration:
 
 ```nix
@@ -43,7 +47,9 @@ This ensures the configuration is loaded automatically when neovim starts.
 ### 3. Created Documentation
 
 #### `docs/MONOREPO_LSP_SETUP.md`
+
 Complete setup and testing guide including:
+
 - How it works
 - Testing procedures
 - Debugging steps
@@ -52,6 +58,7 @@ Complete setup and testing guide including:
 ### 4. Created Helper Scripts
 
 #### `scripts/rebuild.sh`
+
 Convenience script to rebuild the NixOS system:
 
 ```bash
@@ -63,6 +70,7 @@ Handles sudo prompt and provides clear feedback.
 ## Testing Performed
 
 ✓ Configuration loads without errors:
+
 ```bash
 nvim -u NONE -c "luafile /tmp/test-lsp.lua" <file>
 ```
@@ -74,6 +82,7 @@ Output: `[LSP] Monorepo configuration loaded ✓`
 ### Example: paddock-app Monorepo
 
 Structure:
+
 ```
 paddock-app/
 ├── .git
@@ -92,6 +101,7 @@ paddock-app/
 ```
 
 When you open `apps/ui/app/page.tsx`:
+
 - LSP searches upward for markers
 - Finds `tsconfig.json` at `apps/ui/` first (highest priority)
 - Uses `apps/ui/` as the LSP root directory
@@ -101,6 +111,7 @@ When you open `apps/ui/app/page.tsx`:
 ### Commands
 
 **Debug root detection:**
+
 ```vim
 :LspDebugRoot
 ```
@@ -108,6 +119,7 @@ When you open `apps/ui/app/page.tsx`:
 Shows which markers were found and which root is being used.
 
 **Check LSP status:**
+
 ```vim
 :LspInfo
 ```
@@ -115,6 +127,7 @@ Shows which markers were found and which root is being used.
 Shows active LSP clients and their root directories.
 
 **Restart LSP if needed:**
+
 ```vim
 :LspRestart ts_ls
 ```
@@ -131,6 +144,7 @@ cd ~/projects/system
 ```
 
 Or manually:
+
 ```bash
 sudo nixos-rebuild switch --flake ~/projects/system#laptop
 ```
@@ -146,6 +160,7 @@ sudo nixos-rebuild switch --flake ~/projects/system#laptop
 ## Files Created/Modified
 
 ### Created:
+
 - `~/.config/nvf/monorepo-lsp.lua` - Main LSP configuration
 - `~/.config/nvf/init-override.lua` - Loader
 - `docs/MONOREPO_LSP_SETUP.md` - Documentation
@@ -153,14 +168,17 @@ sudo nixos-rebuild switch --flake ~/projects/system#laptop
 - `MONOREPO_LSP_IMPLEMENTATION_SUMMARY.md` (this file)
 
 ### Modified:
+
 - `modules/home/nvf.nix` - Added extraConfigLua
 
 ### Committed:
+
 - ✓ modules/home/nvf.nix
 - ✓ docs/MONOREPO_LSP_SETUP.md
 - ✓ scripts/rebuild.sh
 
 ### Pushed to Remote:
+
 - ✓ All changes pushed to origin/master
 
 ## Issue Tracking
@@ -171,6 +189,7 @@ sudo nixos-rebuild switch --flake ~/projects/system#laptop
 ## Expected Behavior After Rebuild
 
 ### Working:
+
 - ✓ LSP attaches to TypeScript/JavaScript files in monorepos
 - ✓ Root directory is the project directory, not workspace root
 - ✓ Type checking uses correct tsconfig.json

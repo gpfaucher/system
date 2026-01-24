@@ -3,9 +3,11 @@
 ## 🔴 CRITICAL - DO FIRST (1-2 hours)
 
 ### 1. Move Unmonitored Processes to Systemd Services
+
 **Why:** These processes restart automatically if they crash
 
 Move from `riverctl spawn` in river.nix to systemd services:
+
 - [ ] fnott (notifications)
 - [ ] wideriver (tiling layout)
 - [ ] swaybg (wallpaper)
@@ -21,9 +23,11 @@ Move from `riverctl spawn` in river.nix to systemd services:
 ---
 
 ### 2. Add Restart Policy to Tabby Service
+
 **File:** `modules/home/services.nix` (lines 5-17)
 
 **Change:**
+
 ```nix
 # FROM:
 Restart = "always";
@@ -45,9 +49,11 @@ TimeoutStopSec = 10;
 ---
 
 ### 3. Add Logging to River-Resume-Hook
+
 **File:** `modules/home/services.nix` (lines 181-204)
 
 **Add after Service block opening:**
+
 ```nix
 StandardOutput = "journal";
 StandardError = "journal";
@@ -56,6 +62,7 @@ TimeoutStartSec = 15;
 ```
 
 **Add prefix `-` to commands in ExecStartPost to make failures non-fatal:**
+
 ```nix
 ExecStartPost = [
   "-${pkgs.river-classic}/bin/riverctl default-layout wideriver"
@@ -69,11 +76,13 @@ ExecStartPost = [
 ---
 
 ### 4. Enable Kanshi Restart Policy
+
 **File:** `modules/home/services.nix`
 
 **Issue:** Kanshi is auto-configured but has no restart policy
 
 **Add explicit service:**
+
 ```nix
 systemd.user.services.kanshi-monitor = {
   Unit = {
@@ -104,11 +113,13 @@ systemd.user.services.kanshi-monitor = {
 ---
 
 ### 5. Add Gammastep Restart Policy
+
 **File:** `modules/home/services.nix`
 
 **Issue:** Gammastep has no restart policy
 
 **Add after services.gammastep block:**
+
 ```nix
 systemd.user.services.gammastep-monitor = {
   Unit = {
@@ -139,9 +150,11 @@ systemd.user.services.gammastep-monitor = {
 ## 🟡 IMPORTANT - DO NEXT (2-3 hours)
 
 ### 6. Implement Backup Strategy
+
 **File:** `hosts/laptop/default.nix`
 
 **Add after existing config:**
+
 ```nix
 # Enable automatic snapshots
 services.snapper.enable = true;
@@ -179,9 +192,11 @@ systemd.services.backup-home = {
 ---
 
 ### 7. Add River Process Monitoring
+
 **File:** `modules/home/services.nix`
 
 **Add new service:**
+
 ```nix
 systemd.user.services.river-watchdog = {
   Unit = {
@@ -218,9 +233,11 @@ systemd.user.services.river-watchdog = {
 ---
 
 ### 8. Enhanced Network Resilience
+
 **File:** `modules/system/networking.nix`
 
 **Add to networking block:**
+
 ```nix
 networking = {
   networkmanager = {
@@ -232,10 +249,10 @@ networking = {
       };
     };
   };
-  
+
   nameservers = [ "1.1.1.1" "1.0.0.1" "8.8.8.8" ];
   fallbackNameservers = [ "8.8.8.8" ];
-  
+
   firewall = {
     enable = true;
     # ... existing ports ...
@@ -251,6 +268,7 @@ networking = {
 ## 🟢 NICE-TO-HAVE (Weekend Project)
 
 ### 9. Create Health Check Script
+
 **File:** `~/.local/bin/check-services.sh`
 
 ```bash
@@ -264,6 +282,7 @@ done
 ```
 
 Then add timer:
+
 ```nix
 systemd.user.timers.health-check = {
   wantedBy = [ "timers.target" ];
@@ -286,9 +305,11 @@ systemd.user.services.health-check = {
 ---
 
 ### 10. Improve Journal Logging
+
 **File:** `modules/system/services.nix`
 
 **Add to services block:**
+
 ```nix
 services.journald.extraConfig = ''
   Storage=persistent
@@ -320,11 +341,13 @@ After implementing fixes:
 ## Expected Results
 
 **Before:** Grade B+ (Good with gaps)
+
 - Services can crash silently
 - No data protection
 - Limited visibility into failures
 
 **After:** Grade A- (Very Stable)
+
 - Services auto-restart on crash
 - Automatic backups running
 - Full audit trail via journald
@@ -332,4 +355,3 @@ After implementing fixes:
 
 **Time Investment:** ~5-8 hours total
 **Benefit:** Dramatically more reliable system
-

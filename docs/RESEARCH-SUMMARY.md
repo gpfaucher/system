@@ -16,6 +16,7 @@ I've completed comprehensive research on 8 improvements to your NixOS configurat
 ## Research Results Summary
 
 ### ✅ **1. River Tiling Broken After Suspend** (P1 - CRITICAL)
+
 - **Beads:** system-eik, system-yoj
 - **Status:** Ready for implementation
 - **Root Cause:** Wideriver daemon loses IPC connection to River after GPU state corruption during suspend
@@ -24,6 +25,7 @@ I've completed comprehensive research on 8 improvements to your NixOS configurat
 - **Documentation:** 4 documents, 1,050 lines in `docs/research/RIVER-SUSPEND-*.md`
 
 ### ✅ **2. Update Kanshi Monitor Layout** (P2)
+
 - **Beads:** system-5iu
 - **Status:** Configuration updated - ready to rebuild
 - **Finding:** Monitors were physically switched, config now updated
@@ -32,6 +34,7 @@ I've completed comprehensive research on 8 improvements to your NixOS configurat
 - **Documentation:** 377 lines in `docs/kanshi-configuration-research.md`
 
 ### ✅ **3. Remove All Gaps from River** (P2)
+
 - **Beads:** system-nau, system-2s0
 - **Status:** Ready for implementation
 - **Current Gaps:** 4px inner, 4px outer
@@ -40,16 +43,18 @@ I've completed comprehensive research on 8 improvements to your NixOS configurat
 - **Documentation:** Comprehensive analysis in beads issue system-2s0
 
 ### ✅ **4. Apply Gruvbox Theme to OpenCode & Firefox** (P2)
+
 - **Beads:** system-8hr, system-h49
 - **Status:** Ready for implementation
 - **OpenCode:** Has built-in gruvbox theme, just add `theme = "gruvbox"` to config
 - **Firefox:** Add custom userChrome.css for full gruvbox integration
 - **Effort:** 15 minutes total (5 min OpenCode + 10 min Firefox)
-- **Documentation:** 
+- **Documentation:**
   - OpenCode: `docs/OPENCODE_GRUVBOX_THEMING.md`
   - Firefox: Beads issue system-h49 + `/tmp/gruvbox_research.md`
 
 ### ✅ **5. Fix LSP in Monorepos** (P1 - CRITICAL)
+
 - **Beads:** system-3sc
 - **Status:** Ready for implementation
 - **Root Cause:** Static root markers can't distinguish monorepo workspace from project roots
@@ -58,6 +63,7 @@ I've completed comprehensive research on 8 improvements to your NixOS configurat
 - **Documentation:** 4 documents, 1,070 lines in `MONOREPO_LSP_*.md`
 
 ### ✅ **6. Markdown QOL Plugins for Neovim** (P2)
+
 - **Beads:** system-giq
 - **Status:** Ready for implementation
 - **Top 4 Recommended:**
@@ -69,10 +75,11 @@ I've completed comprehensive research on 8 improvements to your NixOS configurat
 - **Documentation:** 3 documents, 1,233 lines in `docs/research/MARKDOWN_*.md`
 
 ### ✅ **7. General Neovim QOL Plugins** (P3)
+
 - **Beads:** system-dmd
 - **Status:** Ready for phased implementation
 - **Top 3 Essential:** Telescope, Gitsigns, Which-Key
-- **Phased Approach:** 
+- **Phased Approach:**
   - Phase 1 (2-3 hrs): 8 essential plugins
   - Phase 2 (1-2 hrs): QOL enhancements
   - Phase 3 (optional): Advanced features
@@ -81,6 +88,7 @@ I've completed comprehensive research on 8 improvements to your NixOS configurat
 - **Documentation:** ~25,000 words in `/tmp/nvim_research_report.md`
 
 ### ✅ **8. Blue Light Filter (Redshift Alternative)** (P2)
+
 - **Beads:** system-26n
 - **Status:** No changes needed - already optimal
 - **Finding:** Gammastep (Wayland redshift fork) already configured perfectly
@@ -93,6 +101,7 @@ I've completed comprehensive research on 8 improvements to your NixOS configurat
 ## Implementation Roadmap
 
 ### **Phase 1: Critical Fixes (2-3 hours)**
+
 Priority fixes that solve major workflow issues:
 
 1. **River Suspend Fix** - 1.5 hours
@@ -110,6 +119,7 @@ Priority fixes that solve major workflow issues:
    - Restart River or apply live
 
 ### **Phase 2: Theming (15 minutes)**
+
 Quick wins for visual consistency:
 
 4. **OpenCode Gruvbox** - 5 minutes
@@ -121,6 +131,7 @@ Quick wins for visual consistency:
    - Rebuild and verify
 
 ### **Phase 3: Neovim Enhancements (4-6 hours, can spread over weeks)**
+
 Quality-of-life improvements (optional, can be done incrementally):
 
 6. **Markdown Plugins** - 1 hour
@@ -139,6 +150,7 @@ Quality-of-life improvements (optional, can be done incrementally):
    - Set up VSCode integration if desired
 
 ### **Phase 4: Verification (0 minutes)**
+
 These are already perfect:
 
 9. **Kanshi** - Already optimal, no changes
@@ -148,32 +160,33 @@ These are already perfect:
 
 ## Total Time Investment
 
-| Phase | Time | Impact | Priority |
-|-------|------|--------|----------|
-| Phase 1 (Critical) | 2-3 hours | HIGH | P1 |
-| Phase 2 (Theming) | 15 minutes | MEDIUM | P2 |
-| Phase 3 (Neovim) | 4-6 hours | MEDIUM-HIGH | P2-P3 |
-| **Total Core** | **3-4 hours** | **HIGH** | **P1-P2** |
-| Optional Advanced | +2-3 hours | MEDIUM | P3 |
+| Phase              | Time          | Impact      | Priority  |
+| ------------------ | ------------- | ----------- | --------- |
+| Phase 1 (Critical) | 2-3 hours     | HIGH        | P1        |
+| Phase 2 (Theming)  | 15 minutes    | MEDIUM      | P2        |
+| Phase 3 (Neovim)   | 4-6 hours     | MEDIUM-HIGH | P2-P3     |
+| **Total Core**     | **3-4 hours** | **HIGH**    | **P1-P2** |
+| Optional Advanced  | +2-3 hours    | MEDIUM      | P3        |
 
 ---
 
 ## Key Configuration Files to Modify
 
-| File | Changes | Lines | Difficulty |
-|------|---------|-------|------------|
-| `modules/home/services.nix` | Add resume hook | +15 | Easy |
-| `~/.config/nvf/monorepo-lsp.lua` | New file | +30 | Easy |
-| `~/.config/river/init` | Change gaps | 1 edit | Trivial |
-| `modules/home/opencode.nix` | Add theme | 1 line | Trivial |
-| `modules/home/default.nix` | Firefox CSS | +50 | Easy |
-| Neovim plugins | New configs | +100-200 | Medium |
+| File                             | Changes         | Lines    | Difficulty |
+| -------------------------------- | --------------- | -------- | ---------- |
+| `modules/home/services.nix`      | Add resume hook | +15      | Easy       |
+| `~/.config/nvf/monorepo-lsp.lua` | New file        | +30      | Easy       |
+| `~/.config/river/init`           | Change gaps     | 1 edit   | Trivial    |
+| `modules/home/opencode.nix`      | Add theme       | 1 line   | Trivial    |
+| `modules/home/default.nix`       | Firefox CSS     | +50      | Easy       |
+| Neovim plugins                   | New configs     | +100-200 | Medium     |
 
 ---
 
 ## Risk Assessment
 
 All changes are **LOW RISK**:
+
 - ✅ All changes are additive (no breaking modifications)
 - ✅ Easy to revert (git, remove configs, disable services)
 - ✅ Well-tested solutions (based on community best practices)
@@ -186,22 +199,27 @@ All changes are **LOW RISK**:
 All research is organized and ready for reference:
 
 ### Critical Issues
+
 - **River Suspend:** `docs/research/RIVER-SUSPEND-*.md` (4 files)
 - **LSP Monorepo:** `MONOREPO_LSP_*.md` (4 files)
 
 ### Theming
+
 - **OpenCode:** `docs/OPENCODE_GRUVBOX_THEMING.md`
 - **Firefox/System:** Beads system-h49 + temp files
 
 ### Neovim
+
 - **Markdown:** `docs/research/MARKDOWN_*.md` (3 files)
 - **General QOL:** `/tmp/nvim_research_report.md`
 
 ### Already Optimal
+
 - **Kanshi:** `docs/kanshi-configuration-research.md`
 - **Blue Light:** `docs/research/BLUE-LIGHT-FILTER-*.md` (5 files)
 
 ### Design
+
 - **Master Spec:** `docs/NIXOS-IMPROVEMENTS-DESIGN.md` (comprehensive)
 
 ---
@@ -210,53 +228,61 @@ All research is organized and ready for reference:
 
 All issues created and tracked:
 
-| ID | Priority | Title | Status |
-|----|----------|-------|--------|
-| system-eik | P1 | Fix river tiling broken after suspend | Open - Ready |
-| system-yoj | P0 | Implement river suspend/resume fix | Open - Ready |
-| system-3sc | P1 | Fix LSP in monorepos | Open - Ready |
-| system-nau | P2 | Remove river gaps | Open - Ready |
-| system-2s0 | P2 | River gaps research | Open - Complete |
-| system-8hr | P2 | Apply gruvbox theme | Open - Ready |
-| system-h49 | P2 | Gruvbox theme research | Open - Complete |
-| system-giq | P2 | Markdown QOL plugins | Open - Ready |
-| system-dmd | P3 | General neovim QOL | Open - Ready |
-| system-5iu | P2 | Kanshi monitor config | Open - No changes needed |
-| system-26n | P2 | Blue light filter | Open - No changes needed |
+| ID         | Priority | Title                                 | Status                   |
+| ---------- | -------- | ------------------------------------- | ------------------------ |
+| system-eik | P1       | Fix river tiling broken after suspend | Open - Ready             |
+| system-yoj | P0       | Implement river suspend/resume fix    | Open - Ready             |
+| system-3sc | P1       | Fix LSP in monorepos                  | Open - Ready             |
+| system-nau | P2       | Remove river gaps                     | Open - Ready             |
+| system-2s0 | P2       | River gaps research                   | Open - Complete          |
+| system-8hr | P2       | Apply gruvbox theme                   | Open - Ready             |
+| system-h49 | P2       | Gruvbox theme research                | Open - Complete          |
+| system-giq | P2       | Markdown QOL plugins                  | Open - Ready             |
+| system-dmd | P3       | General neovim QOL                    | Open - Ready             |
+| system-5iu | P2       | Kanshi monitor config                 | Open - No changes needed |
+| system-26n | P2       | Blue light filter                     | Open - No changes needed |
 
 ---
 
 ## Questions Answered
 
 ### ✅ River Suspend Issue
+
 **Q:** Why does tiling break after suspend?  
 **A:** Wideriver loses IPC connection when GPU resets. Solution: systemd resume hook.
 
 ### ✅ Kanshi Monitor Config
+
 **Q:** How do I save current layout?  
 **A:** Already saved! Your `dual-portrait-ultrawide` profile is perfect.
 
 ### ✅ River Gaps
+
 **Q:** How to remove all gaps?  
 **A:** Change wideriver flags to `--inner-gap 0 --outer-gap 0`.
 
 ### ✅ OpenCode Theming
+
 **Q:** How to apply gruvbox to opencode?  
 **A:** Built-in theme exists! Add `theme = "gruvbox"` to config or press Ctrl+X,t.
 
 ### ✅ LSP Monorepos
+
 **Q:** Why doesn't LSP work in paddock-app?  
 **A:** Wrong root detection. Solution: priority-based root_dir function.
 
 ### ✅ Markdown Plugins
+
 **Q:** What are the best markdown plugins?  
 **A:** markdown-preview.nvim, markdown.nvim, vim-table-mode, obsidian.nvim.
 
 ### ✅ Neovim QOL
+
 **Q:** What essential plugins am I missing?  
 **A:** Telescope (search), Gitsigns (git), Which-Key (discovery), Flash (navigation).
 
 ### ✅ Blue Light Filter
+
 **Q:** Do I have a redshift alternative?  
 **A:** Yes! Gammastep is already configured and running perfectly.
 
@@ -306,7 +332,7 @@ After full implementation, you will have:
 ✅ **Risk Analysis:** All changes assessed as low-risk  
 ✅ **Time Estimates:** Realistic effort calculations  
 ✅ **Alternatives:** Multiple approaches evaluated  
-✅ **Best Practices:** Community-tested solutions  
+✅ **Best Practices:** Community-tested solutions
 
 ---
 

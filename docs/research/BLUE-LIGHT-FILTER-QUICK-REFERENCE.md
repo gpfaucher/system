@@ -13,6 +13,7 @@
 ## Current Configuration
 
 ### Services (modules/home/services.nix lines 162-178)
+
 ```nix
 services.gammastep = {
   enable = true;
@@ -33,11 +34,13 @@ services.gammastep = {
 ```
 
 ### River Integration (river.nix line 209)
+
 ```bash
 riverctl spawn gammastep
 ```
 
 ### Packages (river.nix line 281)
+
 ```nix
 gammastep
 ```
@@ -74,12 +77,12 @@ journalctl --user -u gammastep -f
 
 ## Why Gammastep Over Alternatives
 
-| Feature | Gammastep | wlsunset | wl-gammarelay | Redshift |
-|---------|-----------|----------|---------------|----------|
-| **Wayland** | ✅ Native | ✅ Native | ✅ Native | ❌ NO |
-| **Maintained** | ✅ Active | ⚠️ Archived | ✅ Active | ✅ Active |
-| **Auto-location** | ✅ Yes | ❌ No | ❌ No | ✅ Yes |
-| **For River** | ✅ Best | ⚠️ Minimal | ⚠️ Complex | ❌ Won't work |
+| Feature           | Gammastep | wlsunset    | wl-gammarelay | Redshift      |
+| ----------------- | --------- | ----------- | ------------- | ------------- |
+| **Wayland**       | ✅ Native | ✅ Native   | ✅ Native     | ❌ NO         |
+| **Maintained**    | ✅ Active | ⚠️ Archived | ✅ Active     | ✅ Active     |
+| **Auto-location** | ✅ Yes    | ❌ No       | ❌ No         | ✅ Yes        |
+| **For River**     | ✅ Best   | ⚠️ Minimal  | ⚠️ Complex    | ❌ Won't work |
 
 ---
 
@@ -95,6 +98,7 @@ Late Night (after):   3000K   (deep sleep)
 ```
 
 **Health Impact:**
+
 - Blue light (6000K+) → Suppresses melatonin → Delays sleep
 - Warm light (3000-4000K) → Promotes melatonin → Better sleep
 
@@ -103,6 +107,7 @@ Late Night (after):   3000K   (deep sleep)
 ## Optional Enhancements
 
 ### 1. Add Keybindings (river.nix)
+
 ```bash
 # Reset to normal (remove filter)
 riverctl map normal $mod+Shift O spawn "gammastep -x"
@@ -112,6 +117,7 @@ riverctl map normal $mod+Shift P spawn "gammastep -O 3500"
 ```
 
 ### 2. Create Control Scripts
+
 ```bash
 # ~/.local/bin/toggle-nightlight
 #!/bin/bash
@@ -124,6 +130,7 @@ fi
 ```
 
 ### 3. Custom Schedule (~/.config/gammastep/config.ini)
+
 ```ini
 [general]
 adjustment-method=wayland
@@ -144,23 +151,23 @@ dusk-time=18:00-20:00
 
 ## Troubleshooting
 
-| Problem | Cause | Fix |
-|---------|-------|-----|
-| No effect | Wrong method | Set `adjustment-method = wayland` |
-| Flicker | Multiple instances | `killall gammastep; systemctl restart` |
-| Won't start | No Wayland session | Ensure River is running |
-| Cursor stays blue | Expected | Cursor uses hardware layer |
+| Problem           | Cause              | Fix                                    |
+| ----------------- | ------------------ | -------------------------------------- |
+| No effect         | Wrong method       | Set `adjustment-method = wayland`      |
+| Flicker           | Multiple instances | `killall gammastep; systemctl restart` |
+| Won't start       | No Wayland session | Ensure River is running                |
+| Cursor stays blue | Expected           | Cursor uses hardware layer             |
 
 ---
 
 ## File Locations
 
-| File | Purpose |
-|------|---------|
-| `modules/home/services.nix` | Gammastep NixOS config |
-| `modules/home/river.nix` | River spawn + packages |
-| `~/.config/systemd/user/gammastep.service` | Auto-generated service |
-| `~/.config/gammastep/config.ini` | Runtime config (optional) |
+| File                                       | Purpose                   |
+| ------------------------------------------ | ------------------------- |
+| `modules/home/services.nix`                | Gammastep NixOS config    |
+| `modules/home/river.nix`                   | River spawn + packages    |
+| `~/.config/systemd/user/gammastep.service` | Auto-generated service    |
+| `~/.config/gammastep/config.ini`           | Runtime config (optional) |
 
 ---
 
@@ -175,6 +182,7 @@ dusk-time=18:00-20:00
 ## No Action Required ✅
 
 Your system is optimally configured. The current setup:
+
 - ✅ Uses best Wayland solution (Gammastep)
 - ✅ Proper location coordinates
 - ✅ Good temperature values

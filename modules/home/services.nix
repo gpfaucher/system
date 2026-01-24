@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # Tabby AI coding assistant service
@@ -45,8 +50,8 @@
             status = "disable";
           }
         ];
-        profile.exec = [ 
-          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Dual monitor: Portrait + Ultrawide'" 
+        profile.exec = [
+          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Dual monitor: Portrait + Ultrawide'"
         ];
       }
       # Laptop only (no external monitors)
@@ -182,7 +187,7 @@
   systemd.user.services.gammastep.Service = {
     # Restart on failure (handles Wayland disconnections)
     Restart = lib.mkForce "on-failure";
-    RestartSec = lib.mkForce 5;  # 5 seconds
+    RestartSec = lib.mkForce 5; # 5 seconds
   };
 
   # River WM Resume Hook - Reconnect layout manager after suspend

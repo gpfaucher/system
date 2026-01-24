@@ -4,7 +4,7 @@
 **System:** Gabriel's NixOS Laptop  
 **Date:** January 24, 2026  
 **Analysis Time:** 4 hours  
-**Implementation Time:** ~4 hours (when ready)  
+**Implementation Time:** ~4 hours (when ready)
 
 ---
 
@@ -30,6 +30,7 @@ Your laptop meets **every** criterion for successful impermanence:
 ### 📊 Current State Analysis
 
 **What must persist (4.5GB):**
+
 - `/nix/store` - 55GB of packages (already persistent) ✓
 - `/persist/var/lib/` - ~30MB (systemd, docker, NM, bluetooth)
 - `/persist/etc/` - ~100KB (machine-id, adjtime)
@@ -40,6 +41,7 @@ Your laptop meets **every** criterion for successful impermanence:
   - `.local/state/` - App state (important)
 
 **What can safely discard (12GB+):**
+
 - `~/.cache/` - 5.1GB (regenerated)
 - `~/.npm/` - 290MB (regenerated)
 - `~/.tabby/` - 1.4GB (regenerated)
@@ -48,14 +50,14 @@ Your laptop meets **every** criterion for successful impermanence:
 
 ### 🚀 Benefits Quantified
 
-| Benefit | Impact | Significance |
-|---------|--------|--------------|
-| Faster boot | +500ms-2.5s | **High** |
-| Cleaner state | No accumulation | **High** |
-| Better reliability | No /var corruption | **High** |
-| Philosophical alignment | Stateless systems | **Medium** |
-| Maintenance ease | Explicit persistence | **Medium** |
-| Disk I/O | tmpfs ≈ RAM speed | **Low** (but nice) |
+| Benefit                 | Impact               | Significance       |
+| ----------------------- | -------------------- | ------------------ |
+| Faster boot             | +500ms-2.5s          | **High**           |
+| Cleaner state           | No accumulation      | **High**           |
+| Better reliability      | No /var corruption   | **High**           |
+| Philosophical alignment | Stateless systems    | **Medium**         |
+| Maintenance ease        | Explicit persistence | **Medium**         |
+| Disk I/O                | tmpfs ≈ RAM speed    | **Low** (but nice) |
 
 ### ⚠️ Gotchas (All Manageable)
 
@@ -72,14 +74,14 @@ Your laptop meets **every** criterion for successful impermanence:
 
 ### Phase Breakdown
 
-| Phase | Duration | Critical | Complexity |
-|-------|----------|----------|-----------|
-| 1: Preparation | 1 hour | High | Low |
-| 2: State migration | 30 min | High | Low |
-| 3: NixOS config | 45 min | High | Medium |
-| 4: Testing | 1 hour | Critical | Low |
-| 5: Documentation | 30 min | Low | Low |
-| **TOTAL** | **~4 hours** | | |
+| Phase              | Duration     | Critical | Complexity |
+| ------------------ | ------------ | -------- | ---------- |
+| 1: Preparation     | 1 hour       | High     | Low        |
+| 2: State migration | 30 min       | High     | Low        |
+| 3: NixOS config    | 45 min       | High     | Medium     |
+| 4: Testing         | 1 hour       | Critical | Low        |
+| 5: Documentation   | 30 min       | Low      | Low        |
+| **TOTAL**          | **~4 hours** |          |            |
 
 ### What Gets Created
 
@@ -112,6 +114,7 @@ New Btrfs subvolume: /@persist
 ## Decision Criteria: Should You Do This?
 
 ### ✅ Yes If (all apply):
+
 - [ ] Want cleaner, more predictable system state
 - [ ] Willing to invest 4 hours now for ongoing benefits
 - [ ] Can test carefully before committing
@@ -120,12 +123,14 @@ New Btrfs subvolume: /@persist
 - [ ] Value NixOS philosophy of immutability
 
 ### ⚠️ Maybe If (some concerns):
+
 - [ ] Need persistent syslog for compliance → Keep journald
 - [ ] Frequently edit /etc outside NixOS config → Codify instead
 - [ ] Have custom stateful services → Document persistence points
 - [ ] Uncomfortable with Btrfs subvolumes → Learn first (not hard)
 
 ### ❌ No If (any apply):
+
 - [ ] Need /var/log across reboots for compliance
 - [ ] Make many ad-hoc system modifications
 - [ ] Have zero tolerance for migration risk
@@ -200,6 +205,7 @@ New Btrfs subvolume: /@persist
 **IMPLEMENT IMPERMANENCE for this system.**
 
 **Rationale:**
+
 - Natural fit (all criteria met)
 - Moderate effort (4 hours one-time)
 - Substantial ongoing benefits
@@ -254,7 +260,6 @@ A: Yes. Growing ecosystem. Projects like nix-community/impermanence exist specif
 **Recommendation:** Strongly implement  
 **Risk level:** Low (well-understood, mitigatable)  
 **Effort:** 4 hours setup, ~5 min/month maintenance  
-**Payoff:** Cleaner state, faster boots, better reliability  
+**Payoff:** Cleaner state, faster boots, better reliability
 
 **Status: Ready to implement when you are.**
-

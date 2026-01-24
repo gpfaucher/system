@@ -26,6 +26,7 @@ git log --oneline | head -5
 ```
 
 **Recovery:**
+
 ```bash
 # Clone fresh system configuration
 git clone https://github.com/gabrieljense/system.git
@@ -58,14 +59,14 @@ services.snapper = {
       MOUNT_POINT = "/home";
       TIMELINE_CREATE = true;
       TIMELINE_CLEANUP = true;
-      
+
       # Keep daily snapshots for 1 month
       TIMELINE_LIMIT_DAILY = 30;
       # Keep hourly snapshots for 24 hours
       TIMELINE_LIMIT_HOURLY = 24;
       # Keep monthly snapshots for 1 year
       TIMELINE_LIMIT_MONTHLY = 12;
-      
+
       # Space optimization
       FREE_LIMIT = "0.2";           # Keep 20% free space minimum
       FREE_LIMIT_PERCENTAGE = "20"; # Or 20%
@@ -84,6 +85,7 @@ services.snapper = {
 ```
 
 **Usage:**
+
 ```bash
 # List snapshots
 snapper -c home list
@@ -112,6 +114,7 @@ snapper -c home undochange 5..0
 ```
 
 **Configuration for Duplicacy:**
+
 ```bash
 # Install
 nixos-rebuild switch  # after adding to packages
@@ -248,6 +251,7 @@ sha256sum /mnt/backup/windows-*.img | tee /mnt/backup/windows-backup-checksums.t
 
 **Time to recover:** < 1 minute
 **Steps:**
+
 ```bash
 # List hourly snapshots from past 24 hours
 snapper -c home list -t single | grep hourly
@@ -268,6 +272,7 @@ snapper -c home undochange 10..0
 **Time to recover:** 1-2 hours
 **Prerequisites:** External backup exists
 **Steps:**
+
 ```bash
 # Boot NixOS installer USB
 # Replace failed drive
@@ -290,6 +295,7 @@ sudo nixos-install --flake .#laptop
 **Time to recover:** 30 minutes
 **Prerequisites:** Git repo + external backup
 **Steps:**
+
 ```bash
 # Boot NixOS installer
 # Partition with disko (using config from git)
@@ -311,6 +317,7 @@ rsync -avz /backup/home-latest/ /mnt/home/
 
 **Time to recover:** 5 minutes
 **Steps:**
+
 ```bash
 # NixOS should still boot (disko doesn't touch Windows disk)
 # Boot NixOS
@@ -416,6 +423,7 @@ fi
 ```
 
 Run this monthly:
+
 ```bash
 0 5 15 * * /opt/test-recovery.sh 2>&1 | mail -s "Recovery Test" gabriel@example.com
 ```
@@ -424,14 +432,14 @@ Run this monthly:
 
 ## Summary Table
 
-| Level | What | Frequency | Storage | Recovery Time |
-|-------|------|-----------|---------|----------------|
-| 1 | NixOS Config | Git (continuous) | GitHub | < 5 min |
-| 2A | Home Snapshots | Hourly/Daily | Local Btrfs | < 1 min |
-| 2B | Cloud Sync | Weekly | Nextcloud/Backblaze | 1-10 min |
-| 3A | Full System | Monthly | External 2TB USB | 30 min |
-| 3B | Rsync Backup | Monthly | External USB | 30 min |
-| 4 | Windows Partition | Manual/Quarterly | External USB | 1 hour |
+| Level | What              | Frequency        | Storage             | Recovery Time |
+| ----- | ----------------- | ---------------- | ------------------- | ------------- |
+| 1     | NixOS Config      | Git (continuous) | GitHub              | < 5 min       |
+| 2A    | Home Snapshots    | Hourly/Daily     | Local Btrfs         | < 1 min       |
+| 2B    | Cloud Sync        | Weekly           | Nextcloud/Backblaze | 1-10 min      |
+| 3A    | Full System       | Monthly          | External 2TB USB    | 30 min        |
+| 3B    | Rsync Backup      | Monthly          | External USB        | 30 min        |
+| 4     | Windows Partition | Manual/Quarterly | External USB        | 1 hour        |
 
 ---
 
@@ -443,4 +451,3 @@ Run this monthly:
 4. **Week 4:** Document recovery procedures and test monthly
 
 This comprehensive backup strategy provides **multiple layers of protection** with different recovery time objectives and redundancy characteristics.
-

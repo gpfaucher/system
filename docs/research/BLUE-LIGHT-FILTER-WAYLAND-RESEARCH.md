@@ -5,6 +5,7 @@
 **Current Status:** ✅ Gammastep is already configured and is the **BEST CHOICE** for River WM on Wayland.
 
 The current NixOS configuration already implements an optimal solution with **Gammastep**, which is:
+
 - A Wayland-native fork of Redshift
 - Actively maintained and feature-rich
 - Properly integrated into Home Manager services
@@ -51,12 +52,12 @@ services.gammastep = {
 
 ### Comparison Matrix
 
-| Tool | Type | Status | Wayland Support | Best For |
-|------|------|--------|-----------------|----------|
-| **Gammastep** | Full-featured | ✅ Active | ✅ Native (wl-gamma) | River WM, most users |
-| Wlsunset | Minimal | ⚠️ Archived | ✅ Native (wl-gamma) | Lightweight setups only |
-| wl-gammarelay | DBus-based | ✅ Maintained | ✅ Protocol-based | Scripting/automation |
-| Redshift (orig.) | Full-featured | ✅ Active | ❌ X11 ONLY | NOT for Wayland |
+| Tool             | Type          | Status        | Wayland Support      | Best For                |
+| ---------------- | ------------- | ------------- | -------------------- | ----------------------- |
+| **Gammastep**    | Full-featured | ✅ Active     | ✅ Native (wl-gamma) | River WM, most users    |
+| Wlsunset         | Minimal       | ⚠️ Archived   | ✅ Native (wl-gamma) | Lightweight setups only |
+| wl-gammarelay    | DBus-based    | ✅ Maintained | ✅ Protocol-based    | Scripting/automation    |
+| Redshift (orig.) | Full-featured | ✅ Active     | ❌ X11 ONLY          | NOT for Wayland         |
 
 ### Detailed Analysis
 
@@ -78,10 +79,12 @@ services.gammastep = {
 - **Performance**: Minimal overhead on Wayland
 
 **Adjustment Methods:**
+
 - `wayland` - Primary (wl-gamma-correction protocol)
 - `randr` - X11 fallback (won't work on pure Wayland)
 
 **Protocols Supported:**
+
 - `wl-gamma-correction` - Wayland standard gamma ramp protocol
 - Works with wlroots-based compositors (including River)
 
@@ -134,6 +137,7 @@ services.gammastep = {
 **Status**: ✅ Maintained but **NO WAYLAND SUPPORT**
 
 **Key Issue**: Uses X11 gamma ramps exclusively
+
 - Cannot work on pure Wayland sessions
 - River WM is Wayland-only
 - **Not suitable for this setup**
@@ -162,15 +166,18 @@ services.gammastep = {
 ### Current Configuration Assessment
 
 **Location Setup** (modules/home/services.nix):
+
 - Provider: `manual` (fixed coordinates)
 - Latitude: 52.37 (Amsterdam area)
 - Longitude: 4.90
 
 **Temperature Values**:
+
 - Day: 6500K (bright/neutral)
 - Night: 3500K (warm/red-shifted)
 
 **Configuration**:
+
 - Adjustment method: `wayland` ✅ Correct for Wayland
 - Fade: 1 (smooth transitions enabled) ✅ Best experience
 
@@ -193,12 +200,14 @@ Laptop only (evening): 4000K (good middle ground)
 ```
 
 **Current Settings Assessment**:
+
 - Day 6500K: ✅ Optimal
 - Night 3500K: ✅ Good for eye comfort, not too extreme
 
 ### Location-Based Auto-Adjustment
 
 **Current Manual Setup**:
+
 ```nix
 provider = "manual";
 latitude = 52.37;
@@ -208,9 +217,11 @@ longitude = 4.90;
 **Alternative Providers Available**:
 
 1. **geoclue** - Automatic location from system services
+
    ```nix
    provider = "geoclue2";
    ```
+
    Requires: `systemctl --user enable geoclue`
 
 2. **manual** - Fixed coordinates (current)
@@ -230,27 +241,27 @@ longitude = 4.90;
 ```nix
 services.gammastep = {
   enable = true;
-  
+
   # Location
   provider = "manual";
   latitude = 52.37;
   longitude = 4.90;
-  
+
   # Temperatures
   temperature = {
     day = 6500;
     night = 3500;
   };
-  
+
   # Brightness
   brightness = {
     day = 1.0;
     night = 0.9;  # Slightly dimmer at night
   };
-  
+
   # Gamma correction (per channel)
   gamma = "0.8:0.8:0.8";
-  
+
   # Fade time
   settings.general = {
     adjustment-method = "wayland";
@@ -311,14 +322,17 @@ systemctl --user enable gammastep
 ### Service Dependencies
 
 The service automatically:
+
 1. Starts after `graphical-session.target`
 2. Requires `wayland-server` protocol support
 3. Integrates with River's session management
 
 **Current Integration** (river.nix line 42):
+
 ```bash
 systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
 ```
+
 This ensures gammastep can access the Wayland display.
 
 ---
@@ -326,6 +340,7 @@ This ensures gammastep can access the Wayland display.
 ## 6. Home Manager & NixOS Integration
 
 ### Current Module Path
+
 `modules/home/services.nix` - Lines 162-178
 
 ### Full Configuration Template
@@ -344,12 +359,12 @@ This ensures gammastep can access the Wayland display.
     provider = "manual";
     latitude = 52.37;
     longitude = 4.90;
-    
+
     temperature = {
       day = 6500;
       night = 3500;
     };
-    
+
     settings = {
       general = {
         adjustment-method = "wayland";
@@ -363,6 +378,7 @@ This ensures gammastep can access the Wayland display.
 ### Integration with River Init
 
 **Current (river.nix line 209):**
+
 ```bash
 riverctl spawn gammastep
 ```
@@ -370,9 +386,11 @@ riverctl spawn gammastep
 This spawns gammastep as a background service managed by River.
 
 **Alternative: systemd only** (if needed):
+
 ```bash
 systemctl --user start gammastep
 ```
+
 But current approach is cleaner.
 
 ---
@@ -472,12 +490,12 @@ riverctl map normal $mod+Shift P spawn "gammastep -O 3500"  # Night mode
 
 ### Recommended Keybindings
 
-| Keybinding | Action | Effect |
-|------------|--------|--------|
-| `Mod+Shift+O` | Reset to normal | Removes blue light filter completely |
-| `Mod+Shift+P` | Night mode | Sets warm 3500K temperature |
-| `Mod+Shift+[` | Cooler (Higher K) | Increases temperature (more blue) |
-| `Mod+Shift+]` | Warmer (Lower K) | Decreases temperature (more red) |
+| Keybinding    | Action            | Effect                               |
+| ------------- | ----------------- | ------------------------------------ |
+| `Mod+Shift+O` | Reset to normal   | Removes blue light filter completely |
+| `Mod+Shift+P` | Night mode        | Sets warm 3500K temperature          |
+| `Mod+Shift+[` | Cooler (Higher K) | Increases temperature (more blue)    |
+| `Mod+Shift+]` | Warmer (Lower K)  | Decreases temperature (more red)     |
 
 ---
 
@@ -511,11 +529,13 @@ Late Night (midnight+):  3000K  (before sleep)
 ### Health Considerations
 
 **Blue Light and Sleep**:
+
 - Blue light (6000K+) suppresses melatonin → delays sleep
 - Warm light (3000-4000K) promotes melatonin → better sleep
 - Current config (3500K night) is optimal
 
 **Eye Strain**:
+
 - Extremes (too cold/hot) can cause discomfort
 - Gradual transitions (fade) essential
 - Current fade=1 setting is good
@@ -527,12 +547,15 @@ Late Night (midnight+):  3000K  (before sleep)
 ### Step-by-Step Implementation
 
 **1. Ensure Gammastep is in packages** (river.nix line 281):
+
 ```nix
 gammastep
 ```
+
 ✅ Already present
 
 **2. Enable service** (services.nix lines 162-178):
+
 ```nix
 services.gammastep = {
   enable = true;
@@ -551,15 +574,19 @@ services.gammastep = {
   };
 };
 ```
+
 ✅ Already configured
 
 **3. Spawn in River** (river.nix line 209):
+
 ```bash
 riverctl spawn gammastep
 ```
+
 ✅ Already configured
 
 **4. Optional: Add keybindings** (river.nix new):
+
 ```bash
 # === Blue Light Filter Control ===
 riverctl map normal $mod+Shift O spawn "gammastep -x"
@@ -571,11 +598,13 @@ riverctl map normal $mod+Shift P spawn "gammastep -O 3500"
 After `home-manager switch`:
 
 **Systemd service**: `~/.config/systemd/user/gammastep.service`
+
 - Auto-created by Home Manager module
 - Starts at login
 - Restarts on failure
 
 **Gammastep config**: `~/.config/gammastep/config.ini`
+
 - Can be manually customized
 - Will be respected by service
 - Takes precedence over NixOS config
@@ -619,13 +648,13 @@ gammastep -p
 
 ### Common Issues
 
-| Issue | Cause | Solution |
-|-------|-------|----------|
-| No effect | Protocol unsupported | Check `adjustment-method = wayland` |
-| Flickers | Multiple instances | Kill other gammastep/redshift processes |
-| Can't find location | Manual provider needs coords | Update latitude/longitude in config |
-| Service won't start | No Wayland session | Ensure River is properly started |
-| Cursor unaffected | Driver limitation | Expected behavior (gamma doesn't affect cursor) |
+| Issue               | Cause                        | Solution                                        |
+| ------------------- | ---------------------------- | ----------------------------------------------- |
+| No effect           | Protocol unsupported         | Check `adjustment-method = wayland`             |
+| Flickers            | Multiple instances           | Kill other gammastep/redshift processes         |
+| Can't find location | Manual provider needs coords | Update latitude/longitude in config             |
+| Service won't start | No Wayland session           | Ensure River is properly started                |
+| Cursor unaffected   | Driver limitation            | Expected behavior (gamma doesn't affect cursor) |
 
 ### Useful Commands
 
@@ -672,6 +701,7 @@ services.gammastep = {
 ```
 
 **Requirements**:
+
 - `systemd-geoclue.service` running
 - Location services enabled in system
 - Could reduce battery life on laptop
@@ -745,20 +775,24 @@ The current implementation is production-ready and best-practice.
 ## 14. References & Resources
 
 ### Official Documentation
+
 - **Gammastep Manual**: `man gammastep`
 - **Home Manager Services**: https://nix-community.github.io/home-manager/
 - **Wayland Protocols**: https://wayland.freedesktop.org/
 
 ### Related Tools
+
 - **wl-gammarelay**: DBus-based control
 - **wlsunset**: Minimal Wayland solution
 - **redshift**: X11-only predecessor (not suitable)
 
 ### Standards
+
 - **wl-gamma-correction**: Wayland protocol for gamma ramps
 - **wlroots**: Compositor framework used by River
 
 ### Community Resources
+
 - River WM: https://codeberg.org/river/river
 - wlroots: https://gitlab.freedesktop.org/wlroots
 - NixOS Wayland: https://nixos.wiki/wiki/Wayland

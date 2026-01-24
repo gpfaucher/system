@@ -3,6 +3,7 @@
 ## When to Use Each Agent
 
 ### 🏗️ **Architect** (Sonnet) - Use When:
+
 - Starting any new feature or module
 - Need to design system architecture
 - Evaluating multiple approaches
@@ -14,6 +15,7 @@
 ---
 
 ### 🔨 **Build** (Sonnet) - Use When:
+
 - Implementing features from specs
 - Writing new code modules
 - Creating integrations
@@ -24,6 +26,7 @@
 ---
 
 ### 🧠 **Orchestrator** (Opus) - Use When:
+
 - Task requires 5+ steps
 - Need to coordinate multiple agents
 - Complex multi-domain work (code + config + docs)
@@ -35,6 +38,7 @@
 ---
 
 ### 📋 **Plan** (Haiku) - Use When:
+
 - Breaking down features into tasks
 - Need clear implementation steps
 - Estimating work complexity
@@ -45,6 +49,7 @@
 ---
 
 ### 👁️ **Review** (Sonnet) - Use When:
+
 - Before committing code (auto-invokes)
 - Need security analysis
 - Performance concerns
@@ -56,6 +61,7 @@
 ---
 
 ### ♻️ **Refactor** (Sonnet) - Use When:
+
 - Code smells detected
 - Duplication needs elimination
 - Improving maintainability
@@ -67,6 +73,7 @@
 ---
 
 ### 🧪 **Test** (Sonnet) - Use When:
+
 - Writing test suites
 - Implementing TDD workflow
 - Need edge case coverage
@@ -78,6 +85,7 @@
 ---
 
 ### 🐛 **Debug** (Sonnet) - Use When:
+
 - Complex bugs requiring investigation
 - Root cause analysis needed
 - Multi-layer debugging
@@ -88,6 +96,7 @@
 ---
 
 ### 🔍 **Research** (Haiku) - Use When:
+
 - Exploring unfamiliar codebase
 - Finding patterns and examples
 - Understanding dependencies
@@ -99,6 +108,7 @@
 ---
 
 ### 📚 **Document** (Sonnet) - Use When:
+
 - Writing technical documentation
 - Creating user guides
 - API documentation needed
@@ -110,6 +120,7 @@
 ---
 
 ### ⚡ **Optimize** (Sonnet) - Use When:
+
 - Performance bottlenecks identified
 - Resource usage high
 - Build times slow
@@ -120,6 +131,7 @@
 ---
 
 ### ❄️ **Nix-Specialist** (Sonnet) - Use When:
+
 - NixOS module development
 - Flake configuration
 - Package management
@@ -131,6 +143,7 @@
 ---
 
 ### 🔒 **Security** (Sonnet) - Use When:
+
 - Security audit needed
 - Hardening services
 - Reviewing permissions
@@ -142,6 +155,7 @@
 ---
 
 ### 🔧 **Fix** (Haiku) - Use When:
+
 - Simple bug fix needed
 - Quick iteration required
 - Typo or syntax error
@@ -172,31 +186,37 @@ New Work?
 ## Workflow Patterns
 
 ### Pattern 1: Full Feature Development
+
 ```
 Architect → Plan → Build → Test → Review → Document
 ```
 
 ### Pattern 2: Quick Fix
+
 ```
 Fix → Test (verify)
 ```
 
 ### Pattern 3: Complex Bug
+
 ```
 Research → Debug → Fix → Test
 ```
 
 ### Pattern 4: System Configuration
+
 ```
 Architect → Nix-Specialist → Security → Review
 ```
 
 ### Pattern 5: Code Quality Improvement
+
 ```
 Research → Refactor → Optimize → Test → Review
 ```
 
 ### Pattern 6: Parallel Implementation
+
 ```
 Orchestrator →
   ├─ Build (feature A)
@@ -207,21 +227,23 @@ Orchestrator →
 
 ## Speed Comparison
 
-| Speed Tier | Agents | Use Case |
-|------------|--------|----------|
-| **Fast** ⚡ | Haiku (Plan, Research, Fix) | Quick tasks, exploration |
-| **Medium** 🏃 | Sonnet (most agents) | Main work |
-| **Slow** 🧠 | Opus (Orchestrator) | Complex coordination |
+| Speed Tier    | Agents                      | Use Case                 |
+| ------------- | --------------------------- | ------------------------ |
+| **Fast** ⚡   | Haiku (Plan, Research, Fix) | Quick tasks, exploration |
+| **Medium** 🏃 | Sonnet (most agents)        | Main work                |
+| **Slow** 🧠   | Opus (Orchestrator)         | Complex coordination     |
 
 ## Cost Optimization
 
 ### Minimize costs:
+
 1. Use **Fix** (Haiku) for simple bugs
 2. Use **Research** (Haiku) for exploration
 3. Use **Plan** (Haiku) for task breakdown
 4. Reserve **Orchestrator** (Opus) for truly complex tasks
 
 ### When Opus is worth it:
+
 - Coordinating 3+ agents
 - Complex architectural decisions
 - Critical system changes
@@ -247,29 +269,34 @@ Orchestrator →
 ## Pro Tips
 
 💡 **Chain agents manually** for custom workflows
+
 ```bash
 # Example: Custom security-focused refactor
 Research → Refactor → Security → Review
 ```
 
 💡 **Parallel execution** for independent tasks
+
 ```bash
 # Orchestrator launches simultaneously:
 Document (API) || Document (User Guide) || Document (Architecture)
 ```
 
 💡 **Iterative refinement**
+
 ```bash
 # For complex features:
 Architect (v1) → Review feedback → Architect (v2) → Build
 ```
 
 💡 **NixOS workflows** always include Nix-Specialist
+
 ```bash
 Architect → Nix-Specialist → Security → Review
 ```
 
 💡 **TDD workflow** with Test agent
+
 ```bash
 Test (write tests) → Build (implement) → Test (verify)
 ```

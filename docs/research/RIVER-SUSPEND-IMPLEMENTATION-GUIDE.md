@@ -1,6 +1,7 @@
 # River Suspend Fix - Implementation Guide
 
 ## Overview
+
 This guide provides ready-to-use code snippets for fixing the river tiling issue after suspend/resume.
 
 ## Phase 1: Resume Hook Service (REQUIRED)
@@ -23,16 +24,16 @@ systemd.user.services.river-resume-hook = {
       ${pkgs.bash}/bin/bash -c '
         # Wait for GPU to fully wake up after suspend
         sleep 1.5
-        
+
         # Send notification
         ${pkgs.libnotify}/bin/notify-send -u low "River" "Restoring tiling layout..." 2>/dev/null || true
-        
+
         # Force wideriver reconnection by re-setting default layout
         ${pkgs.river-classic}/bin/riverctl default-layout wideriver 2>/dev/null || true
-        
+
         # Reload display configuration (Kanshi profiles)
         ${pkgs.kanshi}/bin/kanshictl reload 2>/dev/null || true
-        
+
         # Trigger layout refresh by bouncing focus between outputs
         sleep 0.2
         ${pkgs.river-classic}/bin/riverctl focus-output next 2>/dev/null || true
@@ -49,6 +50,7 @@ systemd.user.services.river-resume-hook = {
 ```
 
 **Why this works:**
+
 - `sleep 1.5` ensures GPU is fully initialized
 - `riverctl default-layout wideriver` reconnects wideriver IPC
 - `kanshictl reload` restores multi-monitor configuration
@@ -83,6 +85,7 @@ riverctl spawn "bash -c '
 ```
 
 **Why this works:**
+
 - Monitors every 45 seconds (low overhead)
 - Detects wideriver crash or disconnect
 - Automatically restarts with same configuration
@@ -90,6 +93,7 @@ riverctl spawn "bash -c '
 - Handles edge cases where IPC reconnection fails
 
 **Important:** Check that all package names are correct:
+
 - `${pkgs.procps}` provides `pgrep`
 - `${pkgs.libnotify}` provides `notify-send`
 - `${pkgs.wideriver}` provides `wideriver` binary
@@ -116,6 +120,7 @@ riverctl map normal $mod+Control+Shift R spawn "bash -c '
 ```
 
 **User Manual:** After suspend, if tiling is broken:
+
 1. Press `Super+Ctrl+Shift+R`
 2. System will force-restart wideriver and reload layout
 3. Windows should return to tiled state within 2-3 seconds
@@ -155,6 +160,7 @@ Add this line inside the `hardware.nvidia` block (after line 14, after `powerMan
 ```
 
 Result should look like:
+
 ```nix
 hardware.nvidia = {
   open = true;
@@ -169,6 +175,7 @@ hardware.nvidia = {
 ## Installation Steps
 
 ### Quick Install (Phase 1 only - minimum viable fix)
+
 ```bash
 cd /home/gabriel/projects/system
 
@@ -185,6 +192,7 @@ journalctl --user -xe | tail -20
 ```
 
 ### Full Install (All phases - recommended)
+
 ```bash
 # Apply all code snippets above to their respective files
 
@@ -203,12 +211,14 @@ journalctl --user -u river-resume-hook -n 20
 ## Testing Procedure
 
 ### Test 1: Service loads correctly
+
 ```bash
 systemctl --user status river-resume-hook
 # Should show "loaded" and "enabled"
 ```
 
 ### Test 2: Manual trigger (test without suspend)
+
 ```bash
 systemctl --user start river-resume-hook
 
@@ -220,6 +230,7 @@ pgrep -a wideriver
 ```
 
 ### Test 3: Health monitor (if Phase 2 installed)
+
 ```bash
 # Check health monitor is running
 pgrep -a "bash.*WIDERIVER_CHECK"
@@ -232,6 +243,7 @@ pgrep -a wideriver
 ```
 
 ### Test 4: Actual suspend/resume
+
 ```bash
 # Suspend system
 systemctl suspend
@@ -246,6 +258,7 @@ systemctl suspend
 ```
 
 ### Test 5: Manual recovery key (if Phase 3 installed)
+
 ```bash
 # Test while system awake:
 # Press Super+Ctrl+Shift+R
@@ -263,6 +276,7 @@ pkill -9 wideriver
 ## Troubleshooting
 
 ### Symptoms: Service doesn't start
+
 ```bash
 # Check service status
 systemctl --user status river-resume-hook
@@ -275,6 +289,7 @@ cat modules/home/services.nix | grep -A 20 "river-resume-hook"
 ```
 
 ### Symptoms: Layout not restored after suspend
+
 ```bash
 # Manually test the restore command
 riverctl default-layout wideriver
@@ -287,6 +302,7 @@ wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 ...
 ```
 
 ### Symptoms: Notifications not showing
+
 ```bash
 # Verify fnott is running
 pgrep -a fnott
@@ -299,6 +315,7 @@ systemctl --user restart fnott
 ```
 
 ### Symptoms: Health monitor spam notifications
+
 ```bash
 # Disable health monitor temporarily
 sed -i 's/notify-send/# notify-send/' /etc/systemd/system/river-monitor.service
@@ -327,12 +344,12 @@ sudo nixos-rebuild switch --flake .
 
 ## Performance Impact
 
-| Component | Impact | Notes |
-|-----------|--------|-------|
-| Resume hook | Minimal | Runs once per suspend cycle |
-| Health monitor | Low | 1 pgrep call every 45 seconds |
-| Manual key | None | Only when user presses key |
-| GPU delay | None | 0.5s only on cold boot |
+| Component      | Impact  | Notes                         |
+| -------------- | ------- | ----------------------------- |
+| Resume hook    | Minimal | Runs once per suspend cycle   |
+| Health monitor | Low     | 1 pgrep call every 45 seconds |
+| Manual key     | None    | Only when user presses key    |
+| GPU delay      | None    | 0.5s only on cold boot        |
 
 Total overhead: **Negligible** (~0.1% CPU in idle)
 
@@ -370,6 +387,7 @@ modules/system/graphics.nix
 ## Validation Checklist
 
 After implementation:
+
 - [ ] Services file syntax is correct (no Nix parse errors)
 - [ ] River file syntax is correct
 - [ ] System builds without errors: `sudo nixos-rebuild switch --flake .`
@@ -385,13 +403,16 @@ After implementation:
 ## Support & Future Work
 
 ### If Issue Persists
+
 1. Check GPU driver stability: `dmesg | grep -i gpu`
 2. Monitor GPU power: `cat /sys/class/drm/card0/device/power_state`
 3. Check Wayland protocol errors: `WAYLAND_DEBUG=1 river`
 4. File issue with debug logs
 
 ### Upstream Contributions
+
 Consider submitting:
+
 - PR to wideriver with suspend hook support
 - PR to River with IPC reconnection logic
 - NixOS module for river-wm with suspend handling

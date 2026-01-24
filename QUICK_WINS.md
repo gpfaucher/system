@@ -3,6 +3,7 @@
 ## What to Add NOW
 
 ### 1. Delta (Syntax-Highlighted Diffs)
+
 ```nix
 # In modules/home/default.nix, update git config:
 programs.git = {
@@ -26,6 +27,7 @@ programs.git = {
 ```
 
 ### 2. Eza (Modern ls)
+
 ```nix
 # In modules/home/shell.nix, add to packages:
 home.packages = with pkgs; [
@@ -44,6 +46,7 @@ shellAbbrs = {
 ```
 
 ### 3. Zoxide (Smart cd)
+
 ```nix
 # In modules/home/shell.nix:
 programs.zoxide = {
@@ -53,6 +56,7 @@ programs.zoxide = {
 ```
 
 ### 4. Atuin (Shell History)
+
 ```nix
 # In modules/home/shell.nix:
 programs.atuin = {
@@ -98,7 +102,7 @@ history  # Or press Ctrl+R for search
 ## Next Steps
 
 After these work:
+
 1. Add pre-commit hooks (session 2)
 2. Add k9s for Kubernetes (session 3)
 3. Optimize shell startup (ongoing)
-

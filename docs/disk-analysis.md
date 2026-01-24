@@ -3,6 +3,7 @@
 ## Executive Summary
 
 This system has a **dual-disk, dual-boot setup** with:
+
 - **Primary disk (nvme0n1)**: 931.5GB NixOS with Btrfs + zram swap
 - **Secondary disk (nvme1n1)**: 953.9GB Windows (NTFS)
 - **Boot setup**: Systemd-boot with auto-detected Windows entry
@@ -72,12 +73,13 @@ rw,relatime,ssd,discard=async,space_cache=v2,subvolid=256,subvol=/@,x-initrd.mou
 ```
 
 **Key Features:**
+
 - ✅ SSD optimizations: `ssd`, `discard=async`
 - ✅ Space caching: `space_cache=v2` (modern, performant)
 - ✅ Async discard: Doesn't block writes
-- ⚠️  No snapshots configured
-- ⚠️  No compression enabled
-- ⚠️  No RAID or redundancy
+- ⚠️ No snapshots configured
+- ⚠️ No compression enabled
+- ⚠️ No RAID or redundancy
 
 ---
 
@@ -95,16 +97,18 @@ swapDevices = [ ];         # No disk swap
 ```
 
 **System Memory:**
+
 - Zram size: ~31 GB (calculated as 50% of ~62 GB RAM)
 - Current usage: 0 KB (unused)
 - Priority: 5 (higher than disk swap, if any existed)
 
 **Why Zram is Excellent Here:**
+
 - ✅ ~3-4x compression ratio with zstd
 - ✅ 60-80% faster than disk swap
 - ✅ Reduces I/O wear on SSD
 - ✅ Perfect for modern high-RAM systems
-- ⚠️  Vulnerable to kernel OOM killer (no fallback to disk)
+- ⚠️ Vulnerable to kernel OOM killer (no fallback to disk)
 
 **Recommendation:** Keep zram; consider optional disk swap for true safety net.
 
@@ -122,7 +126,7 @@ Primary EFI: /dev/nvme0n1p1 (1 GB)
 - Used: 90 MB / 1022 MB (9%)
 - Permissions: fmask=0077, dmask=0077 (secure)
 
-Secondary EFI: /dev/nvme1n1p1 (200 MB) 
+Secondary EFI: /dev/nvme1n1p1 (200 MB)
 - File system: FAT32 (Windows)
 - UUID: F41B-3E96
 - Mount: /boot/efi-windows (read-only, nofail)
@@ -144,6 +148,7 @@ boot.loader.efi.canTouchEfiVariables = true
 ```
 
 **Boot Sequence:**
+
 1. UEFI firmware loads systemd-boot from EFI partition
 2. Systemd-boot scans `/boot` for NixOS generations
 3. Systemd-boot auto-detects Windows when `/boot/efi-windows` is mounted
@@ -166,10 +171,11 @@ nvme1n1p3-4 (Win) BitLocker (potentially, Windows may have enabled it)
 ```
 
 **Security Implications:**
-- ⚠️  Full disk readable without authentication
-- ⚠️  No protection against physical theft
-- ⚠️  NixOS configuration visible from boot media
-- ⚠️  User data in /home unencrypted at rest
+
+- ⚠️ Full disk readable without authentication
+- ⚠️ No protection against physical theft
+- ⚠️ NixOS configuration visible from boot media
+- ⚠️ User data in /home unencrypted at rest
 
 **Recommendation:** Add LUKS encryption for production use.
 
@@ -220,6 +226,7 @@ Cons:
 ### Use Cases Enabled by Disko
 
 1. **System Reinstallation**
+
    ```bash
    disko --mode disko --disk /path/to/device
    # Automatically repartitions and formats
@@ -263,9 +270,8 @@ Boot Modules:
 - ✅ SSD-aware mount options already set
 - ✅ Async discard already configured
 - ✅ Zram swap for fast memory compression
-- ⚠️  Could enable Btrfs compression (lz4 or zstd)
-- ⚠️  Could enable Btrfs snapshots
-- ⚠️  Could add encryption
+- ⚠️ Could enable Btrfs compression (lz4 or zstd)
+- ⚠️ Could enable Btrfs snapshots
+- ⚠️ Could add encryption
 
 ---
-

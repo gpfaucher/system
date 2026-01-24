@@ -34,11 +34,45 @@
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    # Impermanence - Ephemeral root filesystem support
+    impermanence = {
+      url = "github:nix-community/impermanence";
+    };
+
+    # Disko - Declarative disk partitioning
+    disko = {
+      url = "github:nix-community/disko";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    treefmt-nix = {
+      url = "github:numtide/treefmt-nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
+
+    pre-commit-hooks = {
+      url = "github:cachix/git-hooks.nix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
-  
-
-  outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, agenix, ... }@inputs:
+  outputs =
+    {
+      self,
+      nixpkgs,
+      home-manager,
+      nvf,
+      stylix,
+      ghostty,
+      beads,
+      agenix,
+      impermanence,
+      disko,
+      treefmt-nix,
+      pre-commit-hooks,
+      ...
+    }@inputs:
     let
       system = "x86_64-linux";
       username = "gabriel";
@@ -69,8 +103,9 @@
           }
           stylix.nixosModules.stylix
           agenix.nixosModules.default
+          impermanence.nixosModules.impermanence
           ./hosts/laptop
-          ./secrets  # Agenix secrets configuration
+          ./secrets # Agenix secrets configuration
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -93,6 +128,36 @@
         modules = [
           ./modules/home
         ];
+      };
+
+      # Formatter configuration using treefmt-nix
+      formatter.${system} = treefmt-nix.lib.mkWrapper pkgs {
+        projectRootFile = "flake.nix";
+        programs = {
+          nixfmt.enable = true;
+          prettier.enable = true;
+          shfmt.enable = true;
+        };
+      };
+
+      # Development shell with pre-commit hooks
+      devShells.${system}.default = pkgs.mkShell {
+        packages = with pkgs; [
+          nil # Nix LSP
+          nixfmt # Nix formatter
+        ];
+        shellHook = ''
+          ${pre-commit-hooks.lib.${system}.run
+            {
+              src = ./.;
+              hooks = {
+                nixfmt.enable = true;
+                shellcheck.enable = true;
+              };
+            }
+            .shellHook
+          }
+        '';
       };
     };
 }

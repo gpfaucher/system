@@ -11,6 +11,7 @@
 ### The Context Loss Problem
 
 AI agents face a critical limitation: **they forget everything between invocations**. Each time an agent starts:
+
 - No memory of previous work
 - Must re-research the codebase
 - Cannot see what other agents did
@@ -35,7 +36,7 @@ AI agents face a critical limitation: **they forget everything between invocatio
 .beads/
 ├── issues/           # Task data (COMMITTED to git)
 │   ├── 001.json     # Individual task files
-│   ├── 002.json     
+│   ├── 002.json
 │   └── epic-*.json  # Epic/parent tasks
 ├── cache/           # Local only (GITIGNORED)
 └── db/              # Local index (GITIGNORED)
@@ -107,11 +108,13 @@ Epic #015: User Authentication System
 Three relationship types:
 
 1. **blocks**: Task A must complete before Task B can start
+
    ```bash
    bd dep add 042 --blocks 043  # 042 blocks 043
    ```
 
 2. **related**: Tasks are connected but independent
+
    ```bash
    bd dep add 042 --related 044  # 042 related to 044
    ```
@@ -128,9 +131,11 @@ Three relationship types:
 ### Primary Agents (3)
 
 #### Orchestrator (Opus)
+
 **Role**: Multi-agent coordinator and epic creator
 
 **Beads Usage**:
+
 - Creates epics for complex multi-step workflows
 - Breaks epics into subtasks assigned to specialists
 - Monitors overall progress across all tasks
@@ -138,6 +143,7 @@ Three relationship types:
 - Escalates blocked tasks
 
 **Typical Commands**:
+
 ```bash
 # Create an epic
 bd create "Epic: Add export feature" --priority P1 --tag epic
@@ -158,9 +164,11 @@ bd list --epic 015 --status in-progress
 ---
 
 #### Architect (Sonnet)
+
 **Role**: System designer and technical planner
 
 **Beads Usage**:
+
 - Records architectural decisions in tasks
 - Creates design tasks before implementation
 - Documents technical constraints and requirements
@@ -168,6 +176,7 @@ bd list --epic 015 --status in-progress
 - Reviews completed work against design specs
 
 **Typical Commands**:
+
 ```bash
 # Create design task
 bd create "Design data model for exports" --priority P1 --tag architecture
@@ -187,9 +196,11 @@ bd done 041 --comment "Architecture documented in docs/architecture/exports.md"
 ---
 
 #### Build (Sonnet)
+
 **Role**: Code implementation specialist
 
 **Beads Usage**:
+
 - Picks ready implementation tasks from queue
 - Marks tasks in-progress while working
 - Creates follow-up tasks for discovered work
@@ -197,6 +208,7 @@ bd done 041 --comment "Architecture documented in docs/architecture/exports.md"
 - Marks tasks done when code is written
 
 **Typical Commands**:
+
 ```bash
 # Find work
 bd ready --tag implementation --priority P0,P1
@@ -218,15 +230,18 @@ bd done 042 --comment "Implemented in lib/export/csv.rs. Tests needed."
 ### Subagents (11)
 
 #### Plan (Haiku)
+
 **Role**: Fast task breakdown specialist
 
 **Beads Usage**:
+
 - Breaks epics into actionable subtasks
 - Estimates task complexity
 - Identifies dependencies
 - Creates task sequences
 
 **Commands**:
+
 ```bash
 bd create "Research current implementation" --priority P2 --tag planning
 bd create "Identify refactoring opportunities" --epic 020 --assign plan
@@ -236,15 +251,18 @@ bd done 056 --comment "Created 5 subtasks for epic #020"
 ---
 
 #### Review (Sonnet)
+
 **Role**: Code quality and QA specialist
 
 **Beads Usage**:
+
 - Picks review tasks from queue
 - Documents findings in task comments
 - Creates follow-up tasks for issues found
 - Marks reviews complete
 
 **Commands**:
+
 ```bash
 bd ready --tag review
 bd update 043 --status in-progress --assign review
@@ -255,15 +273,18 @@ bd done 043 --comment "Found 3 issues. Created tasks #057-059 for fixes."
 ---
 
 #### Test (Sonnet)
+
 **Role**: Testing and TDD specialist
 
 **Beads Usage**:
+
 - Creates test tasks for new features
 - Tracks test coverage gaps
 - Documents failing tests
 - Links tests to implementation
 
 **Commands**:
+
 ```bash
 bd create "Add unit tests for export validation" --priority P1 --tag testing
 bd dep add 042 --blocks 060  # Can't test until implemented
@@ -273,15 +294,18 @@ bd done 060 --comment "96% coverage. All tests passing."
 ---
 
 #### Security (Sonnet)
+
 **Role**: Security analysis and hardening
 
 **Beads Usage**:
+
 - Performs security reviews on completed features
 - Creates vulnerability fix tasks
 - Tracks security-related work
 - Documents security decisions
 
 **Commands**:
+
 ```bash
 bd ready --tag security
 bd create "Audit authentication token handling" --priority P0 --tag security
@@ -291,15 +315,18 @@ bd done 061 --comment "No vulnerabilities found. Rate limiting recommended."
 ---
 
 #### Document (Sonnet)
+
 **Role**: Technical documentation specialist
 
 **Beads Usage**:
+
 - Tracks documentation tasks
 - Ensures every feature has docs
 - Creates user guides and API docs
 - Links docs to implementations
 
 **Commands**:
+
 ```bash
 bd create "Document export API endpoints" --epic 015 --assign document
 bd dep add 042 --blocks 062  # Can't document until implemented
@@ -309,15 +336,18 @@ bd done 062 --comment "Added to docs/api/export.md and updated README"
 ---
 
 #### Debug (Sonnet)
+
 **Role**: Systematic problem solver
 
 **Beads Usage**:
+
 - Investigates bug reports
 - Documents debugging findings
 - Creates fix tasks
 - Tracks reproduction steps
 
 **Commands**:
+
 ```bash
 bd create "Debug crash in CSV export with 10k+ rows" --priority P0 --tag bug
 bd update 063 --description "Root cause: memory overflow in buffer. Fix in progress."
@@ -327,15 +357,18 @@ bd done 063 --comment "Fixed by streaming export. Added regression test."
 ---
 
 #### Research (Haiku)
+
 **Role**: Codebase exploration and investigation
 
 **Beads Usage**:
+
 - Explores unknown areas before work starts
 - Documents findings for other agents
 - Creates research tasks
 - Answers specific questions
 
 **Commands**:
+
 ```bash
 bd create "Research how current CSV export works" --assign research --tag investigation
 bd done 064 --comment "Current impl in lib/csv.go. Uses 3rd party library. See notes."
@@ -344,15 +377,18 @@ bd done 064 --comment "Current impl in lib/csv.go. Uses 3rd party library. See n
 ---
 
 #### Optimize (Sonnet)
+
 **Role**: Performance optimization specialist
 
 **Beads Usage**:
+
 - Tracks performance improvement tasks
 - Documents benchmarks
 - Creates optimization tasks
 - Links optimizations to features
 
 **Commands**:
+
 ```bash
 bd create "Optimize export query performance" --priority P2 --tag performance
 bd done 065 --comment "Reduced query time from 5s to 0.3s. Added indexes."
@@ -361,15 +397,18 @@ bd done 065 --comment "Reduced query time from 5s to 0.3s. Added indexes."
 ---
 
 #### Refactor (Sonnet)
+
 **Role**: Code quality and maintainability
 
 **Beads Usage**:
+
 - Identifies refactoring opportunities
 - Tracks technical debt
 - Creates cleanup tasks
 - Documents refactoring decisions
 
 **Commands**:
+
 ```bash
 bd create "Refactor export module for better testability" --priority P2 --tag refactor
 bd done 066 --comment "Extracted interfaces. 100% unit testable now."
@@ -378,15 +417,18 @@ bd done 066 --comment "Extracted interfaces. 100% unit testable now."
 ---
 
 #### Nix-Specialist (Sonnet)
+
 **Role**: NixOS configuration expert
 
 **Beads Usage**:
+
 - Tracks NixOS module changes
 - Documents configuration decisions
 - Creates system config tasks
 - Links configs to features
 
 **Commands**:
+
 ```bash
 bd create "Add export service to NixOS module" --priority P1 --tag nixos
 bd done 067 --comment "Added to modules/services/export.nix with options."
@@ -395,15 +437,18 @@ bd done 067 --comment "Added to modules/services/export.nix with options."
 ---
 
 #### Fix (Haiku)
+
 **Role**: Fast bug fix specialist
 
 **Beads Usage**:
+
 - Handles quick bug fixes
 - Tracks simple fixes
 - Creates follow-up tasks if needed
 - Fast iteration on small issues
 
 **Commands**:
+
 ```bash
 bd ready --tag bug --priority P0,P1
 bd update 068 --status in-progress --assign fix
@@ -413,15 +458,18 @@ bd done 068 --comment "Quick fix applied. Works now."
 ---
 
 #### Explore (Haiku)
+
 **Role**: Fast codebase discovery
 
 **Beads Usage**:
+
 - Quick exploration tasks
 - Answers specific questions
 - Documents file locations
 - Maps codebase structure
 
 **Commands**:
+
 ```bash
 bd create "Find all export-related files" --assign explore --tag discovery
 bd done 069 --comment "Found 12 files. Listed in task notes."
@@ -430,15 +478,18 @@ bd done 069 --comment "Found 12 files. Listed in task notes."
 ---
 
 #### General (Sonnet)
+
 **Role**: Multi-purpose agent for miscellaneous work
 
 **Beads Usage**:
+
 - Handles tasks that don't fit other agents
 - General maintenance work
 - Cross-cutting concerns
 - Fallback for unassigned work
 
 **Commands**:
+
 ```bash
 bd ready --status backlog --assignee none
 bd update 070 --assign general
@@ -450,6 +501,7 @@ bd done 070 --comment "Completed miscellaneous cleanup."
 ## 4. Essential Commands
 
 ### Initialize (once per repo)
+
 ```bash
 cd /path/to/project
 bd init
@@ -458,6 +510,7 @@ git commit -m "Initialize Beads task tracking"
 ```
 
 ### Create Tasks
+
 ```bash
 # Basic task
 bd create "Fix login bug"
@@ -473,6 +526,7 @@ bd create "Refactor auth" --description "Extract middleware, improve testability
 ```
 
 ### Query Tasks
+
 ```bash
 # List all ready tasks
 bd ready
@@ -497,6 +551,7 @@ bd list --epic 015
 ```
 
 ### Show Task Details
+
 ```bash
 # Full task info
 bd show 042
@@ -509,6 +564,7 @@ bd show 042 --deps
 ```
 
 ### Update Tasks
+
 ```bash
 # Change status
 bd update 042 --status in-progress
@@ -528,6 +584,7 @@ bd update 042 --description "New detailed description"
 ```
 
 ### Manage Dependencies
+
 ```bash
 # Task A blocks Task B
 bd dep add 041 --blocks 042
@@ -540,6 +597,7 @@ bd dep remove 041 042
 ```
 
 ### Complete Tasks
+
 ```bash
 # Mark done (simple)
 bd done 042
@@ -555,6 +613,7 @@ bd close 042
 ```
 
 ### Search and Filter
+
 ```bash
 # Text search in titles
 bd list --search "export"
@@ -567,6 +626,7 @@ bd list --assignee $(whoami) --status in-progress
 ```
 
 ### Git Integration
+
 ```bash
 # Beads auto-commits to git when tasks change
 # Manual sync if needed:
@@ -642,6 +702,7 @@ Flow:
 ## 6. Dependency Types
 
 ### Blocking Dependencies
+
 **Use when**: Task B cannot start until Task A completes
 
 ```bash
@@ -655,6 +716,7 @@ bd dep add 042 --blocks 044
 **Effect**: Task #042 stays in `backlog` until #041 is `done`.
 
 ### Related Dependencies
+
 **Use when**: Tasks are connected but can work in parallel
 
 ```bash
@@ -665,6 +727,7 @@ bd dep add 042 --related 043
 **Effect**: Informational only - helps agents see context.
 
 ### Parent-Child (Epic) Dependencies
+
 **Use when**: Grouping related tasks under an epic
 
 ```bash
@@ -686,6 +749,7 @@ bd create "Test export" --epic 015
 ### Pattern 1: Sequential Delegation (Design → Build → Test)
 
 **Orchestrator starts**:
+
 ```bash
 bd create "Epic: Add two-factor authentication" --priority P1 --tag epic
 bd create "Design 2FA architecture" --epic 020 --assign architect --priority P1
@@ -696,6 +760,7 @@ bd create "Test 2FA flows" --epic 020 --assign test --priority P1
 ```
 
 **Architect**:
+
 ```bash
 bd ready  # Shows task #071
 bd update 071 --status in-progress
@@ -705,6 +770,7 @@ bd done 071 --comment "Architecture in docs/design/2fa.md"
 ```
 
 **Build**:
+
 ```bash
 bd ready  # Shows task #072 (now unblocked)
 bd update 072 --status in-progress
@@ -714,6 +780,7 @@ bd done 072 --comment "Implemented in lib/auth/2fa.rs"
 ```
 
 **Test**:
+
 ```bash
 bd ready  # Shows task #073 (now unblocked)
 bd update 073 --status in-progress
@@ -722,6 +789,7 @@ bd done 073 --comment "95% coverage. All tests pass."
 ```
 
 **Orchestrator verifies**:
+
 ```bash
 bd show 020  # Shows epic with all subtasks complete
 bd close 071 072 073 020  # Archive all
@@ -732,6 +800,7 @@ bd close 071 072 073 020  # Archive all
 ### Pattern 2: Parallel Delegation (Research + Security + Docs)
 
 **Orchestrator starts**:
+
 ```bash
 bd create "Epic: Audit authentication system" --priority P0 --tag epic,security
 bd create "Research auth vulnerabilities" --epic 021 --assign research --priority P0
@@ -743,6 +812,7 @@ bd dep add 075 076 --blocks 077  # Both audits must complete before docs
 ```
 
 **All agents work in parallel**:
+
 ```bash
 # Research (Haiku) - fast exploration
 bd update 074 --status in-progress
@@ -769,11 +839,13 @@ bd done 077 --comment "Security report in docs/security/audit-2026-01.md"
 ### Pattern 3: Iterative Debugging (Debug → Fix → Test → Verify)
 
 **User reports bug**:
+
 ```bash
 bd create "App crashes on large CSV export" --priority P0 --tag bug,urgent
 ```
 
 **Debug investigates**:
+
 ```bash
 bd update 081 --status in-progress --assign debug
 # ... investigates ...
@@ -784,6 +856,7 @@ bd done 081 --comment "Root cause found. Created fix task #082."
 ```
 
 **Fix implements**:
+
 ```bash
 bd update 082 --status in-progress
 # ... implements streaming export ...
@@ -793,6 +866,7 @@ bd done 082 --comment "Implemented streaming. Ready for testing."
 ```
 
 **Test verifies**:
+
 ```bash
 bd update 083 --status in-progress
 # ... tests with 100k+ row CSVs ...
@@ -800,6 +874,7 @@ bd done 083 --comment "Tested with 500k rows. No crash. Memory stable."
 ```
 
 **Review confirms**:
+
 ```bash
 bd create "Review CSV export fix" --priority P1 --assign review
 bd update 084 --status in-progress
@@ -816,6 +891,7 @@ bd close 081 082 083 084  # Archive entire debugging workflow
 **User request**: "Add ability to export reports as PDF"
 
 **Orchestrator**:
+
 ```bash
 # Create epic
 bd create "Epic: PDF Export Feature" --priority P1 --tag feature,export
@@ -833,6 +909,7 @@ bd create "Document PDF export API" --epic 085 --assign document --priority P1
 ```
 
 **Execution**:
+
 1. Research + Architect work in parallel (independent)
 2. Build waits for both to complete
 3. Test + Security work in parallel after Build completes
@@ -846,6 +923,7 @@ bd create "Document PDF export API" --epic 085 --assign document --priority P1
 **User report**: "Login completely broken - P0"
 
 **Orchestrator**:
+
 ```bash
 # Immediate priority
 bd create "CRITICAL: Login system down" --priority P0 --tag bug,urgent
@@ -859,6 +937,7 @@ bd create "Verify login works" --priority P0 --assign test
 ```
 
 **Debug** (10 min):
+
 ```bash
 bd update 092 --status in-progress
 bd done 092 --comment "Database connection pool exhausted. Max connections too low."
@@ -866,6 +945,7 @@ bd done 092 --comment "Database connection pool exhausted. Max connections too l
 ```
 
 **Fix** (15 min):
+
 ```bash
 bd update 093 --status in-progress
 bd done 093 --comment "Increased pool size from 10 to 100. Login restored."
@@ -873,12 +953,14 @@ bd done 093 --comment "Increased pool size from 10 to 100. Login restored."
 ```
 
 **Test** (10 min):
+
 ```bash
 bd update 094 --status in-progress
 bd done 094 --comment "Login working. 100 concurrent users tested successfully."
 ```
 
 **Follow-up**:
+
 ```bash
 bd create "Implement connection pool monitoring" --priority P1 --assign build
 bd create "Document connection pool configuration" --priority P2 --assign document
@@ -893,6 +975,7 @@ bd create "Document connection pool configuration" --priority P2 --assign docume
 **User request**: "Enable Redis caching in NixOS config"
 
 **Orchestrator**:
+
 ```bash
 bd create "Epic: Add Redis caching to system" --priority P1 --tag nixos,infrastructure
 
@@ -986,6 +1069,7 @@ bdd    → bd done
 **Remember**: Beads is your agents' shared brain. Use it religiously, and agents will stop forgetting, stop duplicating work, and start coordinating like a real development team.
 
 **Next Steps**:
+
 1. Run `bd init` in your project root
 2. Commit `.beads/` to git
 3. Have agents create tasks for current work
@@ -993,4 +1077,4 @@ bdd    → bd done
 
 ---
 
-*This guide is part of the NixOS OpenCode system documentation. For OpenCode agent configuration, see `docs/OPENCODE-PARALLEL-INDEX.md`.*
+_This guide is part of the NixOS OpenCode system documentation. For OpenCode agent configuration, see `docs/OPENCODE-PARALLEL-INDEX.md`._

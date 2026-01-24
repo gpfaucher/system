@@ -36,16 +36,19 @@ age -d -i ~/.ssh/id_ed25519 tabby-token.age
 ### Creating New Secrets
 
 1. Add the secret definition to `secrets.nix`:
+
 ```nix
 "new-secret.age".publicKeys = [ gabriel ];
 ```
 
 2. Encrypt the secret:
+
 ```bash
 echo -n "secret-value" | age -r "$(cat ~/.ssh/id_ed25519.pub)" > new-secret.age
 ```
 
 3. Configure decryption in `default.nix`:
+
 ```nix
 age.secrets.new-secret = {
   file = ./new-secret.age;
@@ -56,6 +59,7 @@ age.secrets.new-secret = {
 ```
 
 4. Apply changes:
+
 ```bash
 sudo nixos-rebuild switch --flake .#laptop
 ```

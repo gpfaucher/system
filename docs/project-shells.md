@@ -16,6 +16,7 @@ programs.direnv = {
 ### Step 1: Create `flake.nix` in project root
 
 **Basic example:**
+
 ```nix
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -35,6 +36,7 @@ programs.direnv = {
 ```
 
 **Python project:**
+
 ```nix
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -62,6 +64,7 @@ programs.direnv = {
 ```
 
 **Rust project:**
+
 ```nix
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -85,6 +88,7 @@ programs.direnv = {
 ```
 
 **Go project:**
+
 ```nix
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -105,6 +109,7 @@ programs.direnv = {
 ```
 
 **With system dependencies (e.g., PostgreSQL, Redis):**
+
 ```nix
 {
   inputs.nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
@@ -162,33 +167,37 @@ command not found: node
 
 ## Commands
 
-| Command | Description |
-|---------|-------------|
-| `direnv allow` | Trust .envrc in current directory |
-| `direnv deny` | Untrust .envrc |
+| Command         | Description                          |
+| --------------- | ------------------------------------ |
+| `direnv allow`  | Trust .envrc in current directory    |
+| `direnv deny`   | Untrust .envrc                       |
 | `direnv reload` | Force reload after flake.nix changes |
-| `direnv status` | Show current direnv state |
+| `direnv status` | Show current direnv state            |
 
 ## Tips
 
 **Update shell after changing flake.nix:**
+
 ```bash
 direnv reload
 ```
 
 **Rebuild without cache (nuclear option):**
+
 ```bash
 rm -rf .direnv
 direnv allow
 ```
 
 **Add to .gitignore:**
+
 ```
 .direnv/
 .venv/
 ```
 
 **Multiple shells in one flake:**
+
 ```nix
 devShells.x86_64-linux = {
   default = pkgs.mkShell { ... };
@@ -201,6 +210,7 @@ Use with: `use flake .#ci` in `.envrc`
 ## Environment Variables
 
 Set env vars in the shell:
+
 ```nix
 pkgs.mkShell {
   packages = [ ... ];
@@ -218,11 +228,14 @@ pkgs.mkShell {
 ## Troubleshooting
 
 **Shell not activating:**
+
 - Check `direnv status`
 - Run `direnv allow`
 
 **Old packages after flake update:**
+
 - Run `direnv reload`
 
 **Slow first load:**
+
 - Normal - Nix is building. Subsequent loads are cached.

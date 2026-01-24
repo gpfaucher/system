@@ -8,9 +8,11 @@
 ## 📋 Available Documents
 
 ### 1. **FLAKE-ANALYSIS-SUMMARY.md** (Quick Start - 15 min read)
+
 High-level overview of findings with actionable next steps.
 
 **Contains:**
+
 - Executive summary
 - Key findings (strengths + 11 issues)
 - Priority roadmap
@@ -23,9 +25,11 @@ High-level overview of findings with actionable next steps.
 ---
 
 ### 2. **FLAKE-ANALYSIS.md** (Comprehensive - 45 min read)
+
 Detailed technical analysis with code examples, templates, and implementation guidance.
 
 **Contains:**
+
 - Complete architecture overview
 - Detailed issue analysis with code samples
 - Severity categorization
@@ -44,6 +48,7 @@ Detailed technical analysis with code examples, templates, and implementation gu
 ### By Severity
 
 **Critical Issues (Fix This Week):**
+
 - Input pinning divergence (stylix/ghostty)
 - Bluetooth monitor script errors
 - Hardcoded geographic coordinates
@@ -51,6 +56,7 @@ Detailed technical analysis with code examples, templates, and implementation gu
 See: FLAKE-ANALYSIS.md sections 2.1-2.3
 
 **High Priority Issues (Fix Next 2 Weeks):**
+
 - Undocumented packages
 - Duplicate neovim
 - No multi-machine support
@@ -59,6 +65,7 @@ See: FLAKE-ANALYSIS.md sections 2.1-2.3
 See: FLAKE-ANALYSIS.md sections 2.4-2.6, 2.9
 
 **Medium Priority Issues (Address Next Month):**
+
 - Missing flake.nix documentation
 - No input update strategy
 - Missing module READMEs
@@ -71,21 +78,25 @@ See: FLAKE-ANALYSIS.md sections 2.7, 2.8, 2.10, 2.11
 ### By File
 
 **flake.nix**
+
 - Issue #1: Input pinning divergence
 - Issue #6: No multi-machine support
 - Issue #8: Missing documentation
 - Issue #11: No validation layer
 
 **modules/home/default.nix**
+
 - Issue #4: Undocumented packages
 - Issue #5: Duplicate neovim
 
 **modules/home/services.nix**
+
 - Issue #3: Hardcoded coordinates
 - Issue #7: Exposed auth token
 - Issue #9: No update strategy
 
 **modules/system/bluetooth-monitor.nix**
+
 - Issue #2: Script logic errors
 
 ---
@@ -93,20 +104,24 @@ See: FLAKE-ANALYSIS.md sections 2.7, 2.8, 2.10, 2.11
 ### By Topic
 
 **Architecture:**
+
 - Issue #6: Multi-machine support
 - Section 1: Current architecture overview
 - Section 4: Architectural strengths
 
 **Documentation:**
+
 - Issue #8: Flake.nix metadata
 - Issue #9: Update strategy
 - Issue #10: Module READMEs
 
 **Security:**
+
 - Issue #7: Exposed auth token
 - Section on security considerations
 
 **Code Quality:**
+
 - Issue #2: Error handling
 - Issue #4: Package organization
 - Issue #5: Duplication
@@ -167,11 +182,13 @@ Effort to Quality 8.5: ~15 hours total
 ## 📌 File Locations Reference
 
 ### Main Analysis Files
+
 - `/home/gabriel/projects/system/FLAKE-ANALYSIS.md` (819 lines)
 - `/home/gabriel/projects/system/FLAKE-ANALYSIS-SUMMARY.md` (this index)
 - `/home/gabriel/projects/system/FLAKE-ANALYSIS-INDEX.md` (this file)
 
 ### Configuration Files Referenced
+
 - `/home/gabriel/projects/system/flake.nix`
 - `/home/gabriel/projects/system/flake.lock`
 - `/home/gabriel/projects/system/hosts/laptop/default.nix`
@@ -184,17 +201,20 @@ Effort to Quality 8.5: ~15 hours total
 ## 💡 How to Use These Documents
 
 **For Quick Context:**
+
 1. Read this index
 2. Skim FLAKE-ANALYSIS-SUMMARY.md (10 min)
 3. Jump to specific section in FLAKE-ANALYSIS.md as needed
 
 **For Implementation:**
+
 1. Review FLAKE-ANALYSIS-SUMMARY.md priority roadmap
 2. Go to FLAKE-ANALYSIS.md section 3 for detailed recommendations
 3. Use section 7 (Fix Templates) to implement changes
 4. Run section 8 (Testing Checklist) to validate
 
 **For Learning:**
+
 1. Read section 1 (Current Architecture) in FLAKE-ANALYSIS.md
 2. Review section 4 (Architectural Strengths)
 3. Study section 5 (Areas for Improvement)
@@ -243,11 +263,13 @@ A: No - all fixes are backward compatible or improve without changing behavior.
 ## 📚 Related Documentation
 
 Inside repository:
+
 - `/home/gabriel/projects/system/docs/` - Architecture docs, research
 - `/home/gabriel/projects/system/AGENTS.md` - Agent workflow
 - `/home/gabriel/projects/system/docs/plans/` - Design documents
 
 External resources:
+
 - [NixOS Flakes](https://nixos.wiki/wiki/Flakes)
 - [Home Manager Manual](https://nix-community.github.io/home-manager/)
 - [NixOS Manual - Configuration](https://nixos.org/manual/nixos/)

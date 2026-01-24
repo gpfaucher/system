@@ -1,6 +1,7 @@
 # Deployment & Multi-Machine Management - Quick Summary
 
 ## 🎯 Current State
+
 - **Setup:** Single laptop, NixOS with home-manager
 - **Deployment:** Manual `nixos-rebuild switch` (local only)
 - **Rollback:** ✅ Automatic via boot menu
@@ -10,16 +11,17 @@
 
 ## 📊 Comparison Matrix
 
-| Tool | Single Host | Multi-Host | Complexity | Recommendation |
-|------|:-----------:|:----------:|:-----------:|:---------------:|
-| **nixos-rebuild** | ✅ | ❌ | Minimal | Legacy |
-| **deploy-rs** | ✅✅ | ⚠️ | Low | **RECOMMENDED** |
-| **colmena** | ✅ | ✅✅ | Medium | Future (if scaling) |
-| **Terraform** | ❌ | ✅ | Very High | Avoid |
+| Tool              | Single Host | Multi-Host | Complexity |   Recommendation    |
+| ----------------- | :---------: | :--------: | :--------: | :-----------------: |
+| **nixos-rebuild** |     ✅      |     ❌     |  Minimal   |       Legacy        |
+| **deploy-rs**     |    ✅✅     |     ⚠️     |    Low     |   **RECOMMENDED**   |
+| **colmena**       |     ✅      |    ✅✅    |   Medium   | Future (if scaling) |
+| **Terraform**     |     ❌      |     ✅     | Very High  |        Avoid        |
 
 ## 🚀 Quick Implementation (1-2 hours)
 
 ### Step 1: Update flake.nix
+
 ```nix
 inputs.deploy-rs = {
   url = "github:serokell/deploy-rs";
@@ -29,12 +31,13 @@ inputs.deploy-rs = {
 # In outputs:
 deploy.nodes.laptop = {
   hostname = "localhost";
-  profiles.system.path = deploy-rs.lib.x86_64-linux.activate.nixos 
+  profiles.system.path = deploy-rs.lib.x86_64-linux.activate.nixos
     self.nixosConfigurations.laptop;
 };
 ```
 
 ### Step 2: Add GitHub Actions
+
 ```yaml
 # .github/workflows/flake-check.yml
 - Run: nix flake check
@@ -42,6 +45,7 @@ deploy.nodes.laptop = {
 ```
 
 ### Step 3: Deploy
+
 ```bash
 # Check before deploy
 nix run github:serokell/deploy-rs -- --checks .
@@ -52,31 +56,35 @@ nix run github:serokell/deploy-rs -- --skip-checks .#laptop
 
 ## 🔄 Disaster Recovery Tiers
 
-| Tier | Time | Effort | Notes |
-|------|------|--------|-------|
-| **Local rollback** | < 1 min | None | Boot menu |
-| **Git recovery** | 5-15 min | Low | Rebuild from repo |
-| **Full restore** | 30-60 min | Medium | From ISO/backup |
-| **Automated backup** | Daily | Setup once | S3 or server |
+| Tier                 | Time      | Effort     | Notes             |
+| -------------------- | --------- | ---------- | ----------------- |
+| **Local rollback**   | < 1 min   | None       | Boot menu         |
+| **Git recovery**     | 5-15 min  | Low        | Rebuild from repo |
+| **Full restore**     | 30-60 min | Medium     | From ISO/backup   |
+| **Automated backup** | Daily     | Setup once | S3 or server      |
 
 ## 📋 Implementation Roadmap
 
 ### Phase 1 (Week 1-2): CI/CD
+
 - [ ] Add deploy-rs to flake inputs
 - [ ] Set up GitHub Actions workflow
 - [ ] Document rollback procedures
 
 ### Phase 2 (Week 3-4): Multi-host Ready
+
 - [ ] Create second host configuration
 - [ ] Test deploy-rs deployment
 - [ ] Test with nixos-container
 
 ### Phase 3 (Month 2): Production
+
 - [ ] Set up SSH deployment keys
 - [ ] Deploy to remote machines
 - [ ] Document runbooks
 
 ### Phase 4 (Month 3+): Advanced
+
 - [ ] Consider migrating to colmena
 - [ ] Implement automated testing
 - [ ] Set up monitoring/alerting
@@ -84,6 +92,7 @@ nix run github:serokell/deploy-rs -- --skip-checks .#laptop
 ## 💡 Key Recommendations
 
 ### DO ✅
+
 - Use **deploy-rs** for next deployment tool
 - Set up **CI/CD validation** immediately
 - Keep **Git as source of truth**
@@ -91,6 +100,7 @@ nix run github:serokell/deploy-rs -- --skip-checks .#laptop
 - Implement **automated backups**
 
 ### DON'T ❌
+
 - Use Terraform (overkill for NixOS)
 - Deploy without dry-run validation
 - Skip configuration testing
@@ -100,23 +110,27 @@ nix run github:serokell/deploy-rs -- --skip-checks .#laptop
 ## 🛠️ Tools Overview
 
 ### deploy-rs
+
 - **Best for:** Current single-machine, path to multi-host
 - **Pros:** Simple, NixOS-native, rollback support
 - **Cons:** No multi-host orchestration
 - **Effort:** Low (1-2 hours to set up)
 
 ### colmena
+
 - **Best for:** Multi-host clusters, complex deployments
 - **Pros:** Parallel deployment, orchestration, tagging
 - **Cons:** More complexity, different structure
 - **Effort:** Medium (requires learning)
 
 ### nixos-anywhere
+
 - **Best for:** Remote VPS/bare-metal installation
 - **Use when:** Need to install NixOS on remote machines
 - **Not for:** This project (local machine only)
 
 ### nixos-generators
+
 - **Best for:** Testing, cloud deployment, ISO generation
 - **Use for:** Generate test images, cloud AMIs
 

@@ -5,6 +5,7 @@ This NixOS system includes a comprehensive OpenCode agent setup managed through 
 ## Location
 
 The OpenCode configuration is managed at:
+
 - **Module**: `modules/home/opencode.nix`
 - **Installed to**: `~/.config/opencode/opencode.json`
 - **Prompts**: `~/.config/opencode/prompts/*.md`
@@ -14,11 +15,13 @@ The OpenCode configuration is managed at:
 ### 14 Specialized Agents
 
 **Primary Agents (3):**
+
 - **Architect** (Sonnet 4.5) - Design and planning
 - **Build** (Sonnet 4.5) - Implementation
 - **Orchestrator** (Opus 4.5) - Workflow coordination
 
 **Subagents (11):**
+
 - **Plan** (Haiku 4.5) - Task breakdown
 - **Review** (Sonnet 4.5) - Code review
 - **Refactor** (Sonnet 4.5) - Code improvement

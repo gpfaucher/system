@@ -1,4 +1,11 @@
-{ config, pkgs, lib, inputs, username, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  inputs,
+  username,
+  ...
+}:
 
 {
   imports = [
@@ -15,7 +22,7 @@
   # Enable Beads for persistent agent task memory
   programs.beads = {
     enable = true;
-    enableDaemon = false;  # Opt-in for daemon (auto-sync)
+    enableDaemon = false; # Opt-in for daemon (auto-sync)
   };
 
   # Home Manager configuration
@@ -49,7 +56,7 @@
     enable = true;
     settings = {
       user.name = "Gabriel Faucher";
-      user.email = "gpfaucher@gmail.com";  # TODO: Update with actual email
+      user.email = "gpfaucher@gmail.com"; # TODO: Update with actual email
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
@@ -85,53 +92,53 @@
     gcc
     tree-sitter
     nodejs_22
-    tabby-agent  # AI code completion agent
-    fd         # For telescope find_files
-    ripgrep    # For telescope live_grep
-    docker-compose  # Docker Compose
-    python312  # Python runtime for LSP
-    tmux       # Terminal multiplexer
+    tabby-agent # AI code completion agent
+    fd # For telescope find_files
+    ripgrep # For telescope live_grep
+    docker-compose # Docker Compose
+    python312 # Python runtime for LSP
+    tmux # Terminal multiplexer
 
     # Modern CLI tools
-    delta      # Git diff viewer with syntax highlighting
-    eza        # Modern ls replacement
-    zoxide     # Smart cd with 'z' command
-    atuin      # Database-backed shell history
-    bat        # Better cat with syntax highlighting
-    fzf        # Fuzzy finder
-    jq         # JSON processor
-    yq-go      # YAML processor
-    tldr       # Simplified man pages
-    duf        # Better df
-    du-dust    # Better du
-    procs      # Better ps
-    bottom     # btm - better top/htop
+    delta # Git diff viewer with syntax highlighting
+    eza # Modern ls replacement
+    zoxide # Smart cd with 'z' command
+    atuin # Database-backed shell history
+    bat # Better cat with syntax highlighting
+    fzf # Fuzzy finder
+    jq # JSON processor
+    yq-go # YAML processor
+    tldr # Simplified man pages
+    duf # Better df
+    dust # Better du
+    procs # Better ps
+    bottom # btm - better top/htop
 
     # Debuggers
     gdb
     lldb
 
     # Kubernetes tools
-    kubectl    # Kubernetes CLI
-    k9s        # Kubernetes TUI
-    kubernetes-helm  # Kubernetes package manager
+    kubectl # Kubernetes CLI
+    k9s # Kubernetes TUI
+    kubernetes-helm # Kubernetes package manager
 
     # Database clients
-    postgresql  # psql client
-    mariadb     # mysql client
-    redis       # redis-cli
-    mongosh     # MongoDB shell
+    postgresql # psql client
+    mariadb # mysql client
+    redis # redis-cli
+    mongosh # MongoDB shell
 
     # Cloud tools
-    google-cloud-sdk  # gcloud
-    azure-cli         # az
+    google-cloud-sdk # gcloud
+    azure-cli # az
 
     # Formatters/Linters
     nodePackages.prettier
-    black      # Python formatter
-    ruff       # Python linter
+    black # Python formatter
+    ruff # Python linter
     shellcheck # Shell script linter
-    shfmt      # Shell script formatter
+    shfmt # Shell script formatter
 
     # System utilities
     unzip
@@ -157,24 +164,24 @@
   # Tabby agent configuration
   # Token is encrypted using agenix and decrypted to /run/agenix/tabby-token
   # The config file is generated at activation time to read the decrypted token
-  home.activation.tabbyConfig = lib.hm.dag.entryAfter ["writeBoundary"] ''
-    $DRY_RUN_CMD mkdir -p $HOME/.tabby-client/agent
-    
-    # Read token from agenix-decrypted file, or use a placeholder if not available yet
-    if [ -f /run/agenix/tabby-token ]; then
-      TOKEN=$(cat /run/agenix/tabby-token)
-    else
-      TOKEN="TOKEN_NOT_DECRYPTED_YET"
-      echo "Warning: /run/agenix/tabby-token not found. Run 'sudo nixos-rebuild switch' first."
-    fi
-    
-    $DRY_RUN_CMD cat > $HOME/.tabby-client/agent/config.toml << EOF
-[server]
-endpoint = "http://localhost:8080"
-token = "$TOKEN"
-EOF
-    
-    $DRY_RUN_CMD chmod 600 $HOME/.tabby-client/agent/config.toml
+  home.activation.tabbyConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+        $DRY_RUN_CMD mkdir -p $HOME/.tabby-client/agent
+        
+        # Read token from agenix-decrypted file, or use a placeholder if not available yet
+        if [ -f /run/agenix/tabby-token ]; then
+          TOKEN=$(cat /run/agenix/tabby-token)
+        else
+          TOKEN="TOKEN_NOT_DECRYPTED_YET"
+          echo "Warning: /run/agenix/tabby-token not found. Run 'sudo nixos-rebuild switch' first."
+        fi
+        
+        $DRY_RUN_CMD cat > $HOME/.tabby-client/agent/config.toml << EOF
+    [server]
+    endpoint = "http://localhost:8080"
+    token = "$TOKEN"
+    EOF
+        
+        $DRY_RUN_CMD chmod 600 $HOME/.tabby-client/agent/config.toml
   '';
 
   # # Wallpaper configuration
@@ -273,7 +280,7 @@ EOF
           --red: #fb4934;
           --green: #b8bb26;
         }
-        
+
         /* Tab styling */
         .tabbrowser-tab {
           background-color: var(--bg1) !important;
@@ -282,14 +289,14 @@ EOF
         .tabbrowser-tab[selected] {
           background-color: var(--bg2) !important;
         }
-        
+
         /* Address bar */
         #urlbar {
           background-color: var(--bg1) !important;
           color: var(--fg) !important;
           border: 1px solid var(--bg2) !important;
         }
-        
+
         /* Toolbar */
         #navigator-toolbox {
           background-color: var(--bg0) !important;

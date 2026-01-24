@@ -13,96 +13,106 @@ Comprehensive research on blue light filter solutions for Wayland/River WM on Ni
 ## 📋 Document Overview
 
 ### 1. **BLUE-LIGHT-FILTER-SUMMARY.txt** ⭐ START HERE
-   - **Purpose:** Executive summary and quick findings
-   - **Best for:** Understanding the investigation results quickly
-   - **Length:** 2 pages
-   - **Contains:**
-     * Investigation completion checklist
-     * Current configuration status
-     * Comparison of all solutions
-     * Key findings
-     * Troubleshooting reference
-     * Action items
+
+- **Purpose:** Executive summary and quick findings
+- **Best for:** Understanding the investigation results quickly
+- **Length:** 2 pages
+- **Contains:**
+  - Investigation completion checklist
+  - Current configuration status
+  - Comparison of all solutions
+  - Key findings
+  - Troubleshooting reference
+  - Action items
 
 ### 2. **BLUE-LIGHT-FILTER-QUICK-REFERENCE.md** 🚀 QUICK START
-   - **Purpose:** Fast lookup reference guide
-   - **Best for:** Day-to-day usage and common tasks
-   - **Length:** 2 pages
-   - **Contains:**
-     * TL;DR summary
-     * Current configuration block
-     * Common commands
-     * Temperature guidelines
-     * File locations
-     * Quick troubleshooting table
+
+- **Purpose:** Fast lookup reference guide
+- **Best for:** Day-to-day usage and common tasks
+- **Length:** 2 pages
+- **Contains:**
+  - TL;DR summary
+  - Current configuration block
+  - Common commands
+  - Temperature guidelines
+  - File locations
+  - Quick troubleshooting table
 
 ### 3. **BLUE-LIGHT-FILTER-WAYLAND-RESEARCH.md** 📚 COMPREHENSIVE
-   - **Purpose:** Detailed technical research and analysis
-   - **Best for:** Deep understanding and advanced topics
-   - **Length:** 15+ pages
-   - **Contains:**
-     * Current configuration details (Section 1)
-     * Comparison of all solutions (Section 2)
-     * Detailed tool analysis (Section 3)
-     * Configuration options (Section 4)
-     * Systemd services (Section 5)
-     * Home Manager integration (Section 6)
-     * River keybinding integration (Section 7)
-     * Keybinding examples (Section 8)
-     * Temperature recommendations (Section 9)
-     * Complete configuration example (Section 10)
-     * Troubleshooting guide (Section 11)
-     * Advanced topics (Section 12)
-     * Summary & recommendations (Section 13)
-     * References & resources (Section 14)
+
+- **Purpose:** Detailed technical research and analysis
+- **Best for:** Deep understanding and advanced topics
+- **Length:** 15+ pages
+- **Contains:**
+  - Current configuration details (Section 1)
+  - Comparison of all solutions (Section 2)
+  - Detailed tool analysis (Section 3)
+  - Configuration options (Section 4)
+  - Systemd services (Section 5)
+  - Home Manager integration (Section 6)
+  - River keybinding integration (Section 7)
+  - Keybinding examples (Section 8)
+  - Temperature recommendations (Section 9)
+  - Complete configuration example (Section 10)
+  - Troubleshooting guide (Section 11)
+  - Advanced topics (Section 12)
+  - Summary & recommendations (Section 13)
+  - References & resources (Section 14)
 
 ### 4. **BLUE-LIGHT-FILTER-CONFIG-EXAMPLES.md** 🔧 IMPLEMENTATION GUIDE
-   - **Purpose:** Ready-to-use configuration examples
-   - **Best for:** Implementing or modifying configurations
-   - **Length:** 20+ pages
-   - **Contains:**
-     * Minimal configuration (current)
-     * Enhanced configurations (optional)
-     * Advanced configurations
-     * River integration examples
-     * Helper scripts (ready to copy/paste)
-     * Alternative solutions (wl-gammarelay)
-     * Location presets
-     * Temperature presets
-     * Motion-sensitive setup
-     * Custom systemd services
-     * Testing & verification
-     * Performance notes
+
+- **Purpose:** Ready-to-use configuration examples
+- **Best for:** Implementing or modifying configurations
+- **Length:** 20+ pages
+- **Contains:**
+  - Minimal configuration (current)
+  - Enhanced configurations (optional)
+  - Advanced configurations
+  - River integration examples
+  - Helper scripts (ready to copy/paste)
+  - Alternative solutions (wl-gammarelay)
+  - Location presets
+  - Temperature presets
+  - Motion-sensitive setup
+  - Custom systemd services
+  - Testing & verification
+  - Performance notes
 
 ### 5. **BLUE-LIGHT-FILTER-INDEX.md** 📍 THIS FILE
-   - **Purpose:** Navigation guide for all documents
-   - **Best for:** Finding the right document for your needs
+
+- **Purpose:** Navigation guide for all documents
+- **Best for:** Finding the right document for your needs
 
 ---
 
 ## 🎯 Which Document Should I Read?
 
 ### "I want to know if my setup is correct"
+
 → Read: **BLUE-LIGHT-FILTER-SUMMARY.txt**  
 Time: 5 minutes  
 Result: Verification that Gammastep is optimal ✅
 
 ### "I want to use gammastep (daily usage)"
+
 → Read: **BLUE-LIGHT-FILTER-QUICK-REFERENCE.md**  
 Time: 10 minutes  
 Result: Common commands and troubleshooting
 
 ### "I want to understand all the options"
+
 → Read: **BLUE-LIGHT-FILTER-WAYLAND-RESEARCH.md**  
 Time: 30 minutes  
 Result: Complete technical understanding
 
 ### "I want to modify my configuration"
+
 → Read: **BLUE-LIGHT-FILTER-CONFIG-EXAMPLES.md**  
 Time: 15 minutes  
 Result: Working configuration code ready to use
 
 ### "I need to know everything"
+
 → Read: All four documents in order
 
 ---
@@ -120,27 +130,28 @@ Result: Working configuration code ready to use
 
 ### Tools Evaluated
 
-| Tool | Status | Wayland Support | Best For | Verdict |
-|------|--------|-----------------|----------|---------|
-| **Gammastep** | ✅ Active | ✅ Native | River WM, most users | ✅ USE THIS |
-| Wlsunset | ⚠️ Archived | ✅ Native | Lightweight | ❌ Don't use |
-| wl-gammarelay | ✅ Active | ✅ Protocol | DBus automation | ⚠️ Optional |
-| Redshift | ✅ Active | ❌ NO | ❌ Not compatible | ❌ Won't work |
+| Tool          | Status      | Wayland Support | Best For             | Verdict       |
+| ------------- | ----------- | --------------- | -------------------- | ------------- |
+| **Gammastep** | ✅ Active   | ✅ Native       | River WM, most users | ✅ USE THIS   |
+| Wlsunset      | ⚠️ Archived | ✅ Native       | Lightweight          | ❌ Don't use  |
+| wl-gammarelay | ✅ Active   | ✅ Protocol     | DBus automation      | ⚠️ Optional   |
+| Redshift      | ✅ Active   | ❌ NO           | ❌ Not compatible    | ❌ Won't work |
 
 ### Configuration Files
 
-| File | Status | Purpose |
-|------|--------|---------|
-| `modules/home/services.nix` (lines 162-178) | ✅ OK | Service config |
-| `modules/home/river.nix` (line 209) | ✅ OK | Spawn command |
-| `modules/home/river.nix` (line 281) | ✅ OK | Package list |
-| `~/.config/systemd/user/gammastep.service` | ✅ Auto | Systemd service |
+| File                                        | Status  | Purpose         |
+| ------------------------------------------- | ------- | --------------- |
+| `modules/home/services.nix` (lines 162-178) | ✅ OK   | Service config  |
+| `modules/home/river.nix` (line 209)         | ✅ OK   | Spawn command   |
+| `modules/home/river.nix` (line 281)         | ✅ OK   | Package list    |
+| `~/.config/systemd/user/gammastep.service`  | ✅ Auto | Systemd service |
 
 ---
 
 ## 🔍 Key Topics Covered
 
 ### Configuration Topics
+
 - ✅ Minimal setup (current)
 - ✅ Enhanced setup (optional)
 - ✅ Advanced setup (custom schedule)
@@ -149,6 +160,7 @@ Result: Working configuration code ready to use
 - ✅ Time schedules
 
 ### Integration Topics
+
 - ✅ Home Manager integration
 - ✅ River WM integration
 - ✅ Systemd user services
@@ -156,6 +168,7 @@ Result: Working configuration code ready to use
 - ✅ Keybinding integration
 
 ### Usage Topics
+
 - ✅ Common commands
 - ✅ Temperature guidelines
 - ✅ Health considerations
@@ -163,6 +176,7 @@ Result: Working configuration code ready to use
 - ✅ Troubleshooting
 
 ### Alternative Tools
+
 - ✅ Wlsunset analysis
 - ✅ wl-gammarelay analysis
 - ✅ Redshift analysis
@@ -174,6 +188,7 @@ Result: Working configuration code ready to use
 ## 📁 File Locations
 
 All files located in:
+
 ```
 /home/gabriel/projects/system/docs/research/
 ```
@@ -189,21 +204,25 @@ All files located in:
 ## 🔗 Cross-References
 
 ### From Summary to Others
+
 - Summary → Quick Reference: Common commands
 - Summary → Comprehensive: Detailed explanations
 - Summary → Config Examples: Implementation code
 
 ### From Quick Reference to Others
+
 - Quick Reference → Summary: Full findings
 - Quick Reference → Comprehensive: Temperature guidelines
 - Quick Reference → Config Examples: Enhanced setups
 
 ### From Comprehensive to Others
+
 - Comprehensive → Config Examples: All the templates
 - Comprehensive → Quick Reference: Commands overview
 - Comprehensive → Summary: Executive summary
 
 ### From Config Examples to Others
+
 - Config Examples → Comprehensive: Technical details
 - Config Examples → Quick Reference: Command reference
 - Config Examples → Summary: Why Gammastep
@@ -213,16 +232,19 @@ All files located in:
 ## 🚀 Getting Started
 
 ### For New Users
+
 1. Read **SUMMARY** (5 min) - Understand current setup
 2. Read **QUICK-REFERENCE** (10 min) - Learn basic usage
 3. Keep **CONFIG-EXAMPLES** handy for reference
 
 ### For Developers/Advanced Users
+
 1. Read **COMPREHENSIVE** (30 min) - Deep technical understanding
 2. Reference **CONFIG-EXAMPLES** for implementation
 3. Use **QUICK-REFERENCE** for commands
 
 ### For Configuration Changes
+
 1. Check **CONFIG-EXAMPLES** for templates
 2. Refer to **COMPREHENSIVE** for option explanations
 3. Use **QUICK-REFERENCE** for testing commands
@@ -244,6 +266,7 @@ All files located in:
 ## 📝 Documentation Quality
 
 Each document includes:
+
 - ✅ Clear section headings
 - ✅ Code examples (ready to use)
 - ✅ Comparison tables
@@ -297,11 +320,13 @@ A: Check Comprehensive guide Section 11 (Troubleshooting)
 ## 🔗 Related Documentation
 
 ### In This Project
+
 - `docs/plans/2026-01-21-nixos-migration-design.md` - System architecture
 - `modules/home/services.nix` - Gammastep configuration
 - `modules/home/river.nix` - River WM integration
 
 ### External References
+
 - Gammastep manual: `man gammastep`
 - Home Manager docs: https://nix-community.github.io/home-manager/
 - River WM docs: https://codeberg.org/river/river
@@ -310,15 +335,15 @@ A: Check Comprehensive guide Section 11 (Troubleshooting)
 
 ## 📋 Document Statistics
 
-| Metric | Value |
-|--------|-------|
-| Total Pages | 60+ |
-| Total Words | 20,000+ |
-| Code Examples | 50+ |
-| Configuration Templates | 10+ |
-| Comparison Tables | 8+ |
-| Sections | 40+ |
-| Cross-references | 30+ |
+| Metric                  | Value   |
+| ----------------------- | ------- |
+| Total Pages             | 60+     |
+| Total Words             | 20,000+ |
+| Code Examples           | 50+     |
+| Configuration Templates | 10+     |
+| Comparison Tables       | 8+      |
+| Sections                | 40+     |
+| Cross-references        | 30+     |
 
 ---
 

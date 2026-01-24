@@ -144,7 +144,7 @@ bd update 101 --status in-progress
 # - Designs SSL certificate integration points
 
 # Complete with detailed notes
-bd done 101 --comment "Architecture complete. See docs/architecture/monitoring-module.md. 
+bd done 101 --comment "Architecture complete. See docs/architecture/monitoring-module.md.
 Key decisions:
 - Use systemd-based service with dynamic user
 - Integrate with security.acme for SSL certs
@@ -389,6 +389,7 @@ bd close 100
 ```
 
 **Final Summary**:
+
 - **Total Duration**: ~2.5 hours
 - **Tasks Created**: 7 (5 main + 2 follow-ups)
 - **Tasks Completed**: 6 (1 follow-up deferred to P2)
@@ -604,6 +605,7 @@ bd close 200 201 202 204
 ```
 
 **Final Summary**:
+
 - **Total Duration**: ~60 minutes (from report to resolution)
 - **Tasks Created**: 5 (3 critical path + 2 follow-ups)
 - **Tasks Completed**: 4 (1 follow-up deferred to P2)
@@ -980,11 +982,12 @@ bd close 300
 ```
 
 **Final Summary**:
+
 - **Total Duration**: ~4.5 hours
 - **Tasks Created**: 8 (1 epic + 7 subtasks)
 - **Tasks Completed**: 8
 - **Agents Coordinated**: 7
-- **Parallel Phases**: 
+- **Parallel Phases**:
   - Phase 2: Architecture (1 agent, 45 min)
   - Phase 4: Core (1 agent, 60 min)
   - Phase 5: Providers (3 agents parallel, 90 min)
@@ -999,22 +1002,26 @@ bd close 300
 ## Key Patterns Demonstrated
 
 ### 1. Sequential Delegation
+
 **Scenario 1**: Architect → Nix-Specialist → Security → Document  
 **When to use**: Each step requires output from previous step  
 **Coordination**: `bd dep add X --blocks Y`
 
 ### 2. Parallel Execution
+
 **Scenario 1**: Architect + Nix-Specialist work simultaneously  
 **Scenario 3**: 3 Build agents implement providers simultaneously  
 **When to use**: Tasks are independent and can run concurrently  
 **Coordination**: Mark multiple tasks as `ready` simultaneously
 
 ### 3. Fan-out / Fan-in
+
 **Scenario 3**: Core → (Provider A, Provider B, Provider C) → Integration  
 **When to use**: Multiple parallel implementations that must integrate  
 **Coordination**: Core blocks all, all block integration
 
 ### 4. Rapid Debugging Pipeline
+
 **Scenario 2**: Debug → Fix → Test → Review  
 **When to use**: Production incidents requiring fast iteration  
 **Coordination**: Each step immediately creates next step's task
@@ -1023,16 +1030,16 @@ bd close 300
 
 ## Timeline Estimation Guidelines
 
-| Complexity | Task Type | Estimated Duration |
-|------------|-----------|-------------------|
-| Low | Research/Explore | 10-20 minutes |
-| Low | Bug fix | 15-30 minutes |
-| Medium | Design task | 30-60 minutes |
-| Medium | Feature implementation | 45-90 minutes |
-| High | Architecture | 45-90 minutes |
-| High | Major refactoring | 90-180 minutes |
-| Critical | Production debugging | 15-45 minutes |
-| Critical | Security audit | 30-60 minutes |
+| Complexity | Task Type              | Estimated Duration |
+| ---------- | ---------------------- | ------------------ |
+| Low        | Research/Explore       | 10-20 minutes      |
+| Low        | Bug fix                | 15-30 minutes      |
+| Medium     | Design task            | 30-60 minutes      |
+| Medium     | Feature implementation | 45-90 minutes      |
+| High       | Architecture           | 45-90 minutes      |
+| High       | Major refactoring      | 90-180 minutes     |
+| Critical   | Production debugging   | 15-45 minutes      |
+| Critical   | Security audit         | 30-60 minutes      |
 
 **Parallel Work Multiplier**: When N agents work in parallel, total time ≈ Max(individual times), not Sum(individual times).
 

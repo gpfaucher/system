@@ -11,12 +11,14 @@
 ### Current State: ⚠️ SECURITY ISSUE FOUND
 
 **CRITICAL FINDING**: Hardcoded API token in version control
+
 - **Location**: `/home/gabriel/projects/system/modules/home/default.nix:111`
 - **Token**: `auth_872164f40d10473e861c75db73842900` (Tabby agent)
 - **Risk Level**: HIGH - Exposed in git history, accessible to anyone with repo access
 - **Status**: NO secrets management infrastructure currently in place
 
 ### Key Findings
+
 1. **No existing secrets management system** (agenix/sops-nix not in use)
 2. **Hardcoded tokens in Nix modules** (direct exposure)
 3. **Multiple secret categories requiring protection**:
@@ -28,7 +30,9 @@
    - VPN configurations
 
 ### Recommendation
+
 **IMMEDIATE PRIORITY**: Implement agenix for this system
+
 - Reason: Simpler setup, SSH key infrastructure already in place
 - Timeline: Can be implemented in 2-3 hours
 - Zero additional dependencies required (uses existing SSH keys)
@@ -40,6 +44,7 @@
 ### 1.1 Hardcoded Secrets Found
 
 #### Tabby Agent Token (CRITICAL)
+
 ```nix
 # File: modules/home/default.nix:108-112
 home.file.".tabby-client/agent/config.toml".text = ''
@@ -50,12 +55,14 @@ home.file.".tabby-client/agent/config.toml".text = ''
 ```
 
 **Issues**:
+
 - Token committed to git
 - World-readable in Nix store
 - No expiration management
 - Could provide unauthorized access to Tabby completion server
 
 #### Other Potential Secrets (Not Yet Found, But Should Be Protected)
+
 - SSH keys for GitHub/Git services
 - API keys for cloud providers (AWS, GCP, Azure)
 - Database connection strings
@@ -64,6 +71,7 @@ home.file.".tabby-client/agent/config.toml".text = ''
 - Service tokens
 
 ### 1.2 Network Configuration (Currently Safe)
+
 ```nix
 # File: modules/system/networking.nix
 # Uses NetworkManager for wireless
@@ -72,6 +80,7 @@ home.file.".tabby-client/agent/config.toml".text = ''
 ```
 
 ### 1.3 Git Configuration (Safe)
+
 ```nix
 # File: modules/home/default.nix:47-56
 programs.git = {
@@ -87,7 +96,9 @@ programs.git = {
 ```
 
 ### 1.4 Existing Infrastructure
+
 **SSH Keys**: ✅ Present
+
 ```
 ~/.ssh/id_ed25519          # User SSH key
 ~/.ssh/id_ed25519.pub      # Public key
@@ -95,6 +106,7 @@ programs.git = {
 ```
 
 **flake.nix**: Already uses specialArgs (good for secrets module integration)
+
 ```nix
 outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inputs:
   ...
@@ -110,6 +122,7 @@ outputs = { self, nixpkgs, home-manager, nvf, stylix, ghostty, beads, ... }@inpu
 **Core Concept**: Encrypt secrets with public SSH keys, decrypt with private SSH keys during NixOS activation
 
 **Workflow**:
+
 ```
 User's Local Machine:
   1. agenix CLI + SSH key (~/.ssh/id_ed25519)
@@ -125,42 +138,44 @@ Target Machine (System Activation):
 ```
 
 **Key Files**:
+
 - `secrets.nix` - Lists which keys can decrypt which secrets (NOT imported, git-safe)
 - `*.age` - Encrypted secret files (safe in git, uses age format)
 - Module: `agenix.nixosModules.default` (handles decryption)
 
 ### 2.2 Agenix Advantages
 
-| Feature | Benefit |
-|---------|---------|
-| **SSH-based** | Uses existing infrastructure (no new key management) |
-| **Simple** | ~300 lines of Nix code (easy to audit) |
-| **Flake support** | Perfect fit for your flake.nix setup |
-| **No GPG** | Avoids GPG complexity and reliability issues |
-| **age format** | Modern, fast (Filippo Valsorda's cryptography library) |
-| **Per-secret control** | Fine-grained ownership/permissions |
-| **Home-manager** | Native support for user secrets |
-| **Small footprint** | Single binary, minimal dependencies |
-| **Ed25519 support** | Works perfectly with modern SSH keys |
+| Feature                | Benefit                                                |
+| ---------------------- | ------------------------------------------------------ |
+| **SSH-based**          | Uses existing infrastructure (no new key management)   |
+| **Simple**             | ~300 lines of Nix code (easy to audit)                 |
+| **Flake support**      | Perfect fit for your flake.nix setup                   |
+| **No GPG**             | Avoids GPG complexity and reliability issues           |
+| **age format**         | Modern, fast (Filippo Valsorda's cryptography library) |
+| **Per-secret control** | Fine-grained ownership/permissions                     |
+| **Home-manager**       | Native support for user secrets                        |
+| **Small footprint**    | Single binary, minimal dependencies                    |
+| **Ed25519 support**    | Works perfectly with modern SSH keys                   |
 
 ### 2.3 Agenix Limitations
 
-| Limitation | Impact | Workaround |
-|-----------|--------|-----------|
-| **No message auth** | Encrypted but not authenticated (unlike sops) | Accept risk or use sops |
-| **Password-protected SSH keys** | age can't use ssh-agent | Use unencrypted SSH key |
-| **No team key rotation** | Manual rekeying required | Plan rotation schedule |
-| **Not post-quantum safe** | Harvest-now-decrypt-later risk | Rotate secrets periodically |
-| **Evaluation-time secrets** | Can't use secrets during nix evaluation | Use runtime references only |
+| Limitation                      | Impact                                        | Workaround                  |
+| ------------------------------- | --------------------------------------------- | --------------------------- |
+| **No message auth**             | Encrypted but not authenticated (unlike sops) | Accept risk or use sops     |
+| **Password-protected SSH keys** | age can't use ssh-agent                       | Use unencrypted SSH key     |
+| **No team key rotation**        | Manual rekeying required                      | Plan rotation schedule      |
+| **Not post-quantum safe**       | Harvest-now-decrypt-later risk                | Rotate secrets periodically |
+| **Evaluation-time secrets**     | Can't use secrets during nix evaluation       | Use runtime references only |
 
 ### 2.4 Agenix Module Reference
 
 #### Basic Structure
+
 ```nix
 # In your NixOS configuration
 {
   imports = [ agenix.nixosModules.default ];
-  
+
   age.secrets.my-secret = {
     file = ../secrets/my-secret.age;
     path = "/run/agenix/my-secret";           # default
@@ -172,6 +187,7 @@ Target Machine (System Activation):
 ```
 
 #### Usage in Configuration
+
 ```nix
 # Bad (don't do this):
 config.some-option = builtins.readFile config.age.secrets.my-secret.path;
@@ -187,11 +203,13 @@ services.my-service = {
 ### 2.5 Identity Paths (Key Discovery)
 
 By default, agenix uses SSH host keys:
+
 ```nix
 config.services.openssh.hostKeys
 ```
 
 On NixOS, this is automatic. For home-manager:
+
 ```nix
 age.identityPaths = [ "~/.ssh/id_ed25519" ];
 ```
@@ -203,6 +221,7 @@ age.identityPaths = [ "~/.ssh/id_ed25519" ];
 ### 3.1 How sops-nix Works
 
 **Architecture**: Mozilla's SOPS tool + Nix integration
+
 - Secrets in `.sops.yaml`/`.json` format
 - Stores ONE master encryption key
 - Encrypts/decrypts via: age, GPG, AWS KMS, GCP KMS, Azure Vault, HashiCorp Vault
@@ -210,22 +229,23 @@ age.identityPaths = [ "~/.ssh/id_ed25519" ];
 
 ### 3.2 Side-by-Side Comparison
 
-| Aspect | agenix | sops-nix |
-|--------|---------|----------|
-| **Setup Time** | 30 minutes | 1-2 hours |
-| **Single Host** | ✅ Perfect | ✅ Works |
-| **Team Collab** | Manual rekey | Master key sharing |
-| **Cloud KMS** | ❌ No | ✅ Yes (AWS/GCP/Azure) |
-| **Encryption** | age (public-key) | Multiple backends |
-| **Message Auth** | ❌ No | ✅ Yes (MAC) |
-| **YAML Support** | ❌ Simple text | ✅ Full YAML |
-| **Code Audit** | 📖 Easy (small) | 📖 Moderate (larger) |
-| **Dependencies** | age, openssh | sops, openssl, etc |
-| **Learning Curve** | Gentle | Moderate |
+| Aspect             | agenix           | sops-nix               |
+| ------------------ | ---------------- | ---------------------- |
+| **Setup Time**     | 30 minutes       | 1-2 hours              |
+| **Single Host**    | ✅ Perfect       | ✅ Works               |
+| **Team Collab**    | Manual rekey     | Master key sharing     |
+| **Cloud KMS**      | ❌ No            | ✅ Yes (AWS/GCP/Azure) |
+| **Encryption**     | age (public-key) | Multiple backends      |
+| **Message Auth**   | ❌ No            | ✅ Yes (MAC)           |
+| **YAML Support**   | ❌ Simple text   | ✅ Full YAML           |
+| **Code Audit**     | 📖 Easy (small)  | 📖 Moderate (larger)   |
+| **Dependencies**   | age, openssh     | sops, openssl, etc     |
+| **Learning Curve** | Gentle           | Moderate               |
 
 ### 3.3 When to Use Each
 
 **Use agenix if**:
+
 - ✅ Single machine or small team
 - ✅ SSH keys already managed
 - ✅ No cloud KMS needed
@@ -233,6 +253,7 @@ age.identityPaths = [ "~/.ssh/id_ed25519" ];
 - ✅ Prefer simple, auditable code
 
 **Use sops-nix if**:
+
 - ✅ Large team with shared master key
 - ✅ Using AWS/GCP/Azure KMS
 - ✅ Need authenticated encryption (MAC)
@@ -246,6 +267,7 @@ age.identityPaths = [ "~/.ssh/id_ed25519" ];
 ### 4.1 Categories of Secrets in NixOS
 
 #### 1. **SSH Keys**
+
 ```nix
 # CORRECT: Reference path, don't embed
 services.openssh = {
@@ -259,11 +281,12 @@ services.openssh = {
 age.secrets.github-key.file = ../secrets/github-deploy-key.age;
 
 # In config:
-users.users.git.openssh.authorizedKeys.keyFiles = 
+users.users.git.openssh.authorizedKeys.keyFiles =
   [ config.age.secrets.github-key.path ];
 ```
 
 #### 2. **API Tokens & Service Credentials**
+
 ```nix
 # CORRECT: Via environment file or runtime reference
 systemd.services.my-service = {
@@ -281,6 +304,7 @@ age.secrets.api-token = {
 ```
 
 #### 3. **Database Passwords**
+
 ```nix
 # CORRECT: Store in separate secret file
 services.postgresql = {
@@ -302,6 +326,7 @@ age.secrets.db-password = {
 ```
 
 #### 4. **Wireless Network Passwords**
+
 ```nix
 # GOOD: NetworkManager handles separately (not in Nix)
 networking.networkmanager.enable = true;
@@ -318,6 +343,7 @@ age.secrets.wifi-psk = {
 ```
 
 #### 5. **VPN Configurations**
+
 ```nix
 # CORRECT: Secret reference for credentials
 services.openvpn.servers.myvpn = {
@@ -334,6 +360,7 @@ age.secrets.vpn-creds = {
 ```
 
 #### 6. **TLS/SSL Certificates & Keys**
+
 ```nix
 # CORRECT: Key as secret, cert can be public
 security.acme.certs.example.com = {
@@ -357,6 +384,7 @@ services.nginx.virtualHosts."example.com" = {
 ### 4.2 Secret Organization Strategy
 
 #### Directory Structure
+
 ```
 secrets/
 ├── secrets.nix              # Public key configuration (COMMIT THIS)
@@ -373,27 +401,28 @@ secrets/
 ```
 
 #### secrets.nix Example
+
 ```nix
 let
   # Personal SSH key (for editing)
   gabriel = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIL0idNvgGiuc...";
-  
+
   # System host keys (for decryption)
   laptop = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIKzxQgondgEY...";
   server = "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIPJDyIr/FSz1c...";
-  
+
   all = [ gabriel laptop server ];
 in
 {
   # Shared secrets (all hosts can decrypt)
   "common/api-token.age".publicKeys = all;
   "common/db-password.age".publicKeys = all;
-  
+
   # Laptop-only secrets
   "laptop/wifi-psk.age".publicKeys = [ gabriel laptop ];
   "laptop/github-key.age".publicKeys = [ gabriel laptop ];
   "laptop/tabby-token.age".publicKeys = [ gabriel laptop ];
-  
+
   # Server-only secrets
   "server/database-backup.age".publicKeys = [ gabriel server ];
   "server/ssl-key.age".publicKeys = [ gabriel server ];
@@ -403,6 +432,7 @@ in
 ### 4.3 Workflow: Create & Edit Secrets
 
 #### First Time Setup
+
 ```bash
 # 1. Create secrets directory
 mkdir -p ~/projects/system/secrets
@@ -422,3 +452,4 @@ in
   "tabby-token.age".publicKeys = [ gabriel laptop ];
   "github-key.age".publicKeys = [ gabriel laptop ];
 }
+```

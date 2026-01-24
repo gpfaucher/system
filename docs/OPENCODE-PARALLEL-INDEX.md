@@ -25,9 +25,11 @@ This repository now includes comprehensive documentation on how to configure Ope
 ## Documentation Files (Read in Order)
 
 ### 1. **EXECUTIVE-SUMMARY.md** ⭐ START HERE
+
 **Time: 5 minutes | Purpose: Understand what needs to change**
 
 Quick overview of:
+
 - The problem (what's not working)
 - The solution (what to do)
 - Expected improvements
@@ -37,9 +39,11 @@ Quick overview of:
 → **Read this first to get oriented**
 
 ### 2. **PARALLEL-AGENT-QUICKSTART.md**
+
 **Time: 15 minutes | Purpose: Step-by-step implementation guide**
 
 Practical guide containing:
+
 - 4 implementation steps
 - Before/after comparison
 - Key concepts explained
@@ -49,15 +53,18 @@ Practical guide containing:
 → **Read this to understand the changes**
 
 ### 3. **CONFIGURATION-CHANGES-READY-TO-USE.md** ⭐ COPY-PASTE
+
 **Time: 5 minutes (applying changes) | Purpose: Ready-to-use code snippets**
 
 Exact code to copy and paste:
+
 - Change 1: Update orchestrator.txt (add ~40 lines)
 - Change 2: Update build.txt (replace entire file)
 - Change 3: Update .opencode.json (expand settings)
 - Change 4: Update architect.txt (optional)
 
 Includes:
+
 - Line numbers for edits
 - Complete code snippets
 - Validation commands
@@ -66,9 +73,11 @@ Includes:
 → **Use this to actually make the changes**
 
 ### 4. **OPENCODE-PARALLEL-CONFIGURATION.md**
+
 **Time: 30 minutes | Purpose: Deep technical reference**
 
 Comprehensive technical analysis (25+ pages):
+
 - Current configuration state (detailed)
 - Problem analysis with root causes
 - Solution architecture explanation
@@ -78,6 +87,7 @@ Comprehensive technical analysis (25+ pages):
 - Troubleshooting guide
 
 Includes:
+
 - System architecture diagrams (text-based)
 - Configuration examples
 - Code patterns
@@ -93,12 +103,14 @@ Includes:
 ### By Role/Need
 
 **I'm a developer** (just want it working)
+
 1. Read: EXECUTIVE-SUMMARY.md (5 min)
 2. Copy: CONFIGURATION-CHANGES-READY-TO-USE.md (90 min)
 3. Test: Run example commands
 4. ✓ Done!
 
 **I'm an architect** (want to understand it deeply)
+
 1. Read: EXECUTIVE-SUMMARY.md (5 min)
 2. Read: PARALLEL-AGENT-QUICKSTART.md (15 min)
 3. Study: OPENCODE-PARALLEL-CONFIGURATION.md (30 min)
@@ -106,6 +118,7 @@ Includes:
 5. ✓ Deep understanding + implementation
 
 **I'm debugging** (something isn't working)
+
 1. Check: PARALLEL-AGENT-QUICKSTART.md - Troubleshooting section
 2. Reference: OPENCODE-PARALLEL-CONFIGURATION.md - Troubleshooting guide
 3. Validate: CONFIGURATION-CHANGES-READY-TO-USE.md - Validation steps
@@ -127,12 +140,14 @@ Includes:
 ## Key Concepts Quick Reference
 
 ### The "task" Tool
+
 - **What**: Mechanism to invoke multiple agents in parallel
 - **Where**: Only orchestrator has it (`"task": true` in config)
 - **Syntax**: `task.invoke({ agents: [...], parallel: true, max_concurrent: 4 })`
 - **Why**: Gateway to parallel execution
 
 ### Agent Specialization
+
 - **Build**: Write code only, delegate everything else
 - **Test**: All testing and validation
 - **Review**: All code quality reviews
@@ -141,6 +156,7 @@ Includes:
 - **Optimize**: All performance optimization
 
 ### Parallel Execution
+
 - **Current**: Sequential execution (one agent at a time)
 - **Target**: 3-4 agents working simultaneously
 - **Benefit**: 2-4x faster feature development
@@ -186,13 +202,13 @@ Same as above, plus:
 
 ### Metrics
 
-| Aspect | Before | After |
-|--------|--------|-------|
-| Feature time | 60-120 min | 15-45 min |
-| Test coverage | Partial | Comprehensive |
-| Security review | Manual | Automatic |
-| Documentation | Sporadic | Always |
-| Agent utilization | Sequential | Parallel |
+| Aspect            | Before     | After         |
+| ----------------- | ---------- | ------------- |
+| Feature time      | 60-120 min | 15-45 min     |
+| Test coverage     | Partial    | Comprehensive |
+| Security review   | Manual     | Automatic     |
+| Documentation     | Sporadic   | Always        |
+| Agent utilization | Sequential | Parallel      |
 
 ---
 
@@ -220,6 +236,7 @@ OPENCODE-SETUP.md                       ← Existing setup docs
 ## OpenCode System Architecture
 
 ### Current State
+
 ```
 PRIMARY AGENTS (3):
   Architect (Sonnet)      ← Design
@@ -249,8 +266,9 @@ INFRASTRUCTURE:
 ```
 
 ### After Implementation
+
 ```
-SAME AGENTS + 
+SAME AGENTS +
 - Orchestrator actively uses task tool for parallel invocation
 - Build delegates to specialists
 - Prompts enforce specialization
@@ -263,15 +281,19 @@ SAME AGENTS +
 ## Critical Changes Overview
 
 ### File 1: prompts/orchestrator.txt
+
 **Add** 40+ lines showing task tool usage and parallelization examples
 
 ### File 2: prompts/build.txt
+
 **Replace** with delegation-focused version
 
 ### File 3: .opencode.json
+
 **Expand** settings section with parallelism and delegation flags
 
 ### File 4: prompts/architect.txt (Optional)
+
 **Add** delegation to plan agent for improved task decomposition
 
 ---
@@ -315,6 +337,7 @@ A: Not currently supported by OpenCode. Escalate to orchestrator for complex wor
 ## Getting Started
 
 ### Minimum (Just Want It Working)
+
 ```
 1. Read: EXECUTIVE-SUMMARY.md (5 min)
 2. Apply: CONFIGURATION-CHANGES-READY-TO-USE.md (90 min)
@@ -323,6 +346,7 @@ A: Not currently supported by OpenCode. Escalate to orchestrator for complex wor
 ```
 
 ### Recommended (Want Full Understanding)
+
 ```
 1. Read: EXECUTIVE-SUMMARY.md (5 min)
 2. Read: PARALLEL-AGENT-QUICKSTART.md (15 min)
@@ -332,6 +356,7 @@ A: Not currently supported by OpenCode. Escalate to orchestrator for complex wor
 ```
 
 ### Complete (Want Everything)
+
 ```
 1. Read all documentation (45 min total)
 2. Apply changes (90 min)
@@ -356,6 +381,7 @@ A: Not currently supported by OpenCode. Escalate to orchestrator for complex wor
 ## Questions?
 
 All documentation is comprehensive and includes:
+
 - Problem explanation
 - Solution details
 - Implementation guides

@@ -1,11 +1,12 @@
 # Development Environment Completeness Analysis
+
 ## Professional SWE/Consultant Workstation
 
 **Analysis Date**: January 24, 2026  
 **System**: NixOS (Unstable) with Flakes  
 **Shell**: Fish  
 **Editor**: Neovim (nvf) + Zed Editor + DataGrip  
-**Terminal**: Ghostty  
+**Terminal**: Ghostty
 
 ---
 
@@ -13,24 +14,24 @@
 
 ### ✅ INSTALLED & CONFIGURED
 
-| Language | Status | Details |
-|----------|--------|---------|
-| **TypeScript/JavaScript** | ✅ Configured | NodeJS 22.22.0, ts_ls LSP, npm/corepack |
-| **Python** | ⚠️ Partial | basedpyright LSP configured in nvf, but Python3 not in PATH |
-| **Lua** | ✅ Configured | LSP enabled in nvf |
-| **Nix** | ✅ Configured | LSP enabled in nvf |
-| **Markdown** | ✅ Configured | LSP + markdown-nvim + vim-markdown plugins |
-| **Go** | ⚠️ Configured | LSP enabled in nvf, but no go binary in PATH |
-| **Rust** | ⚠️ Configured | LSP enabled in nvf, but no rustc/cargo in PATH |
-| **Bash** | ❌ Missing | No bash LSP configured |
-| **Java** | ❌ Missing | No Java, no LSP |
-| **C/C++** | ❌ Missing | No toolchain, no LSP |
+| Language                  | Status        | Details                                                     |
+| ------------------------- | ------------- | ----------------------------------------------------------- |
+| **TypeScript/JavaScript** | ✅ Configured | NodeJS 22.22.0, ts_ls LSP, npm/corepack                     |
+| **Python**                | ⚠️ Partial    | basedpyright LSP configured in nvf, but Python3 not in PATH |
+| **Lua**                   | ✅ Configured | LSP enabled in nvf                                          |
+| **Nix**                   | ✅ Configured | LSP enabled in nvf                                          |
+| **Markdown**              | ✅ Configured | LSP + markdown-nvim + vim-markdown plugins                  |
+| **Go**                    | ⚠️ Configured | LSP enabled in nvf, but no go binary in PATH                |
+| **Rust**                  | ⚠️ Configured | LSP enabled in nvf, but no rustc/cargo in PATH              |
+| **Bash**                  | ❌ Missing    | No bash LSP configured                                      |
+| **Java**                  | ❌ Missing    | No Java, no LSP                                             |
+| **C/C++**                 | ❌ Missing    | No toolchain, no LSP                                        |
 
 ### Key Findings on Language Support:
 
 1. **LSP Configuration (nvf)**: Good coverage for modern languages
    - ts_ls (TypeScript)
-   - basedpyright (Python) 
+   - basedpyright (Python)
    - gopls (Go) - configured but binary missing
    - rust-analyzer (Rust) - configured but binary missing
    - lua_ls (Lua)
@@ -53,17 +54,17 @@
 
 ### ❌ CLIENT TOOLS MISSING
 
-| Database | Status | Notes |
-|----------|--------|-------|
+| Database   | Status     | Notes                                 |
+| ---------- | ---------- | ------------------------------------- |
 | PostgreSQL | ❌ Missing | No psql, pg_dump, or connection tools |
-| MySQL | ❌ Missing | No mysql, mysqldump clients |
-| Redis | ❌ Missing | No redis-cli, redis-benchmark |
-| MongoDB | ❌ Missing | No mongosh, mongo client |
+| MySQL      | ❌ Missing | No mysql, mysqldump clients           |
+| Redis      | ❌ Missing | No redis-cli, redis-benchmark         |
+| MongoDB    | ❌ Missing | No mongosh, mongo client              |
 
 ### ✅ GUI DATABASE TOOLS
 
-| Tool | Status | Details |
-|------|--------|---------|
+| Tool         | Status       | Details                                     |
+| ------------ | ------------ | ------------------------------------------- |
 | **DataGrip** | ✅ Installed | JetBrains database IDE (jetbrains.datagrip) |
 
 **Assessment**: Heavy reliance on DataGrip for all database work; no CLI tools for scripting or quick queries. Not ideal for SRE/infrastructure work.
@@ -74,20 +75,21 @@
 
 ### ✅ INSTALLED
 
-| Tool | Status | Version | Details |
-|------|--------|---------|---------|
-| **Docker** | ✅ Installed | 29.1.5 | Rootless mode enabled, setSocketVariable configured |
-| **Docker Compose** | ✅ Installed | (via pkgs) | Available in PATH |
+| Tool               | Status       | Version    | Details                                             |
+| ------------------ | ------------ | ---------- | --------------------------------------------------- |
+| **Docker**         | ✅ Installed | 29.1.5     | Rootless mode enabled, setSocketVariable configured |
+| **Docker Compose** | ✅ Installed | (via pkgs) | Available in PATH                                   |
 
 ### ❌ MISSING
 
-| Tool | Status | Notes |
-|------|--------|-------|
-| **Podman** | ❌ Missing | No OCI container alternative |
-| **Kubernetes** | ❌ Missing | No kubectl, helm, kustomize |
+| Tool           | Status     | Notes                          |
+| -------------- | ---------- | ------------------------------ |
+| **Podman**     | ❌ Missing | No OCI container alternative   |
+| **Kubernetes** | ❌ Missing | No kubectl, helm, kustomize    |
 | **Containerd** | ❌ Missing | No low-level container runtime |
 
 **Assessment**: Basic Docker support is good, but:
+
 - No orchestration tools (K8s is critical for modern SWE)
 - No container registry tools (docker-buildx, skopeo)
 - No advanced Compose features documented
@@ -98,20 +100,20 @@
 
 ### ✅ INSTALLED
 
-| Tool | Status | Details |
-|------|--------|---------|
-| **AWS CLI v2** | ✅ Installed | awscli2 package |
-| **OpenTofu** | ✅ Installed | terraform/opentofu alternative (opentofu) |
+| Tool           | Status       | Details                                   |
+| -------------- | ------------ | ----------------------------------------- |
+| **AWS CLI v2** | ✅ Installed | awscli2 package                           |
+| **OpenTofu**   | ✅ Installed | terraform/opentofu alternative (opentofu) |
 
 ### ❌ MISSING
 
-| Tool | Status | Priority | Notes |
-|------|--------|----------|-------|
-| **Google Cloud SDK** | ❌ Missing | High | gcloud CLI not installed |
-| **Azure CLI** | ❌ Missing | Medium | az CLI not installed |
-| **Terraform** | ❌ Missing | High | OpenTofu alternative installed but standard terraform missing |
-| **AWS SAM CLI** | ❌ Missing | Medium | For serverless development |
-| **Cloud-specific tools** | ❌ Missing | Medium | CDK for AWS, gke-gcloud-auth-plugin, etc. |
+| Tool                     | Status     | Priority | Notes                                                         |
+| ------------------------ | ---------- | -------- | ------------------------------------------------------------- |
+| **Google Cloud SDK**     | ❌ Missing | High     | gcloud CLI not installed                                      |
+| **Azure CLI**            | ❌ Missing | Medium   | az CLI not installed                                          |
+| **Terraform**            | ❌ Missing | High     | OpenTofu alternative installed but standard terraform missing |
+| **AWS SAM CLI**          | ❌ Missing | Medium   | For serverless development                                    |
+| **Cloud-specific tools** | ❌ Missing | Medium   | CDK for AWS, gke-gcloud-auth-plugin, etc.                     |
 
 **Assessment**: AWS-centric, weak multi-cloud support.
 
@@ -121,20 +123,20 @@
 
 ### ✅ INSTALLED & CONFIGURED
 
-| Tool | Status | Details |
-|------|--------|---------|
-| **Git** | ✅ Configured | Global config set, autorebase enabled, autoSetupRemote on |
-| **gh CLI** | ✅ Installed | GitHub CLI for PR/issue management |
-| **Lazygit** | ✅ Installed | TUI git client (<leader>gg in nvf) |
+| Tool        | Status        | Details                                                   |
+| ----------- | ------------- | --------------------------------------------------------- |
+| **Git**     | ✅ Configured | Global config set, autorebase enabled, autoSetupRemote on |
+| **gh CLI**  | ✅ Installed  | GitHub CLI for PR/issue management                        |
+| **Lazygit** | ✅ Installed  | TUI git client (<leader>gg in nvf)                        |
 
 ### ⚠️ CONFIGURED BUT NEEDS ATTENTION
 
-| Item | Status | Details |
-|------|--------|---------|
-| **Email** | ⚠️ Outdated | TODO comment: "Update with actual email" |
-| **SSH Keys** | ⚠️ Unknown | No visible SSH key setup in config |
-| **GitLab** | ❌ Missing | No GitLab CLI (glab) |
-| **Commit Signing** | ❌ Missing | No GPG/commit signing configured |
+| Item               | Status      | Details                                  |
+| ------------------ | ----------- | ---------------------------------------- |
+| **Email**          | ⚠️ Outdated | TODO comment: "Update with actual email" |
+| **SSH Keys**       | ⚠️ Unknown  | No visible SSH key setup in config       |
+| **GitLab**         | ❌ Missing  | No GitLab CLI (glab)                     |
+| **Commit Signing** | ❌ Missing  | No GPG/commit signing configured         |
 
 **Assessment**: GitHub-centric, good git tooling, but lacking GitLab support and security features (commit signing).
 
@@ -144,13 +146,13 @@
 
 ### ❌ LARGELY MISSING
 
-| Tool | Status | Notes |
-|------|--------|-------|
-| **GDB** | ❌ Missing | GNU Debugger for C/C++/Rust |
-| **LLDB** | ❌ Missing | LLVM debugger |
-| **Delve** | ❌ Missing | Go debugger |
-| **Node Debugger** | ⚠️ Partial | Likely available via Node, not explicitly configured |
-| **Python Debugger** | ❌ Missing | pdb/debugpy not available |
+| Tool                | Status     | Notes                                                |
+| ------------------- | ---------- | ---------------------------------------------------- |
+| **GDB**             | ❌ Missing | GNU Debugger for C/C++/Rust                          |
+| **LLDB**            | ❌ Missing | LLVM debugger                                        |
+| **Delve**           | ❌ Missing | Go debugger                                          |
+| **Node Debugger**   | ⚠️ Partial | Likely available via Node, not explicitly configured |
+| **Python Debugger** | ❌ Missing | pdb/debugpy not available                            |
 
 **Assessment**: No professional debugging infrastructure. Only console.log/print debugging available.
 
@@ -160,24 +162,24 @@
 
 ### ✅ INSTALLED
 
-| Tool | Status | Details |
-|------|--------|---------|
-| **htop** | ✅ Installed | Process/resource monitoring |
-| **btop** | ✅ Installed | Modern system monitor (shell package) |
-| **fd** | ✅ Installed | Fast file finder (for telescope) |
-| **ripgrep** | ✅ Installed | Fast grep replacement |
+| Tool        | Status       | Details                               |
+| ----------- | ------------ | ------------------------------------- |
+| **htop**    | ✅ Installed | Process/resource monitoring           |
+| **btop**    | ✅ Installed | Modern system monitor (shell package) |
+| **fd**      | ✅ Installed | Fast file finder (for telescope)      |
+| **ripgrep** | ✅ Installed | Fast grep replacement                 |
 
 ### ❌ MISSING
 
-| Tool | Status | Category |
-|------|--------|----------|
-| **Flamegraph tools** | ❌ Missing | Profiling |
-| **perf** | ❌ Missing | Kernel profiling |
-| **valgrind** | ❌ Missing | Memory profiling |
-| **pprof** | ❌ Missing | Go profiling |
-| **py-spy** | ❌ Missing | Python profiling |
-| **prometheus client** | ❌ Missing | Metrics collection |
-| **grafana** | ❌ Missing | Metrics visualization |
+| Tool                  | Status     | Category              |
+| --------------------- | ---------- | --------------------- |
+| **Flamegraph tools**  | ❌ Missing | Profiling             |
+| **perf**              | ❌ Missing | Kernel profiling      |
+| **valgrind**          | ❌ Missing | Memory profiling      |
+| **pprof**             | ❌ Missing | Go profiling          |
+| **py-spy**            | ❌ Missing | Python profiling      |
+| **prometheus client** | ❌ Missing | Metrics collection    |
+| **grafana**           | ❌ Missing | Metrics visualization |
 
 **Assessment**: Basic system monitoring, no application profiling tools.
 
@@ -187,20 +189,20 @@
 
 ### ❌ MISSING INSTALLED PACKAGES
 
-| Tool | Status | Method | Notes |
-|------|--------|--------|-------|
-| **Slack** | ❌ Missing | Browser/Native | Could use Firefox |
-| **Microsoft Teams** | ⚠️ Configured | Browser | Custom userscript for "always available" status |
-| **Zoom** | ❌ Missing | Browser/Native | Not installed |
-| **OBS/Screen Recording** | ✅ Partial | wf-recorder | Custom screen recording scripts available |
+| Tool                     | Status        | Method         | Notes                                           |
+| ------------------------ | ------------- | -------------- | ----------------------------------------------- |
+| **Slack**                | ❌ Missing    | Browser/Native | Could use Firefox                               |
+| **Microsoft Teams**      | ⚠️ Configured | Browser        | Custom userscript for "always available" status |
+| **Zoom**                 | ❌ Missing    | Browser/Native | Not installed                                   |
+| **OBS/Screen Recording** | ✅ Partial    | wf-recorder    | Custom screen recording scripts available       |
 
 ### ✅ INSTALLED UTILITIES
 
-| Tool | Details |
-|------|---------|
-| **Ghostty Terminal** | Configured with proper display settings |
-| **Screenshot tools** | grim + slurp (area & full screen to clipboard/file) |
-| **Screen Recording** | wf-recorder with custom management scripts |
+| Tool                   | Details                                                    |
+| ---------------------- | ---------------------------------------------------------- |
+| **Ghostty Terminal**   | Configured with proper display settings                    |
+| **Screenshot tools**   | grim + slurp (area & full screen to clipboard/file)        |
+| **Screen Recording**   | wf-recorder with custom management scripts                 |
 | **Display Management** | Kanshi with multiple profiles (docked/laptop/presentation) |
 
 **Assessment**: Browser-based collaboration via Firefox. Good screen recording infrastructure. Could add Slack/Discord native clients.
@@ -211,20 +213,20 @@
 
 ### ✅ INSTALLED
 
-| Tool | Status | Details |
-|------|--------|---------|
+| Tool                 | Status       | Details                                                                              |
+| -------------------- | ------------ | ------------------------------------------------------------------------------------ |
 | **Markdown Support** | ✅ Excellent | Multiple plugins: markdown-nvim, vim-markdown, vim-table-mode, markdown-preview-nvim |
-| **Markdown Preview** | ✅ Installed | markdown-preview-nvim with live browser preview |
-| **Table Mode** | ✅ Installed | vim-table-mode for easy table formatting |
+| **Markdown Preview** | ✅ Installed | markdown-preview-nvim with live browser preview                                      |
+| **Table Mode**       | ✅ Installed | vim-table-mode for easy table formatting                                             |
 
 ### ❌ MISSING
 
-| Tool | Status | Category |
-|------|--------|----------|
-| **Mermaid/PlantUML** | ❌ Missing | Diagram tools |
-| **Excalidraw** | ❌ Missing | Visual whiteboarding |
-| **Diagrams.net** | ❌ Missing | Architecture diagrams |
-| **API Documentation** | ❌ Missing | Swagger/OpenAPI tools |
+| Tool                  | Status     | Category                 |
+| --------------------- | ---------- | ------------------------ |
+| **Mermaid/PlantUML**  | ❌ Missing | Diagram tools            |
+| **Excalidraw**        | ❌ Missing | Visual whiteboarding     |
+| **Diagrams.net**      | ❌ Missing | Architecture diagrams    |
+| **API Documentation** | ❌ Missing | Swagger/OpenAPI tools    |
 | **Docusaurus/MkDocs** | ❌ Missing | Documentation generators |
 
 ---
@@ -233,28 +235,28 @@
 
 ### ✅ INSTALLED & CONFIGURED
 
-| Tool | Status | Details |
-|------|--------|---------|
-| **Fish Shell** | ✅ Configured | Vi keybindings, custom functions (venv switcher, yazi wrapper) |
-| **Starship Prompt** | ✅ Configured | Git integration, python venv display |
-| **Yazi** | ✅ Installed | Terminal file manager with shell wrapper |
-| **FZF** | ✅ Installed | Fuzzy finder (shell package) |
-| **jq** | ✅ Installed | JSON query tool |
-| **direnv** | ✅ Configured | nix-direnv enabled for project environments |
-| **ripgrep (rg)** | ✅ Installed | Fast grep for telescope/shell |
-| **fd** | ✅ Installed | Fast find alternative |
-| **tree** | ✅ Installed | Directory tree visualization |
-| **curl/wget** | ✅ Installed | HTTP clients |
-| **unzip** | ✅ Installed | Archive utilities |
+| Tool                | Status        | Details                                                        |
+| ------------------- | ------------- | -------------------------------------------------------------- |
+| **Fish Shell**      | ✅ Configured | Vi keybindings, custom functions (venv switcher, yazi wrapper) |
+| **Starship Prompt** | ✅ Configured | Git integration, python venv display                           |
+| **Yazi**            | ✅ Installed  | Terminal file manager with shell wrapper                       |
+| **FZF**             | ✅ Installed  | Fuzzy finder (shell package)                                   |
+| **jq**              | ✅ Installed  | JSON query tool                                                |
+| **direnv**          | ✅ Configured | nix-direnv enabled for project environments                    |
+| **ripgrep (rg)**    | ✅ Installed  | Fast grep for telescope/shell                                  |
+| **fd**              | ✅ Installed  | Fast find alternative                                          |
+| **tree**            | ✅ Installed  | Directory tree visualization                                   |
+| **curl/wget**       | ✅ Installed  | HTTP clients                                                   |
+| **unzip**           | ✅ Installed  | Archive utilities                                              |
 
 ### ⚠️ CONFIGURED BUT NEEDS WORK
 
-| Tool | Status | Details |
-|------|--------|---------|
+| Tool            | Status     | Details                                                              |
+| --------------- | ---------- | -------------------------------------------------------------------- |
 | **Tmux/Screen** | ❌ Missing | No terminal multiplexer; Ghostty may substitute but tmux is standard |
-| **bat** | ❌ Missing | Better cat with syntax highlighting |
-| **exa/lsd** | ❌ Missing | Modern ls replacement |
-| **zoxide** | ❌ Missing | Smarter cd with z-style navigation |
+| **bat**         | ❌ Missing | Better cat with syntax highlighting                                  |
+| **exa/lsd**     | ❌ Missing | Modern ls replacement                                                |
+| **zoxide**      | ❌ Missing | Smarter cd with z-style navigation                                   |
 
 **Assessment**: Solid CLI tooling. Missing terminal multiplexer is notable gap for SWE work (screen sharing, remote debugging). Modern CLI replacements mostly present except bat and exa.
 
@@ -264,15 +266,16 @@
 
 ### ✅ INSTALLED & CONFIGURED
 
-| Tool | Status | Details |
-|------|--------|---------|
-| **Claude Code** | ✅ Installed | claude-code CLI (anthropic official) |
-| **Tabby AI Completion** | ✅ Installed | vim-tabby plugin, tabby-agent service |
-| **OpenCode** | ✅ Installed | Fully configured with 14 specialized agent prompts |
+| Tool                    | Status       | Details                                            |
+| ----------------------- | ------------ | -------------------------------------------------- |
+| **Claude Code**         | ✅ Installed | claude-code CLI (anthropic official)               |
+| **Tabby AI Completion** | ✅ Installed | vim-tabby plugin, tabby-agent service              |
+| **OpenCode**            | ✅ Installed | Fully configured with 14 specialized agent prompts |
 
 ### Configuration Details
 
 **OpenCode Setup** (modules/home/opencode.nix):
+
 - Model: Claude Sonnet 4.5 (primary agents)
 - Small model: Claude Haiku 4.5 (fast agents)
 - 14 configured agents with specialized prompts:
@@ -281,6 +284,7 @@
   - general, document, optimize, nix-specialist, security, fix
 
 **Tabby AI Completion**:
+
 - Service running with StarCoder-1B (CUDA)
 - Configured with localhost endpoint
 
@@ -348,20 +352,20 @@
 
 ## SUMMARY BY CATEGORY
 
-| Category | Status | Score |
-|----------|--------|-------|
-| Language Support | ⚠️ Configured but incomplete | 6/10 |
-| Databases | ❌ GUI only | 3/10 |
-| Containers | ⚠️ Docker only | 5/10 |
-| Cloud Tools | ⚠️ AWS only | 4/10 |
-| Version Control | ✅ Good | 8/10 |
-| Debugging | ❌ None | 0/10 |
-| Performance Tools | ⚠️ Monitoring only | 4/10 |
-| Collaboration | ⚠️ Browser-based | 5/10 |
-| Documentation | ✅ Excellent markdown | 8/10 |
-| Terminal/CLI | ✅ Good | 8/10 |
-| AI Tools | ✅ Excellent | 9/10 |
-| **OVERALL** | **⚠️ Good for single-stack dev, gaps for consulting** | **5.6/10** |
+| Category          | Status                                                | Score      |
+| ----------------- | ----------------------------------------------------- | ---------- |
+| Language Support  | ⚠️ Configured but incomplete                          | 6/10       |
+| Databases         | ❌ GUI only                                           | 3/10       |
+| Containers        | ⚠️ Docker only                                        | 5/10       |
+| Cloud Tools       | ⚠️ AWS only                                           | 4/10       |
+| Version Control   | ✅ Good                                               | 8/10       |
+| Debugging         | ❌ None                                               | 0/10       |
+| Performance Tools | ⚠️ Monitoring only                                    | 4/10       |
+| Collaboration     | ⚠️ Browser-based                                      | 5/10       |
+| Documentation     | ✅ Excellent markdown                                 | 8/10       |
+| Terminal/CLI      | ✅ Good                                               | 8/10       |
+| AI Tools          | ✅ Excellent                                          | 9/10       |
+| **OVERALL**       | **⚠️ Good for single-stack dev, gaps for consulting** | **5.6/10** |
 
 ---
 
@@ -370,6 +374,7 @@
 ### 🔴 CRITICAL (Do First)
 
 1. **Fix Python Runtime**
+
    ```nix
    # Add to modules/home/default.nix home.packages
    python312
@@ -378,12 +383,14 @@
    ```
 
 2. **Add Tmux for Remote Work**
+
    ```nix
    tmux
    # Or consider zellij as modern alternative
    ```
 
 3. **Add Kubernetes Support**
+
    ```nix
    kubectl
    helm
@@ -402,6 +409,7 @@
 ### 🟠 HIGH (Next Priority)
 
 5. **Database CLI Tools**
+
    ```nix
    postgresql
    mysql80
@@ -410,6 +418,7 @@
    ```
 
 6. **Multi-Cloud Support**
+
    ```nix
    google-cloud-sdk
    azure-cli
@@ -417,6 +426,7 @@
    ```
 
 7. **Add Missing CLI Tools**
+
    ```nix
    bat          # Better cat
    eza          # Modern ls
@@ -424,19 +434,20 @@
    ```
 
 8. **Add Formatters/Linters**
+
    ```nix
    # TypeScript/JavaScript
    prettier
    eslint
-   
+
    # Python
    black
    ruff
-   
+
    # Bash
    shellcheck
    shfmt
-   
+
    # Markdown
    markdownlint-cli
    ```
@@ -444,6 +455,7 @@
 ### 🟡 MEDIUM (Nice to Have)
 
 9. **Additional Container Tools**
+
    ```nix
    podman        # OCI alternative
    docker-buildx # Advanced image building
@@ -451,6 +463,7 @@
    ```
 
 10. **Profiling Tools**
+
     ```nix
     flamegraph
     py-spy        # Python profiling
@@ -458,6 +471,7 @@
     ```
 
 11. **Documentation Generators**
+
     ```nix
     nodejs  # For Docusaurus, MkDocs uses Python
     ```
@@ -491,25 +505,25 @@ These can be added immediately to `modules/home/default.nix`:
 ```nix
 home.packages = with pkgs; [
   # Add to existing list:
-  
+
   # Critical
   python312
   tmux
   kubectl
   gdb
-  
+
   # High Priority
   postgresql
   mysql80
   redis
   google-cloud-sdk
   azure-cli
-  
+
   # CLI Improvements
   bat
   eza
   zoxide
-  
+
   # Formatters/Linters
   prettier
   eslint_d
@@ -517,14 +531,14 @@ home.packages = with pkgs; [
   ruff
   shellcheck
   shfmt
-  
+
   # Additional
   nodePackages.markdownlint
 ];
 ```
 
 Then:
+
 ```bash
 home-manager switch
 ```
-

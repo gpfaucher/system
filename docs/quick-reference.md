@@ -22,16 +22,16 @@
 
 ## Quick Facts
 
-| Aspect | Current | Recommended |
-|--------|---------|-------------|
-| **Disk Layout** | Static (hardware.nix) | Declarative (disko) |
-| **Filesystems** | Btrfs (2 subvols) | Btrfs (7 subvols) |
-| **Compression** | None | zstd:3 |
-| **Encryption** | None | LUKS (optional) |
-| **Swap** | zram only | zram + 16GB disk |
-| **Snapshots** | None | snapper (hourly/daily) |
-| **Boot Loader** | systemd-boot | systemd-boot |
-| **Dual-boot** | Windows preserved | Windows preserved |
+| Aspect          | Current               | Recommended            |
+| --------------- | --------------------- | ---------------------- |
+| **Disk Layout** | Static (hardware.nix) | Declarative (disko)    |
+| **Filesystems** | Btrfs (2 subvols)     | Btrfs (7 subvols)      |
+| **Compression** | None                  | zstd:3                 |
+| **Encryption**  | None                  | LUKS (optional)        |
+| **Swap**        | zram only             | zram + 16GB disk       |
+| **Snapshots**   | None                  | snapper (hourly/daily) |
+| **Boot Loader** | systemd-boot          | systemd-boot           |
+| **Dual-boot**   | Windows preserved     | Windows preserved      |
 
 ---
 
@@ -78,6 +78,7 @@ ONGOING: Operations
 ## Key Files & Locations
 
 ### Current System
+
 ```
 /etc/nixos/configuration.nix       [Generated]
 /etc/nixos/hardware-configuration  [Current setup]
@@ -87,6 +88,7 @@ ONGOING: Operations
 ```
 
 ### After Disko Migration
+
 ```
 ~/projects/system/
   ├─ flake.nix                     [Add disko input]
@@ -101,6 +103,7 @@ ONGOING: Operations
 ## Common Commands
 
 ### Inspect Current Disk
+
 ```bash
 # Show partitions
 lsblk -o NAME,SIZE,FSTYPE,MOUNTPOINT
@@ -117,6 +120,7 @@ btrfs filesystem usage /
 ```
 
 ### Disko Commands (When Implemented)
+
 ```bash
 # Check configuration
 nix flake check
@@ -132,6 +136,7 @@ sudo nixos-install --flake .#laptop
 ```
 
 ### Snapshot Commands (With Snapper)
+
 ```bash
 # List snapshots
 snapper -c home list
@@ -148,6 +153,7 @@ snapper -c home cleanup timeline
 ```
 
 ### Backup Commands
+
 ```bash
 # Backup to external drive
 rsync -avz --delete / /mnt/backup/
@@ -163,25 +169,27 @@ sha256sum /mnt/backup/* | tee /mnt/backup/checksums.txt
 
 ## Troubleshooting Checklist
 
-| Problem | Check | Solution |
-|---------|-------|----------|
-| Disko not found | disko in flake.nix inputs? | Add disko to inputs and modules |
-| Format failed | Is disk unmounted? | Unmount all partitions first |
-| Boot fails | Can you access recovery? | Boot NixOS installer, restore from backup |
-| Windows won't boot | Is Windows EFI mounted? | Check /boot/efi-windows |
-| Out of disk space | Snapshots too many? | Clean with `snapper cleanup` |
-| Performance degraded | Compression enabled? | Check mount options, disable if slow |
+| Problem              | Check                      | Solution                                  |
+| -------------------- | -------------------------- | ----------------------------------------- |
+| Disko not found      | disko in flake.nix inputs? | Add disko to inputs and modules           |
+| Format failed        | Is disk unmounted?         | Unmount all partitions first              |
+| Boot fails           | Can you access recovery?   | Boot NixOS installer, restore from backup |
+| Windows won't boot   | Is Windows EFI mounted?    | Check /boot/efi-windows                   |
+| Out of disk space    | Snapshots too many?        | Clean with `snapper cleanup`              |
+| Performance degraded | Compression enabled?       | Check mount options, disable if slow      |
 
 ---
 
 ## Security Considerations
 
 ### Current Risks
+
 - ⚠️ No encryption (full disk readable without auth)
 - ⚠️ No snapshots (no recovery from accidents)
 - ⚠️ Single backup location (git only, no disk backup)
 
 ### Mitigation Path
+
 1. **Add disko** → Reproducible setup ✓
 2. **Add compression** → Better disk usage ✓
 3. **Enable snapshots** → Quick recovery ✓
@@ -204,6 +212,7 @@ content = {
 ```
 
 **Notes:**
+
 - Password required at boot
 - Consider FIDO2/TPM for unattended boots
 - Encrypted disko config can be in git (no secrets)
@@ -213,12 +222,14 @@ content = {
 ## Performance Tuning
 
 ### Current Setup (Good)
+
 - ✅ Async discard enabled (TRIM optimization)
 - ✅ space_cache=v2 (modern, performant)
 - ✅ SSD-aware mount options
 - ✅ zram swap (fast, efficient)
 
 ### Enhanced Setup (Better)
+
 - ✅ Add compression (zstd:3)
   - 30-50% space savings
   - Faster with zstd than uncompressed I/O
@@ -254,7 +265,7 @@ Estimated Snapshot Storage:
 
 ## Next Steps (Ordered by Priority)
 
-1. **Week 1:** 
+1. **Week 1:**
    - [ ] Read and understand disko documentation
    - [ ] Create backup of current system
    - [ ] Add disko to flake.nix
@@ -286,12 +297,14 @@ Estimated Snapshot Storage:
 ## Resources & Documentation
 
 ### Official Documentation
+
 - **disko:** https://github.com/nix-community/disko
 - **Btrfs:** https://btrfs.readthedocs.io/
 - **NixOS:** https://nixos.org/manual/
 - **Snapper:** https://snapper.io/
 
 ### Relevant NixOS Modules
+
 ```bash
 # View available disko options
 nixos-option -r disko
@@ -304,6 +317,7 @@ nixos-option -r hardware
 ```
 
 ### Community Resources
+
 - NixOS Discourse: https://discourse.nixos.org/
 - NixOS Matrix Chat: #nixos:matrix.org
 - disko Examples: https://github.com/nix-community/disko/tree/master/examples
@@ -312,18 +326,17 @@ nixos-option -r hardware
 
 ## Summary
 
-| Aspect | Status | Recommendation |
-|--------|--------|-----------------|
-| **Current Setup** | Stable, working | Keep as-is for now |
-| **Disko Integration** | Not implemented | Add in week 1-2 |
-| **Compression** | Disabled | Enable (zstd:3) |
-| **Snapshots** | None | Enable with snapper |
-| **Encryption** | None | Add in future |
-| **Backups** | Git only | Add external + cloud |
-| **Dual-boot** | Working | Preserve Windows |
-| **Performance** | Good | Can be optimized |
+| Aspect                | Status          | Recommendation       |
+| --------------------- | --------------- | -------------------- |
+| **Current Setup**     | Stable, working | Keep as-is for now   |
+| **Disko Integration** | Not implemented | Add in week 1-2      |
+| **Compression**       | Disabled        | Enable (zstd:3)      |
+| **Snapshots**         | None            | Enable with snapper  |
+| **Encryption**        | None            | Add in future        |
+| **Backups**           | Git only        | Add external + cloud |
+| **Dual-boot**         | Working         | Preserve Windows     |
+| **Performance**       | Good            | Can be optimized     |
 
 **Overall Assessment:** ✅ Healthy system with clear improvement path.
 
 The system is currently stable. Migrating to disko will improve **reproducibility**, **maintainability**, and enable future enhancements like **encryption** and **automated snapshots** without disrupting the current setup.
-

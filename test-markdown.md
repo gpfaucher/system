@@ -14,17 +14,21 @@ This file tests all the markdown editing features installed.
 ## Heading Navigation Test
 
 ### Level 3 Heading 1
+
 Press `]]` to jump to next heading.
 
 ### Level 3 Heading 2
+
 Press `[[` to jump to previous heading.
 
 ### Level 3 Heading 3
+
 Press `]c` to jump to current heading's start.
 
 ## Link Test
 
 Test link following with `gx`:
+
 - [GitHub](https://github.com)
 - [Google](https://google.com)
 - Internal link: [[other-file]]
@@ -33,13 +37,14 @@ Test link following with `gx`:
 
 Press `<leader>mt` to enable table mode, then type this:
 
-| Feature | Status | Notes |
-|---------|--------|-------|
+| Feature | Status  | Notes         |
+| ------- | ------- | ------------- |
 | Preview | Working | Opens browser |
-| Tables | Working | Auto-aligns |
-| Folding | Working | By heading |
+| Tables  | Working | Auto-aligns   |
+| Folding | Working | By heading    |
 
 To create a new table:
+
 1. Press `<leader>mt` to enable table mode
 2. Type `|` to start a new row
 3. Type content and press `|` to move to next cell
@@ -48,6 +53,7 @@ To create a new table:
 ## Checkbox Test
 
 Task list (press `<leader>mc` to toggle):
+
 - [ ] First task
 - [x] Completed task
 - [ ] Another pending task
@@ -58,6 +64,7 @@ Task list (press `<leader>mc` to toggle):
 Inline math: $E = mc^2$
 
 Block math:
+
 $$
 \int_{-\infty}^{\infty} e^{-x^2} dx = \sqrt{\pi}
 $$
@@ -90,13 +97,14 @@ const testMarkdown = () => {
 ## Bold, Italic, Strikethrough
 
 - **Bold text** (try `gs` to toggle)
-- *Italic text* (try `gs` to toggle)
-- ***Bold and italic***
+- _Italic text_ (try `gs` to toggle)
+- **_Bold and italic_**
 - ~~Strikethrough~~
 
 ## List Test
 
 Ordered list:
+
 1. First item
 2. Second item
    1. Nested item
@@ -104,6 +112,7 @@ Ordered list:
 3. Third item
 
 Unordered list:
+
 - Item one
 - Item two
   - Nested item
@@ -124,11 +133,13 @@ Unordered list:
 ## Frontmatter Test
 
 This file has no frontmatter, but vim-markdown supports:
+
 - YAML frontmatter
 - TOML frontmatter
 - JSON frontmatter
 
 Example:
+
 ```yaml
 ---
 title: My Document
@@ -141,6 +152,7 @@ tags: [markdown, neovim, testing]
 ## Folding Test
 
 Try these fold commands:
+
 - `zc` - Close fold under cursor
 - `zo` - Open fold under cursor
 - `za` - Toggle fold under cursor
@@ -150,6 +162,7 @@ Try these fold commands:
 ## Preview Features
 
 When you press `<leader>mp`, the preview should show:
+
 - ✅ Rendered markdown
 - ✅ Math equations (KaTeX)
 - ✅ Mermaid diagrams
@@ -160,16 +173,19 @@ When you press `<leader>mp`, the preview should show:
 ## Plugin-Specific Commands
 
 ### markdown.nvim Commands
+
 - `:MDListItemBelow` - Create new list item
 - `:MDTaskToggle` - Toggle checkbox
 - Navigation: `]]`, `[[`, `]c`, `]p`
 
 ### vim-markdown Commands
+
 - `:Toc` - Open table of contents
 - `:InsertToc` - Insert table of contents at cursor
 - `:InsertNToc` - Insert numbered table of contents
 
 ### vim-table-mode Commands
+
 - `:TableModeToggle` - Toggle table mode
 - `:TableModeRealign` - Realign current table
 - `:Tableize` - Convert CSV to table
@@ -177,6 +193,7 @@ When you press `<leader>mp`, the preview should show:
 ## Expected Results
 
 After testing, all features should work:
+
 1. ✅ Syntax highlighting visible
 2. ✅ Headings fold/unfold smoothly
 3. ✅ Preview opens in browser
@@ -192,6 +209,7 @@ After testing, all features should work:
 ## Notes
 
 This is a comprehensive test file covering all features of the installed plugins:
+
 - markdown-preview.nvim
 - markdown.nvim
 - vim-table-mode

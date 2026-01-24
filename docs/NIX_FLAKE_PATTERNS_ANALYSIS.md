@@ -32,28 +32,30 @@ Current Architecture:
 
 ### 1.2 Current State Summary
 
-| Aspect | Status | Details |
-|--------|--------|---------|
-| **Flake Inputs** | ✅ Well-pinned | All inputs follow `inputs.nixpkgs.follows` pattern |
-| **System Support** | ⚠️ Limited | Hardcoded `x86_64-linux` only |
-| **Module Organization** | ✅ Clean | 18 `.nix` modules, well-separated (home/system) |
-| **Code Size** | ✅ Reasonable | 3,062 lines total Nix code |
-| **Configuration** | ⚠️ Monolithic | Single laptop configuration, no generalization |
-| **Flake-parts** | ❌ Not used | Traditional outputs function |
-| **treefmt-nix** | ❌ Not used | No unified formatting |
-| **pre-commit-hooks.nix** | ❌ Not used | No git hooks configured |
-| **devenv** | ❌ Not used | No development shell |
-| **Cachix** | ✅ Configured | 3 caches (cache.nixos.org, ghostty, nix-community) |
+| Aspect                   | Status         | Details                                            |
+| ------------------------ | -------------- | -------------------------------------------------- |
+| **Flake Inputs**         | ✅ Well-pinned | All inputs follow `inputs.nixpkgs.follows` pattern |
+| **System Support**       | ⚠️ Limited     | Hardcoded `x86_64-linux` only                      |
+| **Module Organization**  | ✅ Clean       | 18 `.nix` modules, well-separated (home/system)    |
+| **Code Size**            | ✅ Reasonable  | 3,062 lines total Nix code                         |
+| **Configuration**        | ⚠️ Monolithic  | Single laptop configuration, no generalization     |
+| **Flake-parts**          | ❌ Not used    | Traditional outputs function                       |
+| **treefmt-nix**          | ❌ Not used    | No unified formatting                              |
+| **pre-commit-hooks.nix** | ❌ Not used    | No git hooks configured                            |
+| **devenv**               | ❌ Not used    | No development shell                               |
+| **Cachix**               | ✅ Configured  | 3 caches (cache.nixos.org, ghostty, nix-community) |
 
 ### 1.3 Dependency Analysis
 
 **flake.lock Statistics:**
+
 - **Size:** 686 lines
 - **Locked inputs:** 28 total (including transitive)
 - **Last updated:** 2026-01-24 (current)
 - **Freshness:** Excellent (nixpkgs updated 2026-01-21)
 
 **Dependency Tree (Transitive):**
+
 ```
 root
 ├── nixpkgs (88d386...) [master NixOS baseline]
@@ -82,6 +84,7 @@ root
 ### 2.1 What is flake-parts?
 
 **Purpose:** A standardized flake composition framework that:
+
 - Eliminates `outputs = { self, ... }@inputs: {...}` boilerplate
 - Provides per-system evaluation (multi-architecture friendly)
 - Enables shareable modules and conventions
@@ -92,6 +95,7 @@ root
 ### 2.2 Should This System Use flake-parts?
 
 #### Arguments FOR:
+
 1. **Transitive Dependency Already Present** - Both nvf and stylix include it
 2. **Multi-Machine Ready** - Flake-parts makes adding more hosts trivial
 3. **Developer Shells** - Easy `devShells.${system}.default` pattern
@@ -100,6 +104,7 @@ root
 6. **Cleaner Code** - ~30% reduction in boilerplate
 
 #### Arguments AGAINST:
+
 1. **Single Laptop** - Current setup is sufficient for 1 machine
 2. **Learning Curve** - Requires understanding module system
 3. **Stability vs Edge** - Adds another dependency version to manage
@@ -121,13 +126,13 @@ outputs = { self, nixpkgs, home-manager, ... }@inputs:
 outputs = inputs:
   inputs.flake-parts.lib.mkFlake { inherit inputs; } {
     systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
-    
+
     perSystem = { pkgs, system, ... }: {
       devShells.default = ...
       formatter = pkgs.treefmt
       # per-system derivations here
     };
-    
+
     flake = {
       nixosConfigurations.laptop = ...
       homeConfigurations."gabriel@laptop" = ...
@@ -142,6 +147,7 @@ outputs = inputs:
 ### 3.1 Usage Patterns
 
 **Where flake-utils appears:**
+
 ```
 flake-utils
 ├── Direct: beads input → flake-utils
@@ -152,18 +158,19 @@ flake-utils
 ```
 
 **Observations:**
+
 - **beads** uses flake-utils for simple package export (appropriate)
 - **ghostty** uses flake-utils for per-system builds (transitively through home-manager)
 - System hasn't directly imported flake-utils (not needed with flake-parts)
 
 ### 3.2 Alternatives to flake-utils
 
-| Tool | Purpose | When to Use |
-|------|---------|------------|
-| **flake-parts** | Modular flakes | Multi-system, complex configs (✅ recommended) |
-| **nix-utils** | Utility functions | Niche, superseded by flake-parts |
-| **dream2nix** | Build framework | Non-Nix projects, monorepos |
-| **numtide/flake-utils** | Simple patterns | Single-system, minimal projects |
+| Tool                    | Purpose           | When to Use                                    |
+| ----------------------- | ----------------- | ---------------------------------------------- |
+| **flake-parts**         | Modular flakes    | Multi-system, complex configs (✅ recommended) |
+| **nix-utils**           | Utility functions | Niche, superseded by flake-parts               |
+| **dream2nix**           | Build framework   | Non-Nix projects, monorepos                    |
+| **numtide/flake-utils** | Simple patterns   | Single-system, minimal projects                |
 
 **Recommendation:** Replace ad-hoc flake-utils with flake-parts modules.
 
@@ -174,6 +181,7 @@ flake-utils
 ### 4.1 What is treefmt-nix?
 
 Unified formatting for ALL languages in one place:
+
 - Nix files (nixfmt, alejandra, etc.)
 - Shell scripts (shfmt)
 - Python (black, ruff)
@@ -182,6 +190,7 @@ Unified formatting for ALL languages in one place:
 - etc.
 
 ### 4.2 Current State
+
 - ❌ No treefmt configuration
 - ⚠️ Manual formatting for 18 `.nix` files
 - ❌ No CI enforcement
@@ -189,6 +198,7 @@ Unified formatting for ALL languages in one place:
 ### 4.3 Implementation Path
 
 **Step 1: Add flake input**
+
 ```nix
 inputs.treefmt-nix = {
   url = "github:numtide/treefmt-nix";
@@ -197,6 +207,7 @@ inputs.treefmt-nix = {
 ```
 
 **Step 2: Add to flake-parts module**
+
 ```nix
 # When using flake-parts
 perSystem = { pkgs, ... }: {
@@ -212,12 +223,13 @@ perSystem = { pkgs, ... }: {
       };
     };
   };
-  
+
   formatter = pkgs.treefmt;
 };
 ```
 
 **Step 3: Run formatting**
+
 ```bash
 nix fmt                    # Format all files
 nix fmt -- --check        # Check without modifying
@@ -233,6 +245,7 @@ nix fmt -- path/to/file   # Format specific files
 ### 5.1 Purpose
 
 Automatic quality gates on `git commit`:
+
 - ✅ Nix syntax validation
 - ✅ Formatting enforcement
 - ✅ Secret detection
@@ -240,6 +253,7 @@ Automatic quality gates on `git commit`:
 - ✅ Documentation checks
 
 ### 5.2 Current State
+
 - ❌ No pre-commit hooks configured
 - ✅ Git repository exists (`.git` present)
 - ⚠️ Manual quality checks needed before commits
@@ -247,6 +261,7 @@ Automatic quality gates on `git commit`:
 ### 5.3 Implementation
 
 **Add flake input:**
+
 ```nix
 inputs.pre-commit-hooks-nix = {
   url = "github:cachix/pre-commit-hooks.nix";
@@ -255,6 +270,7 @@ inputs.pre-commit-hooks-nix = {
 ```
 
 **Configure in flake-parts:**
+
 ```nix
 perSystem = { config, pkgs, ... }: {
   pre-commit = {
@@ -264,23 +280,23 @@ perSystem = { config, pkgs, ... }: {
       nixfmt.enable = true;
       nix-linter.enable = true;
       statix.enable = true;              # Static analysis
-      
+
       # Shell
       shellcheck.enable = true;
-      
+
       # General
       end-of-file-fixer.enable = true;
       trailing-whitespace.enable = true;
       mixed-line-ending.enable = true;
-      
+
       # Secrets
       detect-private-key.enable = true;
-      
+
       # Git
       commitizen.enable = true;          # Enforces conventional commits
     };
   };
-  
+
   # Make `nix flake check` validate pre-commit hooks
   checks = {
     pre-commit-check = config.pre-commit.run;
@@ -289,6 +305,7 @@ perSystem = { config, pkgs, ... }: {
 ```
 
 **Usage:**
+
 ```bash
 cd /home/gabriel/projects/system
 nix flake check                  # Run all checks including pre-commit hooks
@@ -296,6 +313,7 @@ git commit -m "message"          # Hooks run automatically (if installed)
 ```
 
 **Installation for git integration:**
+
 ```bash
 # From project root
 nix develop
@@ -311,12 +329,14 @@ direnv allow
 ### 6.1 What is devenv?
 
 Unified development environment tool:
+
 - **Purpose:** Project-specific shells with services, scripts, tools
 - **Integration:** Works with direnv, Nix, Docker
 - **Services:** PostgreSQL, Redis, Minio, etc. (auto-start)
 - **Scripts:** Custom commands (`devenv shell`)
 
 ### 6.2 Current Development Setup
+
 - ✅ direnv configured (shell.nix shows `nix-direnv.enable = true`)
 - ⚠️ Basic setup only
 - ❌ No devenv.yaml configured
@@ -325,6 +345,7 @@ Unified development environment tool:
 ### 6.3 Devenv Configuration
 
 **Create `devenv.yaml`:**
+
 ```yaml
 version: 1
 
@@ -336,12 +357,11 @@ packages:
   - nix
   - git
   - gh
-  - alejandra           # Nix formatter
-  - statix             # Nix linter
+  - alejandra # Nix formatter
+  - statix # Nix linter
   - shellcheck
 
-scripts:
-  fmt.exec = "treefmt"
+scripts: fmt.exec = "treefmt"
   check.exec = "nix flake check"
   update.exec = "nix flake update"
   build.exec = "nix build '.#nixosConfigurations.laptop'"
@@ -351,6 +371,7 @@ scripts:
 ```
 
 **Usage:**
+
 ```bash
 devenv shell
 # Inside shell:
@@ -368,6 +389,7 @@ update           # Update flake inputs
 ### 7.1 Current Status
 
 ✅ **Already Configured!**
+
 ```nix
 # From modules/home/shell.nix (line 150-154):
 programs.direnv = {
@@ -397,6 +419,7 @@ watch_file hosts
 ```
 
 **Setup:**
+
 ```bash
 cd /home/gabriel/projects/system
 echo 'use flake' > .envrc
@@ -410,6 +433,7 @@ direnv allow
 ### 8.1 Current Configuration
 
 **Single Machine:** `laptop` (x86_64-linux)
+
 - Location: `hosts/laptop/`
 - Modules: 12 system modules + 8 home modules
 - Config: Hardcoded system type
@@ -446,6 +470,7 @@ modules/
 ```
 
 **Benefits:**
+
 - ✅ Shared modules (DRY principle)
 - ✅ Host-specific overrides in `hosts/*/`
 - ✅ Easy to add machines (copy host, modify hardware.nix)
@@ -468,17 +493,17 @@ flake = {
         }
       ];
     };
-    
+
     # Future: Add desktop easily
     # desktop = nixpkgs.lib.nixosSystem { ... };
   };
-  
+
   homeConfigurations = {
     "gabriel@laptop" = home-manager.lib.homeManagerConfiguration {
       pkgs = import nixpkgs { system = "x86_64-linux"; ... };
       modules = [ ./modules/home ];
     };
-    
+
     # Future: Add other user/machine combos
     # "gabriel@desktop" = ...
   };
@@ -490,6 +515,7 @@ flake = {
 **Current:** Hardcoded `x86_64-linux`
 
 **With flake-parts:**
+
 ```nix
 systems = ["x86_64-linux" "aarch64-linux" "aarch64-darwin"];
 
@@ -523,6 +549,7 @@ overlays = [
 ```
 
 **Issues:**
+
 - ✅ Works, but scattered
 - ⚠️ Not reusable across different contexts
 - ❌ Hardcoded system variable
@@ -530,17 +557,18 @@ overlays = [
 ### 9.2 Recommended Overlay Pattern
 
 Create `overlays/default.nix`:
+
 ```nix
 # overlays/default.nix
 {
   beads = final: prev: {
     beads = final.callPackage ../pkgs/beads { };
   };
-  
+
   custom-tools = final: prev: {
     custom-lsp = final.callPackage ../pkgs/custom-lsp { };
   };
-  
+
   patches = final: prev: {
     # Override broken packages
     some-package = prev.some-package.overrideAttrs (...);
@@ -549,6 +577,7 @@ Create `overlays/default.nix`:
 ```
 
 Use in flake:
+
 ```nix
 perSystem = { pkgs, system, ... }: {
   overlays = [
@@ -566,6 +595,7 @@ perSystem = { pkgs, system, ... }: {
 ### 10.1 Current Approach
 
 All packages come from `nixpkgs`:
+
 ```nix
 # modules/home/default.nix lines 60-96
 home.packages = with pkgs; [
@@ -581,6 +611,7 @@ home.packages = with pkgs; [
 **Pattern for custom packages:**
 
 Create `pkgs/custom-package/default.nix`:
+
 ```nix
 # pkgs/custom-package/default.nix
 { lib, buildGoModule, fetchFromGitHub, ... }:
@@ -588,16 +619,16 @@ Create `pkgs/custom-package/default.nix`:
 buildGoModule rec {
   pname = "my-tool";
   version = "1.0.0";
-  
+
   src = fetchFromGitHub {
     owner = "username";
     repo = "my-tool";
     rev = "v${version}";
     sha256 = "0000...";
   };
-  
+
   vendorSha256 = "0000...";
-  
+
   meta = with lib; {
     description = "My tool";
     homepage = "https://github.com/username/my-tool";
@@ -608,6 +639,7 @@ buildGoModule rec {
 ```
 
 Use in home config:
+
 ```nix
 home.packages = with pkgs; [
   # From nixpkgs
@@ -624,6 +656,7 @@ home.packages = with pkgs; [
 ### 11.1 Current Setup
 
 ✅ **Already Configured** (hosts/laptop/default.nix lines 37-47):
+
 ```nix
 substituters = [
   "https://cache.nixos.org"           # Official NixOS
@@ -667,6 +700,7 @@ Status:         ✅ Fresh and well-maintained
 ```
 
 **Input Freshness:**
+
 ```
 ✅ nixpkgs         [2026-01-21] (3 days old - excellent)
 ✅ home-manager    [2026-01-23] (1 day old - excellent)
@@ -679,24 +713,26 @@ Status:         ✅ Fresh and well-maintained
 ### 12.2 Pinning Strategy Recommendations
 
 **Current (Implicit):**
+
 - ✅ All inputs automatically follow `nixpkgs`
 - ✅ No duplicate dependencies in lock file
 
 **Best Practices:**
+
 ```nix
 inputs = {
   # Always use latest unstable
   nixpkgs.url = "github:NixOS/nixpkgs/nixos-unstable";
-  
+
   # Or pin to version
   nixpkgs.url = "github:NixOS/nixpkgs/26.05";
-  
+
   # Inputs follow nixpkgs (reduce duplicates)
   home-manager.inputs.nixpkgs.follows = "nixpkgs";
-  
+
   # Branch tracking
   flake-utils.url = "github:numtide/flake-utils";  # Tracks master
-  
+
   # Specific commit (absolute pinning)
   some-tool.url = "github:owner/tool/commit123abc";
 };
@@ -711,15 +747,18 @@ inputs = {
 ### 13.1 Phantom Dependencies Problem
 
 **Current Issue:**
+
 - `nvf` includes `flake-parts` (version A)
 - `stylix` includes `flake-parts` (version B)
 - Both end up in flake.lock but not explicitly managed
 
-**Impact:** 
+**Impact:**
+
 - ✅ Minimal (flake-parts is stable)
 - ⚠️ Harder to debug if versions diverge
 
 **Solution:** Explicitly pin in root flake:
+
 ```nix
 inputs.flake-parts = {
   url = "github:hercules-ci/flake-parts";
@@ -736,16 +775,16 @@ inputs.flake-parts = {
 
 ### Quality Metrics
 
-| Category | Score | Status | Notes |
-|----------|-------|--------|-------|
-| **Current Architecture** | 8/10 | ✅ Good | Well-organized, clean separation |
-| **Dependency Management** | 9/10 | ✅ Excellent | Proper follows pattern |
-| **Lock File Freshness** | 10/10 | ✅ Excellent | Updated regularly |
-| **Multi-System Support** | 3/10 | ⚠️ Poor | Hardcoded x86_64-linux |
-| **Code Quality Tools** | 2/10 | ❌ Poor | No treefmt, pre-commit hooks |
-| **Development Experience** | 4/10 | ⚠️ Fair | direnv present but minimal |
-| **Scalability** | 4/10 | ⚠️ Fair | Single machine, difficult to extend |
-| **Documentation** | 5/10 | ⚠️ Fair | Some docs, could be better |
+| Category                   | Score | Status       | Notes                               |
+| -------------------------- | ----- | ------------ | ----------------------------------- |
+| **Current Architecture**   | 8/10  | ✅ Good      | Well-organized, clean separation    |
+| **Dependency Management**  | 9/10  | ✅ Excellent | Proper follows pattern              |
+| **Lock File Freshness**    | 10/10 | ✅ Excellent | Updated regularly                   |
+| **Multi-System Support**   | 3/10  | ⚠️ Poor      | Hardcoded x86_64-linux              |
+| **Code Quality Tools**     | 2/10  | ❌ Poor      | No treefmt, pre-commit hooks        |
+| **Development Experience** | 4/10  | ⚠️ Fair      | direnv present but minimal          |
+| **Scalability**            | 4/10  | ⚠️ Fair      | Single machine, difficult to extend |
+| **Documentation**          | 5/10  | ⚠️ Fair      | Some docs, could be better          |
 
 ### Overall Assessment: 6/10 - Functional but Ready for Modernization
 
@@ -757,6 +796,7 @@ inputs.flake-parts = {
 ## 15. RECOMMENDED IMPLEMENTATION ROADMAP
 
 ### Phase 1: Foundation (Priority: HIGH)
+
 **Estimated effort:** 2-3 hours
 
 - [ ] Add `treefmt-nix` input
@@ -766,6 +806,7 @@ inputs.flake-parts = {
 - [ ] Document in README
 
 ### Phase 2: Quality Gates (Priority: HIGH)
+
 **Estimated effort:** 2-3 hours
 
 - [ ] Add `pre-commit-hooks.nix` input
@@ -775,6 +816,7 @@ inputs.flake-parts = {
 - [ ] Document in README
 
 ### Phase 3: Modern Architecture (Priority: MEDIUM)
+
 **Estimated effort:** 4-6 hours
 
 - [ ] Add `flake-parts` as explicit input
@@ -786,6 +828,7 @@ inputs.flake-parts = {
 - [ ] Update documentation
 
 ### Phase 4: Multi-Machine Support (Priority: MEDIUM)
+
 **Estimated effort:** 3-4 hours
 
 - [ ] Refactor hosts/ directory structure
@@ -795,6 +838,7 @@ inputs.flake-parts = {
 - [ ] Test adding a test host configuration
 
 ### Phase 5: Polish & Documentation (Priority: LOW)
+
 **Estimated effort:** 2-3 hours
 
 - [ ] Comprehensive README
@@ -818,9 +862,9 @@ See separate file: `NIX_FLAKE_MODERNIZED_EXAMPLE.md`
 # In flake-parts perSystem module
 treefmt = {
   projectRootFile = "flake.nix";
-  
+
   programs.nixfmt.enable = true;
-  
+
   programs.prettier = {
     enable = true;
     includes = ["*.yaml" "*.yml" "*.json" "*.md"];
@@ -850,17 +894,20 @@ pre-commit.hooks = {
 ## 17. REFERENCES & RESOURCES
 
 **Official Documentation:**
+
 - [NixOS Manual - Flakes](https://nixos.org/manual/nix/unstable/command-ref/new-cli/nix3-flake.html)
 - [flake-parts Documentation](https://flake.parts/)
 - [treefmt-nix](https://github.com/numtide/treefmt-nix)
 - [pre-commit-hooks.nix](https://github.com/cachix/pre-commit-hooks.nix)
 
 **Best Practices:**
+
 - [Determinate Systems - Flake Best Practices](https://determinate.systems/posts/nix-flakes/)
 - [Tweag - Nix Flakes Book](https://tweag.io/blog/2021-05-03-flake-tips-and-tricks/)
 - [Nix Community Wiki](https://wiki.nixos.org/)
 
 **Examples:**
+
 - [nvf configuration](https://github.com/notashelf/nvf)
 - [stylix configuration](https://github.com/danth/stylix)
 - [numtide/flake-templates](https://github.com/numtide/flake-templates)
@@ -871,19 +918,20 @@ pre-commit.hooks = {
 
 ### Factors Analysis
 
-| Factor | Current | With flake-parts | Impact |
-|--------|---------|------------------|--------|
-| Boilerplate | 91 lines | ~60 lines | -30% |
-| Multi-system | Hard | Easy | ⬆️ Flexibility |
-| Dev shells | Manual | Automatic | ⬆️ Experience |
-| Code clarity | Good | Better | ⬆️ Maintainability |
-| Learning curve | Low | Medium | ⬇️ Time investment |
-| Dependency versions | Fine | Cleaner | ⬆️ Control |
-| Community | Established | Growing | ⬆️ Support |
+| Factor              | Current     | With flake-parts | Impact             |
+| ------------------- | ----------- | ---------------- | ------------------ |
+| Boilerplate         | 91 lines    | ~60 lines        | -30%               |
+| Multi-system        | Hard        | Easy             | ⬆️ Flexibility     |
+| Dev shells          | Manual      | Automatic        | ⬆️ Experience      |
+| Code clarity        | Good        | Better           | ⬆️ Maintainability |
+| Learning curve      | Low         | Medium           | ⬇️ Time investment |
+| Dependency versions | Fine        | Cleaner          | ⬆️ Control         |
+| Community           | Established | Growing          | ⬆️ Support         |
 
 ### Recommendation: ✅ **ADOPT FLAKE-PARTS**
 
 **Reasoning:**
+
 1. Already transitively present (nvf, stylix use it)
 2. Ecosystem standard for new flakes
 3. Makes future machine additions trivial
@@ -926,6 +974,7 @@ git push
 ## Research Completion Summary
 
 ✅ **Analysis Complete**
+
 - Current architecture documented
 - Modernization path identified
 - Concrete implementation examples provided
@@ -933,4 +982,3 @@ git push
 - All recommendations justified with pros/cons
 
 **Next Steps:** Implement Phase 1-3 for immediate benefits. Phase 4-5 can follow once multi-machine needs arise.
-

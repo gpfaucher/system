@@ -1,11 +1,19 @@
-{ config, pkgs, lib, ... }:
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
 
 {
   # Enable graphics
   hardware.graphics.enable = true;
 
   # Load both GPU drivers
-  services.xserver.videoDrivers = [ "amdgpu" "nvidia" ];
+  services.xserver.videoDrivers = [
+    "amdgpu"
+    "nvidia"
+  ];
 
   # NVIDIA configuration for hybrid graphics (PRIME offload)
   hardware.nvidia = {

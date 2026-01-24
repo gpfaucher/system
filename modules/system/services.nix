@@ -1,4 +1,9 @@
-{ config, lib, pkgs, ... }:
+{
+  config,
+  lib,
+  pkgs,
+  ...
+}:
 
 {
   # dconf for GTK/GNOME settings (required by stylix)
@@ -11,7 +16,7 @@
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
   services.blueman.enable = true;
-  
+
   # Ensure Bluetooth service starts automatically
   systemd.user.services.pipewire.wantedBy = [ "default.target" ];
   systemd.user.services.pipewire-pulse.wantedBy = [ "default.target" ];
@@ -20,7 +25,7 @@
   security.polkit.enable = true;
 
   # PAM service for waylock screen locker
-  security.pam.services.waylock = {};
+  security.pam.services.waylock = { };
 
   # XDG portal configuration for Wayland/wlroots
   xdg.portal = {
@@ -43,7 +48,7 @@
     enable = true;
     rootless = {
       enable = true;
-      setSocketVariable = true;  # Sets DOCKER_HOST for the user
+      setSocketVariable = true; # Sets DOCKER_HOST for the user
     };
   };
 

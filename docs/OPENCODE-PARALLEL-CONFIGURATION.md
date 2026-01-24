@@ -5,6 +5,7 @@
 Based on analysis of the repository's OpenCode configuration, the system is **architecturally capable** of parallel execution and sophisticated delegation, but the current implementation has significant limitations:
 
 ### Key Findings:
+
 1. ✅ **Parallel execution IS configured** but NOT actively used
    - `parallel_subagents: true`
    - `max_parallel_agents: 4`
@@ -27,6 +28,7 @@ Based on analysis of the repository's OpenCode configuration, the system is **ar
 ## Current Configuration State
 
 ### Agent Distribution
+
 ```
 PRIMARY AGENTS (3):
 ├── Architect (Sonnet 4.5) - Design & Planning
@@ -48,6 +50,7 @@ SUBAGENTS (11):
 ```
 
 ### Current Settings
+
 ```json
 {
   "settings": {
@@ -60,6 +63,7 @@ SUBAGENTS (11):
 ```
 
 ### Orchestrator Configuration
+
 - **Model**: claude-opus-4.5 (Smartest, slowest)
 - **Tools**: write, edit, bash, read, glob, grep, **task** ⭐
 - **Prompt**: 51 lines of orchestration guidance
@@ -72,6 +76,7 @@ SUBAGENTS (11):
 ### Issue #1: Sequential Execution Instead of Parallel
 
 **Current Orchestrator Prompt Limitations:**
+
 ```
 Lines 33-37 mention parallel execution strategy:
 "PARALLEL EXECUTION STRATEGY:
@@ -84,6 +89,7 @@ It doesn't mention using the "task" tool to spawn parallel work.
 ```
 
 **Why This Happens:**
+
 - The orchestrator has the "task" tool but no clear instructions to use it
 - Without explicit prompting, LLMs default to sequential reasoning
 - The prompt focuses on thinking about parallelization, not doing it
@@ -91,11 +97,13 @@ It doesn't mention using the "task" tool to spawn parallel work.
 ### Issue #2: Limited Delegation to Subagents
 
 **Current Build Agent Constraints:**
+
 - The Build agent (Sonnet) does most implementation work itself
 - No system prompt encouragement to delegate specialized tasks
 - When it encounters testing/review needs, it tends to handle it instead of delegating
 
 **Why This Happens:**
+
 - Agent prompts are specialized but independent
 - There's no delegation framework or handoff protocol
 - Build prompt doesn't say "delegate testing to the test agent"
@@ -103,6 +111,7 @@ It doesn't mention using the "task" tool to spawn parallel work.
 ### Issue #3: Model Capabilities Not Fully Utilized
 
 **Current Model Distribution Issues:**
+
 ```
 ❌ Most subagents use Sonnet (medium intelligence)
    - They could benefit from Opus for complex tasks
@@ -148,15 +157,17 @@ PARALLEL TASK EXAMPLES:
 
 TASK TOOL USAGE:
 ```
+
 Use the task tool with: task.invoke({
-  parallel: true,
-  agents: [
-    { agent: "review", task: "Security analysis of authentication" },
-    { agent: "review", task: "Performance review of caching layer" },
-    { agent: "security", task: "Hardening recommendations" }
-  ],
-  max_concurrent: 4
+parallel: true,
+agents: [
+{ agent: "review", task: "Security analysis of authentication" },
+{ agent: "review", task: "Performance review of caching layer" },
+{ agent: "security", task: "Hardening recommendations" }
+],
+max_concurrent: 4
 })
+
 ```
 
 CRITICAL: Aim for 80% of complex work to be delegated to subagents.
@@ -247,7 +258,7 @@ Add model flexibility for specialized subagents:
 }
 ```
 
-**Note**: This requires OpenCode to support model fallback/escalation. 
+**Note**: This requires OpenCode to support model fallback/escalation.
 If not supported, manually invoke Opus-based subagents in critical workflows.
 
 ### Solution #4: Create Parallel Workflow Definitions
@@ -265,9 +276,7 @@ Add new workflow pattern using parallel execution:
       "steps": [
         {
           "phase": "design",
-          "sequence": [
-            { "agent": "architect", "task": "Design the feature" }
-          ]
+          "sequence": [{ "agent": "architect", "task": "Design the feature" }]
         },
         {
           "phase": "implementation",
@@ -305,9 +314,18 @@ Add new workflow pattern using parallel execution:
           "phase": "analysis",
           "parallel": true,
           "steps": [
-            { "agent": "research", "task": "Analyze current architecture (Module A)" },
-            { "agent": "research", "task": "Analyze current architecture (Module B)" },
-            { "agent": "research", "task": "Analyze current architecture (Module C)" }
+            {
+              "agent": "research",
+              "task": "Analyze current architecture (Module A)"
+            },
+            {
+              "agent": "research",
+              "task": "Analyze current architecture (Module B)"
+            },
+            {
+              "agent": "research",
+              "task": "Analyze current architecture (Module C)"
+            }
           ]
         },
         {
@@ -360,7 +378,7 @@ Add new workflow pattern using parallel execution:
     "auto_review_before_commit": true,
     "parallel_subagents": true,
     "max_parallel_agents": 4,
-    
+
     "NEW SETTINGS FOR PARALLELISM":
     "orchestrator_delegation_threshold": "tasks > 3",
     "encourage_parallel_execution": true,
@@ -393,6 +411,7 @@ task.invoke({
 ```
 
 **Key Points:**
+
 - Only orchestrator has "task" tool (line 44 of .opencode.json)
 - Can spawn up to 4 agents in parallel
 - Returns combined results from all agents
@@ -401,6 +420,7 @@ task.invoke({
 ### Why Workflows Are Sequential Currently
 
 Current workflows in lines 202-298 of .opencode.json:
+
 ```json
 "steps": [
   { "agent": "architect", "task": "..." },
@@ -412,6 +432,7 @@ Current workflows in lines 202-298 of .opencode.json:
 ```
 
 These steps run ONE AT A TIME in the order listed. To parallelize, you need:
+
 1. The orchestrator to invoke them using the "task" tool
 2. Explicit instruction in orchestrator prompt to do this
 3. Grouped steps that CAN run in parallel (independent tasks)
@@ -423,7 +444,7 @@ These steps run ONE AT A TIME in the order listed. To parallelize, you need:
 ### Phase 1: Update Prompts (IMMEDIATE)
 
 - [ ] Update `prompts/orchestrator.txt` - Add explicit parallel invocation guidance
-- [ ] Update `prompts/build.txt` - Add delegation requirements  
+- [ ] Update `prompts/build.txt` - Add delegation requirements
 - [ ] Update `prompts/architect.txt` - Add delegation to Plan agent
 - [ ] Update `prompts/plan.txt` - Add guidance to suggest parallelizable tasks
 
@@ -453,16 +474,19 @@ These steps run ONE AT A TIME in the order listed. To parallelize, you need:
 ### Features Supporting Parallelism (AVAILABLE)
 
 ✅ **Parallel Execution**
+
 - `parallel_subagents: true` enables it
 - `max_parallel_agents: 4` sets limit
 - Orchestrator "task" tool is the mechanism
 
 ✅ **Subagent Invocation**
+
 - All 11 subagents defined and ready
 - Each specialized for specific domain
 - Proper tool permissions per agent
 
 ✅ **Model Distribution**
+
 - 3 Haiku (fast) for quick tasks
 - 9 Sonnet (balanced) for main work
 - 1 Opus (smart) for orchestration
@@ -470,15 +494,18 @@ These steps run ONE AT A TIME in the order listed. To parallelize, you need:
 ### Features NOT Yet Utilized
 
 ❌ **Explicit Parallel Invocation**
+
 - Orchestrator has tool but prompt doesn't use it
 - Needs explicit instruction to spawn parallel tasks
 
 ❌ **Delegation Framework**
+
 - No protocol for agents to request help
 - No escalation mechanism for subagents
 - Build agent doesn't delegate by default
 
 ❌ **Model Escalation**
+
 - Subagents can't request Opus help
 - No complexity-based model selection
 - All agents locked to their initial model
@@ -500,6 +527,7 @@ Others must be explicitly invoked via orchestrator's task tool.
 ### Tool Permissions
 
 Each agent has specific tool access:
+
 ```json
 "tools": {
   "write": true/false,    // Can create files
@@ -517,11 +545,13 @@ The "task" tool is crucial for parallelism and delegation.
 ### Workflow Execution
 
 Current workflow model:
+
 1. User invokes workflow by name
 2. Steps execute sequentially in order
 3. Each step's result becomes context for next
 
 To enable parallelism, orchestrator must:
+
 1. Receive workflow request
 2. Parse parallelizable tasks
 3. Use "task" tool to invoke multiple agents
@@ -556,35 +586,41 @@ EXAMPLES OF PARALLELIZABLE WORKFLOWS:
 
 Example 1: Documentation in Parallel
 ```
+
 task.invoke({
-  agents: [
-    { agent: "document", task: "Write API documentation" },
-    { agent: "document", task: "Write user guide" },
-    { agent: "document", task: "Write architecture guide" }
-  ]
+agents: [
+{ agent: "document", task: "Write API documentation" },
+{ agent: "document", task: "Write user guide" },
+{ agent: "document", task: "Write architecture guide" }
+]
 })
+
 ```
 
 Example 2: Quality Assurance in Parallel
 ```
+
 task.invoke({
-  agents: [
-    { agent: "review", task: "Code quality review" },
-    { agent: "security", task: "Security analysis" },
-    { agent: "optimize", task: "Performance review" }
-  ]
+agents: [
+{ agent: "review", task: "Code quality review" },
+{ agent: "security", task: "Security analysis" },
+{ agent: "optimize", task: "Performance review" }
+]
 })
+
 ```
 
 Example 3: Testing & Review in Parallel
 ```
+
 task.invoke({
-  agents: [
-    { agent: "test", task: "Write unit tests" },
-    { agent: "test", task: "Integration tests" },
-    { agent: "document", task: "Document changes" }
-  ]
+agents: [
+{ agent: "test", task: "Write unit tests" },
+{ agent: "test", task: "Integration tests" },
+{ agent: "document", task: "Document changes" }
+]
 })
+
 ```
 
 DECISION FRAMEWORK FOR PARALLELIZATION:
@@ -594,19 +630,23 @@ DECISION FRAMEWORK FOR PARALLELIZATION:
 
 ANTI-PATTERN (Sequential):
 ```
+
 1. Research code
 2. Refactor code
 3. Test code
 4. Review code
+
 ```
 
 IMPROVED PATTERN (Parallel):
 ```
+
 1. Research code
-[Then in parallel]
+   [Then in parallel]
 2. Refactor code
 3. Test code
 4. Review code
+
 ```
 
 YOUR PRIMARY RESPONSIBILITY:
@@ -703,6 +743,7 @@ Remember: Ship code that's IMPLEMENTED WELL, not code that's done quickly.
 **Priority**: MEDIUM
 
 Replace:
+
 ```json
 "settings": {
   "auto_invoke_architect": true,
@@ -713,26 +754,27 @@ Replace:
 ```
 
 With:
+
 ```json
 "settings": {
   "auto_invoke_architect": true,
   "auto_review_before_commit": true,
   "parallel_subagents": true,
   "max_parallel_agents": 4,
-  
+
   "orchestrator_settings": {
     "prefer_delegation": true,
     "delegation_threshold": 3,
     "delegation_percentage_target": 80
   },
-  
+
   "parallelism_settings": {
     "enabled": true,
     "max_concurrent_tasks": 4,
     "wait_for_completion": true,
     "aggressive_parallelization": true
   },
-  
+
   "delegation_settings": {
     "build_agent_delegates_testing": true,
     "build_agent_delegates_review": true,
@@ -816,6 +858,7 @@ After implementing changes, validate:
 For maximum parallelism, each agent should follow this pattern:
 
 ### Specialist Agent Prompt Pattern:
+
 ```
 You are the [NAME] agent - a specialized [DOMAIN] expert.
 
@@ -837,6 +880,7 @@ Delegate them to specialist agents.
 ```
 
 ### Orchestrator Prompt Pattern:
+
 ```
 You are the ORCHESTRATOR agent.
 
@@ -862,6 +906,7 @@ WHEN TO USE PARALLEL INVOCATION:
 ## References & Resources
 
 **File Locations in Repository:**
+
 - Config: `/home/gabriel/projects/system/.opencode.json`
 - Orchestrator Prompt: `/home/gabriel/projects/system/prompts/orchestrator.txt`
 - Build Prompt: `/home/gabriel/projects/system/prompts/build.txt`
@@ -870,6 +915,7 @@ WHEN TO USE PARALLEL INVOCATION:
 - Agent List: `/home/gabriel/projects/system/prompts/AGENT-GUIDE.md` (lines 1-170)
 
 **OpenCode Concepts:**
+
 - Task Tool: Only available to orchestrator, enables agent invocation
 - Parallel Setting: `"parallel_subagents": true` must be set
 - Max Agents: `"max_parallel_agents": 4` is the limit
@@ -893,12 +939,14 @@ What's missing:
 ❌ Detailed delegation examples
 
 **Implementation Path:**
+
 1. Update 3 prompts (orchestrator.txt, build.txt, architect.txt)
 2. Expand settings in .opencode.json
 3. Add parallel workflow definitions
 4. Test with complex multi-step tasks
 
 **Expected Outcome:**
+
 - Orchestrator will invoke 3-4 subagents in parallel
 - Build agent will delegate testing, review, documentation
 - Complex tasks will complete 2-4x faster
