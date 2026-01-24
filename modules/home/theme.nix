@@ -14,8 +14,8 @@
 
     fonts = {
       monospace = {
-        package = pkgs.nerd-fonts.jetbrains-mono;
-        name = "JetBrainsMono Nerd Font";
+        package = pkgs.monaspace;
+        name = "Monaspace Neon";  # or Argon, Krypton, Xenon, Radon
       };
       sizes = {
         terminal = 14;
@@ -36,10 +36,13 @@
     };
   };
 
+  # Install Nerd Font for icons (used by wlogout, starship, etc.)
+  home.packages = [ pkgs.nerd-fonts.symbols-only ];
+
   # Minimal fuzzel launcher config - centered floating, no bar, gruvbox themed
   xdg.configFile."fuzzel/fuzzel.ini".text = ''
     [main]
-    font=JetBrainsMono Nerd Font:size=12
+    font=Monaspace Neon:size=12
     prompt=""
     icon-theme=Adwaita
     icons-enabled=no
@@ -90,9 +93,9 @@
     body-color=bdae93ff
     border-color=665c54ff
     border-size=2
-    title-font=JetBrainsMono Nerd Font:size=10:weight=bold
-    summary-font=JetBrainsMono Nerd Font:size=10
-    body-font=JetBrainsMono Nerd Font:size=9
+    title-font=Monaspace Neon:size=10:weight=bold
+    summary-font=Monaspace Neon:size=10
+    body-font=Monaspace Neon:size=9
     default-timeout=5
     progress-bar-color=83a598ff
 
@@ -103,9 +106,9 @@
     body-color=bdae93ff
     border-color=83a598ff
     border-size=2
-    title-font=JetBrainsMono Nerd Font:size=10:weight=bold
-    summary-font=JetBrainsMono Nerd Font:size=10
-    body-font=JetBrainsMono Nerd Font:size=9
+    title-font=Monaspace Neon:size=10:weight=bold
+    summary-font=Monaspace Neon:size=10
+    body-font=Monaspace Neon:size=9
     default-timeout=10
     progress-bar-color=83a598ff
 
@@ -116,9 +119,9 @@
     body-color=d5c4a1ff
     border-color=fb4934ff
     border-size=3
-    title-font=JetBrainsMono Nerd Font:size=10:weight=bold
-    summary-font=JetBrainsMono Nerd Font:size=10
-    body-font=JetBrainsMono Nerd Font:size=9
+    title-font=Monaspace Neon:size=10:weight=bold
+    summary-font=Monaspace Neon:size=10
+    body-font=Monaspace Neon:size=9
     default-timeout=0
     progress-bar-color=fb4934ff
   '';
@@ -175,29 +178,27 @@
     }
   '';
 
-  # wlogout style with Gruvbox colors and Nerd Font icons
+  # wlogout style with Gruvbox colors and SVG icons
   xdg.configFile."wlogout/style.css".text = ''
     * {
         background-image: none;
-        font-family: "JetBrainsMono Nerd Font";
+        font-family: "Monaspace Neon", monospace;
         font-size: 14px;
     }
 
     window {
-        /* Gruvbox bg with transparency */
         background-color: rgba(40, 40, 40, 0.9);
     }
 
     button {
-        /* Gruvbox colors */
         color: #d5c4a1;
         background-color: #3c3836;
         border: 2px solid #504945;
-        border-radius: 0;
-        margin: 5px;
-        padding: 20px;
-        min-width: 120px;
-        min-height: 120px;
+        border-radius: 8px;
+        margin: 10px;
+        background-repeat: no-repeat;
+        background-position: center 30%;
+        background-size: 64px;
     }
 
     button:focus, button:active, button:hover {
@@ -206,71 +207,28 @@
         outline-style: none;
     }
 
-    /* Nerd Font icon buttons */
     #lock {
-        background-image: none;
-    }
-    #lock label {
-        font-size: 48px;
-    }
-    #lock label:before {
-        content: "󰌾\A";
-        white-space: pre;
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/lock.png"));
     }
 
     #logout {
-        background-image: none;
-    }
-    #logout label {
-        font-size: 48px;
-    }
-    #logout label:before {
-        content: "󰍃\A";
-        white-space: pre;
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/logout.png"));
     }
 
     #suspend {
-        background-image: none;
-    }
-    #suspend label {
-        font-size: 48px;
-    }
-    #suspend label:before {
-        content: "󰤄\A";
-        white-space: pre;
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/suspend.png"));
     }
 
     #hibernate {
-        background-image: none;
-    }
-    #hibernate label {
-        font-size: 48px;
-    }
-    #hibernate label:before {
-        content: "󰋊\A";
-        white-space: pre;
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/hibernate.png"));
     }
 
     #reboot {
-        background-image: none;
-    }
-    #reboot label {
-        font-size: 48px;
-    }
-    #reboot label:before {
-        content: "󰜉\A";
-        white-space: pre;
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/reboot.png"));
     }
 
     #shutdown {
-        background-image: none;
-    }
-    #shutdown label {
-        font-size: 48px;
-    }
-    #shutdown label:before {
-        content: "󰐥\A";
-        white-space: pre;
+        background-image: image(url("${pkgs.wlogout}/share/wlogout/icons/shutdown.png"));
     }
   '';
 }
