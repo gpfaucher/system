@@ -65,10 +65,6 @@
           splitbelow = true;
           list = true;
           termguicolors = true;
-          
-          # Concealment (for markdown rendering)
-          conceallevel = 2;
-          concealcursor = "nc";
 
           # Performance
           updatetime = 250;
@@ -496,9 +492,15 @@
                   -- Checkbox toggle
                   map("n", "<leader>mc", "<Cmd>MDTaskToggle<CR>", vim.tbl_extend("force", opts, { desc = "Toggle markdown checkbox" }))
                   
-                  -- List operations
-                  map("i", "<C-x>", "<Cmd>MDListItemBelow<CR>", vim.tbl_extend("force", opts, { desc = "New list item below" }))
-                  map("i", "<CR>", "<Cmd>MDListItemBelow<CR>", vim.tbl_extend("force", opts, { desc = "New list item" }))
+                  -- List operations (use Ctrl+Enter for new list item, keep Enter normal)
+                  map("i", "<C-CR>", "<Cmd>MDListItemBelow<CR>", vim.tbl_extend("force", opts, { desc = "New list item below" }))
+                  map("n", "o", function()
+                    local line = vim.api.nvim_get_current_line()
+                    if line:match("^%s*[-*+]%s") or line:match("^%s*%d+%.%s") then
+                      return "o" .. line:match("^%s*[-*+%d]+[.:]?%s*")
+                    end
+                    return "o"
+                  end, vim.tbl_extend("force", opts, { expr = true, desc = "Smart list continuation" }))
                 end,
               })
             '';
@@ -509,12 +511,10 @@
             package = pkgs.vimPlugins.vim-markdown;
             setup = ''
               -- Folding settings
-              vim.g.vim_markdown_folding_disabled = 0
-              vim.g.vim_markdown_folding_level = 6
-              vim.g.vim_markdown_folding_style_pythonic = 1
+              vim.g.vim_markdown_folding_disabled = 1  -- Disable folding (can be confusing)
               
-              -- Concealment (render checkboxes, emphasis, etc visually)
-              vim.g.vim_markdown_conceal = 2
+              -- Concealment - use level 1 for safety (shows chars, doesn't hide)
+              vim.g.vim_markdown_conceal = 1
               vim.g.vim_markdown_conceal_code_blocks = 0
               
               -- Syntax highlighting
@@ -534,9 +534,6 @@
               -- Don't require .md extension for links
               vim.g.vim_markdown_no_extensions_in_markdown = 1
               vim.g.vim_markdown_autowrite = 1
-              
-              -- Enable checkboxes with nice symbols
-              vim.g.vim_markdown_checkbox_states = {' ', 'x', '-'}
             '';
           };
 
@@ -652,24 +649,18 @@
           
           # Markdown: Better visual rendering
           markdown-visual = ''
-            -- Enable concealment for markdown files
+            -- Enable concealment for markdown files (level 1 = safe, shows chars)
             vim.api.nvim_create_autocmd("FileType", {
               pattern = "markdown",
               callback = function()
-                vim.opt_local.conceallevel = 2
-                vim.opt_local.concealcursor = "nc"
+                -- conceallevel 1: conceal with replacement char if defined, else show original
+                vim.opt_local.conceallevel = 1
+                vim.opt_local.concealcursor = ""  -- Don't conceal on current line
+                vim.opt_local.wrap = true
+                vim.opt_local.linebreak = true
                 
-                -- Custom conceal highlighting for better visibility
+                -- Custom conceal highlighting (gruvbox cyan)
                 vim.api.nvim_set_hl(0, "Conceal", { fg = "#83a598", bg = "NONE" })
-              end,
-            })
-            
-            -- Treesitter-based markdown highlighting improvements
-            vim.api.nvim_create_autocmd("FileType", {
-              pattern = "markdown",
-              callback = function()
-                -- Enhanced list and checkbox rendering
-                vim.treesitter.language.register("markdown", "md")
               end,
             })
           '';
