@@ -9,7 +9,7 @@
   # Stylix theming configuration
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-dark-medium.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/ayu-dark.yaml";
     polarity = "dark";
 
     fonts = {
@@ -27,8 +27,8 @@
     };
 
     targets = {
-      # nvf handles neovim theming
-      neovim.enable = false;
+      # nvf uses base16 theme, Stylix provides the colors
+      neovim.enable = true;
       fish.enable = true;
       gtk.enable = true;
       fuzzel.enable = false; # Use custom minimal config below
@@ -39,7 +39,7 @@
   # Install Nerd Font for icons (used by wlogout, starship, etc.)
   home.packages = [ pkgs.nerd-fonts.symbols-only ];
 
-  # Minimal fuzzel launcher config - centered floating, no bar, gruvbox themed
+  # Minimal fuzzel launcher config - centered floating, no bar, Ayu Dark themed
   xdg.configFile."fuzzel/fuzzel.ini".text = ''
     [main]
     font=Monaspace Neon:size=12
@@ -56,21 +56,21 @@
     inner-pad=8
 
     [colors]
-    # Gruvbox Dark Medium - minimal theme
-    background=282828ee
-    text=d5c4a1ff
-    match=83a598ff
-    selection=3c3836ff
-    selection-text=ebdbb2ff
-    selection-match=83a598ff
-    border=504945ff
+    # Ayu Dark - minimal theme
+    background=0b0e14ee
+    text=bfbdb6ff
+    match=ffb454ff
+    selection=1c1f25ff
+    selection-text=e6e1cfff
+    selection-match=ffb454ff
+    border=24272dff
 
     [border]
     width=2
     radius=0
   '';
 
-  # fnott notification daemon config with Gruvbox colors
+  # fnott notification daemon config with Ayu Dark colors
   xdg.configFile."fnott/fnott.ini".text = ''
     [main]
     output=
@@ -86,56 +86,56 @@
     selection-helper=fuzzel --dmenu
 
     [low]
-    # Gruvbox Dark Medium colors
-    background=282828dd
-    title-color=d5c4a1ff
-    summary-color=d5c4a1ff
-    body-color=bdae93ff
-    border-color=665c54ff
+    # Ayu Dark colors
+    background=0b0e14dd
+    title-color=bfbdb6ff
+    summary-color=bfbdb6ff
+    body-color=8a9199ff
+    border-color=24272dff
     border-size=2
     title-font=Monaspace Neon:size=10:weight=bold
     summary-font=Monaspace Neon:size=10
     body-font=Monaspace Neon:size=9
     default-timeout=5
-    progress-bar-color=83a598ff
+    progress-bar-color=59c2ffff
 
     [normal]
-    background=282828dd
-    title-color=d5c4a1ff
-    summary-color=d5c4a1ff
-    body-color=bdae93ff
-    border-color=83a598ff
+    background=0b0e14dd
+    title-color=bfbdb6ff
+    summary-color=bfbdb6ff
+    body-color=8a9199ff
+    border-color=59c2ffff
     border-size=2
     title-font=Monaspace Neon:size=10:weight=bold
     summary-font=Monaspace Neon:size=10
     body-font=Monaspace Neon:size=9
     default-timeout=10
-    progress-bar-color=83a598ff
+    progress-bar-color=59c2ffff
 
     [critical]
-    background=282828ee
-    title-color=fb4934ff
-    summary-color=fb4934ff
-    body-color=d5c4a1ff
-    border-color=fb4934ff
+    background=0b0e14ee
+    title-color=f07178ff
+    summary-color=f07178ff
+    body-color=bfbdb6ff
+    border-color=f07178ff
     border-size=3
     title-font=Monaspace Neon:size=10:weight=bold
     summary-font=Monaspace Neon:size=10
     body-font=Monaspace Neon:size=9
     default-timeout=0
-    progress-bar-color=fb4934ff
+    progress-bar-color=f07178ff
   '';
 
-  # waylock screen locker config with Gruvbox colors
+  # waylock screen locker config with Ayu Dark colors
   xdg.configFile."waylock/waylock.toml".text = ''
     [flags]
     ignore-empty-password = true
 
     [colors]
-    # Gruvbox Dark Medium
-    init-color = "282828"
-    input-color = "83a598"
-    fail-color = "fb4934"
+    # Ayu Dark
+    init-color = "0b0e14"
+    input-color = "59c2ff"
+    fail-color = "f07178"
   '';
 
   # wlogout layout configuration
@@ -178,7 +178,7 @@
     }
   '';
 
-  # wlogout style with Gruvbox colors and SVG icons
+  # wlogout style with Ayu Dark colors and SVG icons
   xdg.configFile."wlogout/style.css".text = ''
     * {
         background-image: none;
@@ -187,13 +187,13 @@
     }
 
     window {
-        background-color: rgba(40, 40, 40, 0.9);
+        background-color: rgba(11, 14, 20, 0.9);
     }
 
     button {
-        color: #d5c4a1;
-        background-color: #3c3836;
-        border: 2px solid #504945;
+        color: #bfbdb6;
+        background-color: #1c1f25;
+        border: 2px solid #24272d;
         border-radius: 8px;
         margin: 10px;
         background-repeat: no-repeat;
@@ -202,8 +202,8 @@
     }
 
     button:focus, button:active, button:hover {
-        background-color: #504945;
-        border-color: #83a598;
+        background-color: #24272d;
+        border-color: #59c2ff;
         outline-style: none;
     }
 

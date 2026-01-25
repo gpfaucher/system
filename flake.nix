@@ -105,6 +105,14 @@
             nixpkgs.overlays = [
               (final: prev: {
                 beads = beads.packages.${system}.default;
+                # Enable CUDA support for Tabby AI coding assistant
+                # Note: nixpkgs has a bug where postInstall links to non-CUDA llama-cpp
+                # We fix this by overriding postInstall to use the CUDA-enabled llama-cpp
+                tabby = (prev.tabby.override { cudaSupport = true; }).overrideAttrs (oldAttrs: {
+                  postInstall = ''
+                    ln -s ${prev.lib.getExe' (prev.llama-cpp.override { cudaSupport = true; }) "llama-server"} $out/bin/llama-server
+                  '';
+                });
               })
             ];
           }

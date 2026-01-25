@@ -1,5 +1,4 @@
 {
-  config,
   lib,
   pkgs,
   ...
@@ -13,13 +12,15 @@
       After = [ "graphical-session.target" ];
     };
     Service = {
-      ExecStart = "${pkgs.tabby}/bin/tabby serve --model StarCoder-1B --device cuda";
+      ExecStart = "${pkgs.tabby}/bin/tabby serve --model Qwen2.5-Coder-3B --device cuda";
       Restart = "always";
       
       # Security hardening
       PrivateTmp = true;
       ProtectSystem = "strict";
-      ProtectHome = "read-only"; # Needs to write to ~/.tabby
+      ProtectHome = "tmpfs";
+      BindPaths = [ "%h/.tabby" ]; # Bind-mount ~/.tabby directory for read-write access
+      BindReadOnlyPaths = [ "%h/projects" ]; # Allow read access to repos for indexing
       NoNewPrivileges = true;
       ProtectKernelTunables = true;
       ProtectKernelModules = true;

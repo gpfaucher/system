@@ -17,6 +17,7 @@
     ../../modules/system/bluetooth-monitor.nix
     ../../modules/system/hardening.nix
     ../../modules/system/impermanence.nix
+    ../../modules/system/vr.nix
   ];
 
   # Hostname
@@ -83,11 +84,22 @@
       "audio"
       "networkmanager"
       "input"
+      "adbusers" # For Meta Quest / Android device access
     ];
   };
 
   # Enable fish shell system-wide
   programs.fish.enable = true;
+
+  # Steam gaming platform
+  programs.steam = {
+    enable = true;
+    remotePlay.openFirewall = true; # Open ports for Steam Remote Play
+    dedicatedServer.openFirewall = true; # Open ports for Steam dedicated servers
+  };
+
+  # Gamemode for performance optimization while gaming
+  programs.gamemode.enable = true;
 
   # NixOS state version - do not change after initial install
   system.stateVersion = "24.11";

@@ -76,6 +76,7 @@
     # GUI
     jetbrains.datagrip
     zed-editor-fhs
+    zoom-us # Video conferencing
 
     # Browsers
     firefox
@@ -114,6 +115,7 @@
     dust # Better du
     procs # Better ps
     bottom # btm - better top/htop
+    btop # Resource monitor with GPU support
 
     # Debuggers
     gdb
@@ -161,6 +163,27 @@
       enable = false;
     };
   };
+
+  # Tabby server configuration - auto-discover git repos in ~/projects
+  home.activation.tabbyServerConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    $DRY_RUN_CMD mkdir -p $HOME/.tabby
+    
+    # Generate config by scanning ~/projects for git repositories
+    CONFIG="$HOME/.tabby/config.toml"
+    $DRY_RUN_CMD rm -f "$CONFIG"
+    
+    for dir in $HOME/projects/*/; do
+      if [ -d "$dir/.git" ]; then
+        name=$(basename "$dir")
+        echo "[[repositories]]" >> "$CONFIG"
+        echo "name = \"$name\"" >> "$CONFIG"
+        echo "git_url = \"file://$dir\"" >> "$CONFIG"
+        echo "" >> "$CONFIG"
+      fi
+    done
+  '';
+
+
 
   # Tabby agent configuration
   # Token is encrypted using agenix and decrypted to /run/agenix/tabby-token

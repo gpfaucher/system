@@ -691,10 +691,11 @@
           '';
 
           # Tabby vim-tabby configuration
+          # Manual trigger so it doesn't interfere with LSP completion
           tabby-config = ''
             vim.g.tabby_agent_start_command = {"tabby-agent", "--stdio"}
-            vim.g.tabby_inline_completion_trigger = "auto"
-            vim.g.tabby_inline_completion_keybinding_accept = "<Tab>"
+            vim.g.tabby_inline_completion_trigger = "manual"
+            vim.g.tabby_inline_completion_keybinding_accept = "<C-]>"
             vim.g.tabby_inline_completion_keybinding_trigger_or_dismiss = "<C-\\>"
           '';
 
