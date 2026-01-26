@@ -136,7 +136,7 @@
         # Telescope with fzf
         telescope = {
           enable = true;
-          settings = {
+          setupOpts = {
             defaults = {
               hidden = true;  # Show hidden files (dotfiles)
               # ripgrep and fd respect .gitignore by default (no --no-ignore flag)
