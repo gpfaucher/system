@@ -119,6 +119,11 @@
             lsp.enable = true;
           };
 
+          terraform = {
+            enable = true;
+            lsp.enable = true;
+          };
+
           markdown = {
             enable = true;
             lsp.enable = true;
@@ -136,17 +141,6 @@
         # Telescope with fzf
         telescope = {
           enable = true;
-          setupOpts = {
-            defaults = {
-              hidden = true;  # Show hidden files (dotfiles)
-              # ripgrep and fd respect .gitignore by default (no --no-ignore flag)
-            };
-            pickers = {
-              find_files = {
-                hidden = true;  # Ensure hidden files are shown in find_files picker
-              };
-            };
-          };
         };
 
 
@@ -697,6 +691,28 @@
 
         # LSP keymaps and settings via luaConfigRC
         luaConfigRC = {
+          # Telescope configuration for hidden files
+          telescope-config = ''
+            local telescope = require("telescope")
+            telescope.setup({
+              defaults = {
+                hidden = true,  -- Show hidden files (dotfiles)
+                -- ripgrep and fd respect .gitignore by default
+              },
+              pickers = {
+                find_files = {
+                  hidden = true,  -- Ensure hidden files are shown in find_files picker
+                  no_ignore = false,  -- Respect .gitignore files
+                },
+                live_grep = {
+                  additional_args = function()
+                    return {"--hidden"}
+                  end,
+                },
+              },
+            })
+          '';
+
           # Add nvf site directory to runtimepath for treesitter
           nvf-runtimepath = ''
             vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/nvf/site")
