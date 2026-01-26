@@ -37,7 +37,7 @@ in
       model = "anthropic/claude-sonnet-4-5";
       small_model = "anthropic/claude-haiku-4-5";
 
-      theme = "gruvbox";
+      theme = "ayu";
 
       autoupdate = true;
 
