@@ -19,43 +19,30 @@
     alsa.support32Bit = true;
     pulse.enable = true;
     jack.enable = true; # Enable JACK support for better Bluetooth audio
+
     wireplumber = {
       enable = true;
-      # Custom WirePlumber configuration for Bluetooth multipoint handling
-      configPackages = [
-        (pkgs.writeTextDir "share/wireplumber/main.lua.d/51-bluetooth-policy.lua" ''
-          -- Bluetooth Multipoint Call Handling Policy
-          -- Optimizes HSP/HFP profile switching for VoIP calls
-
-          -- Configure Bluetooth policy
-          bluetooth_policy = {
-            ["policy.bluetooth"] = {
-              -- Enable automatic profile switching
-              ["auto-switch-profile"] = true,
-              
-              -- Prioritize HSP/HFP for calls (headset mode with microphone)
-              -- This triggers automatically when apps like Teams request microphone access
-              ["use-persistent-storage"] = true,
-              
-              -- Only allow one device to use HSP/HFP at a time
-              -- This prevents multipoint conflicts during calls
-              ["hfp-no-multi-hf"] = true,
-              
-              -- Set proper sample rate for headset mode (16kHz is standard for HSP/HFP)
-              ["bluez5.hfp-headset-sample-rate"] = 16000,
-              
-              -- Enable mSBC codec for better voice quality
-              ["bluez5.msbc-support"] = true,
-              
-              -- Reconnection handling
-              ["bluez5.reconnect-delay"] = 2000,  -- 2 second delay before reconnecting
-            },
-          }
-
-          -- Load the configuration
-          table.insert(alsa_monitor.rules, bluetooth_policy)
-        '')
-      ];
+      extraConfig = {
+        # Bluetooth codec configuration
+        "10-bluez" = {
+          "monitor.bluez.properties" = {
+            # Enable better codecs
+            "bluez5.enable-sbc-xq" = true;
+            "bluez5.enable-msbc" = true;
+            "bluez5.enable-hw-volume" = true;
+            # Include BOTH A2DP and headset roles
+            "bluez5.roles" = [ "a2dp_sink" "a2dp_source" "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
+            # Default to A2DP profile
+            "bluez5.default.profile" = "a2dp-sink";
+          };
+        };
+        # Auto-switch to headset profile when app needs microphone
+        "11-bluetooth-policy" = {
+          "wireplumber.settings" = {
+            "bluetooth.autoswitch-to-headset-profile" = true;
+          };
+        };
+      };
     };
   };
 
@@ -70,8 +57,10 @@
     General = {
       # Enable all Bluetooth profiles including A2DP (high-quality audio)
       Enable = "Source,Sink,Media,Socket";
-      # Disable battery reporting if it causes disconnection issues
-      Experimental = false;
+      # Enable experimental features for mSBC codec support (better call quality)
+      Experimental = true;
+      # Keep connections alive during profile switches
+      KernelExperimental = true;
     };
   };
 }

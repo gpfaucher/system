@@ -71,8 +71,8 @@ let
     log "Bluetooth monitor started"
     # notify "Bluetooth Monitor" "Multipoint call handling active"  # Disabled - too annoying
 
-    # Monitor PipeWire/WirePlumber events via wpctl
-    ${pkgs.wireplumber}/bin/wpctl status --monitor | while read -r line; do
+    # Monitor PipeWire/WirePlumber events via pw-mon
+    ${pkgs.pipewire}/bin/pw-mon | while read -r line; do
       # Get all connected audio devices
       devices=$(get_connected_audio_devices)
       
@@ -159,7 +159,10 @@ let
 in
 {
   # Systemd user service for Bluetooth monitor
+  # DISABLED: WirePlumber's bluez5.autoswitch-profile handles this now
+  # To re-enable: add wantedBy = [ "graphical-session.target" ];
   systemd.user.services.bluetooth-monitor = {
+    enable = false; # Disabled - conflicts with WirePlumber auto-switch
     description = "Bluetooth Multipoint Call Monitor";
     documentation = [ "Handles automatic device switching during VoIP calls" ];
 
@@ -173,7 +176,6 @@ in
       "wireplumber.service"
     ];
     partOf = [ "graphical-session.target" ];
-    wantedBy = [ "graphical-session.target" ];
 
     serviceConfig = {
       Type = "simple";
