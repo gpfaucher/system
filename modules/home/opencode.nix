@@ -95,7 +95,7 @@ in
           model = "anthropic/claude-haiku-4-5";
           prompt = "{file:~/.config/opencode/prompts/plan.md}";
           tools = {
-            write = true;
+            write = false;
             edit = false;
             bash = false;
             read = true;
@@ -256,9 +256,9 @@ in
         };
 
         security = {
-          description = "Security analysis and hardening specialist.";
+          description = "Security analysis and hardening specialist. Uses Opus for thorough vulnerability detection.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/security.md}";
           tools = {
             write = false;
@@ -271,9 +271,9 @@ in
         };
 
         fix = {
-          description = "Fast bug fix specialist using Haiku for quick iterations.";
+          description = "Bug fix specialist for careful, regression-free fixes.";
           mode = "subagent";
-          model = "anthropic/claude-haiku-4-5";
+          model = "anthropic/claude-sonnet-4-5";
           prompt = "{file:~/.config/opencode/prompts/fix.md}";
           tools = {
             write = false;
