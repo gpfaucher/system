@@ -204,9 +204,11 @@ let
     riverctl focus-follows-cursor normal
 
     # === Window Rules ===
-    riverctl rule-add -app-id 'btop' float
-    riverctl rule-add -app-id 'bluetuith' float
-    riverctl rule-add -app-id 'impala' float
+    # Terminal apps: match on -title (they inherit terminal's app-id)
+    riverctl rule-add -title 'btop' float
+    riverctl rule-add -title 'bluetuith' float
+    riverctl rule-add -title 'impala' float
+    # GUI apps: match on -app-id
     riverctl rule-add -app-id 'pavucontrol' float
     riverctl rule-add -app-id '.blueman-*' float
     riverctl rule-add -app-id 'org.gnome.Calculator' float
