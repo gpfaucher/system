@@ -206,8 +206,11 @@ let
     # === Window Rules ===
     # Terminal apps: match on -title (they inherit terminal's app-id)
     riverctl rule-add -title 'btop' float
+    riverctl rule-add -title 'btop' dimensions 1200 800
     riverctl rule-add -title 'bluetuith' float
+    riverctl rule-add -title 'bluetuith' dimensions 900 600
     riverctl rule-add -title 'impala' float
+    riverctl rule-add -title 'impala' dimensions 900 600
     # GUI apps: match on -app-id
     riverctl rule-add -app-id 'pavucontrol' float
     riverctl rule-add -app-id '.blueman-*' float
