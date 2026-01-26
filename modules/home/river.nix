@@ -47,6 +47,19 @@ let
     dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
     systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
     
+    # === Wait for WAYLAND_DISPLAY socket to be ready ===
+    # Fix race condition: graphical-session.target services (like kanshi) need the socket to exist
+    # Wait up to 5 seconds for $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY to appear
+    if [ -n "$WAYLAND_DISPLAY" ]; then
+        WAYLAND_SOCKET="$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
+        for i in $(seq 1 50); do
+            if [ -S "$WAYLAND_SOCKET" ]; then
+                break
+            fi
+            sleep 0.1
+        done
+    fi
+    
     # Start graphical session target (and all services that depend on it, like wideriver)
     systemctl --user start graphical-session.target
 

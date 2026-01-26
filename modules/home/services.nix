@@ -216,13 +216,29 @@
     LockPersonality = true;
   };
 
+  # Override kanshi systemd service to survive suspend/resume and fix startup race condition
+  systemd.user.services.kanshi = {
+    Unit = {
+      # Remove PartOf to prevent stopping on suspend
+      PartOf = lib.mkForce [ ];
+      # Disable restart rate limiting
+      StartLimitIntervalSec = lib.mkForce 0;
+    };
+    Service = {
+      # Add delay between restart attempts to avoid rapid failures during startup
+      # This helps when WAYLAND_DISPLAY isn't immediately available
+      RestartSec = lib.mkForce 2;
+    };
+  };
+
   # Wideriver layout generator for River WM
   # Managed as a systemd service to enable proper restart after suspend/resume
   systemd.user.services.wideriver = {
     Unit = {
       Description = "Wideriver layout generator for River WM";
-      PartOf = [ "graphical-session.target" ];
       After = [ "graphical-session.target" ];
+      # Disable restart rate limiting - wideriver may restart many times during suspend/resume
+      StartLimitIntervalSec = 0;
     };
     Service = {
       ExecStart = "${pkgs.wideriver}/bin/wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 --border-width 2 --border-width-monocle 0 --inner-gap 0 --outer-gap 0";
