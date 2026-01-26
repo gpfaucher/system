@@ -82,7 +82,7 @@
       "wheel"
       "video"
       "audio"
-      "networkmanager"
+      "network" # For iwd wireless management
       "input"
       "adbusers" # For Meta Quest / Android device access
     ];

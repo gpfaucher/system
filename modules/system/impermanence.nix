@@ -17,9 +17,8 @@
   #     "/var/log"
   #     "/var/lib/bluetooth"
   #     "/var/lib/docker"
-  #     "/var/lib/NetworkManager"
+  #     "/var/lib/iwd" # iwd wireless network profiles
   #     "/var/lib/systemd"
-  #     "/etc/NetworkManager/system-connections"
   #   ];
   #   files = [
   #     "/etc/machine-id"

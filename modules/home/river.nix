@@ -208,7 +208,6 @@ let
     riverctl rule-add -app-id 'bluetuith' float
     riverctl rule-add -app-id 'impala' float
     riverctl rule-add -app-id 'pavucontrol' float
-    riverctl rule-add -app-id 'nm-connection-editor' float
     riverctl rule-add -app-id '.blueman-*' float
     riverctl rule-add -app-id 'org.gnome.Calculator' float
 
@@ -230,8 +229,7 @@ let
     riverctl spawn "wl-paste --type text --watch cliphist store"
     riverctl spawn "wl-paste --type image --watch cliphist store"
 
-    # Network/Bluetooth tray
-    riverctl spawn "nm-applet --indicator"
+    # Bluetooth tray
     riverctl spawn blueman-applet
 
     # Polkit agent
@@ -302,7 +300,6 @@ in
 
       # System utilities
       polkit_gnome
-      networkmanagerapplet
       blueman
       impala # TUI wifi manager
       bluetuith # TUI bluetooth manager

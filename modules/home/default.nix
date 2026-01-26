@@ -150,7 +150,6 @@
     htop
     tree
     psmisc # killall command
-    networkmanagerapplet # nm-applet - NetworkManager GUI tray applet for Wayland/River
 
     # Fonts
     nerd-fonts.jetbrains-mono

@@ -6,8 +6,26 @@
 }:
 
 {
-  # NetworkManager for network management
-  networking.networkmanager.enable = true;
+  # iwd for wireless management (replaces NetworkManager)
+  networking.wireless.iwd = {
+    enable = true;
+    settings = {
+      # General settings
+      General = {
+        EnableNetworkConfiguration = true; # iwd handles DHCP internally
+        UseDefaultInterface = true;
+      };
+      # Network configuration
+      Network = {
+        EnableIPv6 = true;
+        RoutePriorityOffset = 300;
+      };
+      # Scanning settings for better performance
+      Scan = {
+        DisablePeriodicScan = false;
+      };
+    };
+  };
 
   # Firewall configuration
   networking.firewall = {
