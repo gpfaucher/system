@@ -11,10 +11,13 @@
     enable = true;
     settings = {
       # General settings
-      General = {
-        EnableNetworkConfiguration = true; # iwd handles DHCP internally
-        UseDefaultInterface = true;
-      };
+       General = {
+         EnableNetworkConfiguration = true;
+       };
+       # Driver quirks for wireless devices
+       DriverQuirks = {
+         DefaultInterface = true;
+       };
       # Network configuration
       Network = {
         EnableIPv6 = true;
