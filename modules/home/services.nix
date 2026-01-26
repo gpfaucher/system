@@ -216,28 +216,21 @@
     LockPersonality = true;
   };
 
-  # River WM Resume Hook - Reconnect layout manager after suspend
-  systemd.user.services.river-resume-hook = {
+  # Wideriver layout generator for River WM
+  # Managed as a systemd service to enable proper restart after suspend/resume
+  systemd.user.services.wideriver = {
     Unit = {
-      Description = "River WM Resume Hook";
+      Description = "Wideriver layout generator for River WM";
       PartOf = [ "graphical-session.target" ];
       After = [ "graphical-session.target" ];
     };
     Service = {
-      Type = "oneshot";
-      ExecStartPre = "${pkgs.coreutils}/bin/sleep 1.5";
-      ExecStart = "${pkgs.libnotify}/bin/notify-send -u low 'River' 'Restoring tiling layout...'";
-      ExecStartPost = [
-        "${pkgs.river-classic}/bin/riverctl default-layout wideriver"
-        "${pkgs.kanshi}/bin/kanshictl reload"
-        "${pkgs.coreutils}/bin/sleep 0.2"
-        "${pkgs.river-classic}/bin/riverctl focus-output next"
-        "${pkgs.coreutils}/bin/sleep 0.1"
-        "${pkgs.river-classic}/bin/riverctl focus-output previous"
-      ];
-      RemainAfterExit = false;
+      ExecStart = "${pkgs.wideriver}/bin/wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 --border-width 2 --border-width-monocle 0 --inner-gap 0 --outer-gap 0";
+      # Always restart when wideriver dies (including after suspend/resume when River drops the connection)
+      Restart = "always";
+      RestartSec = "2s";
       
-      # Security hardening (needs IPC access to River WM and display server)
+      # Security hardening
       PrivateTmp = true;
       ProtectSystem = "strict";
       ProtectHome = "read-only";

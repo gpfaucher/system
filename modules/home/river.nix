@@ -46,6 +46,9 @@ let
     # === Export environment to systemd/dbus for portals ===
     dbus-update-activation-environment --systemd WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
     systemctl --user import-environment WAYLAND_DISPLAY XDG_CURRENT_DESKTOP XDG_SESSION_TYPE
+    
+    # Start graphical session target (and all services that depend on it, like wideriver)
+    systemctl --user start graphical-session.target
 
     # === Mod Key ===
     mod="Super"
@@ -197,9 +200,13 @@ let
     riverctl rule-add -app-id 'org.gnome.Calculator' float
 
     # === Autostart ===
-    # Layout generator (wideriver - dwm/xmonad style)
-    riverctl spawn "wideriver --layout left --stack dwindle --count-master 1 --ratio-master 0.55 --border-width 2 --border-width-monocle 0 --inner-gap 0 --outer-gap 0"
-
+    # NOTE: Most services are managed by systemd user services (see modules/home/services.nix)
+    # The graphical-session.target is started above, which triggers:
+    # - wideriver (layout generator)
+    # - kanshi (display management)
+    # - gammastep (night light) - via systemd default.target
+    # This ensures proper restart after suspend/resume.
+    
     # Wallpaper - Solid gruvbox background color (#282828)
     riverctl spawn "swaybg -c '#282828'"
 
@@ -210,18 +217,12 @@ let
     riverctl spawn "wl-paste --type text --watch cliphist store"
     riverctl spawn "wl-paste --type image --watch cliphist store"
 
-    # Night light
-    riverctl spawn gammastep
-
     # Network/Bluetooth tray
     riverctl spawn "nm-applet --indicator"
     riverctl spawn blueman-applet
 
     # Polkit agent
     riverctl spawn "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
-
-    # Auto display management
-    riverctl spawn kanshi
 
     # === Default layout generator ===
     riverctl default-layout wideriver
