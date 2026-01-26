@@ -136,7 +136,19 @@
         # Telescope with fzf
         telescope = {
           enable = true;
+          settings = {
+            defaults = {
+              hidden = true;  # Show hidden files (dotfiles)
+              # ripgrep and fd respect .gitignore by default (no --no-ignore flag)
+            };
+            pickers = {
+              find_files = {
+                hidden = true;  # Ensure hidden files are shown in find_files picker
+              };
+            };
+          };
         };
+
 
         # Autocomplete via blink-cmp
         # autocomplete = {
