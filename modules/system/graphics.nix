@@ -6,8 +6,21 @@
 }:
 
 {
-  # Enable graphics
-  hardware.graphics.enable = true;
+  # Enable graphics with hardware video encoding support
+  hardware.graphics = {
+    enable = true;
+    enable32Bit = true; # Required for some VR applications
+    
+    # AMD VAAPI support for hardware encoding (ALVR VR streaming)
+    # Mesa provides radeonsi_drv_video.so for AMD Phoenix1 GPU
+    extraPackages = with pkgs; [
+      libva # VA-API library
+    ];
+    
+    extraPackages32 = with pkgs.pkgsi686Linux; [
+      libva # 32-bit VA-API support for VR
+    ];
+  };
 
   # Load both GPU drivers
   services.xserver.videoDrivers = [
@@ -35,6 +48,11 @@
       nvidiaBusId = "PCI:1:0:0";
     };
   };
+
+  # System packages for graphics diagnostics
+  environment.systemPackages = with pkgs; [
+    libva-utils # vainfo for testing VAAPI drivers
+  ];
 
   # Wayland environment variables
   environment.sessionVariables = {
