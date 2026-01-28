@@ -77,9 +77,12 @@
     jetbrains.datagrip
     zed-editor-fhs
     zoom-us # Video conferencing
+    teams-for-linux
+    libreoffice-fresh # Office suite
 
     # Browsers
     firefox
+    google-chrome
     inputs.zen-browser.packages.${pkgs.system}.twilight
     neovim
     claude-code
@@ -94,6 +97,7 @@
     gcc
     tree-sitter
     nodejs_22
+    bun # Fast JavaScript runtime and package manager (required by opencode)
     tabby-agent # AI code completion agent
     fd # For telescope find_files
     ripgrep # For telescope live_grep

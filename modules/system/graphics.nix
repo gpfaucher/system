@@ -6,19 +6,19 @@
 }:
 
 {
-  # Enable graphics with hardware video encoding support
+  # Enable graphics with hardware acceleration
   hardware.graphics = {
     enable = true;
-    enable32Bit = true; # Required for some VR applications
-    
-    # AMD VAAPI support for hardware encoding (ALVR VR streaming)
+    enable32Bit = true; # Required for Steam and some applications
+
+    # AMD VAAPI support for hardware video encoding/decoding
     # Mesa provides radeonsi_drv_video.so for AMD Phoenix1 GPU
     extraPackages = with pkgs; [
       libva # VA-API library
     ];
-    
+
     extraPackages32 = with pkgs.pkgsi686Linux; [
-      libva # 32-bit VA-API support for VR
+      libva # 32-bit VA-API support
     ];
   };
 
@@ -28,17 +28,19 @@
     "nvidia"
   ];
 
-  # NVIDIA configuration for hybrid graphics (PRIME offload)
+  # NVIDIA configuration - PRIME offload mode
+  # AMD Phoenix1 is primary (display), NVIDIA RTX 2000 Ada is secondary (compute on-demand)
   hardware.nvidia = {
     open = true;
     modesetting.enable = true;
     powerManagement.enable = true;
 
-    # PRIME offload mode - AMD primary, NVIDIA on-demand for better battery
+    # PRIME offload mode - AMD primary, NVIDIA on-demand
+    # Use nvidia-offload or prime-run to run apps on NVIDIA GPU
     prime = {
       offload = {
         enable = true;
-        enableOffloadCmd = true;
+        enableOffloadCmd = true; # Provides 'nvidia-offload' command
       };
 
       # Bus IDs from: lspci | grep -E 'VGA|3D'

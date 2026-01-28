@@ -14,10 +14,7 @@
     ../../modules/system/networking.nix
     ../../modules/system/audio.nix
     ../../modules/system/services.nix
-    ../../modules/system/bluetooth-monitor.nix
     ../../modules/system/hardening.nix
-    ../../modules/system/impermanence.nix
-    ../../modules/system/vr.nix
   ];
 
   # Hostname
@@ -84,7 +81,6 @@
       "audio"
       "network" # For iwd wireless management
       "input"
-      "adbusers" # For Meta Quest / Android device access
     ];
   };
 

@@ -54,4 +54,13 @@
       setSocketVariable = true; # Sets DOCKER_HOST for the user
     };
   };
+
+  # Enable coredumps for crash diagnosis
+  systemd.coredump = {
+    enable = true;
+    extraConfig = ''
+      Storage=external
+      MaxUse=5G
+    '';
+  };
 }

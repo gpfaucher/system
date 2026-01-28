@@ -14,7 +14,8 @@
     Service = {
       ExecStart = "${pkgs.tabby}/bin/tabby serve --model Qwen2.5-Coder-3B --device cuda";
       Restart = "always";
-      
+      RestartSec = 5; # Prevent rapid restart loops on failure
+
       # Security hardening
       PrivateTmp = true;
       ProtectSystem = "strict";
@@ -31,6 +32,10 @@
       LockPersonality = true;
       # Note: MemoryDenyWriteExecute not set - may conflict with CUDA/GPU
       # Note: DeviceAllow needed for GPU access is handled by default in user services
+
+      # Memory limits to prevent OOM
+      MemoryMax = "8G";
+      MemoryHigh = "6G";
     };
     Install = {
       WantedBy = [ "default.target" ];
@@ -40,7 +45,7 @@
   # Kanshi display configuration service
   services.kanshi = {
     enable = true;
-    systemdTarget = "graphical-session.target";
+    systemdTarget = "default.target";
     settings = [
       # Dual external monitors: Portrait + Ultrawide (laptop disabled)
       {
@@ -223,6 +228,8 @@
       PartOf = lib.mkForce [ ];
       # Disable restart rate limiting
       StartLimitIntervalSec = lib.mkForce 0;
+      # Remove WAYLAND_DISPLAY condition - River starts us after Wayland is ready
+      ConditionEnvironment = lib.mkForce [ ];
     };
     Service = {
       # Add delay between restart attempts to avoid rapid failures during startup
@@ -260,7 +267,7 @@
       LockPersonality = true;
     };
     Install = {
-      WantedBy = [ "graphical-session.target" ];
+      WantedBy = [ "default.target" ];
     };
   };
 }

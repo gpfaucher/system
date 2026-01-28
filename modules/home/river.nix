@@ -39,7 +39,6 @@ let
     export SDL_VIDEODRIVER=wayland
     export CLUTTER_BACKEND=wayland
     export WLR_NO_HARDWARE_CURSORS=1
-    export LIBVA_DRIVER_NAME=radeonsi
     export XCURSOR_SIZE=24
     export XCURSOR_THEME=Adwaita
 
@@ -49,10 +48,10 @@ let
     
     # === Wait for WAYLAND_DISPLAY socket to be ready ===
     # Fix race condition: graphical-session.target services (like kanshi) need the socket to exist
-    # Wait up to 5 seconds for $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY to appear
+    # Wait up to 15 seconds for $XDG_RUNTIME_DIR/$WAYLAND_DISPLAY to appear
     if [ -n "$WAYLAND_DISPLAY" ]; then
         WAYLAND_SOCKET="$XDG_RUNTIME_DIR/$WAYLAND_DISPLAY"
-        for i in $(seq 1 50); do
+        for i in $(seq 1 150); do
             if [ -S "$WAYLAND_SOCKET" ]; then
                 break
             fi
