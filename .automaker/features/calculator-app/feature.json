@@ -1,0 +1,12 @@
+{
+  "id": "calculator-app",
+  "category": "Applications",
+  "title": "Quick Calculator",
+  "description": "Add qalculate-gtk or galculator with River keybinding for quick calculations. Includes unit conversions, scientific functions, and currency conversion with theme integration.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.762Z",
+  "updatedAt": "2026-01-29T09:27:10.762Z"
+}

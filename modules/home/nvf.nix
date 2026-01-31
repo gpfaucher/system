@@ -4,6 +4,21 @@
   lib,
   ...
 }:
+let
+  # OpenCode.nvim - AI coding assistant integration
+  opencode-nvim = pkgs.vimUtils.buildVimPlugin {
+    pname = "opencode-nvim";
+    version = "unstable-2026-01-28";
+    src = pkgs.fetchFromGitHub {
+      owner = "sudo-tee";
+      repo = "opencode.nvim";
+      rev = "main";
+      sha256 = "0xkxdcpp06wxzy0isx0pfb11ys4pbd9s61g51fpcfvy1wsk8xi8b";
+    };
+    doCheck = false;
+    meta.homepage = "https://github.com/sudo-tee/opencode.nvim";
+  };
+in
 {
   programs.nvf = {
     enable = true;
@@ -145,30 +160,17 @@
 
 
         # Autocomplete via blink-cmp
-        # autocomplete = {
-        #   blink-cmp = {
-        #     enable = true;
-        #     friendly-snippets.enable = true;
-        #     settings = {
-        #       keymap = {
-        #         preset = "enter";
-        #         "<Tab>" = ["select_next" "fallback"];
-        #         "<S-Tab>" = ["select_prev" "fallback"];
-        #       };
-        #       appearance = {
-        #         nerd_font_variant = "mono";
-        #       };
-        #       sources = {
-        #         default = ["lsp" "path" "snippets" "buffer"];
-        #       };
-        #       completion = {
-        #         documentation = {
-        #           auto_show = true;
-        #         };
-        #       };
-        #     };
-        #   };
-        # };
+        autocomplete = {
+          blink-cmp = {
+            enable = true;
+            friendly-snippets.enable = true;
+            setupOpts = {
+              keymap.preset = "enter";
+              sources.default = ["lsp" "path" "snippets" "buffer"];
+              completion.documentation.auto_show = true;
+            };
+          };
+        };
 
         # Git integration
         git = {
@@ -248,14 +250,6 @@
             ];
             action = "<cmd>w<cr>";
             desc = "Save file";
-          }
-
-          # Better escape
-          {
-            key = "jk";
-            mode = "i";
-            action = "<Esc>";
-            desc = "Exit insert mode";
           }
 
           # Center after movements
@@ -457,6 +451,7 @@
                 { "<leader>h", group = "Harpoon" },
                 { "<leader>m", group = "Markdown" },
                 { "<leader>n", group = "Notes" },
+                { "<leader>o", group = "OpenCode" },
                 { "<leader>q", group = "Quickfix" },
                 { "<leader>s", group = "Search" },
               })
@@ -508,18 +503,46 @@
             '';
           };
 
-          # nvim-lspconfig (required by vim-tabby)
+          # nvim-lspconfig
           nvim-lspconfig = {
             package = nvim-lspconfig;
             setup = ''
-              -- Just load the module so vim-tabby can use it
               require("lspconfig")
             '';
           };
 
-          # Tabby AI completion (vim-tabby)
-          vim-tabby = {
-            package = vim-tabby;
+          # OpenCode.nvim - AI coding assistant
+          opencode = {
+            package = opencode-nvim;
+            setup = ''
+              require("opencode").setup({
+                position = "right",
+                window_width = 60,
+
+                -- Keymaps
+                keymaps = {
+                  editor = {
+                    toggle = "<leader>oo",      -- Toggle OpenCode window
+                    open_input = "<leader>oi",  -- Open input in insert mode
+                    quick_chat = "<leader>o/",  -- Quick chat with selection
+                    timeline = "<leader>oT",    -- Conversation timeline
+                    sessions = "<leader>os",    -- Session picker
+                  },
+                  input_window = {
+                    submit = "<S-CR>",          -- Submit prompt
+                  },
+                },
+
+                -- Context settings
+                context = {
+                  cursor_data = true,
+                  diagnostics = { info = false, warn = true, error = true },
+                  current_file = true,
+                  selection = true,
+                  git_diff = true,
+                },
+              })
+            '';
           };
 
           # ============ MARKDOWN PLUGINS (Option 3: Lightweight) ============
@@ -716,15 +739,6 @@
           # Add nvf site directory to runtimepath for treesitter
           nvf-runtimepath = ''
             vim.opt.runtimepath:append(vim.fn.stdpath("data") .. "/nvf/site")
-          '';
-
-          # Tabby vim-tabby configuration
-          # Manual trigger so it doesn't interfere with LSP completion
-          tabby-config = ''
-            vim.g.tabby_agent_start_command = {"tabby-agent", "--stdio"}
-            vim.g.tabby_inline_completion_trigger = "manual"
-            vim.g.tabby_inline_completion_keybinding_accept = "<C-]>"
-            vim.g.tabby_inline_completion_keybinding_trigger_or_dismiss = "<C-\\>"
           '';
 
           # LSP attach keymaps

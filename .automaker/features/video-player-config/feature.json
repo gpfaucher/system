@@ -1,0 +1,12 @@
+{
+  "id": "video-player-config",
+  "category": "Applications",
+  "title": "Enhanced Video Player Configuration",
+  "description": "Configure mpv with hardware acceleration profiles, subtitle support, and keybinding customization. Includes shader integration for upscaling and video enhancement with Ayu Dark OSD theme.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.765Z",
+  "updatedAt": "2026-01-29T09:27:10.765Z"
+}

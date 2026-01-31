@@ -1,0 +1,12 @@
+{
+  "id": "screen-recorder-ui",
+  "category": "UI",
+  "title": "Screen Recording Interface",
+  "description": "Create River keybinding menu for wf-recorder with options for full screen, window, or area recording. Includes audio source selection, format options, and recording status notifications.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.763Z",
+  "updatedAt": "2026-01-29T09:27:10.763Z"
+}

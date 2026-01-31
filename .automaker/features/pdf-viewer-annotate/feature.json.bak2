@@ -1,0 +1,14 @@
+{
+  "id": "pdf-viewer-annotate",
+  "category": "Applications",
+  "title": "PDF Viewer with Annotations",
+  "description": "Add zathura or evince with annotation support for highlighting, notes, and form filling. Includes vim keybindings, bookmark management, and print support with Ayu Dark theme.",
+  "status": "in_progress",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.765Z",
+  "updatedAt": "2026-01-29T09:47:43.629Z",
+  "startedAt": "2026-01-29T09:47:43.353Z",
+  "descriptionHistory": []
+}

@@ -1,0 +1,16 @@
+{
+  "id": "pi-hole-ads-blocking",
+  "category": "Networking",
+  "title": "Network-wide Ad Blocking",
+  "description": "Implement DNS-based ad blocking using custom blocklists with unbound or dnscrypt-proxy. Blocks tracking domains, malware, and ads at the DNS level with whitelist management.",
+  "status": "in_progress",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [
+    "local-dns-cache"
+  ],
+  "createdAt": "2026-01-29T09:27:10.759Z",
+  "updatedAt": "2026-01-29T09:27:10.759Z",
+  "startedAt": "2026-01-29T09:49:09.356Z",
+  "descriptionHistory": []
+}

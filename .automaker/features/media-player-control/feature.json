@@ -1,0 +1,12 @@
+{
+  "id": "media-player-control",
+  "category": "UI",
+  "title": "Media Player Integration",
+  "description": "Configure playerctl with River keybindings for play/pause, next/prev track, and volume control. Includes MPRIS support for browser media, Spotify, and local players with OSD notifications.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.760Z",
+  "updatedAt": "2026-01-29T09:27:10.760Z"
+}

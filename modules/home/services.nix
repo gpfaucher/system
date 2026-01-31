@@ -4,44 +4,17 @@
   ...
 }:
 
+let
+  # Commands for swayidle actions
+  lockCmd = "${pkgs.waylock}/bin/waylock";
+  # Screen brightness dimming via brightnessctl (reduce to 10%)
+  dimCmd = "${pkgs.brightnessctl}/bin/brightnessctl -s set 10%";
+  undimCmd = "${pkgs.brightnessctl}/bin/brightnessctl -r";
+  # DPMS control for River WM via wlopm
+  dpmsOffCmd = "${pkgs.wlopm}/bin/wlopm --off '*'";
+  dpmsOnCmd = "${pkgs.wlopm}/bin/wlopm --on '*'";
+in
 {
-  # Tabby AI coding assistant service
-  systemd.user.services.tabby = {
-    Unit = {
-      Description = "Tabby AI coding assistant";
-      After = [ "graphical-session.target" ];
-    };
-    Service = {
-      ExecStart = "${pkgs.tabby}/bin/tabby serve --model Qwen2.5-Coder-3B --device cuda";
-      Restart = "always";
-      RestartSec = 5; # Prevent rapid restart loops on failure
-
-      # Security hardening
-      PrivateTmp = true;
-      ProtectSystem = "strict";
-      ProtectHome = "tmpfs";
-      BindPaths = [ "%h/.tabby" ]; # Bind-mount ~/.tabby directory for read-write access
-      BindReadOnlyPaths = [ "%h/projects" ]; # Allow read access to repos for indexing
-      NoNewPrivileges = true;
-      ProtectKernelTunables = true;
-      ProtectKernelModules = true;
-      ProtectControlGroups = true;
-      RestrictNamespaces = true;
-      RestrictRealtime = true;
-      RestrictSUIDSGID = true;
-      LockPersonality = true;
-      # Note: MemoryDenyWriteExecute not set - may conflict with CUDA/GPU
-      # Note: DeviceAllow needed for GPU access is handled by default in user services
-
-      # Memory limits to prevent OOM
-      MemoryMax = "8G";
-      MemoryHigh = "6G";
-    };
-    Install = {
-      WantedBy = [ "default.target" ];
-    };
-  };
-
   # Kanshi display configuration service
   services.kanshi = {
     enable = true;
@@ -73,6 +46,7 @@
         ];
         profile.exec = [
           "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Dual monitor: Portrait + Ultrawide'"
+          "$HOME/.local/bin/workspace-dual-monitor"
         ];
       }
       # Laptop only (no external monitors)
@@ -86,6 +60,10 @@
             scale = 2.0;
             status = "enable";
           }
+        ];
+        profile.exec = [
+          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Laptop only'"
+          "$HOME/.local/bin/workspace-laptop-only"
         ];
       }
       # External ultrawide only via DP (laptop closed/disabled)
@@ -104,6 +82,10 @@
             status = "disable";
           }
         ];
+        profile.exec = [
+          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Docked DP ultrawide'"
+          "$HOME/.local/bin/workspace-ultrawide-only"
+        ];
       }
       # External display via HDMI only (laptop disabled)
       {
@@ -120,6 +102,10 @@
             criteria = "eDP-1";
             status = "disable";
           }
+        ];
+        profile.exec = [
+          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Docked HDMI ultrawide'"
+          "$HOME/.local/bin/workspace-ultrawide-only"
         ];
       }
       # Both displays (laptop + external ultrawide)
@@ -268,6 +254,70 @@
     };
     Install = {
       WantedBy = [ "default.target" ];
+    };
+  };
+
+  # Swayidle idle management service
+  # Configures automatic screen dimming, locking, and display power-off
+  services.swayidle = {
+    enable = true;
+    # Wait for idle command to finish before continuing to process events (-w flag)
+    extraArgs = [ "-w" ];
+    systemdTarget = "graphical-session.target";
+
+    # Timeouts: dim at 5m, lock at 10m, display off at 15m
+    timeouts = [
+      # Dim screen after 5 minutes (300 seconds)
+      {
+        timeout = 300;
+        command = dimCmd;
+        resumeCommand = undimCmd;
+      }
+      # Lock screen after 10 minutes (600 seconds)
+      {
+        timeout = 600;
+        command = lockCmd;
+      }
+      # Turn off display after 15 minutes (900 seconds)
+      {
+        timeout = 900;
+        command = dpmsOffCmd;
+        resumeCommand = dpmsOnCmd;
+      }
+    ];
+
+    # Events: handle sleep/resume and manual lock/unlock
+    # Note: Uses attrset syntax (home-manager 24.11+)
+    events = {
+      # Lock screen before system sleeps
+      before-sleep = "${lockCmd}; ${dpmsOffCmd}";
+      # Restore display after resume
+      after-resume = dpmsOnCmd;
+      # Handle explicit lock request (loginctl lock-session)
+      lock = lockCmd;
+    };
+  };
+
+  # Override swayidle systemd service for security hardening and restart behavior
+  systemd.user.services.swayidle = {
+    Unit = {
+      # Disable restart rate limiting for suspend/resume cycles
+      StartLimitIntervalSec = lib.mkForce 0;
+    };
+    Service = {
+      # Restart on failure (handles Wayland disconnections)
+      Restart = lib.mkForce "on-failure";
+      RestartSec = lib.mkForce 2;
+
+      # Security hardening (needs Wayland display access)
+      PrivateTmp = true;
+      NoNewPrivileges = true;
+      ProtectKernelTunables = true;
+      ProtectKernelModules = true;
+      ProtectControlGroups = true;
+      RestrictRealtime = true;
+      RestrictSUIDSGID = true;
+      LockPersonality = true;
     };
   };
 }

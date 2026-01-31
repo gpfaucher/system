@@ -1,0 +1,12 @@
+{
+  "id": "emoji-picker",
+  "category": "UI",
+  "title": "Emoji and Symbol Picker",
+  "description": "Integrate wofi-emoji or bemenu-based emoji selector with River keybinding. Provides fuzzy searchable emoji/symbol picker that copies selection to clipboard for quick insertion.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.761Z",
+  "updatedAt": "2026-01-29T09:27:10.761Z"
+}

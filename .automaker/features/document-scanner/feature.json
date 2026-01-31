@@ -1,0 +1,12 @@
+{
+  "id": "document-scanner",
+  "category": "Applications",
+  "title": "Document Scanner Integration",
+  "description": "Configure SANE with simple-scan or gscan2pdf for scanning documents. Includes automatic crop/deskew, OCR integration, and direct PDF export with multi-page support.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.765Z",
+  "updatedAt": "2026-01-29T09:27:10.765Z"
+}

@@ -1,0 +1,12 @@
+{
+  "id": "yubikey-auth",
+  "category": "Security",
+  "title": "YubiKey Authentication",
+  "description": "Configure PAM modules for YubiKey-based authentication for sudo, login, and screen unlock. Includes U2F/FIDO2 support and challenge-response mode for offline authentication.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.757Z",
+  "updatedAt": "2026-01-29T09:27:10.757Z"
+}

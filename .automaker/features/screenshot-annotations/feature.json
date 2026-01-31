@@ -1,0 +1,12 @@
+{
+  "id": "screenshot-annotations",
+  "category": "UI",
+  "title": "Screenshot Annotation Tool",
+  "description": "Integrate swappy for annotating screenshots after capture with grim/slurp. Allows adding arrows, text, shapes, and blur before saving or copying to clipboard.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.762Z",
+  "updatedAt": "2026-01-29T09:27:10.762Z"
+}

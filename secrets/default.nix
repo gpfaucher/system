@@ -5,13 +5,6 @@
     "/home/gabriel/.ssh/id_ed25519"
   ];
 
-  age.secrets.tabby-token = {
-    file = ./tabby-token.age;
-    owner = "gabriel";
-    group = "users";
-    mode = "0400";
-  };
-
   age.secrets.aws-credentials = {
     file = ./aws-credentials.age;
     owner = "gabriel";

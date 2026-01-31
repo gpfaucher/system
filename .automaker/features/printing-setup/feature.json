@@ -1,0 +1,12 @@
+{
+  "id": "printing-setup",
+  "category": "Hardware",
+  "title": "CUPS Printing Configuration",
+  "description": "Enable CUPS with automatic printer discovery and driver management. Includes web interface for job management, PDF printing, and integration with application print dialogs.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.765Z",
+  "updatedAt": "2026-01-29T09:27:10.765Z"
+}

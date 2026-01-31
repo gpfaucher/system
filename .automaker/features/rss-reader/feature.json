@@ -1,0 +1,12 @@
+{
+  "id": "rss-reader",
+  "category": "Applications",
+  "title": "RSS Feed Reader",
+  "description": "Deploy newsboat or miniflux for RSS/Atom feed aggregation. Includes vim keybindings, automatic feed updates, and browser integration for reading articles with Ayu Dark theme.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.764Z",
+  "updatedAt": "2026-01-29T09:27:10.764Z"
+}

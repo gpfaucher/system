@@ -34,19 +34,46 @@ in
     text = builtins.toJSON {
       "$schema" = "https://opencode.ai/config.json";
 
-      model = "anthropic/claude-sonnet-4-5";
-      small_model = "anthropic/claude-haiku-4-5";
+      model = "anthropic/claude-opus-4-5";
+      small_model = "anthropic/claude-opus-4-5";
 
       theme = "ayu";
 
       autoupdate = true;
+
+      # MCP servers
+      mcp = {
+        github = {
+          type = "local";
+          command = [ "npx" "-y" "@modelcontextprotocol/server-github" ];
+          environment = {
+            GITHUB_PERSONAL_ACCESS_TOKEN = "{env:GITHUB_TOKEN}";
+          };
+          enabled = true;
+        };
+        postgres = {
+          type = "local";
+          command = [ "npx" "-y" "@crystaldba/postgres-mcp" "--access-mode=restricted" "{env:DATABASE_URL}" ];
+          enabled = true;
+        };
+        filesystem = {
+          type = "local";
+          command = [ "npx" "-y" "@modelcontextprotocol/server-filesystem" "/home/gabriel/projects" ];
+          enabled = true;
+        };
+        context7 = {
+          type = "remote";
+          url = "https://mcp.context7.com/mcp";
+          enabled = true;
+        };
+      };
 
       # Agent configuration
       agent = {
         architect = {
           description = "Primary agent for brainstorming, design, and planning. Automatically activates before implementation.";
           mode = "primary";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/architect.md}";
           tools = {
             write = true;
@@ -61,7 +88,7 @@ in
         build = {
           description = "Primary implementation agent for writing production code. The main workhorse for code generation.";
           mode = "primary";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/build.md}";
           tools = {
             write = true;
@@ -92,7 +119,7 @@ in
         plan = {
           description = "Fast planning agent for breaking down tasks. Uses Haiku for speed.";
           mode = "subagent";
-          model = "anthropic/claude-haiku-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/plan.md}";
           tools = {
             write = false;
@@ -107,7 +134,7 @@ in
         review = {
           description = "Code review specialist for quality assurance and security analysis.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/review.md}";
           tools = {
             write = false;
@@ -122,7 +149,7 @@ in
         refactor = {
           description = "Code refactoring and optimization specialist.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/refactor.md}";
           tools = {
             write = false;
@@ -137,7 +164,7 @@ in
         test = {
           description = "Testing specialist for TDD and comprehensive test coverage.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/test.md}";
           tools = {
             write = true;
@@ -152,7 +179,7 @@ in
         debug = {
           description = "Debugging specialist for systematic problem-solving.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/debug.md}";
           tools = {
             write = false;
@@ -167,7 +194,7 @@ in
         research = {
           description = "Codebase exploration and investigation specialist. Fast and thorough.";
           mode = "subagent";
-          model = "anthropic/claude-haiku-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/research.md}";
           tools = {
             write = false;
@@ -182,7 +209,7 @@ in
         explore = {
           description = "Fast agent for quick codebase exploration. Uses Haiku for speed.";
           mode = "subagent";
-          model = "anthropic/claude-haiku-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/explore.md}";
           tools = {
             write = false;
@@ -197,7 +224,7 @@ in
         general = {
           description = "General-purpose agent for multi-step tasks. Uses Sonnet for balanced capability.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/general.md}";
           tools = {
             write = true;
@@ -213,7 +240,7 @@ in
         document = {
           description = "Documentation specialist for technical writing.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/document.md}";
           tools = {
             write = true;
@@ -228,7 +255,7 @@ in
         optimize = {
           description = "Performance optimization specialist.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/optimize.md}";
           tools = {
             write = false;
@@ -243,7 +270,7 @@ in
         nix-specialist = {
           description = "NixOS and Nix language specialist for system configuration.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/nix-specialist.md}";
           tools = {
             write = true;
@@ -273,7 +300,7 @@ in
         fix = {
           description = "Bug fix specialist for careful, regression-free fixes.";
           mode = "subagent";
-          model = "anthropic/claude-sonnet-4-5";
+          model = "anthropic/claude-opus-4-5";
           prompt = "{file:~/.config/opencode/prompts/fix.md}";
           tools = {
             write = false;

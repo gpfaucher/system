@@ -1,0 +1,14 @@
+{
+  "id": "full-disk-encryption",
+  "category": "Security",
+  "title": "LUKS Full Disk Encryption",
+  "description": "Implement LUKS2 encryption for root and data partitions with TPM2 unlock support. Includes YubiKey backup unlock method and secure boot integration for measured boot.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "complex",
+  "dependencies": [
+    "disko-partitioning"
+  ],
+  "createdAt": "2026-01-29T09:27:10.757Z",
+  "updatedAt": "2026-01-29T09:27:10.757Z"
+}

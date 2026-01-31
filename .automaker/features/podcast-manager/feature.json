@@ -1,0 +1,12 @@
+{
+  "id": "podcast-manager",
+  "category": "Applications",
+  "title": "Podcast Subscription Manager",
+  "description": "Add podboat or castero for podcast subscription and download management. Integrates with mpd/mpv for playback and includes automatic episode cleanup and sync status.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.764Z",
+  "updatedAt": "2026-01-29T09:27:10.764Z"
+}

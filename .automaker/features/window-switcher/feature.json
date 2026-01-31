@@ -1,0 +1,12 @@
+{
+  "id": "window-switcher",
+  "category": "UI",
+  "title": "Window Switcher Dialog",
+  "description": "Create fuzzel/wofi-based window switcher activated via River keybinding. Shows all open windows across workspaces with thumbnails, allows fuzzy search, and focuses selected window.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.761Z",
+  "updatedAt": "2026-01-29T09:27:10.761Z"
+}

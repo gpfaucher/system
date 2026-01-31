@@ -1,0 +1,12 @@
+{
+  "id": "image-viewer-advanced",
+  "category": "Applications",
+  "title": "Advanced Image Viewer",
+  "description": "Configure imv or vimiv with gallery mode, thumbnail generation, and basic editing (rotate, crop). Includes slideshow mode, EXIF display, and integration with file manager.",
+  "status": "backlog",
+  "priority": 3,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.765Z",
+  "updatedAt": "2026-01-29T09:27:10.765Z"
+}

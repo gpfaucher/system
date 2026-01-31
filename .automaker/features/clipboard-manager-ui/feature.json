@@ -1,0 +1,12 @@
+{
+  "id": "clipboard-manager-ui",
+  "category": "UI",
+  "title": "Clipboard Manager Interface",
+  "description": "Create fuzzel/wofi frontend for cliphist with River keybinding. Provides searchable clipboard history with image preview, pinning, and deletion support for enhanced clipboard workflow.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.762Z",
+  "updatedAt": "2026-01-29T09:27:10.762Z"
+}

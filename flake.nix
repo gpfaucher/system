@@ -95,6 +95,7 @@
       };
     in
     {
+      # Laptop configuration (AMD + NVIDIA hybrid, WiFi)
       nixosConfigurations.laptop = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs username self; };
         modules = [
@@ -105,14 +106,6 @@
             nixpkgs.overlays = [
               (final: prev: {
                 beads = beads.packages.${system}.default;
-                # Enable CUDA support for Tabby AI coding assistant
-                # Note: nixpkgs has a bug where postInstall links to non-CUDA llama-cpp
-                # We fix this by overriding postInstall to use the CUDA-enabled llama-cpp
-                tabby = (prev.tabby.override { cudaSupport = true; }).overrideAttrs (oldAttrs: {
-                  postInstall = ''
-                    ln -s ${prev.lib.getExe' (prev.llama-cpp.override { cudaSupport = true; }) "llama-server"} $out/bin/llama-server
-                  '';
-                });
               })
             ];
           }
@@ -120,6 +113,40 @@
           agenix.nixosModules.default
           impermanence.nixosModules.impermanence
           ./hosts/laptop
+          ./secrets # Agenix secrets configuration
+          home-manager.nixosModules.home-manager
+          {
+            home-manager = {
+              useGlobalPkgs = true;
+              useUserPackages = true;
+              extraSpecialArgs = { inherit inputs username self; };
+              sharedModules = [
+                inputs.nvf.homeManagerModules.default
+                inputs.stylix.homeModules.stylix
+              ];
+              users.${username} = import ./modules/home;
+            };
+          }
+        ];
+      };
+
+      # Server configuration (NVIDIA RTX 3070, wired, Jellyfin + Kubernetes)
+      nixosConfigurations.nixbox = nixpkgs.lib.nixosSystem {
+        specialArgs = { inherit inputs username self; };
+        modules = [
+          {
+            nixpkgs.hostPlatform = system;
+            nixpkgs.config.allowUnfree = true;
+            nixpkgs.config.cudaSupport = true;
+            nixpkgs.overlays = [
+              (final: prev: {
+                beads = beads.packages.${system}.default;
+              })
+            ];
+          }
+          stylix.nixosModules.stylix
+          agenix.nixosModules.default
+          ./hosts/nixbox
           ./secrets # Agenix secrets configuration
           home-manager.nixosModules.home-manager
           {

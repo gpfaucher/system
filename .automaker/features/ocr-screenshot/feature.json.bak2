@@ -1,0 +1,14 @@
+{
+  "id": "ocr-screenshot",
+  "category": "Productivity",
+  "title": "OCR Screenshot Text Extraction",
+  "description": "Implement grim/slurp + tesseract pipeline for extracting text from screen regions. River keybinding captures area, performs OCR, and copies recognized text to clipboard.",
+  "status": "in_progress",
+  "priority": 3,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.763Z",
+  "updatedAt": "2026-01-29T09:49:31.691Z",
+  "startedAt": "2026-01-29T09:49:31.527Z",
+  "descriptionHistory": []
+}

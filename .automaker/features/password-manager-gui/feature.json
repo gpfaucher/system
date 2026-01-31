@@ -1,0 +1,12 @@
+{
+  "id": "password-manager-gui",
+  "category": "Security",
+  "title": "Password Manager Integration",
+  "description": "Configure pass or KeePassXC with River keybinding for password autofill. Uses fuzzel/wofi for selection and wtype for Wayland-native typing into focused windows.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "moderate",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.763Z",
+  "updatedAt": "2026-01-29T09:27:10.763Z"
+}

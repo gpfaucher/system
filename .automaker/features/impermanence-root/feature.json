@@ -1,0 +1,12 @@
+{
+  "id": "impermanence-root",
+  "category": "Core",
+  "title": "Ephemeral Root Filesystem",
+  "description": "Implement impermanence module with tmpfs root and persistent data directories. Automatically persists user data, system logs, secrets, and application state while wiping /root on reboot for enhanced security.",
+  "status": "backlog",
+  "priority": 1,
+  "complexity": "complex",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.756Z",
+  "updatedAt": "2026-01-29T09:27:10.756Z"
+}

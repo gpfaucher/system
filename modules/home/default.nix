@@ -16,12 +16,15 @@
     ./services.nix
     ./theme.nix
     ./opencode.nix
+    ./claude-code.nix
     ./beads.nix
+    ./ssh.nix
   ];
 
   # Enable Beads for persistent agent task memory
+  # FIXME: Disabled due to vendoring mismatch in upstream package
   programs.beads = {
-    enable = true;
+    enable = false;
     enableDaemon = false; # Opt-in for daemon (auto-sync)
   };
 
@@ -45,8 +48,8 @@
   programs.river = {
     enable = true;
     terminal = "ghostty";
-    borderColorFocused = "83a598";
-    borderColorUnfocused = "504945";
+    borderColorFocused = "59c2ff"; # ayu blue
+    borderColorUnfocused = "272d38"; # ayu dark bg
     keyboardRepeatDelay = 250;
     keyboardRepeatRate = 30;
   };
@@ -98,7 +101,6 @@
     tree-sitter
     nodejs_22
     bun # Fast JavaScript runtime and package manager (required by opencode)
-    tabby-agent # AI code completion agent
     fd # For telescope find_files
     ripgrep # For telescope live_grep
     docker-compose # Docker Compose
@@ -168,50 +170,6 @@
       enable = false;
     };
   };
-
-  # Tabby server configuration - auto-discover git repos in ~/projects
-  home.activation.tabbyServerConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-    $DRY_RUN_CMD mkdir -p $HOME/.tabby
-    
-    # Generate config by scanning ~/projects for git repositories
-    CONFIG="$HOME/.tabby/config.toml"
-    $DRY_RUN_CMD rm -f "$CONFIG"
-    
-    for dir in $HOME/projects/*/; do
-      if [ -d "$dir/.git" ]; then
-        name=$(basename "$dir")
-        echo "[[repositories]]" >> "$CONFIG"
-        echo "name = \"$name\"" >> "$CONFIG"
-        echo "git_url = \"file://$dir\"" >> "$CONFIG"
-        echo "" >> "$CONFIG"
-      fi
-    done
-  '';
-
-
-
-  # Tabby agent configuration
-  # Token is encrypted using agenix and decrypted to /run/agenix/tabby-token
-  # The config file is generated at activation time to read the decrypted token
-  home.activation.tabbyConfig = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
-        $DRY_RUN_CMD mkdir -p $HOME/.tabby-client/agent
-        
-        # Read token from agenix-decrypted file, or use a placeholder if not available yet
-        if [ -f /run/agenix/tabby-token ]; then
-          TOKEN=$(cat /run/agenix/tabby-token)
-        else
-          TOKEN="TOKEN_NOT_DECRYPTED_YET"
-          echo "Warning: /run/agenix/tabby-token not found. Run 'sudo nixos-rebuild switch' first."
-        fi
-        
-        $DRY_RUN_CMD cat > $HOME/.tabby-client/agent/config.toml << EOF
-    [server]
-    endpoint = "http://localhost:8080"
-    token = "$TOKEN"
-    EOF
-        
-        $DRY_RUN_CMD chmod 600 $HOME/.tabby-client/agent/config.toml
-  '';
 
   # AWS configuration
   # Credentials are encrypted with agenix and decrypted directly to ~/.aws/credentials
@@ -303,6 +261,138 @@
     '';
   };
 
+  # Workspace startup scripts for different monitor profiles
+  # Tags: 1=1, 2=2, 3=4, 4=8, 5=16, 6=32, 7=64, 8=128, 9=256
+
+  home.file.".local/bin/workspace-ultrawide-only" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      export PATH="/run/current-system/sw/bin:$PATH"
+      # Ultrawide-only workspace setup
+      # Tag 1: nvim in paddock-app + claude code
+      # Tag 2: zen browser
+      # Tag 3: two terminals (apps/ui, apps/api)
+      # Tag 4: datagrip
+      # Tag 9: teams
+
+      sleep 1  # Wait for display to be ready
+
+      # Tag 1: nvim + claude code
+      ghostty --title="nvim-paddock" --working-directory="$HOME/projects/paddock-app" -e nvim &
+      sleep 0.5
+      ghostty --title="claude-paddock" --working-directory="$HOME/projects/paddock-app" -e claude &
+
+      # Tag 2: zen browser (main instance)
+      zen &
+
+      # Tag 3: terminals for apps/ui and apps/api
+      sleep 0.5
+      ghostty --title="term-ui" --working-directory="$HOME/projects/paddock-app/apps/ui" &
+      sleep 0.3
+      ghostty --title="term-api" --working-directory="$HOME/projects/paddock-app/apps/api" &
+
+      # Tag 4: datagrip
+      sleep 0.5
+      datagrip &
+
+      # Tag 9: teams
+      sleep 0.5
+      teams-for-linux &
+    '';
+  };
+
+  home.file.".local/bin/workspace-dual-monitor" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      export PATH="/run/current-system/sw/bin:$PATH"
+      # Dual monitor (vertical + ultrawide) workspace setup
+      # Ultrawide tags 1-4, 9: paddock development + teams
+      # Vertical tags 6-8: claude code terminals + zen (separate instance)
+
+      sleep 1  # Wait for display to be ready
+
+      # === ULTRAWIDE MONITOR ===
+      # Tag 1: nvim in paddock-app
+      ghostty --title="nvim-paddock" --working-directory="$HOME/projects/paddock-app" -e nvim &
+
+      # Tag 2: zen browser (main instance)
+      zen &
+
+      # Tag 3: terminals for apps/ui and apps/api
+      sleep 0.5
+      ghostty --title="term-ui" --working-directory="$HOME/projects/paddock-app/apps/ui" &
+      sleep 0.3
+      ghostty --title="term-api" --working-directory="$HOME/projects/paddock-app/apps/api" &
+
+      # Tag 4: datagrip
+      sleep 0.5
+      datagrip &
+
+      # Tag 9: teams
+      sleep 0.5
+      teams-for-linux &
+
+      # === VERTICAL MONITOR ===
+      # Tag 6: claude code in system project
+      sleep 0.5
+      ghostty --title="claude-system" --working-directory="$HOME/projects/system" -e claude &
+
+      # Tag 7: claude code in paddock-app project
+      sleep 0.3
+      ghostty --title="claude-paddock-v" --working-directory="$HOME/projects/paddock-app" -e claude &
+
+      # Tag 8: zen browser (separate instance with different profile)
+      # Create profile dir if it doesn't exist, then launch with separate profile
+      mkdir -p "$HOME/.zen/vertical"
+      sleep 0.3
+      zen --profile "$HOME/.zen/vertical" --no-remote --class zen-vertical &
+    '';
+  };
+
+  home.file.".local/bin/workspace-laptop-only" = {
+    executable = true;
+    text = ''
+      #!/usr/bin/env bash
+      export PATH="/run/current-system/sw/bin:$PATH"
+      # Laptop-only workspace setup
+      # Tag 1: nvim in paddock-app
+      # Tag 2: zen browser
+      # Tag 3: two terminals (apps/ui, apps/api)
+      # Tag 4: datagrip
+      # Tag 5: claude code
+      # Tag 9: teams
+
+      sleep 1  # Wait for display to be ready
+
+      # Tag 1: nvim in paddock-app
+      ghostty --title="nvim-paddock" --working-directory="$HOME/projects/paddock-app" -e nvim &
+
+      # Tag 2: zen browser
+      sleep 0.5
+      zen &
+
+      # Tag 3: terminals for apps/ui and apps/api
+      sleep 0.5
+      ghostty --title="term-ui" --working-directory="$HOME/projects/paddock-app/apps/ui" &
+      sleep 0.3
+      ghostty --title="term-api" --working-directory="$HOME/projects/paddock-app/apps/api" &
+
+      # Tag 4: datagrip
+      sleep 0.5
+      datagrip &
+
+      # Tag 5: claude code
+      sleep 0.5
+      ghostty --title="claude-main" --working-directory="$HOME/projects/paddock-app" -e claude &
+
+      # Tag 9: teams
+      sleep 0.5
+      teams-for-linux &
+    '';
+  };
+
   # Firefox configuration for Teams always-available status
   programs.firefox = {
     enable = true;
@@ -312,17 +402,17 @@
         # Disable visibility API to prevent Teams from detecting tab/window switches
         "dom.visibilityAPI.enabled" = false;
       };
-      # Full gruvbox theme for Firefox UI
+      # Full ayu dark theme for Firefox UI
       userChrome = ''
-        /* Gruvbox Dark Theme */
+        /* Ayu Dark Theme */
         :root {
-          --bg0: #282828;
-          --bg1: #3c3836;
-          --bg2: #504945;
-          --fg: #ebdbb2;
-          --blue: #83a598;
-          --red: #fb4934;
-          --green: #b8bb26;
+          --bg0: #0b0e14;
+          --bg1: #1f2430;
+          --bg2: #272d38;
+          --fg: #bfbdb6;
+          --blue: #59c2ff;
+          --red: #f07178;
+          --green: #aad94c;
         }
 
         /* Tab styling */
@@ -346,13 +436,13 @@
           background-color: var(--bg0) !important;
         }
       '';
-      # Gruvbox theme for about: pages
+      # Ayu dark theme for about: pages
       userContent = ''
         /* Style about: pages */
         @-moz-document url-prefix(about:) {
           body {
-            background-color: #282828 !important;
-            color: #ebdbb2 !important;
+            background-color: #0b0e14 !important;
+            color: #bfbdb6 !important;
           }
         }
       '';

@@ -1,0 +1,12 @@
+{
+  "id": "bluetooth-management",
+  "category": "Hardware",
+  "title": "Enhanced Bluetooth Management",
+  "description": "Configure blueman or bluetuith for advanced Bluetooth device management. Includes automatic device reconnection, per-device codec preferences, and battery level monitoring via River keybindings.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.759Z",
+  "updatedAt": "2026-01-29T09:27:10.759Z"
+}

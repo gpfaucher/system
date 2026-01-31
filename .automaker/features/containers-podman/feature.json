@@ -1,0 +1,12 @@
+{
+  "id": "containers-podman",
+  "category": "Development",
+  "title": "Rootless Podman Containers",
+  "description": "Add podman as Docker alternative with rootless container support. Includes docker-compose compatibility, systemd integration for container services, and automatic image cleanup policies.",
+  "status": "backlog",
+  "priority": 2,
+  "complexity": "simple",
+  "dependencies": [],
+  "createdAt": "2026-01-29T09:27:10.766Z",
+  "updatedAt": "2026-01-29T09:27:10.766Z"
+}

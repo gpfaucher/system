@@ -56,25 +56,25 @@
     font = "ter-132n";
     packages = [ pkgs.terminus_font ];
 
-    # Gruvbox dark theme colors
+    # Ayu dark theme colors
     # Format: black, red, green, yellow, blue, magenta, cyan, white (normal + bright)
     colors = [
-      "282828" # black (bg)
-      "cc241d" # red
-      "98971a" # green
-      "d79921" # yellow
-      "458588" # blue
-      "b16286" # magenta
-      "689d6a" # cyan
-      "a89984" # white (fg4)
-      "928374" # bright black (gray)
-      "fb4934" # bright red
-      "b8bb26" # bright green
-      "fabd2f" # bright yellow
-      "83a598" # bright blue
-      "d3869b" # bright magenta
-      "8ec07c" # bright cyan
-      "ebdbb2" # bright white (fg)
+      "0b0e14" # black (bg)
+      "f07178" # red
+      "aad94c" # green
+      "ffb454" # yellow
+      "59c2ff" # blue
+      "d2a6ff" # magenta
+      "95e6cb" # cyan
+      "6c7380" # white (fg4)
+      "3d424d" # bright black (gray)
+      "ff3333" # bright red
+      "b8cc52" # bright green
+      "e6b673" # bright yellow
+      "73d0ff" # bright blue
+      "dfbfff" # bright magenta
+      "95e6cb" # bright cyan
+      "bfbdb6" # bright white (fg)
     ];
   };
 }
