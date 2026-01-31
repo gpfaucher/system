@@ -20,13 +20,38 @@ in
     enable = true;
     systemdTarget = "default.target";
     settings = [
-      # Dual external monitors: Portrait + Ultrawide (laptop disabled)
+      # Dual external monitors: Portrait 27" (DP-2) + Ultrawide (DP-1) via dock (laptop disabled)
       {
-        profile.name = "dual-portrait-ultrawide";
+        profile.name = "dual-portrait-ultrawide-dp";
         profile.outputs = [
           {
             criteria = "DP-2";
-            mode = "2560x1440@60Hz";
+            mode = "2560x1440@100Hz";
+            position = "0,0";
+            transform = "90";
+            scale = 1.0;
+            status = "enable";
+          }
+          {
+            criteria = "DP-1";
+            mode = "3440x1440@100Hz";
+            position = "1440,0";
+            scale = 1.0;
+            status = "enable";
+          }
+          {
+            criteria = "eDP-1";
+            status = "disable";
+          }
+        ];
+      }
+      # Dual external monitors: Portrait + Ultrawide via HDMI (laptop disabled)
+      {
+        profile.name = "dual-portrait-ultrawide-hdmi";
+        profile.outputs = [
+          {
+            criteria = "DP-2";
+            mode = "2560x1440@100Hz";
             position = "0,0";
             scale = 1.0;
             transform = "90";
@@ -44,10 +69,6 @@ in
             status = "disable";
           }
         ];
-        profile.exec = [
-          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Dual monitor: Portrait + Ultrawide'"
-          "$HOME/.local/bin/workspace-dual-monitor"
-        ];
       }
       # Laptop only (no external monitors)
       {
@@ -60,10 +81,6 @@ in
             scale = 2.0;
             status = "enable";
           }
-        ];
-        profile.exec = [
-          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Laptop only'"
-          "$HOME/.local/bin/workspace-laptop-only"
         ];
       }
       # External ultrawide only via DP (laptop closed/disabled)
@@ -82,10 +99,6 @@ in
             status = "disable";
           }
         ];
-        profile.exec = [
-          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Docked DP ultrawide'"
-          "$HOME/.local/bin/workspace-ultrawide-only"
-        ];
       }
       # External display via HDMI only (laptop disabled)
       {
@@ -102,10 +115,6 @@ in
             criteria = "eDP-1";
             status = "disable";
           }
-        ];
-        profile.exec = [
-          "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Docked HDMI ultrawide'"
-          "$HOME/.local/bin/workspace-ultrawide-only"
         ];
       }
       # Both displays (laptop + external ultrawide)
@@ -146,7 +155,6 @@ in
             status = "enable";
           }
         ];
-        profile.exec = [ "${pkgs.libnotify}/bin/notify-send 'Presentation Mode' 'HDMI display connected'" ];
       }
       # Presentation: Laptop + any DP display
       {
@@ -166,7 +174,6 @@ in
             status = "enable";
           }
         ];
-        profile.exec = [ "${pkgs.libnotify}/bin/notify-send 'Presentation Mode' 'DP display connected'" ];
       }
     ];
   };

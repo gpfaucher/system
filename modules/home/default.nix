@@ -243,10 +243,14 @@
     text = ''
       #!/bin/sh
       if [ -f /tmp/screenrecord.pid ]; then
-        kill $(cat /tmp/screenrecord.pid)
+        PID=$(cat /tmp/screenrecord.pid)
+        kill -INT "$PID" 2>/dev/null
+        # Wait for wf-recorder to finalize the MP4 file
+        while kill -0 "$PID" 2>/dev/null; do sleep 0.1; done
         rm /tmp/screenrecord.pid
         mkdir -p ~/Videos/Recordings
         mv /tmp/recording.mp4 ~/Videos/Recordings/$(date +%Y%m%d_%H%M%S).mp4
+        notify-send "Recording saved" "~/Videos/Recordings/"
       fi
     '';
   };

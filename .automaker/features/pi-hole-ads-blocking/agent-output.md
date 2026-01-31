@@ -301,3 +301,175 @@ Input: {
   "offset": 155,
   "limit": 30
 }
+The Nix unbound module expects `include` to be a list or uses a different structure. Let me check the NixOS unbound module to see the correct format:
+
+🔧 Tool: Bash
+Input: {
+  "command": "nix-instantiate --eval -E '(import <nixpkgs> {}).unbound.version' 2>/dev/null || echo \"checking docs...\"",
+  "description": "Check unbound version"
+}
+
+🔧 Tool: WebSearch
+Input: {
+  "query": "NixOS services.unbound.settings include multiple files configuration"
+}
+The `include` option should be a list. Let me fix the configuration:
+
+🔧 Tool: Edit
+Input: {
+  "file_path": "/home/gabriel/projects/system/modules/system/dns.nix",
+  "old_string": "        # ================================\n        # Ad-blocking via local-zone\n        # ================================\n        # Block common ad/tracking domains locally\n        # Additional domains loaded via blocklist update service\n\n        # Include whitelist to prevent false positives\n        include = \"/var/lib/unbound/whitelist.conf\";\n\n        # Include generated blocklist\n        include = \"/var/lib/unbound/blocklist.conf\";",
+  "new_string": "        # ================================\n        # Ad-blocking via local-zone\n        # ================================\n        # Block common ad/tracking domains locally\n        # Additional domains loaded via blocklist update service\n\n        # Include whitelist (transparent zones) and blocklist (nxdomain zones)\n        # Note: paths need to be quoted strings for unbound\n        include = [\n          ''\"/var/lib/unbound/whitelist.conf\"''\n          ''\"/var/lib/unbound/blocklist.conf\"''\n        ];"
+}
+
+🔧 Tool: Bash
+Input: {
+  "command": "nix flake check 2>&1 | head -150",
+  "description": "Check NixOS flake after fix",
+  "timeout": 180000
+}
+The flake check passed. There's a warning that `services.dnscrypt-proxy2` has been renamed to `services.dnscrypt-proxy`. Let me fix that:
+
+🔧 Tool: Edit
+Input: {
+  "file_path": "/home/gabriel/projects/system/modules/system/dns.nix",
+  "old_string": "  services.dnscrypt-proxy2 = {",
+  "new_string": "  services.dnscrypt-proxy = {"
+}
+
+🔧 Tool: Bash
+Input: {
+  "command": "nix flake check 2>&1 | head -50",
+  "description": "Verify flake check passes",
+  "timeout": 180000
+}
+The flake check passes (only showing warnings about unrelated deprecated options). Now let me also do a quick build test to make sure everything builds:
+
+🔧 Tool: Bash
+Input: {
+  "command": "nix build .#nixosConfigurations.laptop.config.system.build.toplevel --dry-run 2>&1 | head -30",
+  "description": "Dry run build of NixOS config",
+  "timeout": 120000
+}
+
+🔧 Tool: TodoWrite
+Input: {
+  "todos": [
+    {
+      "content": "Create dns.nix module with dnscrypt-proxy for DoT/DoH",
+      "status": "completed",
+      "activeForm": "Creating dns.nix with dnscrypt-proxy configuration"
+    },
+    {
+      "content": "Add unbound as local DNS caching resolver",
+      "status": "completed",
+      "activeForm": "Adding unbound local DNS resolver"
+    },
+    {
+      "content": "Implement ad-blocking with blocklists in unbound",
+      "status": "completed",
+      "activeForm": "Implementing ad-blocking with blocklists"
+    },
+    {
+      "content": "Create whitelist management for exceptions",
+      "status": "completed",
+      "activeForm": "Creating whitelist management"
+    },
+    {
+      "content": "Import dns.nix into host configuration",
+      "status": "completed",
+      "activeForm": "Importing dns.nix into host configuration"
+    },
+    {
+      "content": "Verify implementation builds correctly",
+      "status": "completed",
+      "activeForm": "Verifying implementation builds correctly"
+    }
+  ]
+}
+The implementation is complete. Now, regarding the Playwright verification - this is a NixOS/Nix configuration, not a web application. Playwright is used for browser automation and testing web UIs. For a NixOS configuration like this, verification would involve:
+
+1. Running `nix flake check` (done - passes)
+2. Building the configuration (done - dry-run succeeds)
+3. Actually deploying and testing the services on the system
+
+Since Playwright is not applicable to this type of infrastructure code, I'll note this in the summary.
+
+Let me read the final version of the implementation to provide a complete summary:
+
+🔧 Tool: Read
+Input: {
+  "file_path": "/home/gabriel/projects/system/modules/system/dns.nix"
+}
+<summary>
+## Summary: Network-wide Ad Blocking (pi-hole-ads-blocking)
+
+### Changes Implemented
+- Created a complete DNS stack with three tiers:
+  1. **dnscrypt-proxy** - Encrypted DNS-over-HTTPS/TLS to upstream resolvers (Cloudflare, Quad9, Mullvad, NextDNS)
+  2. **unbound** - Local caching DNS resolver with DNSSEC validation
+  3. **Ad-blocking layer** - Blocklist-based domain filtering using `local-zone: always_nxdomain`
+
+- Configured blocklists from three well-maintained sources:
+  - Steven Black's unified hosts (ads + malware)
+  - OISD small blocklist (comprehensive tracking prevention)
+  - Hagezi light blocklist (minimal false positives)
+
+- Implemented whitelist management for common false positives:
+  - Microsoft authentication domains
+  - Package managers (npm, PyPI, crates.io, rubygems)
+  - Development tools (GitHub, GitLab, Bitbucket)
+  - Cloud services (AWS, Cloudflare)
+
+- Created systemd timer/service for daily blocklist updates with:
+  - Automatic download and processing of blocklists
+  - Multi-format support (hosts files, wildcard lists, plain domains)
+  - Automatic unbound reload after updates
+  - Security hardening (PrivateTmp, ProtectSystem, NoNewPrivileges)
+
+- Configured system DNS to use local unbound:
+  - Disabled systemd-resolved to avoid conflicts
+  - Set nameservers to localhost
+  - Prevented DHCP/iwd from overwriting DNS settings
+
+### Files Modified
+- `modules/system/dns.nix` (new file - 340 lines)
+- `hosts/laptop/default.nix` (added dns.nix import)
+
+### Architecture
+```
+Applications → unbound (port 53, caching + ad-blocking)
+                  ↓
+             dnscrypt-proxy (port 5353, DoH/DoT encryption)
+                  ↓
+             Upstream resolvers (Cloudflare, Quad9, Mullvad, etc.)
+```
+
+### Notes for Developer
+- Run `sudo systemctl start unbound-blocklist-update` after first boot to populate blocklists
+- To add whitelisted domains, edit the `whitelist` list in `dns.nix`
+- To add blocklist sources, add URLs to the `blocklistUrls` list
+- Use `dog` or `dig` commands to test DNS resolution
+- Check blocklist status: `wc -l /var/lib/unbound/blocklist.conf`
+- Manual blocklist update: `sudo systemctl start unbound-blocklist-update`
+
+### Verification Status
+- **`nix flake check`**: Passes successfully
+- **`nix build --dry-run`**: Configuration builds without errors
+- **Playwright verification**: Not applicable - this is NixOS infrastructure configuration, not a web application. Verification requires deploying the configuration with `nixos-rebuild switch` and testing DNS resolution on the actual system.
+
+### Post-deployment Testing Commands
+```bash
+# Verify services are running
+systemctl status unbound dnscrypt-proxy
+
+# Test DNS resolution
+dog example.com @127.0.0.1
+
+# Verify ad domain is blocked (should return NXDOMAIN)
+dog doubleclick.net @127.0.0.1
+
+# Check blocklist count
+wc -l /var/lib/unbound/blocklist.conf
+```
+</summary>

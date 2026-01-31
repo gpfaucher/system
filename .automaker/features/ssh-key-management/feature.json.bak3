@@ -3,12 +3,12 @@
   "category": "Security",
   "title": "SSH Key Management with Agent",
   "description": "Configure ssh-agent systemd service with automatic key loading and timeout policies. Includes integration with pinentry for secure passphrase prompts and per-key TTL settings.",
-  "status": "completed",
+  "status": "in_progress",
   "priority": 2,
   "complexity": "simple",
   "dependencies": [],
   "createdAt": "2026-01-29T09:27:10.764Z",
-  "updatedAt": "2026-01-29T09:51:47.779Z",
+  "updatedAt": "2026-01-29T09:27:10.764Z",
   "startedAt": "2026-01-29T09:47:48.461Z",
   "descriptionHistory": []
 }

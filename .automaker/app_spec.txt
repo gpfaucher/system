@@ -209,6 +209,18 @@
       <name>OCR Screenshot Text Extraction</name>
       <description>Implement grim/slurp + tesseract pipeline for extracting text from screen regions. River keybinding captures area, performs OCR, and copies recognized text to clipboard.</description>
     </feature>
+    <feature>
+      <name>SSH Key Management with Agent</name>
+      <description>Configure ssh-agent systemd service with automatic key loading and timeout policies. Includes integration with pinentry for secure passphrase prompts and per-key TTL settings.</description>
+    </feature>
+    <feature>
+      <name>Idle Detection and Auto-lock</name>
+      <description>Deploy swayidle service with configurable timeouts for screen dimming (5m), locking (10m), and display power-off (15m). Integrates with waylock and inhibits during media playback.</description>
+    </feature>
+    <feature>
+      <name>Network-wide Ad Blocking</name>
+      <description>Implement DNS-based ad blocking using custom blocklists with unbound or dnscrypt-proxy. Blocks tracking domains, malware, and ads at the DNS level with whitelist management.</description>
+    </feature>
   </implemented_features>
 
   <additional_requirements>

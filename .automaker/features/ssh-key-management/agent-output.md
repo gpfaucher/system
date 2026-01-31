@@ -510,3 +510,54 @@ Input: {
     }
   ]
 }
+The feature has been implemented. However, I notice the task instructions mentioned Playwright verification, but this is a **NixOS configuration** project, not a web application. Playwright is designed for browser/web testing and isn't applicable here. The appropriate verification for a NixOS configuration is:
+
+1. `nix flake check` - validates the Nix expressions
+2. `nix build --dry-run` - ensures all derivations can be built  
+3. Actual deployment with `nixos-rebuild switch`
+
+Both `nix flake check` and `nix build --dry-run` have passed successfully.
+
+Let me provide the final summary:
+
+<summary>
+## Summary: SSH Key Management with Agent
+
+### Changes Implemented
+- Created new `ssh.nix` Home Manager module for SSH agent and key management
+- Enabled `services.ssh-agent` systemd user service for automatic agent startup
+- Configured `programs.ssh` with:
+  - `addKeysToAgent = "4h"` - Automatic key loading with 4-hour TTL expiration
+  - `identitiesOnly = true` - Security setting to only use explicitly configured identities
+  - Connection keepalive settings (60s interval, 3 retries)
+  - SSH multiplexing via ControlMaster for faster subsequent connections
+- Pre-configured matchBlocks for GitHub and GitLab with appropriate settings
+- Integrated `ssh-askpass-fullscreen` for secure GUI passphrase prompts on Wayland
+- Set `SSH_ASKPASS` and `SSH_ASKPASS_REQUIRE` environment variables for pinentry integration
+- Created activation script to ensure SSH socket directory exists with proper permissions
+
+### Files Modified
+- `modules/home/ssh.nix` (new file)
+- `modules/home/default.nix` (added import)
+
+### Configuration Features
+| Feature | Implementation |
+|---------|---------------|
+| SSH Agent Service | `services.ssh-agent.enable = true` |
+| Key TTL | `addKeysToAgent = "4h"` per matchBlock |
+| Pinentry | `ssh-askpass-fullscreen` via `SSH_ASKPASS` |
+| Security | `identitiesOnly = true` by default |
+| Multiplexing | ControlMaster with 10m persist |
+
+### Notes for Developer
+- The configuration uses Home Manager's new API where `addKeysToAgent` is set per matchBlock
+- SSH_AUTH_SOCK is automatically set by the `services.ssh-agent` service
+- The socket directory `~/.ssh/sockets` is created automatically for multiplexing
+- To apply: run `sudo nixos-rebuild switch --flake .#laptop`
+- Key loading happens automatically on first SSH connection to a host
+
+### Verification Status
+- `nix flake check --no-build` passes successfully
+- `nix build .#nixosConfigurations.laptop.config.system.build.toplevel --dry-run` completes without errors
+- Note: Playwright verification is not applicable for NixOS configuration projects (it's designed for web application testing)
+</summary>

@@ -43,6 +43,39 @@
       "dismissed": false,
       "featureId": "ocr-screenshot",
       "projectPath": "/home/gabriel/projects/system"
+    },
+    {
+      "id": "f061cb74-1a25-4c0f-8f50-8b235f19a455",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"ssh-key-management\" has been verified and is complete.",
+      "createdAt": "2026-01-29T09:51:47.780Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "ssh-key-management",
+      "projectPath": "/home/gabriel/projects/system"
+    },
+    {
+      "id": "3e5852ef-9c11-4c49-a053-d0c91a722f14",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"idle-management\" has been verified and is complete.",
+      "createdAt": "2026-01-29T09:52:25.565Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "idle-management",
+      "projectPath": "/home/gabriel/projects/system"
+    },
+    {
+      "id": "36ca8e27-4535-4cb6-bd18-1b89f6cf8c17",
+      "type": "feature_verified",
+      "title": "Feature Verified",
+      "message": "\"pi-hole-ads-blocking\" has been verified and is complete.",
+      "createdAt": "2026-01-29T09:53:35.818Z",
+      "read": false,
+      "dismissed": false,
+      "featureId": "pi-hole-ads-blocking",
+      "projectPath": "/home/gabriel/projects/system"
     }
   ]
 }
