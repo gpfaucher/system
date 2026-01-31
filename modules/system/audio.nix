@@ -20,6 +20,18 @@
     pulse.enable = true;
     jack.enable = true; # Enable JACK support for better Bluetooth audio
 
+    # Higher quality audio settings for external speakers
+    extraConfig.pipewire = {
+      "10-higher-quality" = {
+        "context.properties" = {
+          "default.clock.rate" = 48000;
+          "default.clock.allowed-rates" = [ 44100 48000 96000 ];
+          "default.clock.quantum" = 1024;
+          "default.clock.min-quantum" = 512;
+        };
+      };
+    };
+
     wireplumber = {
       enable = true;
       extraConfig = {
@@ -46,10 +58,12 @@
     };
   };
 
-  # Bluetooth audio codec support
-  # Provides high-quality codecs: AAC, aptX, aptX-HD, LDAC
+  # Audio tools and EQ
   environment.systemPackages = with pkgs; [
     pipewire
+    pulseaudio   # For pactl and other utilities
+    easyeffects  # System-wide EQ and audio effects for PipeWire
+    helvum       # PipeWire patchbay for routing audio
   ];
 
   # Bluetooth settings for better audio compatibility

@@ -320,4 +320,11 @@ in
       LockPersonality = true;
     };
   };
+
+  # EasyEffects audio equalizer and effects processor
+  # Provides system-wide EQ for external speakers
+  services.easyeffects = {
+    enable = true;
+    # Preset will be created in ~/.config/easyeffects/output/
+  };
 }
