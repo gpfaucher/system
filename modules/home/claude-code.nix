@@ -74,9 +74,25 @@ let
     echo "Branch: $BRANCH_NAME (from $BASE_BRANCH)"
     echo "Port: $PORT"
 
-    # Create worktree
-    git worktree add "$WORKTREE_DIR" -b "$BRANCH_NAME" "$BASE_BRANCH" 2>/dev/null || \
+    # Check if worktree already exists
+    if [[ -d "$WORKTREE_DIR" ]]; then
+      echo ""
+      echo "Worktree already exists at $WORKTREE_DIR"
+      echo "Launching existing environment..."
+      WORKTREE_ABS=$(cd "$WORKTREE_DIR" && pwd)
+      ghostty --working-directory="$WORKTREE_ABS" -e zellij --layout agent --session "$SAFE_NAME" &
+      echo "Agent spawned! Switch to the new terminal window."
+      exit 0
+    fi
+
+    # Create worktree - try with new branch first, then existing branch
+    if git show-ref --verify --quiet "refs/heads/$BRANCH_NAME"; then
+      echo "Branch $BRANCH_NAME already exists, using it..."
       git worktree add "$WORKTREE_DIR" "$BRANCH_NAME"
+    else
+      echo "Creating new branch $BRANCH_NAME..."
+      git worktree add "$WORKTREE_DIR" -b "$BRANCH_NAME" "$BASE_BRANCH"
+    fi
 
     # Copy environment files
     echo "Copying environment files..."
@@ -92,10 +108,12 @@ let
       ! -path "./node_modules/*" \
       ! -path "./.worktrees/*" \
       ! -path "./.git/*" 2>/dev/null | while read -r envfile; do
-      dir=$(dirname "$envfile")
-      mkdir -p "$WORKTREE_DIR/$dir"
-      cp "$envfile" "$WORKTREE_DIR/$envfile" 2>/dev/null || true
-    done
+      if [[ -f "$envfile" ]]; then
+        dir=$(dirname "$envfile")
+        mkdir -p "$WORKTREE_DIR/$dir" 2>/dev/null || true
+        cp "$envfile" "$WORKTREE_DIR/$envfile" 2>/dev/null || true
+      fi
+    done || true  # Don't fail if find returns nothing
 
     # Set unique port in .env.local
     touch "$WORKTREE_DIR/.env.local"
