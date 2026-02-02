@@ -80,7 +80,10 @@ let
       echo "Worktree already exists at $WORKTREE_DIR"
       echo "Launching existing environment..."
       WORKTREE_ABS=$(cd "$WORKTREE_DIR" && pwd)
-      ghostty --working-directory="$WORKTREE_ABS" -e zellij --layout agent --session "$SAFE_NAME" &
+      LAYOUT="$HOME/.config/zellij/layouts/agent.kdl"
+      # Start zellij with layout, fully detached
+      nohup ghostty --working-directory="$WORKTREE_ABS" -e zellij --layout "$LAYOUT" >/dev/null 2>&1 &
+      disown
       echo "Agent spawned! Switch to the new terminal window."
       exit 0
     fi
@@ -171,8 +174,10 @@ let
     echo "  Port: $PORT"
     echo ""
 
-    # Launch in new terminal window (ghostty)
-    ghostty --working-directory="$WORKTREE_ABS" -e zellij --layout agent --session "$SAFE_NAME" &
+    LAYOUT="$HOME/.config/zellij/layouts/agent.kdl"
+    # Launch in new terminal window (ghostty) with layout, fully detached
+    nohup ghostty --working-directory="$WORKTREE_ABS" -e zellij --layout "$LAYOUT" >/dev/null 2>&1 &
+    disown
 
     echo "Agent spawned! Switch to the new terminal window."
   '';

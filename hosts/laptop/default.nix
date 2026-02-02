@@ -10,11 +10,14 @@
   imports = [
     ./hardware.nix
     ../../modules/system/bootloader.nix
-    ../../modules/system/graphics.nix
+    # For VR: use graphics-vr.nix (NVIDIA sync mode, higher power but VR works)
+    # For battery: use graphics.nix (AMD primary, NVIDIA offload)
+    ../../modules/system/graphics-vr.nix
     ../../modules/system/networking.nix
     ../../modules/system/audio.nix
     ../../modules/system/services.nix
     ../../modules/system/hardening.nix
+    ../../modules/system/vr.nix
   ];
 
   # Hostname

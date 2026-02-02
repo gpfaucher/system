@@ -4,8 +4,7 @@
   programs.zellij = {
     enable = true;
     settings = {
-      # Clean, minimal UI
-      default_layout = "compact";
+      # Clean, minimal UI - no default_layout to avoid conflicts with --layout flag
       pane_frames = false;
       simplified_ui = true;
       hide_session_name = true;
@@ -33,6 +32,7 @@
   };
 
   # Agent layout for spawn-agent
+  # Auto-starts nvim and claude in their panes
   xdg.configFile."zellij/layouts/agent.kdl".text = ''
     layout {
       pane size=1 borderless=true {
@@ -42,7 +42,7 @@
         pane size="60%" command="nvim"
         pane split_direction="horizontal" {
           pane size="60%" command="claude"
-          pane // shell for dev server
+          pane name="shell"
         }
       }
     }

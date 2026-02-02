@@ -9,45 +9,40 @@
   # Enable graphics with hardware acceleration
   hardware.graphics = {
     enable = true;
-    enable32Bit = true; # Required for Steam and VR applications
+    enable32Bit = true;
 
     extraPackages = with pkgs; [
-      libva
       vulkan-loader
-    ];
-
-    extraPackages32 = with pkgs.pkgsi686Linux; [
-      libva
     ];
   };
 
   # Load both GPU drivers
-  services.xserver.videoDrivers = [
-    "nvidia"
-    "amdgpu"
-  ];
+  services.xserver.videoDrivers = [ "amdgpu" "nvidia" ];
 
-  # NVIDIA configuration - PRIME sync mode for VR
-  # NVIDIA RTX 2000 Ada is primary (display + render), AMD is secondary
+  # NVIDIA PRIME offload mode (works with Wayland)
+  # Sync mode is X11-only and won't work with River/Wayland
   hardware.nvidia = {
     open = true;
     modesetting.enable = true;
     powerManagement.enable = true;
+    nvidiaSettings = true;
 
-    # PRIME sync mode - NVIDIA renders, AMD displays
-    # Required for VR as NVIDIA needs direct rendering access
     prime = {
-      sync.enable = true;
+      offload = {
+        enable = true;
+        enableOffloadCmd = true;
+      };
 
-      # Bus IDs from: lspci | grep -E 'VGA|3D'
+      # Bus IDs
       amdgpuBusId = "PCI:198:0:0";
       nvidiaBusId = "PCI:1:0:0";
     };
   };
 
-  # System packages for graphics diagnostics
+  # System packages
   environment.systemPackages = with pkgs; [
     libva-utils
+    nvtopPackages.nvidia
   ];
 
   # Wayland environment variables

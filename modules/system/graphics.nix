@@ -15,6 +15,7 @@
     # Mesa provides radeonsi_drv_video.so for AMD Phoenix1 GPU
     extraPackages = with pkgs; [
       libva # VA-API library
+      vulkan-loader # Vulkan runtime
     ];
 
     extraPackages32 = with pkgs.pkgsi686Linux; [
