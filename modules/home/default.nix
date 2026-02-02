@@ -13,6 +13,7 @@
     ./nvf.nix
     ./shell.nix
     ./terminal.nix
+    ./zellij.nix
     ./services.nix
     ./theme.nix
     ./opencode.nix
@@ -82,6 +83,7 @@
     zoom-us # Video conferencing
     teams-for-linux
     libreoffice-fresh # Office suite
+    vscode-fhs
 
     # Browsers
     firefox

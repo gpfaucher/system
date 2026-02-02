@@ -18,6 +18,20 @@ let
     doCheck = false;
     meta.homepage = "https://github.com/sudo-tee/opencode.nvim";
   };
+
+  # Claude Code Neovim integration (coder/claudecode.nvim)
+  claudecode-nvim = pkgs.vimUtils.buildVimPlugin {
+    pname = "claudecode-nvim";
+    version = "unstable-2026-02-02";
+    src = pkgs.fetchFromGitHub {
+      owner = "coder";
+      repo = "claudecode.nvim";
+      rev = "main";
+      sha256 = "125scrzl96k30q2vjvfx0bl38rhfp5z3nfirzfjbji3vg3xl1807";
+    };
+    doCheck = false;
+    meta.homepage = "https://github.com/coder/claudecode.nvim";
+  };
 in
 {
   programs.nvf = {
@@ -444,7 +458,7 @@ in
               local wk = require("which-key")
               wk.add({
                 { "<leader>b", group = "Buffer" },
-                { "<leader>c", group = "Code" },
+                { "<leader>c", group = "Claude" },
                 { "<leader>d", group = "Diagnostics" },
                 { "<leader>f", group = "File" },
                 { "<leader>g", group = "Git" },
@@ -511,6 +525,14 @@ in
             '';
           };
 
+          # snacks.nvim - Required by claudecode.nvim for terminal provider
+          snacks-nvim = {
+            package = pkgs.vimPlugins.snacks-nvim;
+            setup = ''
+              require("snacks").setup({})
+            '';
+          };
+
           # OpenCode.nvim - AI coding assistant
           opencode = {
             package = opencode-nvim;
@@ -542,6 +564,34 @@ in
                   git_diff = true,
                 },
               })
+            '';
+          };
+
+          # Claude Code Neovim integration (coder/claudecode.nvim)
+          # Provides WebSocket MCP server for Claude CLI integration
+          claudecode = {
+            package = claudecode-nvim;
+            setup = ''
+              require("claudecode").setup({
+                auto_start = true,
+                terminal = {
+                  split_side = "right",
+                  split_width_percentage = 0.4,
+                  provider = "snacks",
+                },
+                diff = {
+                  enabled = true,
+                  auto_close_on_accept = true,
+                },
+              })
+
+              -- Keymaps for Claude Code
+              vim.keymap.set("n", "<leader>cc", "<cmd>ClaudeCodeToggle<cr>", { desc = "Toggle Claude Code" })
+              vim.keymap.set("n", "<leader>cs", "<cmd>ClaudeCodeSend<cr>", { desc = "Send to Claude" })
+              vim.keymap.set("v", "<leader>cs", "<cmd>ClaudeCodeSend<cr>", { desc = "Send selection to Claude" })
+              vim.keymap.set("n", "<leader>cA", "<cmd>ClaudeCodeAdd<cr>", { desc = "Add file to Claude context" })
+              vim.keymap.set("n", "<leader>ct", "<cmd>ClaudeCodeTreeAdd<cr>", { desc = "Add from file tree" })
+              vim.keymap.set("n", "<leader>cd", "<cmd>ClaudeCodeDiff<cr>", { desc = "Show Claude diff" })
             '';
           };
 

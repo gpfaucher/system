@@ -6,6 +6,187 @@
 }:
 
 let
+  # Spawn agent script - creates worktree and launches zellij environment
+  spawn-agent = pkgs.writeShellScriptBin "spawn-agent" ''
+    set -euo pipefail
+
+    usage() {
+      echo "Usage: spawn-agent [--linear ISSUE_ID] <branch-name> [base-branch]"
+      echo ""
+      echo "Options:"
+      echo "  --linear ISSUE_ID   Fetch issue from Linear, use for branch naming"
+      echo ""
+      echo "Examples:"
+      echo "  spawn-agent feature/auth main"
+      echo "  spawn-agent --linear LIN-123"
+      exit 1
+    }
+
+    LINEAR_ISSUE=""
+    BRANCH_NAME=""
+    BASE_BRANCH=""
+
+    # Parse arguments
+    while [[ $# -gt 0 ]]; do
+      case $1 in
+        --linear)
+          LINEAR_ISSUE="$2"
+          shift 2
+          ;;
+        -h|--help)
+          usage
+          ;;
+        *)
+          if [[ -z "$BRANCH_NAME" ]]; then
+            BRANCH_NAME="$1"
+          elif [[ -z "$BASE_BRANCH" ]]; then
+            BASE_BRANCH="$1"
+          fi
+          shift
+          ;;
+      esac
+    done
+
+    # If Linear issue provided, use as branch name
+    if [[ -n "$LINEAR_ISSUE" ]]; then
+      echo "Linear issue: $LINEAR_ISSUE"
+      BRANCH_NAME="$LINEAR_ISSUE"
+    fi
+
+    if [[ -z "$BRANCH_NAME" ]]; then
+      usage
+    fi
+
+    # Determine base branch
+    if [[ -z "$BASE_BRANCH" ]]; then
+      BASE_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@' || echo "main")
+    fi
+
+    # Sanitize branch name for directory
+    SAFE_NAME=$(echo "$BRANCH_NAME" | tr '/' '-' | tr '[:upper:]' '[:lower:]')
+    WORKTREE_DIR=".worktrees/$SAFE_NAME"
+
+    # Calculate port (based on number of existing worktrees)
+    WORKTREE_COUNT=$(git worktree list | wc -l)
+    PORT=$((3000 + WORKTREE_COUNT))
+
+    echo "Creating worktree: $WORKTREE_DIR"
+    echo "Branch: $BRANCH_NAME (from $BASE_BRANCH)"
+    echo "Port: $PORT"
+
+    # Create worktree
+    git worktree add "$WORKTREE_DIR" -b "$BRANCH_NAME" "$BASE_BRANCH" 2>/dev/null || \
+      git worktree add "$WORKTREE_DIR" "$BRANCH_NAME"
+
+    # Copy environment files
+    echo "Copying environment files..."
+    for envfile in .env .env.local .env.development .env.development.local .envrc; do
+      if [[ -f "$envfile" ]]; then
+        cp "$envfile" "$WORKTREE_DIR/"
+        echo "  Copied $envfile"
+      fi
+    done
+
+    # Copy nested .env files (monorepo support)
+    find . -maxdepth 4 \( -name ".env*" -o -name ".envrc" \) \
+      ! -path "./node_modules/*" \
+      ! -path "./.worktrees/*" \
+      ! -path "./.git/*" 2>/dev/null | while read -r envfile; do
+      dir=$(dirname "$envfile")
+      mkdir -p "$WORKTREE_DIR/$dir"
+      cp "$envfile" "$WORKTREE_DIR/$envfile" 2>/dev/null || true
+    done
+
+    # Set unique port in .env.local
+    touch "$WORKTREE_DIR/.env.local"
+    echo "" >> "$WORKTREE_DIR/.env.local"
+    echo "# Auto-configured by spawn-agent" >> "$WORKTREE_DIR/.env.local"
+    echo "PORT=$PORT" >> "$WORKTREE_DIR/.env.local"
+    echo "VITE_PORT=$PORT" >> "$WORKTREE_DIR/.env.local"
+    echo "NEXT_PORT=$PORT" >> "$WORKTREE_DIR/.env.local"
+
+    # Copy IDE/editor settings
+    for dir in .idea .vscode .claude; do
+      if [[ -d "$dir" ]]; then
+        cp -r "$dir" "$WORKTREE_DIR/"
+      fi
+    done
+
+    # Create CLAUDE.md with context if Linear issue
+    if [[ -n "$LINEAR_ISSUE" ]]; then
+      mkdir -p "$WORKTREE_DIR/.claude"
+      cat > "$WORKTREE_DIR/.claude/AGENT_CONTEXT.md" << EOF
+    # Agent Context
+
+    Linear Issue: $LINEAR_ISSUE
+    Branch: $BRANCH_NAME
+    Port: $PORT
+
+    On startup, fetch the Linear issue details and understand the task.
+    EOF
+    fi
+
+    # Install dependencies
+    WORKTREE_ABS=$(cd "$WORKTREE_DIR" && pwd)
+    cd "$WORKTREE_DIR"
+    if [[ -f "pnpm-lock.yaml" ]]; then
+      echo "Installing dependencies with pnpm..."
+      pnpm install
+    elif [[ -f "yarn.lock" ]]; then
+      echo "Installing dependencies with yarn..."
+      yarn install
+    elif [[ -f "package-lock.json" ]]; then
+      echo "Installing dependencies with npm..."
+      npm install
+    elif [[ -f "requirements.txt" ]]; then
+      echo "Installing Python dependencies..."
+      pip install -r requirements.txt
+    elif [[ -f "pyproject.toml" ]]; then
+      echo "Installing Python project..."
+      pip install -e .
+    fi
+
+    # Open new terminal window with zellij
+    echo ""
+    echo "Launching agent environment..."
+    echo "  Worktree: $WORKTREE_DIR"
+    echo "  Port: $PORT"
+    echo ""
+
+    # Launch in new terminal window (ghostty)
+    ghostty --working-directory="$WORKTREE_ABS" -e zellij --layout agent --session "$SAFE_NAME" &
+
+    echo "Agent spawned! Switch to the new terminal window."
+  '';
+
+  # Cleanup script for pre-commit hook
+  cleanup-code = pkgs.writeShellScriptBin "claude-cleanup" ''
+    set -euo pipefail
+
+    # Get staged files
+    STAGED_FILES=$(git diff --cached --name-only --diff-filter=ACMR | grep -E '\.(js|jsx|ts|tsx|py|go|rs)$' || true)
+
+    if [[ -z "$STAGED_FILES" ]]; then
+      exit 0
+    fi
+
+    echo "Cleaning up staged files..."
+
+    for file in $STAGED_FILES; do
+      if [[ -f "$file" ]]; then
+        # Remove debug console.logs (but keep intentional ones)
+        ${pkgs.gnused}/bin/sed -i 's/console\.log(.*DEBUG.*);//g' "$file" 2>/dev/null || true
+
+        # Remove // TODO: remove comments
+        ${pkgs.gnused}/bin/sed -i '/\/\/ TODO: remove/d' "$file" 2>/dev/null || true
+        ${pkgs.gnused}/bin/sed -i '/# TODO: remove/d' "$file" 2>/dev/null || true
+
+        # Re-stage the file if modified
+        git add "$file"
+      fi
+    done
+  '';
+
   # JSON content for mutable config files (created by activation script)
   claudeJsonContent = builtins.toJSON {
     mcpServers = {
@@ -28,6 +209,13 @@ let
         command = "npx";
         args = [ "-y" "@upstash/context7-mcp@latest" ];
       };
+      linear = {
+        command = "npx";
+        args = [ "-y" "mcp-linear" ];
+        env = {
+          LINEAR_API_KEY = "\${LINEAR_API_KEY}";
+        };
+      };
     };
   };
 
@@ -36,6 +224,14 @@ let
       "superpowers@claude-plugins-official" = true;
     };
     preferences = { };
+    hooks = {
+      PreToolUse = [
+        {
+          matcher = "Bash(git commit*)";
+          command = "claude-cleanup";
+        }
+      ];
+    };
   };
 
   claudeSettingsLocalContent = builtins.toJSON {
@@ -344,11 +540,21 @@ let
       Copy files that aren't tracked by git but needed for development:
 
       ```bash
-      # Environment files
+      # Root-level environment files
       cp .env "$WORKTREE_DIR/" 2>/dev/null || true
       cp .env.local "$WORKTREE_DIR/" 2>/dev/null || true
       cp .env.development "$WORKTREE_DIR/" 2>/dev/null || true
       cp .env.development.local "$WORKTREE_DIR/" 2>/dev/null || true
+      cp .envrc "$WORKTREE_DIR/" 2>/dev/null || true
+
+      # Monorepo: Copy nested .env files preserving directory structure
+      # Find all .env* and .envrc files, exclude node_modules and .worktrees
+      find . -maxdepth 4 -name ".env*" -o -name ".envrc" 2>/dev/null | \
+        grep -v node_modules | grep -v .worktrees | while read -r envfile; do
+          dir=$(dirname "$envfile")
+          mkdir -p "$WORKTREE_DIR/$dir"
+          cp "$envfile" "$WORKTREE_DIR/$envfile" 2>/dev/null || true
+        done
 
       # Local config overrides
       mkdir -p "$WORKTREE_DIR/.claude"
@@ -490,6 +696,65 @@ let
       - Relevant code snippet
       - Suggested fix
     '';
+
+    spawn-agent = ''
+      ---
+      name: spawn-agent
+      description: Create a new parallel agent environment with git worktree
+      ---
+
+      # Spawn Agent
+
+      Create a new isolated development environment for a feature.
+
+      ## Usage
+
+      ```bash
+      spawn-agent [--linear ISSUE_ID] <branch-name> [base-branch]
+      ```
+
+      ## Examples
+
+      ```bash
+      # Simple feature branch
+      spawn-agent feature/user-auth main
+
+      # From Linear issue (fetches details automatically)
+      spawn-agent --linear LIN-123
+      ```
+
+      ## What It Does
+
+      1. Creates git worktree at `.worktrees/<branch-name>`
+      2. Copies all `.env*` files (including nested for monorepos)
+      3. Configures unique port (3001, 3002, etc.) in `.env.local`
+      4. Installs dependencies (pnpm/yarn/npm/pip)
+      5. Opens new terminal with zellij layout:
+         - Left: Neovim with claudecode.nvim
+         - Top-right: Claude Code
+         - Bottom-right: Shell for dev server
+
+      ## After Spawning
+
+      - Switch to the new terminal window
+      - Claude is ready with workspace context
+      - Run dev server in shell pane (port is pre-configured)
+      - If Linear issue: Claude will fetch and understand the task
+
+      ## Cleanup
+
+      When done with the agent/feature:
+      ```bash
+      git worktree remove .worktrees/<branch-name>
+      git branch -d <branch-name>  # if merged
+      ```
+
+      ## List Active Agents
+
+      ```bash
+      git worktree list
+      ```
+    '';
   };
 
   # Generate home.file entries for both Claude Code and OpenCode formats
@@ -556,7 +821,10 @@ let
 
       1. Determine base branch: `git symbolic-ref refs/remotes/origin/HEAD 2>/dev/null | sed 's@^refs/remotes/origin/@@'` or default to `main`
       2. Create worktree: `git worktree add "../$(basename $PWD)-$1" -b "$1" "$BASE"`
-      3. Copy local files: `.env`, `.env.local`, `.env.development`, `.env.development.local`, `.claude/settings.local.json`, `.idea/`, `.vscode/`, `*.db`, `*.sqlite`
+      3. Copy local files:
+         - Root: `.env`, `.env.local`, `.env.development`, `.env.development.local`, `.envrc`
+         - Monorepo: Find all `.env*` and `.envrc` files up to 4 levels deep, preserving directory structure (excludes node_modules, .worktrees)
+         - Config: `.claude/settings.local.json`, `.idea/`, `.vscode/`, `*.db`, `*.sqlite`
       4. Install deps: detect pnpm/yarn/npm/pip and install
       5. Report location, branch, files copied, and suggest `cd ../dir && opencode`
 
@@ -592,6 +860,12 @@ in
   home.activation.createClaudeConfigs = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
     run ${createMutableConfig}
   '';
+
+  # Scripts for parallel agent workflow
+  home.packages = [
+    spawn-agent
+    cleanup-code
+  ];
 
   # Skills and commands can be symlinks (read-only is fine)
   home.file = allSkillFiles // allCommandFiles;
