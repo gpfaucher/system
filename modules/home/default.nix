@@ -15,6 +15,7 @@
     ./zellij.nix
     ./services.nix
     ./theme.nix
+    ./zed.nix
     ./ssh.nix
   ];
 
@@ -26,8 +27,8 @@
 
     # Set neovim as default editor
     sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = "nvim";
+      EDITOR = "zeditor --wait";
+      VISUAL = "zeditor --wait";
     };
   };
 
@@ -61,7 +62,6 @@
   home.packages = with pkgs; [
     # GUI
     jetbrains.datagrip
-    zed-editor
     zoom-us # Video conferencing
     teams-for-linux
     libreoffice-fresh # Office suite

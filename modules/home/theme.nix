@@ -26,6 +26,7 @@
 
     targets = {
       neovim.enable = true;
+      zed.enable = true;
       fish.enable = true;
       gtk.enable = true;
       kde.enable = false; # Disabled: crashes on NixOS
