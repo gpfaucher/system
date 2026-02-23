@@ -18,14 +18,17 @@
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
-    jack.enable = true; # Enable JACK support for better Bluetooth audio
 
-    # Higher quality audio settings for external speakers
+    # Audio quality settings
     extraConfig.pipewire = {
       "10-higher-quality" = {
         "context.properties" = {
           "default.clock.rate" = 48000;
-          "default.clock.allowed-rates" = [ 44100 48000 96000 ];
+          "default.clock.allowed-rates" = [
+            44100
+            48000
+            96000
+          ];
           "default.clock.quantum" = 1024;
           "default.clock.min-quantum" = 512;
         };
@@ -35,45 +38,64 @@
     wireplumber = {
       enable = true;
       extraConfig = {
-        # Bluetooth codec configuration
+        # Bluetooth codec and role configuration
         "10-bluez" = {
           "monitor.bluez.properties" = {
-            # Enable better codecs
             "bluez5.enable-sbc-xq" = true;
             "bluez5.enable-msbc" = true;
             "bluez5.enable-hw-volume" = true;
-            # Include BOTH A2DP and headset roles
-            "bluez5.roles" = [ "a2dp_sink" "a2dp_source" "hsp_hs" "hsp_ag" "hfp_hf" "hfp_ag" ];
-            # Default to A2DP profile
-            "bluez5.default.profile" = "a2dp-sink";
+            "bluez5.roles" = [
+              "a2dp_sink"
+              "hfp_hf"
+            ];
           };
         };
-        # Auto-switch to headset profile when app needs microphone
+
+        # WirePlumber auto-switches to HFP when a call app opens the mic,
+        # and back to A2DP when the call ends. No custom scripts needed.
         "11-bluetooth-policy" = {
           "wireplumber.settings" = {
             "bluetooth.autoswitch-to-headset-profile" = true;
           };
         };
+
+        # Default to A2DP (high-quality music) on connection
+        "12-bluetooth-defaults" = {
+          "monitor.bluez.rules" = [
+            {
+              matches = [
+                {
+                  "device.name" = "~bluez_card.*";
+                }
+              ];
+              actions = {
+                update-props = {
+                  "bluez5.auto-connect" = [
+                    "a2dp_sink"
+                    "hfp_hf"
+                  ];
+                };
+              };
+            }
+          ];
+        };
       };
     };
   };
 
-  # Audio tools and EQ
+  # Audio tools
   environment.systemPackages = with pkgs; [
     pipewire
-    pulseaudio   # For pactl and other utilities
-    easyeffects  # System-wide EQ and audio effects for PipeWire
-    helvum       # PipeWire patchbay for routing audio
+    pulseaudio # pactl utilities
+    easyeffects # System-wide EQ (output effects only with BT headsets)
+    helvum # PipeWire patchbay for debugging
   ];
 
-  # Bluetooth settings for better audio compatibility
+  # Bluetooth audio settings
   hardware.bluetooth.settings = {
     General = {
-      # Enable all Bluetooth profiles including A2DP (high-quality audio)
       Enable = "Source,Sink,Media,Socket";
-      # Enable experimental features for mSBC codec support (better call quality)
       Experimental = true;
-      # Keep connections alive during profile switches
       KernelExperimental = true;
     };
   };
