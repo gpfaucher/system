@@ -18,16 +18,8 @@
     ./theme.nix
     ./opencode.nix
     ./claude-code.nix
-    ./beads.nix
     ./ssh.nix
   ];
-
-  # Enable Beads for persistent agent task memory
-  # FIXME: Disabled due to vendoring mismatch in upstream package
-  programs.beads = {
-    enable = false;
-    enableDaemon = false; # Opt-in for daemon (auto-sync)
-  };
 
   # Home Manager configuration
   home = {

@@ -20,15 +20,6 @@
       url = "github:ghostty-org/ghostty";
     };
 
-    # Beads - Git-backed issue tracker for AI agents
-    # Provides persistent task memory across agent sessions
-    # Task memory: .beads/issues/ (committed to git)
-    # Cache: .beads/cache/ (local only, gitignored)
-    beads = {
-      url = "github:steveyegge/beads";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Agenix - Age-encrypted secrets for NixOS
     agenix = {
       url = "github:ryantm/agenix";
@@ -71,7 +62,6 @@
       nvf,
       stylix,
       ghostty,
-      beads,
       agenix,
       impermanence,
       disko,
@@ -86,12 +76,6 @@
       pkgs = import nixpkgs {
         inherit system;
         config.allowUnfree = true;
-        # Add beads overlay for easy package access
-        overlays = [
-          (final: prev: {
-            beads = beads.packages.${system}.default;
-          })
-        ];
       };
     in
     {
@@ -102,12 +86,6 @@
           {
             nixpkgs.hostPlatform = system;
             nixpkgs.config.allowUnfree = true;
-            # Add beads overlay for system-level access
-            nixpkgs.overlays = [
-              (final: prev: {
-                beads = beads.packages.${system}.default;
-              })
-            ];
           }
           stylix.nixosModules.stylix
           agenix.nixosModules.default
@@ -138,11 +116,6 @@
             nixpkgs.hostPlatform = system;
             nixpkgs.config.allowUnfree = true;
             nixpkgs.config.cudaSupport = true;
-            nixpkgs.overlays = [
-              (final: prev: {
-                beads = beads.packages.${system}.default;
-              })
-            ];
           }
           stylix.nixosModules.stylix
           agenix.nixosModules.default
