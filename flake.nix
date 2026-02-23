@@ -104,6 +104,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = "hm-backup";
               extraSpecialArgs = { inherit inputs username self; };
               sharedModules = [
                 inputs.nvf.homeManagerModules.default
@@ -134,6 +135,7 @@
             home-manager = {
               useGlobalPkgs = true;
               useUserPackages = true;
+              backupFileExtension = "hm-backup";
               extraSpecialArgs = { inherit inputs username self; };
               sharedModules = [
                 inputs.nvf.homeManagerModules.default
