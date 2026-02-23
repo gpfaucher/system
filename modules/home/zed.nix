@@ -34,7 +34,9 @@
       # Vim mode
       vim_mode = true;
 
-      # UI (font sizes and families managed by Stylix)
+      # UI
+      ui_font_size = lib.mkForce 14;
+      buffer_font_size = lib.mkForce 13;
       hour_format = "hour24";
       tab_size = 2;
       show_whitespaces = "boundary";
@@ -128,16 +130,16 @@
         context = "vim_mode == normal";
         bindings = {
           # Window navigation (match nvim C-hjkl)
-          "ctrl-h" = "workspace::ActivatePaneInDirection::Left";
-          "ctrl-j" = "workspace::ActivatePaneInDirection::Down";
-          "ctrl-k" = "workspace::ActivatePaneInDirection::Up";
-          "ctrl-l" = "workspace::ActivatePaneInDirection::Right";
+          "ctrl-h" = "workspace::ActivatePaneLeft";
+          "ctrl-j" = "workspace::ActivatePaneDown";
+          "ctrl-k" = "workspace::ActivatePaneUp";
+          "ctrl-l" = "workspace::ActivatePaneRight";
           # Buffer navigation (match nvim S-hl)
-          "shift-h" = "pane::ActivatePrevItem";
+          "shift-h" = "pane::ActivatePreviousItem";
           "shift-l" = "pane::ActivateNextItem";
           # Leader-style (space) bindings
           "space f" = "file_finder::Toggle";
-          "space g" = "workspace::NewSearch";
+          "space g" = "project_search::ToggleFocus";
           "space b" = "tab_switcher::Toggle";
           "space e" = "workspace::ToggleLeftDock";
         };
