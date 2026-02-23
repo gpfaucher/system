@@ -16,6 +16,12 @@
 
     stylix.url = "github:danth/stylix";
 
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
+
     ghostty = {
       url = "github:ghostty-org/ghostty";
     };
@@ -61,6 +67,7 @@
       home-manager,
       nvf,
       stylix,
+      plasma-manager,
       ghostty,
       agenix,
       impermanence,
@@ -101,6 +108,7 @@
               sharedModules = [
                 inputs.nvf.homeManagerModules.default
                 inputs.stylix.homeModules.stylix
+                inputs.plasma-manager.homeManagerModules.plasma-manager
               ];
               users.${username} = import ./modules/home;
             };
@@ -130,6 +138,7 @@
               sharedModules = [
                 inputs.nvf.homeManagerModules.default
                 inputs.stylix.homeModules.stylix
+                inputs.plasma-manager.homeManagerModules.plasma-manager
               ];
               users.${username} = import ./modules/home;
             };
