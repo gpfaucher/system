@@ -25,7 +25,7 @@
     homeDirectory = "/home/${username}";
     stateVersion = "24.11";
 
-    # Set neovim as default editor
+    # Default editor (zed-editor provides the 'zeditor' binary)
     sessionVariables = {
       EDITOR = "zeditor --wait";
       VISUAL = "zeditor --wait";
@@ -72,7 +72,6 @@
     firefox
     google-chrome
     inputs.zen-browser.packages.${pkgs.system}.twilight
-    neovim
     neovide
 
     # Development tools
@@ -81,7 +80,6 @@
     opentofu
     awscli2
     gh
-    git
     gnumake
     gcc
     tree-sitter
@@ -94,7 +92,6 @@
     tmux # Terminal multiplexer
 
     # Modern CLI tools
-    delta # Git diff viewer with syntax highlighting
     eza # Modern ls replacement
     zoxide # Smart cd with 'z' command
     atuin # Database-backed shell history

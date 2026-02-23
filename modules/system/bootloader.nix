@@ -46,7 +46,8 @@
     font = "ter-132n";
     packages = [ pkgs.terminus_font ];
 
-    # Ayu dark theme colors
+    # Ayu dark theme colors (from base16 ayu-dark scheme)
+    # TODO: Consider generating from Stylix base16 scheme instead of hardcoding
     # Format: black, red, green, yellow, blue, magenta, cyan, white (normal + bright)
     colors = [
       "0b0e14" # black (bg)
