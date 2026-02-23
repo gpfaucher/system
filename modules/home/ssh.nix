@@ -72,6 +72,21 @@
     $DRY_RUN_CMD chmod 700 $HOME/.ssh/sockets
   '';
 
+  # WORKAROUND: Fix SSH config permissions
+  # home-manager symlinks to Nix store which has wrong owner (nobody:nogroup or root)
+  # SSH requires the config file to be owned by the user, not root/nix-daemon
+  # This copies the file instead of symlinking, fixing "Bad owner or permissions" error
+  # See: https://github.com/nix-community/home-manager/issues/322
+  home.activation.fixSshConfigPermissions = lib.hm.dag.entryAfter [ "writeBoundary" ] ''
+    if [ -L "$HOME/.ssh/config" ]; then
+      # Get the actual file the symlink points to
+      configTarget=$(readlink -f "$HOME/.ssh/config")
+      # Remove the symlink and copy the file with correct permissions
+      $DRY_RUN_CMD rm "$HOME/.ssh/config"
+      $DRY_RUN_CMD install -m 600 "$configTarget" "$HOME/.ssh/config"
+    fi
+  '';
+
   # SSH_ASKPASS integration for GUI passphrase prompts
   # Uses ssh-askpass-fullscreen for Wayland
   home.sessionVariables = {

@@ -10,9 +10,8 @@
   imports = [
     ./hardware.nix
     ../../modules/system/bootloader.nix
-    # For VR: use graphics-vr.nix (NVIDIA sync mode, higher power but VR works)
-    # For battery: use graphics.nix (AMD primary, NVIDIA offload)
-    ../../modules/system/graphics-vr.nix
+    # GPU: offload mode (AMD primary, NVIDIA on-demand)
+    ../../modules/system/graphics.nix
     ../../modules/system/networking.nix
     ../../modules/system/audio.nix
     ../../modules/system/services.nix
@@ -89,6 +88,20 @@
 
   # Enable fish shell system-wide
   programs.fish.enable = true;
+
+  # KDE Plasma 6 Desktop Environment
+  services.xserver.enable = true;
+  services.desktopManager.plasma6.enable = true;
+  services.displayManager.sddm = {
+    enable = true;
+    wayland.enable = true;
+  };
+
+  # Enable XDG portal for Wayland
+  xdg.portal = {
+    enable = true;
+    extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
+  };
 
   # Steam gaming platform
   programs.steam = {

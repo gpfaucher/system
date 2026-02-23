@@ -104,9 +104,8 @@
   security.apparmor = {
     enable = true;
 
-    # When set to true, kills processes that should be confined but aren't
-    # Start with false and monitor logs before enabling
-    killUnconfinedConfinables = false; # TODO: Set to true after testing profiles
+    # Kills processes that should be confined but aren't
+    killUnconfinedConfinables = true;
   };
 
   # ----------------------------------------------------------------------------

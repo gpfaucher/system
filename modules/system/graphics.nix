@@ -38,10 +38,11 @@
 
     # PRIME offload mode - AMD primary, NVIDIA on-demand
     # Use nvidia-offload or prime-run to run apps on NVIDIA GPU
+    # Note: sync mode is X11-only and breaks Wayland compositors
     prime = {
       offload = {
         enable = true;
-        enableOffloadCmd = true; # Provides 'nvidia-offload' command
+        enableOffloadCmd = true;
       };
 
       # Bus IDs from: lspci | grep -E 'VGA|3D'
@@ -59,9 +60,6 @@
 
   # Wayland environment variables
   environment.sessionVariables = {
-    # Fix cursor issues on wlroots compositors with NVIDIA
-    WLR_NO_HARDWARE_CURSORS = "1";
-
     # Enable Wayland for Electron/Chromium apps on NixOS
     NIXOS_OZONE_WL = "1";
 

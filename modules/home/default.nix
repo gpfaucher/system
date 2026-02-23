@@ -9,15 +9,12 @@
 
 {
   imports = [
-    ./river.nix
     ./nvf.nix
     ./shell.nix
     ./terminal.nix
     ./zellij.nix
     ./services.nix
     ./theme.nix
-    ./opencode.nix
-    ./claude-code.nix
     ./ssh.nix
   ];
 
@@ -37,33 +34,26 @@
   # Enable Home Manager
   programs.home-manager.enable = true;
 
-  # Enable River WM
-  programs.river = {
-    enable = true;
-    terminal = "ghostty";
-    borderColorFocused = "59c2ff"; # ayu blue
-    borderColorUnfocused = "272d38"; # ayu dark bg
-    keyboardRepeatDelay = 250;
-    keyboardRepeatRate = 30;
-  };
-
   # Git configuration
   programs.git = {
     enable = true;
     settings = {
       user.name = "Gabriel Faucher";
-      user.email = "gpfaucher@gmail.com"; # TODO: Update with actual email
+      user.email = "gpfaucher@gmail.com";
       init.defaultBranch = "main";
       pull.rebase = true;
       push.autoSetupRemote = true;
     };
-    delta = {
-      enable = true;
-      options = {
-        navigate = true;
-        side-by-side = true;
-        line-numbers = true;
-      };
+  };
+
+  # Delta - git diff viewer (moved from programs.git.delta)
+  programs.delta = {
+    enable = true;
+    enableGitIntegration = true;
+    options = {
+      navigate = true;
+      side-by-side = true;
+      line-numbers = true;
     };
   };
 
@@ -71,21 +61,23 @@
   home.packages = with pkgs; [
     # GUI
     jetbrains.datagrip
-    zed-editor-fhs
+    zed-editor
     zoom-us # Video conferencing
     teams-for-linux
     libreoffice-fresh # Office suite
     vscode-fhs
+    warp-terminal
 
     # Browsers
     firefox
     google-chrome
     inputs.zen-browser.packages.${pkgs.system}.twilight
     neovim
-    claude-code
+    neovide
 
     # Development tools
-    opencode
+    nixd # Nix language server
+    claude-code
     opentofu
     awscli2
     gh
@@ -180,216 +172,9 @@
     $DRY_RUN_CMD chmod 700 $HOME/.aws
   '';
 
-  # # Wallpaper configuration
-  # xdg.configFile."wpaperd/config.toml".text = ''
-  #   [default]
-  #   path = "${../../../assets/wallpaper.png}"
-  #   duration = "30m"
-  #   mode = "center"
-  # '';
-
-  # Screenshot and screenrecord scripts
-  home.file.".local/bin/screenshot-area" = {
-    executable = true;
-    text = ''
-      #!/bin/sh
-      grim -g "$(slurp)" - | wl-copy
-    '';
-  };
-
-  home.file.".local/bin/screenshot-screen" = {
-    executable = true;
-    text = ''
-      #!/bin/sh
-      grim - | wl-copy
-    '';
-  };
-
-  home.file.".local/bin/screenshot-save" = {
-    executable = true;
-    text = ''
-      #!/bin/sh
-      mkdir -p ~/Pictures/Screenshots
-      grim -g "$(slurp)" ~/Pictures/Screenshots/$(date +%Y%m%d_%H%M%S).png
-    '';
-  };
-
-  home.file.".local/bin/screenrecord-area" = {
-    executable = true;
-    text = ''
-      #!/bin/sh
-      wf-recorder -g "$(slurp)" -f /tmp/recording.mp4 &
-      echo $! > /tmp/screenrecord.pid
-    '';
-  };
-
-  home.file.".local/bin/screenrecord-screen" = {
-    executable = true;
-    text = ''
-      #!/bin/sh
-      wf-recorder -f /tmp/recording.mp4 &
-      echo $! > /tmp/screenrecord.pid
-    '';
-  };
-
-  home.file.".local/bin/screenrecord-save" = {
-    executable = true;
-    text = ''
-      #!/bin/sh
-      if [ -f /tmp/screenrecord.pid ]; then
-        PID=$(cat /tmp/screenrecord.pid)
-        kill -INT "$PID" 2>/dev/null
-        # Wait for wf-recorder to finalize the MP4 file
-        while kill -0 "$PID" 2>/dev/null; do sleep 0.1; done
-        rm /tmp/screenrecord.pid
-        mkdir -p ~/Videos/Recordings
-        mv /tmp/recording.mp4 ~/Videos/Recordings/$(date +%Y%m%d_%H%M%S).mp4
-        notify-send "Recording saved" "~/Videos/Recordings/"
-      fi
-    '';
-  };
-
-  home.file.".local/bin/display-info" = {
-    executable = true;
-    text = ''
-      #!/bin/sh
-      # Display current monitor configuration summary
-      echo "=== Current Display Configuration ==="
-      wlr-randr | grep -E "(^[A-Z]|Enabled:|Position:|Mode:|Scale:|Transform:)"
-    '';
-  };
-
-  # Workspace startup scripts for different monitor profiles
-  # Tags: 1=1, 2=2, 3=4, 4=8, 5=16, 6=32, 7=64, 8=128, 9=256
-
-  home.file.".local/bin/workspace-ultrawide-only" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      export PATH="/run/current-system/sw/bin:$PATH"
-      # Ultrawide-only workspace setup
-      # Tag 1: nvim in paddock-app + claude code
-      # Tag 2: zen browser
-      # Tag 3: two terminals (apps/ui, apps/api)
-      # Tag 4: datagrip
-      # Tag 9: teams
-
-      sleep 1  # Wait for display to be ready
-
-      # Tag 1: nvim + claude code
-      ghostty --title="nvim-paddock" --working-directory="$HOME/projects/paddock-app" -e nvim &
-      sleep 0.5
-      ghostty --title="claude-paddock" --working-directory="$HOME/projects/paddock-app" -e claude &
-
-      # Tag 2: zen browser (main instance)
-      zen &
-
-      # Tag 3: terminals for apps/ui and apps/api
-      sleep 0.5
-      ghostty --title="term-ui" --working-directory="$HOME/projects/paddock-app/apps/ui" &
-      sleep 0.3
-      ghostty --title="term-api" --working-directory="$HOME/projects/paddock-app/apps/api" &
-
-      # Tag 4: datagrip
-      sleep 0.5
-      datagrip &
-
-      # Tag 9: teams
-      sleep 0.5
-      teams-for-linux &
-    '';
-  };
-
-  home.file.".local/bin/workspace-dual-monitor" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      export PATH="/run/current-system/sw/bin:$PATH"
-      # Dual monitor (vertical + ultrawide) workspace setup
-      # Ultrawide tags 1-4, 9: paddock development + teams
-      # Vertical tags 6-8: claude code terminals + zen (separate instance)
-
-      sleep 1  # Wait for display to be ready
-
-      # === ULTRAWIDE MONITOR ===
-      # Tag 1: nvim in paddock-app
-      ghostty --title="nvim-paddock" --working-directory="$HOME/projects/paddock-app" -e nvim &
-
-      # Tag 2: zen browser (main instance)
-      zen &
-
-      # Tag 3: terminals for apps/ui and apps/api
-      sleep 0.5
-      ghostty --title="term-ui" --working-directory="$HOME/projects/paddock-app/apps/ui" &
-      sleep 0.3
-      ghostty --title="term-api" --working-directory="$HOME/projects/paddock-app/apps/api" &
-
-      # Tag 4: datagrip
-      sleep 0.5
-      datagrip &
-
-      # Tag 9: teams
-      sleep 0.5
-      teams-for-linux &
-
-      # === VERTICAL MONITOR ===
-      # Tag 6: claude code in system project
-      sleep 0.5
-      ghostty --title="claude-system" --working-directory="$HOME/projects/system" -e claude &
-
-      # Tag 7: claude code in paddock-app project
-      sleep 0.3
-      ghostty --title="claude-paddock-v" --working-directory="$HOME/projects/paddock-app" -e claude &
-
-      # Tag 8: zen browser (separate instance with different profile)
-      # Create profile dir if it doesn't exist, then launch with separate profile
-      mkdir -p "$HOME/.zen/vertical"
-      sleep 0.3
-      zen --profile "$HOME/.zen/vertical" --no-remote --class zen-vertical &
-    '';
-  };
-
-  home.file.".local/bin/workspace-laptop-only" = {
-    executable = true;
-    text = ''
-      #!/usr/bin/env bash
-      export PATH="/run/current-system/sw/bin:$PATH"
-      # Laptop-only workspace setup
-      # Tag 1: nvim in paddock-app
-      # Tag 2: zen browser
-      # Tag 3: two terminals (apps/ui, apps/api)
-      # Tag 4: datagrip
-      # Tag 5: claude code
-      # Tag 9: teams
-
-      sleep 1  # Wait for display to be ready
-
-      # Tag 1: nvim in paddock-app
-      ghostty --title="nvim-paddock" --working-directory="$HOME/projects/paddock-app" -e nvim &
-
-      # Tag 2: zen browser
-      sleep 0.5
-      zen &
-
-      # Tag 3: terminals for apps/ui and apps/api
-      sleep 0.5
-      ghostty --title="term-ui" --working-directory="$HOME/projects/paddock-app/apps/ui" &
-      sleep 0.3
-      ghostty --title="term-api" --working-directory="$HOME/projects/paddock-app/apps/api" &
-
-      # Tag 4: datagrip
-      sleep 0.5
-      datagrip &
-
-      # Tag 5: claude code
-      sleep 0.5
-      ghostty --title="claude-main" --working-directory="$HOME/projects/paddock-app" -e claude &
-
-      # Tag 9: teams
-      sleep 0.5
-      teams-for-linux &
-    '';
-  };
+  # KDE Plasma handles screenshots (Spectacle) and screen recording natively
+  # Use Meta+Shift+Print for area screenshot, Meta+Print for full screen
+  # Screen recording available via OBS or KDE's built-in recorder
 
   # Firefox configuration for Teams always-available status
   programs.firefox = {

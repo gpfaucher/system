@@ -15,10 +15,9 @@
   # UPower service for battery/power management info
   services.upower.enable = true;
 
-  # Bluetooth support
+  # Bluetooth support (KDE Plasma provides its own Bluetooth UI)
   hardware.bluetooth.enable = true;
   hardware.bluetooth.powerOnBoot = true;
-  services.blueman.enable = true;
 
   # Ensure Bluetooth service starts automatically
   systemd.user.services.pipewire.wantedBy = [ "default.target" ];
@@ -27,24 +26,7 @@
   # Polkit for authentication dialogs
   security.polkit.enable = true;
 
-  # PAM service for waylock screen locker
-  security.pam.services.waylock = { };
-
-  # XDG portal configuration for Wayland/wlroots
-  xdg.portal = {
-    enable = true;
-    wlr.enable = true;
-    config = {
-      common = {
-        default = [ "wlr" ];
-      };
-      river = {
-        default = [ "wlr" ];
-        "org.freedesktop.impl.portal.Screenshot" = [ "wlr" ];
-        "org.freedesktop.impl.portal.ScreenCast" = [ "wlr" ];
-      };
-    };
-  };
+  # XDG portal configuration is handled by KDE Plasma in hosts/laptop/default.nix
 
   # Rootless Docker
   virtualisation.docker = {

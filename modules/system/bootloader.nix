@@ -19,16 +19,6 @@
   # Timeout to allow boot menu selection for dual-boot
   boot.loader.timeout = 5;
 
-  # Mount Windows EFI partition for dual-boot auto-detection
-  # systemd-boot auto-detects Windows when its EFI partition is accessible
-  # Find Windows EFI UUID with: lsblk -o NAME,FSTYPE,UUID,MOUNTPOINT
-  # Then add to hardware.nix:
-  #   fileSystems."/boot/efi-windows" = {
-  #     device = "/dev/disk/by-uuid/XXXX-XXXX";
-  #     fsType = "vfat";
-  #     options = [ "ro" "nofail" ];
-  #   };
-
   # Initrd optimization - use systemd in initrd for faster boot
   boot.initrd = {
     verbose = false; # Less logging for faster boot

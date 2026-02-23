@@ -20,7 +20,7 @@
   services.xserver.videoDrivers = [ "amdgpu" "nvidia" ];
 
   # NVIDIA PRIME offload mode (works with Wayland)
-  # Sync mode is X11-only and won't work with River/Wayland
+  # Sync mode is X11-only and won't work with Wayland compositors
   hardware.nvidia = {
     open = true;
     modesetting.enable = true;
@@ -47,7 +47,6 @@
 
   # Wayland environment variables
   environment.sessionVariables = {
-    WLR_NO_HARDWARE_CURSORS = "1";
     NIXOS_OZONE_WL = "1";
     MOZ_ENABLE_WAYLAND = "1";
   };

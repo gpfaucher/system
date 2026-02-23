@@ -24,11 +24,6 @@
 
       # Initialize atuin (shell history)
       atuin init fish | source
-
-      # Start River on tty1
-      if test (tty) = "/dev/tty1"
-        exec river
-      end
     '';
 
     shellAbbrs = {
