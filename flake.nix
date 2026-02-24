@@ -109,7 +109,7 @@
               sharedModules = [
                 inputs.nvf.homeManagerModules.default
                 inputs.stylix.homeModules.stylix
-                inputs.plasma-manager.homeManagerModules.plasma-manager
+                inputs.plasma-manager.homeModules.plasma-manager
               ];
               users.${username} = import ./modules/home;
             };
@@ -140,7 +140,7 @@
               sharedModules = [
                 inputs.nvf.homeManagerModules.default
                 inputs.stylix.homeModules.stylix
-                inputs.plasma-manager.homeManagerModules.plasma-manager
+                inputs.plasma-manager.homeModules.plasma-manager
               ];
               users.${username} = import ./modules/home;
             };
