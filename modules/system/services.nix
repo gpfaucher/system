@@ -28,14 +28,11 @@
 
   # XDG portal configuration is handled by KDE Plasma in hosts/laptop/default.nix
 
-  # Rootless Docker
-  virtualisation.docker = {
-    enable = true;
-    rootless = {
-      enable = true;
-      setSocketVariable = true; # Sets DOCKER_HOST for the user
-    };
-  };
+  # nix-ld: run dynamically linked binaries (e.g. pip-installed ruff, black)
+  programs.nix-ld.enable = true;
+
+  # Docker
+  virtualisation.docker.enable = true;
 
   # Enable coredumps for crash diagnosis
   systemd.coredump = {
