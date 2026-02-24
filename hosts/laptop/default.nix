@@ -83,6 +83,7 @@
       "audio"
       "network" # For iwd wireless management
       "input"
+      "docker"
     ];
   };
 
