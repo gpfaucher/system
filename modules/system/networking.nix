@@ -42,6 +42,8 @@
       4000 # Phoenix/Elixir
       5000 # Flask/generic
       5173 # Vite dev server
+      5432 # PostgreSQL (for Docker → host tunnel)
+
       8000 # Django/Python
       8080 # Alternative HTTP / Tabby
       8888 # Jupyter
