@@ -124,6 +124,12 @@
     ];
   };
 
+  # Audit rules are locked (-e 1) after boot, so reloading during
+  # nixos-rebuild switch fails. The sysinit-reactivation target always
+  # restarts this service on switch (ignoring restartIfChanged), so treat
+  # auditctl's exit code 1 as success to avoid blocking the switch.
+  systemd.services.audit-rules-nixos.serviceConfig.SuccessExitStatus = [ 1 ];
+
   # ----------------------------------------------------------------------------
   # PAM HARDENING AND LIMITS
   # ----------------------------------------------------------------------------

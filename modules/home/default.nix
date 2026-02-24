@@ -181,6 +181,9 @@
       settings = {
         # Disable visibility API to prevent Teams from detecting tab/window switches
         "dom.visibilityAPI.enabled" = false;
+
+        # Enable PipeWire camera portal for Wayland (required for webcam in Teams/WebRTC)
+        "media.webrtc.camera.allow-pipewire" = true;
       };
       # Full ayu dark theme for Firefox UI
       userChrome = ''
