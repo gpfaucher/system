@@ -17,6 +17,7 @@
     ./theme.nix
     ./zed.nix
     ./ssh.nix
+    ./dwm
   ];
 
   # Home Manager configuration
@@ -60,8 +61,18 @@
 
   # Additional packages
   home.packages = with pkgs; [
-    # GUI
+    # JetBrains All Products Pack
     jetbrains.datagrip
+    jetbrains.idea
+    # jetbrains.webstorm
+    jetbrains.pycharm
+    # jetbrains.clion
+    # jetbrains.goland
+    # jetbrains.phpstorm
+    # jetbrains.ruby-mine
+    # jetbrains.rider
+    # jetbrains.rust-rover
+    # jetbrains.dataspell
     zoom-us # Video conferencing
     teams-for-linux
     libreoffice-fresh # Office suite
@@ -182,8 +193,9 @@
         # Disable visibility API to prevent Teams from detecting tab/window switches
         "dom.visibilityAPI.enabled" = false;
 
-        # Enable PipeWire camera portal for Wayland (required for webcam in Teams/WebRTC)
-        "media.webrtc.camera.allow-pipewire" = true;
+        # Disable PipeWire camera portal — crashes Firefox 147 on PipeWire 1.4.x
+        # (video_capture_pipewire.cc:148 segfault). Camera still works via V4L2.
+        "media.webrtc.camera.allow-pipewire" = false;
       };
       # Full ayu dark theme for Firefox UI
       userChrome = ''
