@@ -9,8 +9,8 @@ let
 
     static int topbar = 1;
     static const char *fonts[] = {
-    	"Monaspace Neon:size=10:weight=medium",
-    	"Symbols Nerd Font:size=11"
+    	"Monaspace Neon:size=9:weight=medium",
+    	"Symbols Nerd Font:size=10"
     };
     static const char *prompt      = NULL;
     static const char *colors[SchemeLast][2] = {

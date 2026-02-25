@@ -34,8 +34,11 @@ in
     blueman
     networkmanagerapplet
 
-    # Audio control
+    # Audio / brightness / media
     pavucontrol
+    wireplumber
+    brightnessctl
+    playerctl
 
     # Screenshot (flameshot is HiDPI-aware, maim/slop is blurry at 2x)
     flameshot

@@ -1,4 +1,5 @@
 /* See LICENSE file for copyright and license details. */
+#include <X11/XF86keysym.h>
 
 /* appearance */
 static const unsigned int borderpx  = 3;        /* border pixel of windows */
@@ -37,8 +38,8 @@ static const int swallowfloating    = 0;        /* 1 means swallow floating wind
 static const int smartborders       = 1;
 
 /* fonts */
-static const char *fonts[]          = { "Monaspace Neon:size=10:weight=medium", "Symbols Nerd Font:size=11" };
-static const char dmenufont[]       = "Monaspace Neon:size=10:weight=medium";
+static const char *fonts[]          = { "Monaspace Neon:size=9:weight=medium", "Symbols Nerd Font:size=10" };
+static const char dmenufont[]       = "Monaspace Neon:size=9:weight=medium";
 
 /* xrdb colors - these are defaults overridden at runtime via xrdb */
 static char normbgcolor[]           = "@base01@";
@@ -150,6 +151,17 @@ static const Key keys[] = {
 	/* screenshots */
 	{ MODKEY,                       XK_Print,      spawn,          {.v = scrotfull } },
 	{ MODKEY|ShiftMask,             XK_Print,      spawn,          {.v = scrotsel } },
+
+	/* media keys */
+	{ 0, XF86XK_AudioMute,         spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SINK@ toggle") },
+	{ 0, XF86XK_AudioLowerVolume,  spawn, SHCMD("wpctl set-volume @DEFAULT_AUDIO_SINK@ 5%-") },
+	{ 0, XF86XK_AudioRaiseVolume,  spawn, SHCMD("wpctl set-volume -l 1.0 @DEFAULT_AUDIO_SINK@ 5%+") },
+	{ 0, XF86XK_AudioMicMute,      spawn, SHCMD("wpctl set-mute @DEFAULT_AUDIO_SOURCE@ toggle") },
+	{ 0, XF86XK_MonBrightnessDown, spawn, SHCMD("brightnessctl set 5%-") },
+	{ 0, XF86XK_MonBrightnessUp,   spawn, SHCMD("brightnessctl set +5%") },
+	{ 0, XF86XK_AudioPlay,         spawn, SHCMD("playerctl play-pause") },
+	{ 0, XF86XK_AudioNext,         spawn, SHCMD("playerctl next") },
+	{ 0, XF86XK_AudioPrev,         spawn, SHCMD("playerctl previous") },
 
 	/* scratchpad */
 	{ MODKEY,                       XK_grave,      togglescratch,  {.v = scratchpadcmd } },
