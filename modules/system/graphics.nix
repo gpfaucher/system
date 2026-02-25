@@ -38,7 +38,7 @@
 
     # PRIME offload mode - AMD primary, NVIDIA on-demand
     # Use nvidia-offload or prime-run to run apps on NVIDIA GPU
-    # Note: sync mode is X11-only and breaks Wayland compositors
+    # Offload mode: AMD handles display, NVIDIA available on-demand
     prime = {
       offload = {
         enable = true;
@@ -58,12 +58,4 @@
     libva-utils # vainfo for testing VAAPI drivers
   ];
 
-  # Wayland environment variables
-  environment.sessionVariables = {
-    # Enable Wayland for Electron/Chromium apps on NixOS
-    NIXOS_OZONE_WL = "1";
-
-    # Enable native Wayland for Firefox
-    MOZ_ENABLE_WAYLAND = "1";
-  };
 }
