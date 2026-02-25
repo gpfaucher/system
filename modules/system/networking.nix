@@ -6,29 +6,16 @@
 }:
 
 {
-  # iwd for wireless management (replaces NetworkManager)
-  networking.wireless.iwd = {
+  # NetworkManager for wireless management (integrates with KDE Plasma)
+  networking.networkmanager = {
     enable = true;
-    settings = {
-      # General settings
-       General = {
-         EnableNetworkConfiguration = true;
-       };
-       # Driver quirks for wireless devices
-       DriverQuirks = {
-         DefaultInterface = true;
-       };
-      # Network configuration
-      Network = {
-        EnableIPv6 = true;
-        RoutePriorityOffset = 300;
-      };
-      # Scanning settings for better performance
-      Scan = {
-        DisablePeriodicScan = false;
-      };
-    };
+    wifi.powersave = true;
   };
+
+  # ModemManager grabs the HFP Bluetooth profile on D-Bus, preventing
+  # PipeWire's native backend from registering HFP for headset microphones.
+  # Disable it since we don't use cellular modems.
+  systemd.services.ModemManager.enable = false;
 
   # Firewall configuration
   networking.firewall = {

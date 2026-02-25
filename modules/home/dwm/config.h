@@ -22,6 +22,9 @@ static const int showsystray             = 1;   /* 0 means no systray */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
 
+/* swallow */
+static const int swallowfloating    = 0;        /* 1 means swallow floating windows by default */
+
 /* smartborders */
 static const int smartborders       = 1;
 
@@ -43,35 +46,43 @@ static char *colors[][3] = {
 	[SchemeSel]  = { selfgcolor,  selbgcolor,  selbordercolor  },
 };
 
+/* statuscmd */
+#define STATUSBAR "slstatus"
+
+/* autostart */
+static const char *const autostart[] = {
+	NULL /* terminate */
+};
+
 /* tagging */
 static const char *tags[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9" };
 
 /* named scratchpads */
 static const char scratchpadname[] = "scratchpad";
-static const char *scratchpadcmd[] = { "ghostty", "--class", "scratchpad", NULL };
+static const char *scratchpadcmd[] = { "s", "ghostty", "--class", "scratchpad", NULL };
 
 static const Rule rules[] = {
 	/* xprop(1):
 	 *	WM_CLASS(STRING) = instance, class
 	 *	WM_NAME(STRING) = title
 	 */
-	/* class                  instance      title       tags mask  isfloating  isterminal  noswallow  monitor */
-	{ "Ghostty",              NULL,         NULL,       0,         0,          1,          0,         -1 },
-	{ "ghostty",              NULL,         NULL,       0,         0,          1,          0,         -1 },
-	{ "scratchpad",           NULL,         NULL,       0,         1,          1,          0,         -1 },
-	{ "teams-for-linux",      NULL,         NULL,       0,         0,          0,          0,         -1 },
-	{ "zoom",                 NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "Gimp",                 NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "Steam",                NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "steam",                NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "blueman-manager",      NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "Blueman-manager",      NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "nm-connection-editor", NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "Nm-connection-editor", NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "pavucontrol",          NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "Pavucontrol",          NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ "Arandr",               NULL,         NULL,       0,         1,          0,          0,         -1 },
-	{ NULL,                   NULL,         "Event Tester", 0,     0,          0,          1,         -1 }, /* xev */
+	/* class                  instance      title       tags mask  isfloating  isterminal  noswallow  monitor  scratchkey */
+	{ "Ghostty",              NULL,         NULL,       0,         0,          1,          0,         -1,      0 },
+	{ "ghostty",              NULL,         NULL,       0,         0,          1,          0,         -1,      0 },
+	{ "scratchpad",           NULL,         NULL,       0,         1,          1,          0,         -1,      's' },
+	{ "teams-for-linux",      NULL,         NULL,       0,         0,          0,          0,         -1,      0 },
+	{ "zoom",                 NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "Gimp",                 NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "Steam",                NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "steam",                NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "blueman-manager",      NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "Blueman-manager",      NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "nm-connection-editor", NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "Nm-connection-editor", NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "pavucontrol",          NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "Pavucontrol",          NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ "Arandr",               NULL,         NULL,       0,         1,          0,          0,         -1,      0 },
+	{ NULL,                   NULL,         "Event Tester", 0,     0,          0,          1,         -1,      0 }, /* xev */
 };
 
 /* layout(s) */

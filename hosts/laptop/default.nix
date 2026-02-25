@@ -17,10 +17,14 @@
     ../../modules/system/services.nix
     ../../modules/system/hardening.nix
     ../../modules/system/vr.nix
+    ../../modules/system/dwm.nix
   ];
 
   # Hostname
   networking.hostName = "laptop";
+
+  # Stylix NixOS-level config (needed for DWM config.h color substitution)
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/ayu-dark.yaml";
 
   # Enable Nix flakes and experimental features
   nix = {
@@ -90,9 +94,10 @@
   # Enable fish shell system-wide
   programs.fish.enable = true;
 
-  # X11 + DWM
+  # X11 + DWM (custom patched build from home-manager module)
   services.xserver.enable = true;
   services.xserver.windowManager.dwm.enable = true;
+  services.displayManager.defaultSession = "none+dwm";
 
   # Display manager: LightDM with slick greeter
   services.xserver.displayManager.lightdm = {
