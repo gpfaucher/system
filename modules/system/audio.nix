@@ -61,6 +61,36 @@
           };
         };
 
+        # Cap camera resolution to 720p to prevent lag in video calls
+        "10-camera-limit" = {
+          "monitor.libcamera.rules" = [
+            {
+              matches = [ { "node.name" = "~libcamera_input.*"; } ];
+              actions.update-props = {
+                "node.param.PortConfig" = {
+                  format = "MJPG";
+                  width = 1280;
+                  height = 720;
+                  framerate = 30;
+                };
+              };
+            }
+          ];
+          "monitor.v4l2.rules" = [
+            {
+              matches = [ { "node.name" = "~v4l2_input.*"; } ];
+              actions.update-props = {
+                "node.param.PortConfig" = {
+                  format = "MJPG";
+                  width = 1280;
+                  height = 720;
+                  framerate = 30;
+                };
+              };
+            }
+          ];
+        };
+
         # Default to A2DP (high-quality music) on connection
         "12-bluetooth-defaults" = {
           "monitor.bluez.rules" = [
