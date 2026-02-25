@@ -123,98 +123,16 @@
     };
   };
 
-  # Autorandr: declarative display profiles with udev hotplug detection.
-  # Mirrors the old kanshi profiles. defaultTarget ensures eDP-1 re-enables
-  # when all external monitors are unplugged (the core bug fix).
+  # Autorandr: runtime-managed display profiles with udev hotplug detection.
+  # Profiles are saved at runtime, not declaratively:
+  #   1. Set up your displays with xrandr
+  #   2. Save: autorandr --save <name>
+  #   3. The "laptop" profile is the fallback (defaultTarget)
   #
-  # To populate fingerprints after first boot:
-  #   1. Connect your monitors in each layout
-  #   2. Run: autorandr --fingerprint
-  #   3. Paste the EDID hashes below, then rebuild
+  # First boot: connect only laptop screen, then run: autorandr --save laptop
   services.autorandr = {
     enable = true;
     defaultTarget = "laptop";
-
-    profiles = {
-      # Laptop only (fallback when no externals connected)
-      "laptop" = {
-        fingerprint = {
-          "eDP-1" = "<run: autorandr --fingerprint>";
-        };
-        config = {
-          "eDP-1" = {
-            enable = true;
-            primary = true;
-            mode = "3840x2400";
-            rate = "60.00";
-            position = "0x0";
-            dpi = 192;
-          };
-        };
-      };
-
-      # Dual external: portrait DP + ultrawide HDMI (laptop disabled)
-      "dual-portrait-ultrawide" = {
-        fingerprint = {
-          "eDP-1" = "<run: autorandr --fingerprint>";
-          "DP-2" = "<run: autorandr --fingerprint>";
-          "HDMI-A-1" = "<run: autorandr --fingerprint>";
-        };
-        config = {
-          "DP-2" = {
-            enable = true;
-            mode = "2560x1440";
-            rate = "60.00";
-            position = "0x0";
-            rotate = "left";
-          };
-          "HDMI-A-1" = {
-            enable = true;
-            primary = true;
-            mode = "3440x1440";
-            rate = "100.00";
-            position = "1440x0";
-          };
-          "eDP-1".enable = false;
-        };
-      };
-
-      # Single DP external (laptop disabled)
-      "docked-dp" = {
-        fingerprint = {
-          "eDP-1" = "<run: autorandr --fingerprint>";
-          "DP-2" = "<run: autorandr --fingerprint>";
-        };
-        config = {
-          "DP-2" = {
-            enable = true;
-            primary = true;
-            mode = "3440x1440";
-            rate = "100.00";
-            position = "0x0";
-          };
-          "eDP-1".enable = false;
-        };
-      };
-
-      # Single HDMI external (laptop disabled)
-      "docked-hdmi" = {
-        fingerprint = {
-          "eDP-1" = "<run: autorandr --fingerprint>";
-          "HDMI-A-1" = "<run: autorandr --fingerprint>";
-        };
-        config = {
-          "HDMI-A-1" = {
-            enable = true;
-            primary = true;
-            mode = "3440x1440";
-            rate = "100.00";
-            position = "0x0";
-          };
-          "eDP-1".enable = false;
-        };
-      };
-    };
 
     hooks.postswitch = {
       "refresh-wallpaper" = "${pkgs.hsetroot}/bin/hsetroot -solid '#202020'";
