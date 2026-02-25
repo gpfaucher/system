@@ -8,8 +8,9 @@ let
   configFile = pkgs.replaceVars ../home/dwm/config.h {
     base00 = "#${colors.base00}";
     base01 = "#${colors.base01}";
+    base02 = "#${colors.base02}";
     base05 = "#${colors.base05}";
-    base0B = "#${colors.base0B}";
+    base08 = "#${colors.base08}";
   };
 
   customDwm = pkgs.dwm.overrideAttrs (old: {
@@ -24,7 +25,7 @@ let
       # Fix systray background: use normal bg instead of selected bg
       sed -i 's/scheme\[SchemeSel\]\[ColBg\]\.pixel/scheme[SchemeNorm][ColBg].pixel/g' dwm.c
       # Add internal bar padding (~6px above/below text)
-      sed -i 's/bh = drw->fonts->h + 2;/bh = drw->fonts->h + 14;/' dwm.c
+      sed -i 's/bh = drw->fonts->h + 2;/bh = drw->fonts->h + 8;/' dwm.c
     '';
 
     buildInputs = (old.buildInputs or [ ]) ++ [

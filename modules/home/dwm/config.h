@@ -1,7 +1,7 @@
 /* See LICENSE file for copyright and license details. */
 
 /* appearance */
-static const unsigned int borderpx  = 2;        /* border pixel of windows */
+static const unsigned int borderpx  = 3;        /* border pixel of windows */
 static const unsigned int snap      = 32;       /* snap pixel */
 
 /* vanitygaps */
@@ -21,8 +21,8 @@ static const int showsystray             = 1;   /* 0 means no systray */
 /* bar */
 static const int showbar            = 1;        /* 0 means no bar */
 static const int topbar             = 1;        /* 0 means bottom bar */
-static const int vertpad            = 10;       /* vertical padding for bar */
-static const int sidepad            = 16;       /* horizontal padding for bar */
+static const int vertpad            = 6;        /* vertical padding for bar */
+static const int sidepad            = 10;       /* horizontal padding for bar */
 
 /* underline tags */
 static const unsigned int ulinepad  = 2;        /* horizontal padding between underline and tag */
@@ -37,16 +37,16 @@ static const int swallowfloating    = 0;        /* 1 means swallow floating wind
 static const int smartborders       = 1;
 
 /* fonts */
-static const char *fonts[]          = { "Monaspace Neon:size=13:weight=medium", "Symbols Nerd Font:size=14" };
-static const char dmenufont[]       = "Monaspace Neon:size=13:weight=medium";
+static const char *fonts[]          = { "Monaspace Neon:size=10:weight=medium", "Symbols Nerd Font:size=11" };
+static const char dmenufont[]       = "Monaspace Neon:size=10:weight=medium";
 
 /* xrdb colors - these are defaults overridden at runtime via xrdb */
 static char normbgcolor[]           = "@base01@";
-static char normbordercolor[]       = "@base01@";
+static char normbordercolor[]       = "@base02@";
 static char normfgcolor[]           = "@base05@";
 static char selfgcolor[]            = "@base00@";
-static char selbordercolor[]        = "@base0B@";
-static char selbgcolor[]            = "@base0B@";
+static char selbordercolor[]        = "@base08@";
+static char selbgcolor[]            = "@base08@";
 
 static char *colors[][3] = {
 	/*               fg           bg           border   */
@@ -64,6 +64,7 @@ static const char *const autostart[] = {
 	"sh", "-l", "-c", "sleep 1 && nm-applet", NULL,
 	"sh", "-l", "-c", "sleep 1 && blueman-applet", NULL,
 	"sh", "-l", "-c", "sleep 1 && slstatus", NULL,
+	"xsetroot", "-cursor_name", "left_ptr", NULL,
 	"hsetroot", "-solid", "@base00@", NULL,
 	NULL /* terminate */
 };
