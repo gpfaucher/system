@@ -191,9 +191,7 @@
         # Disable visibility API to prevent Teams from detecting tab/window switches
         "dom.visibilityAPI.enabled" = false;
 
-        # Disable PipeWire camera portal — crashes Firefox 147 on PipeWire 1.4.x
-        # (video_capture_pipewire.cc:148 segfault). Camera still works via V4L2.
-        "media.webrtc.camera.allow-pipewire" = false;
+        "media.webrtc.camera.allow-pipewire" = true;
       };
       # Gruvbox Material Dark theme for Firefox UI
       userChrome = ''
