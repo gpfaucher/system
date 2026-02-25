@@ -81,7 +81,7 @@
       "wheel"
       "video"
       "audio"
-      "network" # For iwd wireless management
+      "networkmanager" # For NetworkManager wireless management
       "input"
       "docker"
     ];
@@ -90,18 +90,42 @@
   # Enable fish shell system-wide
   programs.fish.enable = true;
 
-  # KDE Plasma 6 Desktop Environment
+  # X11 + DWM
   services.xserver.enable = true;
-  services.desktopManager.plasma6.enable = true;
-  services.displayManager.sddm = {
+  services.xserver.windowManager.dwm.enable = true;
+
+  # Display manager: LightDM with slick greeter
+  services.xserver.displayManager.lightdm = {
     enable = true;
-    wayland.enable = true;
+    greeters.slick = {
+      enable = true;
+      theme = {
+        name = "Adwaita-dark";
+        package = pkgs.gnome-themes-extra;
+      };
+      iconTheme = {
+        name = "Papirus-Dark";
+        package = pkgs.papirus-icon-theme;
+      };
+      cursorTheme = {
+        name = "breeze_cursors";
+      };
+      extraConfig = ''
+        draw-user-backgrounds=false
+        font-name=Monaspace Neon 11
+        show-hostname=false
+      '';
+    };
   };
 
-  # Enable XDG portal for Wayland
+  # Autorandr for monitor hotplug
+  services.autorandr.enable = true;
+
+  # XDG portal for X11 (screensharing via x11 backend)
   xdg.portal = {
     enable = true;
-    extraPortals = [ pkgs.kdePackages.xdg-desktop-portal-kde ];
+    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
+    config.common.default = "gtk";
   };
 
   # Steam gaming platform
