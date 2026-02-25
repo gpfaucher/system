@@ -3,18 +3,17 @@
 let
   colors = config.lib.stylix.colors;
 
-  # Generate config.h with Stylix colors substituted
-  # replaceVars replaces @varname@ patterns (only include colors actually used in config.h)
-  configFile = pkgs.replaceVars ../home/dwm/config.h {
-    base00 = "#${colors.base00}";
-    base01 = "#${colors.base01}";
-    base02 = "#${colors.base02}";
-    base05 = "#${colors.base05}";
-    base08 = "#${colors.base08}";
-    # Pass through wpctl PipeWire targets literally (avoid replaceVars check)
-    DEFAULT_AUDIO_SINK = "@DEFAULT_AUDIO_SINK@";
-    DEFAULT_AUDIO_SOURCE = "@DEFAULT_AUDIO_SOURCE@";
-  };
+  # Generate config.h with Stylix colors substituted.
+  # Uses substitute instead of replaceVars to avoid the strict @-pattern check,
+  # since wpctl targets like @DEFAULT_AUDIO_SINK@ must remain literal.
+  configFile = pkgs.runCommand "config.h" { } ''
+    substitute ${../home/dwm/config.h} $out \
+      --subst-var-by base00 "#${colors.base00}" \
+      --subst-var-by base01 "#${colors.base01}" \
+      --subst-var-by base02 "#${colors.base02}" \
+      --subst-var-by base05 "#${colors.base05}" \
+      --subst-var-by base08 "#${colors.base08}"
+  '';
 
   customDwm = pkgs.dwm.overrideAttrs (old: {
     # Single combined patch with all 25 DWM patches pre-merged and conflicts resolved.
