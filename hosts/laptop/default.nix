@@ -123,8 +123,22 @@
     };
   };
 
-  # Autorandr for monitor hotplug
-  services.autorandr.enable = true;
+  # Autorandr: runtime-managed display profiles with udev hotplug detection.
+  # Profiles are saved at runtime, not declaratively:
+  #   1. Set up your displays with xrandr
+  #   2. Save: autorandr --save <name>
+  #   3. The "laptop" profile is the fallback (defaultTarget)
+  #
+  # First boot: connect only laptop screen, then run: autorandr --save laptop
+  services.autorandr = {
+    enable = true;
+    defaultTarget = "laptop";
+
+    hooks.postswitch = {
+      "refresh-wallpaper" = "${pkgs.hsetroot}/bin/hsetroot -solid '#202020'";
+      "notify" = "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Switched display layout'";
+    };
+  };
 
   # XDG portal for X11 (screensharing via x11 backend)
   xdg.portal = {

@@ -17,10 +17,10 @@ in
     "Xft.dpi" = 192;
     "Xcursor.size" = 48;
     "dwm.normbgcolor" = "#${colors.base01}";
-    "dwm.normbordercolor" = "#${colors.base01}";
+    "dwm.normbordercolor" = "#${colors.base02}";
     "dwm.normfgcolor" = "#${colors.base05}";
-    "dwm.selbgcolor" = "#${colors.base0B}";
-    "dwm.selbordercolor" = "#${colors.base0B}";
+    "dwm.selbgcolor" = "#${colors.base08}";
+    "dwm.selbordercolor" = "#${colors.base08}";
     "dwm.selfgcolor" = "#${colors.base00}";
   };
 

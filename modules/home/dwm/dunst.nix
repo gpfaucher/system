@@ -38,13 +38,13 @@ in
       urgency_normal = {
         background = lib.mkForce "#${colors.base01}";
         foreground = lib.mkForce "#${colors.base05}";
-        frame_color = lib.mkForce "#${colors.base0B}";
+        frame_color = lib.mkForce "#${colors.base08}";
         timeout = 10;
       };
 
       urgency_critical = {
-        background = lib.mkForce "#${colors.base01}";
-        foreground = lib.mkForce "#${colors.base05}";
+        background = lib.mkForce "#${colors.base08}";
+        foreground = lib.mkForce "#${colors.base07}";
         frame_color = lib.mkForce "#${colors.base08}";
         timeout = 0;
       };
