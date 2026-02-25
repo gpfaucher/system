@@ -11,6 +11,9 @@ let
     base02 = "#${colors.base02}";
     base05 = "#${colors.base05}";
     base08 = "#${colors.base08}";
+    # Pass through wpctl PipeWire targets literally (avoid replaceVars check)
+    DEFAULT_AUDIO_SINK = "@DEFAULT_AUDIO_SINK@";
+    DEFAULT_AUDIO_SOURCE = "@DEFAULT_AUDIO_SOURCE@";
   };
 
   customDwm = pkgs.dwm.overrideAttrs (old: {
