@@ -3,12 +3,29 @@
 let
   colors = config.lib.stylix.colors;
 
+  dmenuConfig = pkgs.writeText "dmenu-config.h" ''
+    /* See LICENSE file for copyright and license details. */
+    /* Default settings; can be overriden by command line. */
+
+    static int topbar = 1;
+    static const char *fonts[] = {
+    	"Monaspace Neon:size=11",
+    	"Symbols Nerd Font:size=11"
+    };
+    static const char *prompt      = NULL;
+    static const char *colors[SchemeLast][2] = {
+    	/*     fg         bg       */
+    	[SchemeNorm] = { "#${colors.base05}", "#${colors.base00}" },
+    	[SchemeSel] = { "#${colors.base00}", "#${colors.base0D}" },
+    	[SchemeOut] = { "#${colors.base05}", "#${colors.base02}" },
+    };
+    static unsigned int lines      = 0;
+    static const char worddelimiters[] = " ";
+  '';
+
   customDmenu = pkgs.dmenu.overrideAttrs (old: {
     postPatch = (old.postPatch or "") + ''
-      sed -i 's/static const char \*fonts\[\] = .*/static const char *fonts[] = { "Monaspace Neon:size=11", "Symbols Nerd Font:size=11" };/' config.def.h
-      sed -i 's/\[SchemeNorm\] = .*/[SchemeNorm] = { "#${colors.base05}", "#${colors.base00}" },/' config.def.h
-      sed -i 's/\[SchemeSel\] = .*/[SchemeSel] = { "#${colors.base00}", "#${colors.base0D}" },/' config.def.h
-      sed -i 's/\[SchemeOut\] = .*/[SchemeOut] = { "#${colors.base05}", "#${colors.base02}" },/' config.def.h
+      cp ${dmenuConfig} config.def.h
     '';
   });
 in

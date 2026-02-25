@@ -1,4 +1,4 @@
-{ config, pkgs, ... }:
+{ config, pkgs, lib, ... }:
 
 {
   services.dunst = {
@@ -11,7 +11,7 @@
         origin = "top-right";
         frame_width = 2;
         corner_radius = 8;
-        font = "Monaspace Neon 11";
+        font = lib.mkForce "Monaspace Neon 11";
         markup = "full";
         format = "<b>%s</b>\\n%b";
         alignment = "left";

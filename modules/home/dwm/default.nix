@@ -131,9 +131,9 @@ in
     slock
 
     # X11 utilities
-    xorg.xrandr
-    xorg.xsetroot
-    xorg.xprop
-    xorg.xev
+    xrandr
+    xsetroot
+    xprop
+    xev
   ];
 }
