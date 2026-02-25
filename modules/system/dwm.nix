@@ -12,7 +12,10 @@ let
       --subst-var-by base01 "#${colors.base01}" \
       --subst-var-by base02 "#${colors.base02}" \
       --subst-var-by base05 "#${colors.base05}" \
-      --subst-var-by base08 "#${colors.base08}"
+      --subst-var-by base08 "#${colors.base08}" \
+      --subst-var-by wpctl "${pkgs.wireplumber}/bin/wpctl" \
+      --subst-var-by brightnessctl "${pkgs.brightnessctl}/bin/brightnessctl" \
+      --subst-var-by playerctl "${pkgs.playerctl}/bin/playerctl"
   '';
 
   customDwm = pkgs.dwm.overrideAttrs (old: {
