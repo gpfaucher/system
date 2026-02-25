@@ -17,6 +17,7 @@
     ./theme.nix
     ./zed.nix
     ./ssh.nix
+    ./vscode.nix
     ./dwm
   ];
 
@@ -30,6 +31,14 @@
     sessionVariables = {
       EDITOR = "zeditor --wait";
       VISUAL = "zeditor --wait";
+    };
+
+    pointerCursor = {
+      name = "breeze_cursors";
+      package = pkgs.kdePackages.breeze;
+      size = 48;
+      x11.enable = true;
+      gtk.enable = true;
     };
   };
 
@@ -61,22 +70,11 @@
 
   # Additional packages
   home.packages = with pkgs; [
-    # JetBrains All Products Pack
-    jetbrains.datagrip
-    jetbrains.idea
-    # jetbrains.webstorm
-    jetbrains.pycharm
-    # jetbrains.clion
-    # jetbrains.goland
-    # jetbrains.phpstorm
-    # jetbrains.ruby-mine
-    # jetbrains.rider
-    # jetbrains.rust-rover
-    # jetbrains.dataspell
+    # JetBrains (installed via Toolbox for marketplace plugin support)
+    jetbrains-toolbox
     zoom-us # Video conferencing
     teams-for-linux
     libreoffice-fresh # Office suite
-    vscode-fhs
     warp-terminal
 
     # Browsers
@@ -197,17 +195,17 @@
         # (video_capture_pipewire.cc:148 segfault). Camera still works via V4L2.
         "media.webrtc.camera.allow-pipewire" = false;
       };
-      # Full ayu dark theme for Firefox UI
+      # Gruvbox Material Dark theme for Firefox UI
       userChrome = ''
-        /* Ayu Dark Theme */
+        /* Gruvbox Material Dark Theme */
         :root {
-          --bg0: #0b0e14;
-          --bg1: #1f2430;
-          --bg2: #272d38;
-          --fg: #bfbdb6;
-          --blue: #59c2ff;
-          --red: #f07178;
-          --green: #aad94c;
+          --bg0: #202020;
+          --bg1: #2a2827;
+          --bg2: #504945;
+          --fg: #ddc7a1;
+          --blue: #7daea3;
+          --red: #ea6962;
+          --green: #a9b665;
         }
 
         /* Tab styling */
@@ -231,13 +229,13 @@
           background-color: var(--bg0) !important;
         }
       '';
-      # Ayu dark theme for about: pages
+      # Gruvbox dark theme for about: pages
       userContent = ''
         /* Style about: pages */
         @-moz-document url-prefix(about:) {
           body {
-            background-color: #0b0e14 !important;
-            color: #bfbdb6 !important;
+            background-color: #202020 !important;
+            color: #ddc7a1 !important;
           }
         }
       '';

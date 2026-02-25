@@ -24,7 +24,7 @@
   networking.hostName = "laptop";
 
   # Stylix NixOS-level config (needed for DWM config.h color substitution)
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/ayu-dark.yaml";
+  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
 
   # Enable Nix flakes and experimental features
   nix = {
@@ -142,6 +142,9 @@
 
   # Gamemode for performance optimization while gaming
   programs.gamemode.enable = true;
+
+  # Screen locker (NixOS module sets up suid wrapper)
+  programs.slock.enable = true;
 
   # NixOS state version - do not change after initial install
   system.stateVersion = "24.11";

@@ -3,33 +3,33 @@
 let
   # Helper script for bluetooth device name
   btDevice = pkgs.writeShellScript "bt-device" ''
-    connected=$(${pkgs.bluez}/bin/bluetoothctl info 2>/dev/null | ${pkgs.gnugrep}/bin/grep -m1 "Name:" | ${pkgs.coreutils}/bin/cut -d' ' -f2-)
-    if [ -n "$connected" ]; then
-      echo " $connected"
+    export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(${pkgs.coreutils}/bin/id -u)/bus"
+    device=$(${pkgs.bluez}/bin/bluetoothctl devices Connected 2>/dev/null | ${pkgs.coreutils}/bin/head -1 | ${pkgs.coreutils}/bin/cut -d' ' -f3-)
+    if [ -n "$device" ]; then
+      echo " 󰂯 $device "
     fi
   '';
 
-  # Helper script for wifi (interface name may vary)
+  # Helper script for wifi via nmcli (more reliable than iw)
   wifiStatus = pkgs.writeShellScript "wifi-status" ''
-    iface=$(${pkgs.iproute2}/bin/ip -o link show | ${pkgs.gnugrep}/bin/grep -m1 'wl' | ${pkgs.gawk}/bin/awk -F': ' '{print $2}')
-    if [ -n "$iface" ]; then
-      ssid=$(${pkgs.iw}/bin/iw dev "$iface" link 2>/dev/null | ${pkgs.gnugrep}/bin/grep -m1 "SSID:" | ${pkgs.gawk}/bin/awk '{print $2}')
-      if [ -n "$ssid" ]; then
-        echo " $ssid"
-      else
-        echo " disconnected"
-      fi
+    export DBUS_SESSION_BUS_ADDRESS="unix:path=/run/user/$(${pkgs.coreutils}/bin/id -u)/bus"
+    ssid=$(${pkgs.networkmanager}/bin/nmcli -t -f active,ssid dev wifi 2>/dev/null | ${pkgs.gnugrep}/bin/grep '^yes:' | ${pkgs.coreutils}/bin/cut -d: -f2)
+    if [ -n "$ssid" ]; then
+      echo " 󰤨 $ssid "
+    else
+      echo " 󰤭 "
     fi
   '';
 
   # Helper for volume via wpctl (PipeWire)
   volumeStatus = pkgs.writeShellScript "vol-status" ''
+    export XDG_RUNTIME_DIR="/run/user/$(${pkgs.coreutils}/bin/id -u)"
     vol=$(${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | ${pkgs.gawk}/bin/awk '{printf "%.0f", $2 * 100}')
     mute=$(${pkgs.wireplumber}/bin/wpctl get-volume @DEFAULT_AUDIO_SINK@ 2>/dev/null | ${pkgs.gnugrep}/bin/grep -c MUTED)
     if [ "$mute" = "1" ]; then
-      echo " MUTE"
+      echo " 󰝟 MUTE "
     elif [ -n "$vol" ]; then
-      echo " ''${vol}%"
+      echo " 󰕾 ''${vol}% "
     fi
   '';
 
@@ -47,13 +47,13 @@ let
 
     static const struct arg args[] = {
       /* function       format          argument */
-      { run_command,    "%s |",         "${btDevice}" },
-      { run_command,    "%s |",         "${wifiStatus}" },
-      { run_command,    "%s |",         "${volumeStatus}" },
-      { battery_perc,   " BAT %s%% |", "BAT0" },
-      { cpu_perc,       " CPU %s%% |", NULL },
-      { ram_perc,       " MEM %s%% |", NULL },
-      { datetime,       " %s ",        "%a %b %d %H:%M" },
+      { run_command,    "%s",                  "${btDevice}" },
+      { run_command,    "%s",                  "${wifiStatus}" },
+      { run_command,    "%s",                  "${volumeStatus}" },
+      { battery_perc,   " 󰁹 %s%% ",         "BAT0" },
+      { cpu_perc,       " 󰻠 %s%% ",         NULL },
+      { ram_perc,       " 󰍛 %s%% ",         NULL },
+      { datetime,       " 󰥔 %s ",           "%a %d %b  %H:%M" },
     };
   '';
 

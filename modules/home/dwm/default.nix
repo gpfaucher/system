@@ -11,40 +11,22 @@ in
     ./dunst.nix
   ];
 
-  # Autostart script for DWM (cool_autostart patch reads ~/.dwm/autostart.sh)
-  home.file.".dwm/autostart.sh" = {
-    executable = true;
-    text = ''
-      #!/bin/sh
-      # Kill existing instances to avoid duplicates on restart
-      pkill -x picom 2>/dev/null; sleep 0.2
-      pkill -x slstatus 2>/dev/null
-      pkill -x dunst 2>/dev/null
-
-      picom &
-      slstatus &
-      dunst &
-      nm-applet &
-      blueman-applet &
-      feh --bg-fill ~/.wallpaper 2>/dev/null &
-      autorandr --change &
-    '';
-  };
-
   # Xresources for xrdb patch (Stylix colors loaded at X startup)
+  # Xft.dpi = 192 gives 2x HiDPI scaling on the 3840x2400 laptop panel
   xresources.properties = {
-    "dwm.normbgcolor" = "#${colors.base00}";
+    "Xft.dpi" = 192;
+    "Xcursor.size" = 48;
+    "dwm.normbgcolor" = "#${colors.base01}";
     "dwm.normbordercolor" = "#${colors.base01}";
     "dwm.normfgcolor" = "#${colors.base05}";
-    "dwm.selbgcolor" = "#${colors.base0D}";
-    "dwm.selbordercolor" = "#${colors.base0D}";
+    "dwm.selbgcolor" = "#${colors.base0B}";
+    "dwm.selbordercolor" = "#${colors.base0B}";
     "dwm.selfgcolor" = "#${colors.base00}";
   };
 
   # Packages needed for the DWM environment
   home.packages = with pkgs; [
-    # Compositor and display
-    feh
+    # Display
     autorandr
     arandr
 
@@ -55,17 +37,18 @@ in
     # Audio control
     pavucontrol
 
-    # Screenshot
-    maim
+    # Screenshot (flameshot is HiDPI-aware, maim/slop is blurry at 2x)
+    flameshot
     xclip
     xdotool
 
-    # Screen lock
-    slock
+    # Wallpaper
+    feh
 
     # X11 utilities
     xrandr
     xsetroot
+    hsetroot
     xprop
     xev
   ];

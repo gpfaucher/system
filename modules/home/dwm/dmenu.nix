@@ -9,14 +9,14 @@ let
 
     static int topbar = 1;
     static const char *fonts[] = {
-    	"Monaspace Neon:size=11",
-    	"Symbols Nerd Font:size=11"
+    	"Monaspace Neon:size=13:weight=medium",
+    	"Symbols Nerd Font:size=14"
     };
     static const char *prompt      = NULL;
     static const char *colors[SchemeLast][2] = {
     	/*     fg         bg       */
-    	[SchemeNorm] = { "#${colors.base05}", "#${colors.base00}" },
-    	[SchemeSel] = { "#${colors.base00}", "#${colors.base0D}" },
+    	[SchemeNorm] = { "#${colors.base05}", "#${colors.base01}" },
+    	[SchemeSel] = { "#${colors.base00}", "#${colors.base0B}" },
     	[SchemeOut] = { "#${colors.base05}", "#${colors.base02}" },
     };
     static unsigned int lines      = 0;

@@ -4,7 +4,7 @@
   # Stylix theming configuration
   stylix = {
     enable = true;
-    base16Scheme = "${pkgs.base16-schemes}/share/themes/ayu-dark.yaml";
+    base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
     polarity = "dark";
 
     # Disable overlays at home-manager level since useGlobalPkgs = true
