@@ -111,6 +111,44 @@
             }
           ];
         };
+
+        # Boost built-in mic gain (internal mics are often too quiet)
+        "20-mic-gain" = {
+          "monitor.alsa.rules" = [
+            {
+              matches = [
+                {
+                  "node.name" = "~alsa_input.*";
+                }
+              ];
+              actions.update-props = {
+                "channelVolumes" = [ 1.5 1.5 ];
+                "channelMap" = [ "FL" "FR" ];
+                "softVolumes" = true;
+              };
+            }
+          ];
+        };
+
+        # Ensure USB webcam audio nodes are not suspended
+        # (v4l2 camera rules can sometimes interfere with the audio side)
+        "21-webcam-audio" = {
+          "monitor.alsa.rules" = [
+            {
+              matches = [
+                {
+                  "node.name" = "~alsa_input.usb-*";
+                }
+              ];
+              actions.update-props = {
+                "session.suspend-timeout-seconds" = 0;
+                "channelVolumes" = [ 2.0 2.0 ];
+                "channelMap" = [ "FL" "FR" ];
+                "softVolumes" = true;
+              };
+            }
+          ];
+        };
       };
     };
   };
