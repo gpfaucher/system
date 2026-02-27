@@ -1,62 +1,486 @@
-# Desktop Improvements Design
+# Desktop Improvements Implementation Plan
 
-## Changes
+> **For Claude:** REQUIRED SUB-SKILL: Use superpowers:executing-plans to implement this plan task-by-task.
 
-### 1. Webcam mic fix
+**Goal:** Fix webcam mic, replace EWW with Waybar (all monitors, proper layout), add DWM-style per-monitor workspaces, and install opencode.
 
-The WirePlumber rules in `audio.nix` use `device.name = "v4l2_device.*"` to cap camera resolution. The webcam's audio interface is a separate USB audio device, but we should verify these rules aren't interfering with the audio node.
+**Architecture:** Four independent changes to the NixOS system config. The Waybar replacement is the largest — it creates a new module and removes the EWW module. The workspace and mic changes are edits to existing files. opencode is a one-liner.
 
-Add WirePlumber monitor rules that:
-- Target USB audio input devices (webcam mic, built-in mic) by node properties
-- Set default channel volume/gain to a usable level (e.g. 1.5-2.0x)
-- Ensure the nodes are not disabled or suspended
+**Tech Stack:** NixOS, Home Manager, Hyprland, Waybar, WirePlumber, Stylix
 
-Also bump the built-in mic gain since it's reported as very quiet.
+---
 
-Files: `modules/system/audio.nix`
+### Task 1: Fix webcam mic and boost built-in mic
 
-### 2. Replace EWW with Waybar
+**Files:**
 
-Remove the EWW module and replace with Waybar.
+- Modify: `modules/system/audio.nix`
 
-**Remove:**
-- `modules/home/hyprland/eww/` (entire directory)
-- EWW import from `modules/home/hyprland/default.nix`
-- EWW exec-once and toggle keybind from Hyprland config
+**Step 1: Add WirePlumber rules for mic input gain**
 
-**Add:**
-- `modules/home/hyprland/waybar.nix` with:
-  - `programs.waybar.enable = true`
-  - `output: "*"` for all monitors
-  - Left: `hyprland/workspaces` (show workspaces for current monitor only)
-  - Center: `hyprland/window` (active window title)
-  - Right: `wireplumber`, `network`, `bluetooth`, `battery`, `cpu`, `memory`, `clock`, `tray` (packed together, not spread)
-  - Gruvbox Material Dark styling via Stylix color variables
-  - Semi-transparent background, rounded corners, matching current aesthetic
-- Import waybar.nix from `modules/home/hyprland/default.nix`
-- Waybar exec-once in Hyprland config
-- `$mod+b` toggle via `pkill -SIGUSR1 waybar`
+In `modules/system/audio.nix`, add two new WirePlumber extraConfig entries inside the `wireplumber.extraConfig` attrset, after the `"12-bluetooth-defaults"` block:
 
-**Waybar workspace widget config:**
-- `show-special: false` (scratchpad stays hidden)
-- `active-only: false` (show all workspace buttons)
-- `all-outputs: false` (per-monitor workspace display)
+```nix
+        # Boost built-in mic gain (internal mics are often too quiet)
+        "20-mic-gain" = {
+          "monitor.alsa.rules" = [
+            {
+              matches = [
+                {
+                  "node.name" = "~alsa_input.*";
+                }
+              ];
+              actions.update-props = {
+                "channelVolumes" = [ 1.5 1.5 ];
+                "channelMap" = [ "FL" "FR" ];
+                "softVolumes" = true;
+              };
+            }
+          ];
+        };
 
-Files: `modules/home/hyprland/waybar.nix` (new), `modules/home/hyprland/default.nix`
+        # Ensure USB webcam audio nodes are not suspended
+        # (v4l2 camera rules can sometimes interfere with the audio side)
+        "21-webcam-audio" = {
+          "monitor.alsa.rules" = [
+            {
+              matches = [
+                {
+                  "node.name" = "~alsa_input.usb-*";
+                }
+              ];
+              actions.update-props = {
+                "session.suspend-timeout-seconds" = 0;
+                "channelVolumes" = [ 2.0 2.0 ];
+                "channelMap" = [ "FL" "FR" ];
+                "softVolumes" = true;
+              };
+            }
+          ];
+        };
+```
 
-### 3. DWM-style per-monitor workspaces
+**Step 2: Verify the camera rules don't target audio nodes**
 
-Replace workspace dispatchers so `$mod+N` operates on the focused monitor:
-- `$mod+1-9`: `focusworkspaceoncurrentmonitor` instead of `workspace`
-- `$mod+SHIFT+1-9`: `movetoworkspace` (unchanged — windows move to the target workspace)
-- `$mod+Tab`: keep as `workspace, previous` (goes to last workspace globally)
+Check the existing `"10-camera-limit"` block. It matches `node.name = "~v4l2_input.*"` — this targets video input nodes only (not audio), so it should be fine. No changes needed here.
 
-This gives the DWM feel: each monitor has its own active workspace, and switching workspaces only affects the current monitor.
+**Step 3: Commit**
 
-Files: `modules/home/hyprland/default.nix`
+```bash
+git add modules/system/audio.nix
+git commit -m "fix: boost mic gain and prevent webcam audio node suspension"
+```
 
-### 4. Add opencode
+---
 
-Add `pkgs.opencode` to `home.packages`.
+### Task 2: Create Waybar module
 
-Files: `modules/home/default.nix`
+**Files:**
+
+- Create: `modules/home/hyprland/waybar.nix`
+
+**Step 1: Create the Waybar module file**
+
+Create `modules/home/hyprland/waybar.nix` with the following content:
+
+```nix
+{
+  config,
+  pkgs,
+  lib,
+  ...
+}:
+
+let
+  colors = config.lib.stylix.colors;
+in
+{
+  programs.waybar = {
+    enable = true;
+
+    # Disable Stylix auto-styling — we provide our own CSS
+    # (Stylix waybar target is not in theme.nix targets, so this is already off)
+
+    settings = {
+      mainBar = {
+        layer = "top";
+        position = "top";
+        height = 36;
+        margin-top = 6;
+        margin-left = 8;
+        margin-right = 8;
+        output = "*";
+        modules-left = [ "hyprland/workspaces" ];
+        modules-center = [ "hyprland/window" ];
+        modules-right = [
+          "tray"
+          "bluetooth"
+          "network"
+          "wireplumber"
+          "battery"
+          "cpu"
+          "memory"
+          "clock"
+        ];
+
+        "hyprland/workspaces" = {
+          format = "{id}";
+          on-click = "activate";
+          all-outputs = false;
+          show-special = false;
+          sort-by-number = true;
+        };
+
+        "hyprland/window" = {
+          max-length = 60;
+          separate-outputs = true;
+        };
+
+        tray = {
+          icon-size = 18;
+          spacing = 8;
+        };
+
+        bluetooth = {
+          format = "󰂯 {device_alias}";
+          format-disabled = "";
+          format-off = "";
+          format-no-controller = "";
+          format-connected = "󰂯 {device_alias}";
+          format-connected-battery = "󰂯 {device_alias} {device_battery_percentage}%";
+          on-click = "blueman-manager";
+        };
+
+        network = {
+          format-wifi = "󰤨 {essid}";
+          format-ethernet = "󰈀 {ifname}";
+          format-disconnected = "󰤭 Off";
+          on-click = "nm-connection-editor";
+        };
+
+        wireplumber = {
+          format = "󰕾 {volume}%";
+          format-muted = "󰝟 MUTE";
+          on-click = "pavucontrol";
+        };
+
+        battery = {
+          interval = 10;
+          states = {
+            warning = 30;
+            critical = 10;
+          };
+          format = "{icon} {capacity}%";
+          format-charging = "󰂄 {capacity}%";
+          format-icons = [ "󰁺" "󰁼" "󰁾" "󰂀" "󰁹" ];
+        };
+
+        cpu = {
+          interval = 2;
+          format = "󰻠 {usage}%";
+        };
+
+        memory = {
+          interval = 2;
+          format = "󰍛 {percentage}%";
+        };
+
+        clock = {
+          interval = 1;
+          format = "󰥔 {:%a %d %b  %H:%M}";
+        };
+      };
+    };
+
+    style = ''
+      * {
+        font-family: "Monaspace Neon", "Symbols Nerd Font", sans-serif;
+        font-size: 13px;
+        min-height: 0;
+      }
+
+      window#waybar {
+        background: transparent;
+      }
+
+      .modules-left,
+      .modules-center,
+      .modules-right {
+        background: rgba(${colors.base01-rgb-r}, ${colors.base01-rgb-g}, ${colors.base01-rgb-b}, 0.92);
+        border-radius: 12px;
+        border: 2px solid #${colors.base02};
+        padding: 0 12px;
+      }
+
+      /* ── Workspaces ── */
+      #workspaces button {
+        min-width: 24px;
+        min-height: 24px;
+        border-radius: 8px;
+        color: #${colors.base04};
+        padding: 0 4px;
+        transition: all 150ms ease;
+      }
+
+      #workspaces button:hover {
+        background: #${colors.base02};
+        color: #${colors.base05};
+      }
+
+      #workspaces button.active {
+        background: #${colors.base08};
+        color: #${colors.base00};
+        font-weight: bold;
+      }
+
+      #workspaces button.occupied {
+        color: #${colors.base05};
+      }
+
+      /* ── Window title ── */
+      #window {
+        color: #${colors.base05};
+        padding: 0 16px;
+      }
+
+      /* ── Modules ── */
+      #tray,
+      #bluetooth,
+      #network,
+      #wireplumber,
+      #battery,
+      #cpu,
+      #memory,
+      #clock {
+        padding: 0 8px;
+        color: #${colors.base05};
+        border-radius: 8px;
+        transition: all 150ms ease;
+      }
+
+      #tray:hover,
+      #bluetooth:hover,
+      #network:hover,
+      #wireplumber:hover,
+      #battery:hover,
+      #cpu:hover,
+      #memory:hover,
+      #clock:hover {
+        background: #${colors.base02};
+      }
+
+      /* Module-specific icon colors via font color */
+      #network { color: #${colors.base0D}; }
+      #bluetooth { color: #${colors.base0D}; }
+      #wireplumber { color: #${colors.base0A}; }
+      #battery { color: #${colors.base0B}; }
+      #cpu { color: #${colors.base09}; }
+      #memory { color: #${colors.base0E}; }
+      #clock { color: #${colors.base0C}; }
+      #tray { padding: 0 4px; }
+
+      /* Battery states */
+      #battery.warning { color: #${colors.base0A}; }
+      #battery.critical { color: #${colors.base08}; }
+    '';
+  };
+}
+```
+
+**Step 2: Commit**
+
+```bash
+git add modules/home/hyprland/waybar.nix
+git commit -m "feat: add Waybar module with Gruvbox theme"
+```
+
+---
+
+### Task 3: Wire up Waybar and remove EWW
+
+**Files:**
+
+- Modify: `modules/home/hyprland/default.nix`
+- Delete: `modules/home/hyprland/eww/` (entire directory)
+
+**Step 1: Update imports in `modules/home/hyprland/default.nix`**
+
+Replace the `./eww` import with `./waybar.nix`:
+
+```
+# Old
+    ./eww
+
+# New
+    ./waybar.nix
+```
+
+**Step 2: Remove EWW references from the `let` block**
+
+Remove the `handleMonitorChange` script's EWW restart lines. Replace the monitor hotplug script so it no longer references EWW:
+
+```nix
+  handleMonitorChange = pkgs.writeShellScriptBin "handle-monitor-change" ''
+    handle() {
+      case "$1" in
+        monitoradded*|monitorremoved*)
+          external_count=$(${pkgs.hyprland}/bin/hyprctl monitors -j | ${pkgs.jq}/bin/jq '[.[] | select(.name != "eDP-1")] | length')
+          if [ "$external_count" -gt 0 ]; then
+            ${pkgs.hyprland}/bin/hyprctl keyword monitor "eDP-1, disable"
+          else
+            ${pkgs.hyprland}/bin/hyprctl keyword monitor "eDP-1, 3840x2400@60, auto, 2"
+          fi
+          ;;
+      esac
+    }
+
+    ${pkgs.socat}/bin/socat -u "UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" - | while IFS= read -r line; do
+      handle "$line"
+    done
+  '';
+```
+
+**Step 3: Update bar toggle keybind**
+
+In the `bind` list, replace:
+
+```
+"$mod, b, exec, eww close bar || eww open bar"
+```
+
+with:
+
+```
+"$mod, b, exec, pkill -SIGUSR1 waybar"
+```
+
+**Step 4: Update exec-once**
+
+In the `exec-once` list, replace:
+
+```
+"eww open bar"
+```
+
+with:
+
+```
+"waybar"
+```
+
+**Step 5: Remove EWW from home.packages**
+
+The `eww` package is pulled in by `programs.eww.enable = true` in the eww module. Since we're removing that import, no explicit cleanup needed in packages — but verify there's no leftover `eww` reference.
+
+**Step 6: Delete the EWW directory**
+
+```bash
+git rm -r modules/home/hyprland/eww/
+```
+
+**Step 7: Commit**
+
+```bash
+git add modules/home/hyprland/default.nix
+git commit -m "feat: replace EWW with Waybar, show bar on all monitors"
+```
+
+---
+
+### Task 4: DWM-style per-monitor workspaces
+
+**Files:**
+
+- Modify: `modules/home/hyprland/default.nix`
+
+**Step 1: Replace workspace dispatchers**
+
+In the `bind` list, replace all 9 workspace focus bindings:
+
+```
+# Old
+"$mod, 1, workspace, 1"
+"$mod, 2, workspace, 2"
+"$mod, 3, workspace, 3"
+"$mod, 4, workspace, 4"
+"$mod, 5, workspace, 5"
+"$mod, 6, workspace, 6"
+"$mod, 7, workspace, 7"
+"$mod, 8, workspace, 8"
+"$mod, 9, workspace, 9"
+
+# New
+"$mod, 1, focusworkspaceoncurrentmonitor, 1"
+"$mod, 2, focusworkspaceoncurrentmonitor, 2"
+"$mod, 3, focusworkspaceoncurrentmonitor, 3"
+"$mod, 4, focusworkspaceoncurrentmonitor, 4"
+"$mod, 5, focusworkspaceoncurrentmonitor, 5"
+"$mod, 6, focusworkspaceoncurrentmonitor, 6"
+"$mod, 7, focusworkspaceoncurrentmonitor, 7"
+"$mod, 8, focusworkspaceoncurrentmonitor, 8"
+"$mod, 9, focusworkspaceoncurrentmonitor, 9"
+```
+
+Also replace workspace 10:
+
+```
+# Old
+"$mod, 0, workspace, 10"
+
+# New
+"$mod, 0, focusworkspaceoncurrentmonitor, 10"
+```
+
+The `$mod+SHIFT+N` (movetoworkspace) bindings stay unchanged.
+
+**Step 2: Commit**
+
+```bash
+git add modules/home/hyprland/default.nix
+git commit -m "feat: DWM-style per-monitor workspaces"
+```
+
+---
+
+### Task 5: Add opencode
+
+**Files:**
+
+- Modify: `modules/home/default.nix`
+
+**Step 1: Add opencode to home.packages**
+
+In `modules/home/default.nix`, add `opencode` to the `home.packages` list. Add it in the "Development tools" section after `claude-code`:
+
+```nix
+    claude-code
+    opencode
+```
+
+**Step 2: Commit**
+
+```bash
+git add modules/home/default.nix
+git commit -m "feat: add opencode AI coding tool"
+```
+
+---
+
+### Task 6: Build and verify
+
+**Step 1: Run a NixOS build check**
+
+```bash
+cd /home/gabriel/projects/system
+nix build .#nixosConfigurations.laptop.config.system.build.toplevel --dry-run
+```
+
+If there are evaluation errors, fix them before proceeding.
+
+**Step 2: If build succeeds, rebuild the system**
+
+```bash
+sudo nixos-rebuild switch --flake .#laptop
+```
+
+This requires user confirmation as it modifies the running system.
