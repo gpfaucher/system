@@ -19,10 +19,6 @@ let
           else
             ${pkgs.hyprland}/bin/hyprctl keyword monitor "eDP-1, 3840x2400@60, auto, 2"
           fi
-          # Restart Eww bars on correct monitors
-          ${pkgs.eww}/bin/eww close-all
-          sleep 0.5
-          ${pkgs.eww}/bin/eww open bar
           ;;
       esac
     }
@@ -37,7 +33,7 @@ in
     ./dunst.nix
     ./fuzzel.nix
     ./hyprlock.nix
-    ./eww
+    ./waybar.nix
   ];
 
   wayland.windowManager.hyprland = {
@@ -46,12 +42,12 @@ in
     settings = {
       # ── Monitors ──
       monitor = [
-        # Known externals (matched by EDID description)
-        "desc:MSI MAG342CQR, 3440x1440@100, auto, 1"
-        "desc:MSI G272QPF, 2560x1440@60, auto-left, 1, transform, 1"
-
-        # Laptop panel (fallback when no externals)
-        "eDP-1, 3840x2400@60, auto, 2"
+        # Portrait left
+        "DP-1, 2560x1440@60, 0x0, 1, transform, 1"
+        # Ultrawide right
+        "HDMI-A-1, 3440x1440@100, 1440x0, 1"
+        # Laptop panel disabled when externals connected
+        "eDP-1, disable"
 
         # Unknown displays: auto-configure at preferred resolution
         ", preferred, auto, 1"
@@ -118,9 +114,10 @@ in
       };
 
       # ── Gestures ──
-      gestures = {
-        workspace_swipe = true;
-      };
+      gesture = [
+        "3, l, workspace, m+1"
+        "3, r, workspace, m-1"
+      ];
 
       # ── Misc ──
       misc = {
@@ -135,35 +132,35 @@ in
       };
 
       # ── Window rules ──
-      windowrulev2 = [
+      windowrule = [
         # Scratchpad
-        "float, class:^(scratchpad)$"
-        "size 80% 80%, class:^(scratchpad)$"
-        "center, class:^(scratchpad)$"
+        "match:class ^(scratchpad)$, float on"
+        "match:class ^(scratchpad)$, size 80% 80%"
+        "match:class ^(scratchpad)$, center on"
 
         # Floating apps
-        "float, class:^(zoom)$"
-        "float, class:^(Gimp)$"
-        "float, class:^(gimp)$"
-        "float, class:^(Steam)$"
-        "float, class:^(steam)$"
-        "float, class:^(blueman-manager)$"
-        "float, class:^(Blueman-manager)$"
-        "float, class:^(nm-connection-editor)$"
-        "float, class:^(Nm-connection-editor)$"
-        "float, class:^(pavucontrol)$"
-        "float, class:^(Pavucontrol)$"
-        "float, class:^(.blueman-manager-wrapped)$"
-        "float, class:^(org.pulseaudio.pavucontrol)$"
+        "match:class ^(zoom)$, float on"
+        "match:class ^(Gimp)$, float on"
+        "match:class ^(gimp)$, float on"
+        "match:class ^(Steam)$, float on"
+        "match:class ^(steam)$, float on"
+        "match:class ^(blueman-manager)$, float on"
+        "match:class ^(Blueman-manager)$, float on"
+        "match:class ^(nm-connection-editor)$, float on"
+        "match:class ^(Nm-connection-editor)$, float on"
+        "match:class ^(pavucontrol)$, float on"
+        "match:class ^(Pavucontrol)$, float on"
+        "match:class ^(.blueman-manager-wrapped)$, float on"
+        "match:class ^(org.pulseaudio.pavucontrol)$, float on"
 
         # Fullscreen opacity
-        "opacity 1.0 override, fullscreen:1"
+        "match:fullscreen 1, opacity 1.0 override"
 
         # Video call opacity
-        "opacity 1.0 override, class:^(zoom)$"
-        "opacity 1.0 override, class:^(teams-for-linux)$"
-        "opacity 1.0 override, class:^(Google-chrome)$"
-        "opacity 1.0 override, class:^(firefox)$, focus:1"
+        "match:class ^(zoom)$, opacity 1.0 override"
+        "match:class ^(teams-for-linux)$, opacity 1.0 override"
+        "match:class ^(Google-chrome)$, opacity 1.0 override"
+        "match:class ^(firefox)$ match:focus 1, opacity 1.0 override"
       ];
 
       # ── Variables ──
@@ -213,7 +210,7 @@ in
         "$mod, s, pin"
 
         # Toggle bar
-        "$mod, b, exec, eww close bar || eww open bar"
+        "$mod, b, exec, pkill -SIGUSR1 waybar"
 
         # Gaps
         "$mod ALT, equal, exec, hyprctl keyword general:gaps_in $(( $(hyprctl getoption general:gaps_in -j | jq '.int') + 1 )) && hyprctl keyword general:gaps_out $(( $(hyprctl getoption general:gaps_out -j | jq '.int') + 2 ))"
@@ -222,7 +219,7 @@ in
         "$mod ALT SHIFT, 0, exec, hyprctl keyword general:gaps_in 10 && hyprctl keyword general:gaps_out 20"
 
         # All tags
-        "$mod, 0, focusworkspaceoncurrentmonitor, 10"
+        "$mod, 0, workspace, 10"
         "$mod SHIFT, 0, movetoworkspace, 10"
 
         # Monitors
@@ -236,15 +233,15 @@ in
         "$mod CTRL, period, exec, hyprctl keyword monitor 'eDP-1, 3840x2400@60, auto, 2'"
 
         # Workspaces 1-9
-        "$mod, 1, focusworkspaceoncurrentmonitor, 1"
-        "$mod, 2, focusworkspaceoncurrentmonitor, 2"
-        "$mod, 3, focusworkspaceoncurrentmonitor, 3"
-        "$mod, 4, focusworkspaceoncurrentmonitor, 4"
-        "$mod, 5, focusworkspaceoncurrentmonitor, 5"
-        "$mod, 6, focusworkspaceoncurrentmonitor, 6"
-        "$mod, 7, focusworkspaceoncurrentmonitor, 7"
-        "$mod, 8, focusworkspaceoncurrentmonitor, 8"
-        "$mod, 9, focusworkspaceoncurrentmonitor, 9"
+        "$mod, 1, workspace, 1"
+        "$mod, 2, workspace, 2"
+        "$mod, 3, workspace, 3"
+        "$mod, 4, workspace, 4"
+        "$mod, 5, workspace, 5"
+        "$mod, 6, workspace, 6"
+        "$mod, 7, workspace, 7"
+        "$mod, 8, workspace, 8"
+        "$mod, 9, workspace, 9"
 
         "$mod SHIFT, 1, movetoworkspace, 1"
         "$mod SHIFT, 2, movetoworkspace, 2"
@@ -312,8 +309,8 @@ in
         # Hyprland special workspace for scratchpad
         "hyprctl dispatch movetoworkspacesilent special:scratch,class:^(scratchpad)$"
 
-        # Eww bar
-        "eww open bar"
+        # Waybar
+        "waybar"
       ];
     };
   };
