@@ -93,6 +93,7 @@
     # Development tools
     nixd # Nix language server
     claude-code
+    opencode
     opentofu
     awscli2
     gh
