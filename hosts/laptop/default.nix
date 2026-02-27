@@ -17,13 +17,14 @@
     ../../modules/system/services.nix
     ../../modules/system/hardening.nix
     ../../modules/system/vr.nix
-    ../../modules/system/dwm.nix
+    ../../modules/system/hyprland.nix
+    ../../modules/system/power.nix
   ];
 
   # Hostname
   networking.hostName = "laptop";
 
-  # Stylix NixOS-level config (needed for DWM config.h color substitution)
+  # Stylix NixOS-level config
   stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
 
   # Enable Nix flakes and experimental features
@@ -94,58 +95,8 @@
   # Enable fish shell system-wide
   programs.fish.enable = true;
 
-  # X11 + DWM (custom patched build from home-manager module)
+  # X server (needed for XWayland + GPU drivers)
   services.xserver.enable = true;
-  services.xserver.windowManager.dwm.enable = true;
-  services.displayManager.defaultSession = "none+dwm";
-
-  # Display manager: LightDM with slick greeter
-  services.xserver.displayManager.lightdm = {
-    enable = true;
-    greeters.slick = {
-      enable = true;
-      theme = {
-        name = "Adwaita-dark";
-        package = pkgs.gnome-themes-extra;
-      };
-      iconTheme = {
-        name = "Papirus-Dark";
-        package = pkgs.papirus-icon-theme;
-      };
-      cursorTheme = {
-        name = "breeze_cursors";
-      };
-      extraConfig = ''
-        draw-user-backgrounds=false
-        font-name=Monaspace Neon 11
-        show-hostname=false
-      '';
-    };
-  };
-
-  # Autorandr: runtime-managed display profiles with udev hotplug detection.
-  # Profiles are saved at runtime, not declaratively:
-  #   1. Set up your displays with xrandr
-  #   2. Save: autorandr --save <name>
-  #   3. The "laptop" profile is the fallback (defaultTarget)
-  #
-  # First boot: connect only laptop screen, then run: autorandr --save laptop
-  services.autorandr = {
-    enable = true;
-    defaultTarget = "laptop";
-
-    hooks.postswitch = {
-      "refresh-wallpaper" = "${pkgs.hsetroot}/bin/hsetroot -solid '#202020'";
-      "notify" = "${pkgs.libnotify}/bin/notify-send 'Display Profile' 'Switched display layout'";
-    };
-  };
-
-  # XDG portal for X11 (screensharing via x11 backend)
-  xdg.portal = {
-    enable = true;
-    extraPortals = [ pkgs.xdg-desktop-portal-gtk ];
-    config.common.default = "gtk";
-  };
 
   # Steam gaming platform
   programs.steam = {
@@ -156,9 +107,6 @@
 
   # Gamemode for performance optimization while gaming
   programs.gamemode.enable = true;
-
-  # Screen locker (NixOS module sets up suid wrapper)
-  programs.slock.enable = true;
 
   # NixOS state version - do not change after initial install
   system.stateVersion = "24.11";

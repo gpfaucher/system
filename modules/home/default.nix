@@ -18,8 +18,15 @@
     ./zed.nix
     ./ssh.nix
     ./vscode.nix
-    ./dwm
+    ./hyprland
   ];
+
+  # Qt apps: read GTK settings (cursor theme/size, font, colors)
+  qt = {
+    enable = true;
+    platformTheme.name = "gtk2";
+    style.name = "gtk2";
+  };
 
   # Home Manager configuration
   home = {
@@ -37,7 +44,7 @@
       name = "breeze_cursors";
       package = pkgs.kdePackages.breeze;
       size = 48;
-      x11.enable = true;
+      hyprcursor.enable = true;
       gtk.enable = true;
     };
   };
@@ -192,6 +199,40 @@
         "dom.visibilityAPI.enabled" = false;
 
         "media.webrtc.camera.allow-pipewire" = true;
+
+        # Hardware video decode via VA-API (AMD radeonsi)
+        "media.ffmpeg.vaapi.enabled" = true;
+
+        # GPU-accelerated compositing and WebRender
+        "gfx.webrender.all" = true;
+        "layers.gpu-process.enabled" = true;
+
+        # Faster page loads: more concurrent connections
+        "network.http.max-persistent-connections-per-server" = 10;
+        "network.http.max-connections" = 1800;
+
+        # Faster DNS
+        "network.dnsCacheEntries" = 4000;
+        "network.dnsCacheExpiration" = 3600;
+
+        # Disable heavy telemetry and reporting
+        "toolkit.telemetry.enabled" = false;
+        "toolkit.telemetry.unified" = false;
+        "datareporting.healthreport.uploadEnabled" = false;
+        "browser.ping-centre.telemetry" = false;
+
+        # Disable Pocket
+        "extensions.pocket.enabled" = false;
+
+        # Skip slow shutdown steps
+        "browser.sessionstore.resume_from_crash" = true;
+        "toolkit.winRegisterApplicationRestart" = false;
+
+        # Reduce disk writes (session store interval: 5 min instead of 15 sec)
+        "browser.sessionstore.interval" = 300000;
+
+        # Compact UI (saves vertical space on HiDPI)
+        "browser.compactmode.show" = true;
       };
       # Gruvbox Material Dark theme for Firefox UI
       userChrome = ''
@@ -243,6 +284,11 @@
       '';
     };
   };
+
+  # Chrome: enable hardware video decode via VA-API
+  home.file.".config/chrome-flags.conf".text = ''
+    --enable-features=VaapiVideoDecodeLinuxGL
+  '';
 
   # Greasemonkey/Tampermonkey userscript for Teams - install in browser
   home.file.".local/share/userscripts/teams-always-available.user.js" = {

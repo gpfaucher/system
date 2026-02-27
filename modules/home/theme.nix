@@ -51,6 +51,9 @@
       # Notifications
       dunst.enable = true;
 
+      # Hyprland
+      hyprland.enable = true;
+
       # KDE/Qt — disabled (no longer using KDE)
       kde.enable = false;
       qt.enable = false;

@@ -1,0 +1,140 @@
+;; ── Listeners ──
+
+(deflisten workspaces
+  :initial "[]"
+  "scripts/workspaces")
+
+(deflisten active-window
+  :initial ""
+  "scripts/active-window")
+
+;; ── Pollers ──
+
+(defpoll volume
+  :interval "1s"
+  :initial '{"icon":"󰕾","value":0,"text":"--"}'
+  "scripts/volume")
+
+(defpoll wifi
+  :interval "5s"
+  :initial '{"icon":"󰤭","text":"Off"}'
+  "scripts/wifi")
+
+(defpoll bluetooth
+  :interval "5s"
+  :initial '{"icon":"","text":""}'
+  "scripts/bluetooth")
+
+(defpoll battery
+  :interval "10s"
+  :initial '{"icon":"󰁹","value":100,"text":"100%"}'
+  "scripts/battery")
+
+(defpoll cpu
+  :interval "2s"
+  :initial "0"
+  "scripts/cpu")
+
+(defpoll ram
+  :interval "2s"
+  :initial "0"
+  "scripts/ram")
+
+(defpoll clock-time
+  :interval "1s"
+  :initial ""
+  "date '+%H:%M'")
+
+(defpoll clock-date
+  :interval "60s"
+  :initial ""
+  "date '+%a %d %b'")
+
+;; ── Workspace widget ──
+
+(defwidget workspaces-widget []
+  (box :class "workspaces" :orientation "h" :spacing 6
+    (for ws in workspaces
+      (button
+        :class "ws-btn ${ws.active ? 'active' : ws.occupied ? 'occupied' : ''}"
+        :onclick "hyprctl dispatch focusworkspaceoncurrentmonitor ${ws.id}"
+        "${ws.id}"))))
+
+;; ── Active window widget ──
+
+(defwidget window-title []
+  (box :class "window-title" :halign "center"
+    (label :text active-window :limit-width 60)))
+
+;; ── Module widgets ──
+
+(defwidget module [icon text ?class]
+  (box :class "module ${class}" :spacing 4
+    (label :class "module-icon" :text icon)
+    (label :class "module-text" :text text)))
+
+(defwidget bluetooth-widget []
+  (box :visible {bluetooth.text != ""}
+    (module :icon {bluetooth.icon} :text {bluetooth.text} :class "bluetooth")))
+
+(defwidget wifi-widget []
+  (module :icon {wifi.icon} :text {wifi.text} :class "wifi"))
+
+(defwidget volume-widget []
+  (button :class "module volume" :onclick "pavucontrol &"
+    (box :spacing 4
+      (label :class "module-icon" :text {volume.icon})
+      (label :class "module-text" :text {volume.text}))))
+
+(defwidget battery-widget []
+  (module :icon {battery.icon} :text {battery.text} :class "battery"))
+
+(defwidget cpu-widget []
+  (module :icon "󰻠" :text "${cpu}%" :class "cpu"))
+
+(defwidget ram-widget []
+  (module :icon "󰍛" :text "${ram}%" :class "ram"))
+
+(defwidget clock-widget []
+  (box :class "module clock" :spacing 8
+    (label :class "module-icon" :text "󰥔")
+    (label :class "module-text" :text "${clock-date}  ${clock-time}")))
+
+(defwidget systray-widget []
+  (systray :class "systray" :icon-size 18 :spacing 8))
+
+;; ── Right modules container ──
+
+(defwidget right-modules []
+  (box :class "right-modules" :orientation "h" :spacing 12 :halign "end"
+    (systray-widget)
+    (bluetooth-widget)
+    (wifi-widget)
+    (volume-widget)
+    (battery-widget)
+    (cpu-widget)
+    (ram-widget)
+    (clock-widget)))
+
+;; ── Bar widget ──
+
+(defwidget bar-content []
+  (centerbox :orientation "h"
+    (workspaces-widget)
+    (window-title)
+    (right-modules)))
+
+;; ── Bar window ──
+
+(defwindow bar
+  :monitor 0
+  :geometry (geometry
+    :x "0%"
+    :y "6px"
+    :width "99%"
+    :height "36px"
+    :anchor "top center")
+  :stacking "fg"
+  :exclusive true
+  :namespace "eww-bar"
+  (bar-content))
