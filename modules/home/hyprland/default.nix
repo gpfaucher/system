@@ -219,7 +219,7 @@ in
         "$mod ALT SHIFT, 0, exec, hyprctl keyword general:gaps_in 10 && hyprctl keyword general:gaps_out 20"
 
         # All tags
-        "$mod, 0, workspace, 10"
+        "$mod, 0, focusworkspaceoncurrentmonitor, 10"
         "$mod SHIFT, 0, movetoworkspace, 10"
 
         # Monitors
@@ -233,15 +233,15 @@ in
         "$mod CTRL, period, exec, hyprctl keyword monitor 'eDP-1, 3840x2400@60, auto, 2'"
 
         # Workspaces 1-9
-        "$mod, 1, workspace, 1"
-        "$mod, 2, workspace, 2"
-        "$mod, 3, workspace, 3"
-        "$mod, 4, workspace, 4"
-        "$mod, 5, workspace, 5"
-        "$mod, 6, workspace, 6"
-        "$mod, 7, workspace, 7"
-        "$mod, 8, workspace, 8"
-        "$mod, 9, workspace, 9"
+        "$mod, 1, focusworkspaceoncurrentmonitor, 1"
+        "$mod, 2, focusworkspaceoncurrentmonitor, 2"
+        "$mod, 3, focusworkspaceoncurrentmonitor, 3"
+        "$mod, 4, focusworkspaceoncurrentmonitor, 4"
+        "$mod, 5, focusworkspaceoncurrentmonitor, 5"
+        "$mod, 6, focusworkspaceoncurrentmonitor, 6"
+        "$mod, 7, focusworkspaceoncurrentmonitor, 7"
+        "$mod, 8, focusworkspaceoncurrentmonitor, 8"
+        "$mod, 9, focusworkspaceoncurrentmonitor, 9"
 
         "$mod SHIFT, 1, movetoworkspace, 1"
         "$mod SHIFT, 2, movetoworkspace, 2"
