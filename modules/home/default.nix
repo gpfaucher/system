@@ -87,7 +87,7 @@
     # Browsers
     firefox
     google-chrome
-    inputs.zen-browser.packages.${pkgs.system}.twilight
+    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight
     neovide
 
     # Development tools

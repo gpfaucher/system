@@ -22,10 +22,10 @@
   boot.resumeDevice = "/dev/disk/by-uuid/388ac5b1-433c-46d2-8c1f-88cfdfae5297";
 
   # Hibernate on lid close
-  services.logind = {
-    lidSwitch = "hibernate";
-    lidSwitchExternalPower = "hibernate";
-    lidSwitchDocked = "ignore";
+  services.logind.settings.Login = {
+    HandleLidSwitch = "hibernate";
+    HandleLidSwitchExternalPower = "hibernate";
+    HandleLidSwitchDocked = "ignore";
   };
 
   # One-time setup:

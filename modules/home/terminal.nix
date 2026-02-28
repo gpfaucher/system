@@ -4,7 +4,7 @@
   # Ghostty terminal (from ghostty flake)
   programs.ghostty = {
     enable = true;
-    package = inputs.ghostty.packages.${pkgs.system}.default;
+    package = inputs.ghostty.packages.${pkgs.stdenv.hostPlatform.system}.default;
 
     settings = {
       # Start in home directory
