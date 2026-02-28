@@ -26,12 +26,12 @@
   programs.nix-ld.enable = true;
   programs.nix-ld.libraries = with pkgs; [
     # X11/GUI libraries needed by JetBrains IDEs (bundled JBR)
-    xorg.libXext
-    xorg.libX11
-    xorg.libXrender
-    xorg.libXtst
-    xorg.libXi
-    xorg.libXrandr
+    libxext
+    libx11
+    libxrender
+    libxtst
+    libxi
+    libxrandr
     fontconfig
     freetype
     zlib

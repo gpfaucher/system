@@ -53,8 +53,8 @@ in
 
       # ── General ──
       general = {
-        gaps_in = 10;
-        gaps_out = 20;
+        gaps_in = 0;
+        gaps_out = 0;
         border_size = 3;
         layout = "master";
         allow_tearing = false;
@@ -75,7 +75,7 @@ in
 
       # ── Decoration ──
       decoration = {
-        rounding = 12;
+        rounding = 0;
 
         blur = {
           enabled = true;
@@ -137,7 +137,6 @@ in
         "match:class ^(scratchpad)$, center on"
 
         # Floating apps
-        "match:class ^(zoom)$, float on"
         "match:class ^(Gimp)$, float on"
         "match:class ^(gimp)$, float on"
         "match:class ^(Steam)$, float on"
@@ -214,7 +213,7 @@ in
         "$mod ALT, equal, exec, hyprctl keyword general:gaps_in $(( $(hyprctl getoption general:gaps_in -j | jq '.int') + 1 )) && hyprctl keyword general:gaps_out $(( $(hyprctl getoption general:gaps_out -j | jq '.int') + 2 ))"
         "$mod ALT, minus, exec, hyprctl keyword general:gaps_in $(( $(hyprctl getoption general:gaps_in -j | jq '.int') - 1 )) && hyprctl keyword general:gaps_out $(( $(hyprctl getoption general:gaps_out -j | jq '.int') - 2 ))"
         "$mod ALT, 0, exec, hyprctl keyword general:gaps_in 0 && hyprctl keyword general:gaps_out 0"
-        "$mod ALT SHIFT, 0, exec, hyprctl keyword general:gaps_in 10 && hyprctl keyword general:gaps_out 20"
+        "$mod ALT SHIFT, 0, exec, hyprctl keyword general:gaps_in 0 && hyprctl keyword general:gaps_out 0"
 
         # All tags
         "$mod, 0, focusworkspaceoncurrentmonitor, 10"
