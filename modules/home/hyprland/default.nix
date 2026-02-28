@@ -42,10 +42,8 @@ in
     settings = {
       # ── Monitors ──
       monitor = [
-        # Portrait left
-        "DP-1, 2560x1440@60, 0x0, 1, transform, 1"
-        # Ultrawide right
-        "HDMI-A-1, 3440x1440@100, 1440x0, 1"
+        # External monitor
+        "DP-2, 2560x1440@144, 0x0, 1"
         # Laptop panel disabled when externals connected
         "eDP-1, disable"
 
