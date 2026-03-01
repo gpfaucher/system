@@ -9,6 +9,7 @@
 {
   imports = [
     ./hardware.nix
+    ../../modules/system/common.nix
     ../../modules/system/bootloader.nix
     # GPU: offload mode (AMD primary, NVIDIA on-demand)
     ../../modules/system/graphics.nix
@@ -24,76 +25,18 @@
   # Hostname
   networking.hostName = "laptop";
 
-  # Stylix NixOS-level config
-  stylix.base16Scheme = "${pkgs.base16-schemes}/share/themes/gruvbox-material-dark-hard.yaml";
-
-  # Enable Nix flakes and experimental features
-  nix = {
-    settings = {
-      experimental-features = [
-        "nix-command"
-        "flakes"
-      ];
-      auto-optimise-store = true;
-
-      # Parallel build optimization
-      max-jobs = "auto"; # Use all available CPU cores for parallel builds
-      cores = 0; # Use all cores per individual build job
-
-      # Download optimization
-      http-connections = 25; # Parallel download connections (default is 25)
-
-      # Build caching optimization
-      keep-outputs = true; # Keep build outputs for faster rebuilds
-      keep-derivations = true; # Keep .drv files for better caching
-
-      # Tarball caching
-      tarball-ttl = 300; # Cache downloaded tarballs for 5 minutes
-
-      # Binary caches
-      substituters = [
-        "https://cache.nixos.org"
-        "https://ghostty.cachix.org"
-        "https://nix-community.cachix.org"
-      ];
-      trusted-public-keys = [
-        "cache.nixos.org-1:6NCHdD59X431o0gWypbMrAURkbJ16ZPMQFGspcDShjY="
-        "ghostty.cachix.org-1:QB389yTa6gTyneehvqG58y0WnHjQOqgnA+wBnpWWxns="
-        "nix-community.cachix.org-1:mB9FSh9qf2dCimDSUo8Zy7bkq5CX+/rkCWyvRCYg3Fs="
-      ];
-    };
-    gc = {
-      automatic = true;
-      dates = "weekly";
-      options = "--delete-older-than 30d"; # Extended retention for safer rollbacks
-    };
-  };
-
-  # Font configuration
-  fonts = {
-    packages = with pkgs; [
-      nerd-fonts.jetbrains-mono
+  # Laptop-specific: extra binary cache for Ghostty
+  nix.settings = {
+    substituters = [
+      "https://ghostty.cachix.org"
     ];
-    fontconfig.enable = true;
-  };
-
-  # User configuration
-  users.users.gabriel = {
-    isNormalUser = true;
-    home = "/home/gabriel";
-    shell = pkgs.fish;
-    extraGroups = [
-      "wheel"
-      "video"
-      "audio"
-      "networkmanager" # For NetworkManager wireless management
-      "input"
-      "docker"
+    trusted-public-keys = [
+      "ghostty.cachix.org-1:QB389yTa6gTyneehvqG58y0WnHjQOqgnA+wBnpWWxns="
     ];
   };
 
-  # Enable fish shell system-wide
-  programs.fish.enable = true;
+  # Laptop-specific: NetworkManager group
+  users.users.gabriel.extraGroups = [ "networkmanager" ];
 
   # X server (needed for XWayland + GPU drivers)
   services.xserver.enable = true;
@@ -101,9 +44,12 @@
   # Steam gaming platform
   programs.steam = {
     enable = true;
-    remotePlay.openFirewall = true; # Open ports for Steam Remote Play
-    dedicatedServer.openFirewall = true; # Open ports for Steam dedicated servers
+    remotePlay.openFirewall = true;
+    dedicatedServer.openFirewall = true;
+    gamescopeSession.enable = true;
   };
+
+  programs.gamescope.enable = true;
 
   # Gamemode for performance optimization while gaming
   programs.gamemode.enable = true;

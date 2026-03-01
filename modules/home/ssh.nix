@@ -63,6 +63,14 @@
         identityFile = [ "~/.ssh/id_ed25519" ];
         addKeysToAgent = "4h";
       };
+
+      # VPS
+      "vps" = {
+        hostname = "95.217.73.154";
+        user = "gabriel";
+        identityFile = [ "~/.ssh/id_ed25519" ];
+        setEnv = { TERM = "xterm-256color"; };
+      };
     };
   };
 

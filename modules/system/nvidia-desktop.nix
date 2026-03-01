@@ -58,7 +58,7 @@
     nvtopPackages.nvidia # GPU monitoring
     libva-utils          # vainfo for testing VAAPI
     vulkan-tools         # vulkaninfo
-    glxinfo              # OpenGL info
+    mesa-demos           # glxinfo, glxgears, etc.
     nvidia-vaapi-driver  # For hardware video decode
   ];
 

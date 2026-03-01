@@ -48,6 +48,10 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
+    opencode = {
+      url = "github:anomalyco/opencode";
+    };
+
     pre-commit-hooks = {
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -67,6 +71,7 @@
       impermanence,
       disko,
       zen-browser,
+      opencode,
       treefmt-nix,
       pre-commit-hooks,
       ...
@@ -139,14 +144,6 @@
               users.${username} = import ./modules/home;
             };
           }
-        ];
-      };
-
-      homeConfigurations."${username}@laptop" = home-manager.lib.homeManagerConfiguration {
-        inherit pkgs;
-        extraSpecialArgs = { inherit inputs username; };
-        modules = [
-          ./modules/home
         ];
       };
 

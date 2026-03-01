@@ -9,7 +9,7 @@
 
 {
   imports = [
-    ./nvf.nix
+    ./nvf
     ./shell.nix
     ./terminal.nix
     ./zellij.nix
@@ -20,6 +20,24 @@
     ./vscode.nix
     ./hyprland
   ];
+
+  # Blue light filter - adjusts color temperature based on time of day
+  services.gammastep = {
+    enable = true;
+    provider = "manual";
+    latitude = 48.86;
+    longitude = 2.35;
+    temperature = {
+      day = 6500;
+      night = 3500;
+    };
+    settings = {
+      general = {
+        fade = 1; # Smooth transition between day/night
+        adjustment-method = "wayland";
+      };
+    };
+  };
 
   # Qt apps: read GTK settings (cursor theme/size, font, colors)
   qt = {
@@ -34,16 +52,16 @@
     homeDirectory = "/home/${username}";
     stateVersion = "24.11";
 
-    # Default editor (zed-editor provides the 'zeditor' binary)
+    # Default editor: nvim for terminal contexts, zed for visual
     sessionVariables = {
-      EDITOR = "zeditor --wait";
+      EDITOR = "nvim";
       VISUAL = "zeditor --wait";
     };
 
     pointerCursor = {
       name = "breeze_cursors";
       package = pkgs.kdePackages.breeze;
-      size = 48;
+      size = 24;
       hyprcursor.enable = true;
       gtk.enable = true;
     };
@@ -93,7 +111,23 @@
     # Development tools
     nixd # Nix language server
     claude-code
-    opencode
+    (inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
+      nativeBuildInputs = map (p:
+        if (p.pname or "") == "bun" then
+          p.overrideAttrs (bunOld: rec {
+            version = "1.3.10";
+            src = fetchurl {
+              url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-linux-x64.zip";
+              hash = "sha256-9XvAGH45Yj3nFro6OJ/aVIay175xMamAulTce3M9Lgg=";
+            };
+          })
+        else p
+      ) old.nativeBuildInputs;
+      preBuild = ''
+        mkdir -p .github
+        touch .github/TEAM_MEMBERS
+      '' + (old.preBuild or "");
+    }))
     opentofu
     awscli2
     gh
@@ -140,7 +174,7 @@
 
     # Cloud tools
     google-cloud-sdk # gcloud
-    azure-cli # az
+    # azure-cli # az — disabled: broken in nixpkgs (missing azure.mgmt.web.v2024_11_01)
 
     # Formatters/Linters
     nodePackages.prettier
@@ -235,17 +269,17 @@
         # Compact UI (saves vertical space on HiDPI)
         "browser.compactmode.show" = true;
       };
-      # Gruvbox Material Dark theme for Firefox UI
+      # Ayu Dark theme for Firefox UI
       userChrome = ''
-        /* Gruvbox Material Dark Theme */
+        /* Ayu Dark Theme */
         :root {
-          --bg0: #202020;
-          --bg1: #2a2827;
-          --bg2: #504945;
-          --fg: #ddc7a1;
-          --blue: #7daea3;
-          --red: #ea6962;
-          --green: #a9b665;
+          --bg0: #0b0e14;
+          --bg1: #131721;
+          --bg2: #202229;
+          --fg: #e6e1cf;
+          --blue: #59c2ff;
+          --red: #f07178;
+          --green: #aad94c;
         }
 
         /* Tab styling */
@@ -269,13 +303,13 @@
           background-color: var(--bg0) !important;
         }
       '';
-      # Gruvbox dark theme for about: pages
+      # Ayu Dark theme for about: pages
       userContent = ''
         /* Style about: pages */
         @-moz-document url-prefix(about:) {
           body {
-            background-color: #202020 !important;
-            color: #ddc7a1 !important;
+            background-color: #0b0e14 !important;
+            color: #e6e1cf !important;
           }
         }
       '';

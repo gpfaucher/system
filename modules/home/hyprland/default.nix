@@ -8,6 +8,9 @@
 let
   colors = config.lib.stylix.colors;
 
+  # Helper to launch a TUI tool in a floating Ghostty terminal
+  tuiLaunch = name: cmd: "ghostty --class=tui-${name} -e ${cmd}";
+
   # Monitor hotplug script: disable laptop when externals are connected
   handleMonitorChange = pkgs.writeShellScriptBin "handle-monitor-change" ''
     handle() {
@@ -111,6 +114,11 @@ in
         };
       };
 
+      device = {
+        name = "keychron-m1-mouse";
+        sensitivity = -0.75;
+      };
+
       # ── Gestures ──
       gesture = [
         "3, l, workspace, m+1"
@@ -135,6 +143,11 @@ in
         "match:class ^(scratchpad)$, float on"
         "match:class ^(scratchpad)$, size 80% 80%"
         "match:class ^(scratchpad)$, center on"
+
+        # TUI tool windows
+        "match:class ^(tui-.*)$, float on"
+        "match:class ^(tui-.*)$, size 70% 70%"
+        "match:class ^(tui-.*)$, center on"
 
         # Floating apps
         "match:class ^(Gimp)$, float on"
@@ -169,6 +182,14 @@ in
         "$mod, Return, exec, ghostty"
         "$mod, d, exec, fuzzel"
         "$mod SHIFT, l, exec, hyprlock"
+
+        # TUI tools (floating terminal)
+        "$mod, n, exec, ${tuiLaunch "nmtui" "nmtui"}"
+        "$mod, o, exec, ${tuiLaunch "btop" "btop"}"
+        "$mod, a, exec, ${tuiLaunch "pulsemixer" "pulsemixer"}"
+        "$mod, g, exec, ${tuiLaunch "lazygit" "lazygit"}"
+        "$mod, e, exec, ${tuiLaunch "yazi" "yazi"}"
+        "$mod, x, exec, ${tuiLaunch "bluetuith" "bluetuith"}"
 
         # Screenshots (grimblast)
         "$mod, Print, exec, grimblast copy output"
@@ -325,6 +346,10 @@ in
 
     # Wallpaper
     swaybg
+
+    # TUI tools for keybinds
+    bluetuith # Bluetooth TUI (Super+x)
+    pulsemixer # Audio mixer TUI (Super+a)
 
     # System tray applets
     blueman

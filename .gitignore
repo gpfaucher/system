@@ -6,3 +6,6 @@ result
 # Beads - stealth mode (all .beads/ directories local-only)
 .beads/
 .worktrees/
+
+# Tool-generated state
+.automaker/

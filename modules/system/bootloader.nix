@@ -5,6 +5,9 @@
   ...
 }:
 
+let
+  c = config.lib.stylix.colors;
+in
 {
   # Systemd-boot configuration
   boot.loader.systemd-boot = {
@@ -47,26 +50,25 @@
     font = "ter-132n";
     packages = [ pkgs.terminus_font ];
 
-    # Ayu dark theme colors (from base16 ayu-dark scheme)
-    # TODO: Consider generating from Stylix base16 scheme instead of hardcoding
+    # Console colors generated from Stylix base16 scheme
     # Format: black, red, green, yellow, blue, magenta, cyan, white (normal + bright)
     colors = [
-      "0b0e14" # black (bg)
-      "f07178" # red
-      "aad94c" # green
-      "ffb454" # yellow
-      "59c2ff" # blue
-      "d2a6ff" # magenta
-      "95e6cb" # cyan
-      "6c7380" # white (fg4)
-      "3d424d" # bright black (gray)
-      "ff3333" # bright red
-      "b8cc52" # bright green
-      "e6b673" # bright yellow
-      "73d0ff" # bright blue
-      "dfbfff" # bright magenta
-      "95e6cb" # bright cyan
-      "bfbdb6" # bright white (fg)
+      "${c.base00}" # black (bg)
+      "${c.base08}" # red
+      "${c.base0B}" # green
+      "${c.base0A}" # yellow
+      "${c.base0D}" # blue
+      "${c.base0E}" # magenta
+      "${c.base0C}" # cyan
+      "${c.base04}" # white (muted fg)
+      "${c.base03}" # bright black (gray)
+      "${c.base08}" # bright red
+      "${c.base0B}" # bright green
+      "${c.base09}" # bright yellow (orange)
+      "${c.base0D}" # bright blue
+      "${c.base0E}" # bright magenta
+      "${c.base0C}" # bright cyan
+      "${c.base05}" # bright white (fg)
     ];
   };
 }
