@@ -26,17 +26,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Impermanence - Ephemeral root filesystem support
-    impermanence = {
-      url = "github:nix-community/impermanence";
-    };
-
-    # Disko - Declarative disk partitioning
-    disko = {
-      url = "github:nix-community/disko";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     # Zen Browser - Privacy-focused Firefox-based browser
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
@@ -65,11 +54,8 @@
       home-manager,
       nvf,
       stylix,
-
       ghostty,
       agenix,
-      impermanence,
-      disko,
       zen-browser,
       opencode,
       treefmt-nix,
@@ -85,7 +71,6 @@
       };
     in
     {
-      # Laptop configuration (AMD + NVIDIA hybrid, WiFi)
       nixosConfigurations.laptop = nixpkgs.lib.nixosSystem {
         specialArgs = { inherit inputs username self; };
         modules = [
@@ -95,9 +80,8 @@
           }
           stylix.nixosModules.stylix
           agenix.nixosModules.default
-          impermanence.nixosModules.impermanence
           ./hosts/laptop
-          ./secrets # Agenix secrets configuration
+          ./secrets
           home-manager.nixosModules.home-manager
           {
             home-manager = {
@@ -108,38 +92,6 @@
               sharedModules = [
                 inputs.nvf.homeManagerModules.default
                 inputs.stylix.homeModules.stylix
-
-              ];
-              users.${username} = import ./modules/home;
-            };
-          }
-        ];
-      };
-
-      # Server configuration (NVIDIA RTX 3070, wired, Jellyfin + Kubernetes)
-      nixosConfigurations.nixbox = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs username self; };
-        modules = [
-          {
-            nixpkgs.hostPlatform = system;
-            nixpkgs.config.allowUnfree = true;
-            nixpkgs.config.cudaSupport = true;
-          }
-          stylix.nixosModules.stylix
-          agenix.nixosModules.default
-          ./hosts/nixbox
-          ./secrets # Agenix secrets configuration
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "hm-backup";
-              extraSpecialArgs = { inherit inputs username self; };
-              sharedModules = [
-                inputs.nvf.homeManagerModules.default
-                inputs.stylix.homeModules.stylix
-
               ];
               users.${username} = import ./modules/home;
             };
@@ -170,8 +122,8 @@
         in
         pkgs.mkShell {
           packages = with pkgs; [
-            nil # Nix LSP
-            nixfmt # Nix formatter
+            nil
+            nixfmt
           ];
           shellHook = pre-commit.shellHook;
         };

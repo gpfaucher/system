@@ -153,12 +153,10 @@
     };
   };
 
-  # Audio tools
+  # Audio tools (GUI tools like easyeffects/helvum are in home-manager)
   environment.systemPackages = with pkgs; [
     pipewire
     pulseaudio # pactl utilities
-    easyeffects # System-wide EQ (output effects only with BT headsets)
-    helvum # PipeWire patchbay for debugging
   ];
 
   # Bluetooth audio settings

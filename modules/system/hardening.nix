@@ -151,24 +151,5 @@
     }
   ];
 
-  # ----------------------------------------------------------------------------
-  # FIREWALL CONFIGURATION (Reference)
-  # ----------------------------------------------------------------------------
-  # Firewall is configured in networking.nix with the following open ports:
-  #
-  # TCP Ports:
-  #   22    - SSH (remote access)
-  #   80    - HTTP (web development)
-  #   443   - HTTPS (secure web development)
-  #   3000  - Node.js/React development server
-  #   4000  - Phoenix/Elixir development server
-  #   5000  - Flask/generic development server
-  #   5173  - Vite development server
-  #   8000  - Django/Python development server
-  #   8080  - Alternative HTTP / Tabby AI server
-  #   8888  - Jupyter notebook server
-  #
-  # Note: Consider restricting development ports to localhost-only in production
-  # or on untrusted networks by using iptables rules or NetworkManager zones.
-  # ----------------------------------------------------------------------------
+  # Firewall is configured in networking.nix (SSH only - dev servers bind to localhost)
 }

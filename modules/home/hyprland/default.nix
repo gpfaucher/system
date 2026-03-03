@@ -10,26 +10,6 @@ let
 
   # Helper to launch a TUI tool in a floating Ghostty terminal
   tuiLaunch = name: cmd: "ghostty --class=tui-${name} -e ${cmd}";
-
-  # Monitor hotplug script: disable laptop when externals are connected
-  handleMonitorChange = pkgs.writeShellScriptBin "handle-monitor-change" ''
-    handle() {
-      case "$1" in
-        monitoradded*|monitorremoved*)
-          external_count=$(${pkgs.hyprland}/bin/hyprctl monitors -j | ${pkgs.jq}/bin/jq '[.[] | select(.name != "eDP-1")] | length')
-          if [ "$external_count" -gt 0 ]; then
-            ${pkgs.hyprland}/bin/hyprctl keyword monitor "eDP-1, disable"
-          else
-            ${pkgs.hyprland}/bin/hyprctl keyword monitor "eDP-1, 3840x2400@60, auto, 2"
-          fi
-          ;;
-      esac
-    }
-
-    ${pkgs.socat}/bin/socat -u "UNIX-CONNECT:$XDG_RUNTIME_DIR/hypr/$HYPRLAND_INSTANCE_SIGNATURE/.socket2.sock" - | while IFS= read -r line; do
-      handle "$line"
-    done
-  '';
 in
 {
   imports = [
@@ -41,15 +21,15 @@ in
 
   wayland.windowManager.hyprland = {
     enable = true;
+    systemd.enable = true;
 
     settings = {
       # ── Monitors ──
       monitor = [
-        # External monitor
-        "DP-2, 2560x1440@144, 0x0, 1"
-        # Laptop panel disabled when externals connected
-        "eDP-1, disable"
-
+        # Laptop panel (high-res/scaled)
+        "eDP-1, 3840x2400@60, auto, 2"
+        # Ultrawide
+        "DP-2, 3440x1440@100, auto, 1"
         # Unknown displays: auto-configure at preferred resolution
         ", preferred, auto, 1"
       ];
@@ -58,7 +38,7 @@ in
       general = {
         gaps_in = 0;
         gaps_out = 0;
-        border_size = 3;
+        border_size = 0;
         layout = "master";
         allow_tearing = false;
       };
@@ -321,9 +301,6 @@ in
         # Polkit agent
         "${pkgs.polkit_gnome}/libexec/polkit-gnome-authentication-agent-1"
 
-        # Monitor hotplug handler
-        "${handleMonitorChange}/bin/handle-monitor-change"
-
         # Hyprland special workspace for scratchpad
         "hyprctl dispatch movetoworkspacesilent special:scratch,class:^(scratchpad)$"
 
@@ -335,8 +312,7 @@ in
 
   # Packages needed for the Hyprland environment
   home.packages = with pkgs; [
-    # Wayland clipboard
-    wl-clipboard
+    # Clipboard
     cliphist
 
     # Screenshots
@@ -366,9 +342,5 @@ in
 
     # Polkit
     polkit_gnome
-
-    # Utilities for hotplug script
-    socat
-    jq
   ];
 }

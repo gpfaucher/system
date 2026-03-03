@@ -20,6 +20,8 @@
     ../../modules/system/vr.nix
     ../../modules/system/hyprland.nix
     ../../modules/system/power.nix
+    ../../modules/system/maintenance.nix
+    ../../modules/system/vpn.nix
   ];
 
   # Hostname

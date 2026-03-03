@@ -6,7 +6,7 @@
 }:
 
 {
-  # NetworkManager for wireless management (integrates with KDE Plasma)
+  # NetworkManager for WiFi + wired management
   networking.networkmanager = {
     enable = true;
     wifi.powersave = true;
@@ -18,22 +18,15 @@
   systemd.services.ModemManager.enable = false;
 
   # Firewall configuration
+  # Dev servers bind to localhost by default - no need to open ports for them.
+  # Only open ports that genuinely need incoming connections from other devices.
   networking.firewall = {
     enable = true;
-    # Common development ports
     allowedTCPPorts = [
       22 # SSH
-      80 # HTTP
-      443 # HTTPS
-      3000 # Node.js/React dev server
-      4000 # Phoenix/Elixir
-      5000 # Flask/generic
-      5173 # Vite dev server
-      5432 # PostgreSQL (for Docker → host tunnel)
-
-      8000 # Django/Python
-      8080 # Alternative HTTP / Tabby
-      8888 # Jupyter
     ];
+    # Trust the Docker bridge so containers can reach host-bound services
+    # (e.g. SSH tunnels on 0.0.0.0:5432).
+    trustedInterfaces = [ "docker0" "br-+" ];
   };
 }

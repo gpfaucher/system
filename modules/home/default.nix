@@ -19,6 +19,7 @@
     ./ssh.nix
     ./vscode.nix
     ./hyprland
+    ./kanshi.nix
   ];
 
   # Blue light filter - adjusts color temperature based on time of day
@@ -82,7 +83,7 @@
     };
   };
 
-  # Delta - git diff viewer (moved from programs.git.delta)
+  # Delta - git diff viewer
   programs.delta = {
     enable = true;
     enableGitIntegration = true;
@@ -90,6 +91,28 @@
       navigate = true;
       side-by-side = true;
       line-numbers = true;
+    };
+  };
+
+  # ── mpv media player ──
+  programs.mpv = {
+    enable = true;
+    config = {
+      hwdec = "auto-safe";
+      vo = "gpu";
+      gpu-context = "wayland";
+      profile = "gpu-hq";
+      ytdl-format = "bestvideo+bestaudio";
+    };
+  };
+
+  # ── zathura PDF/ebook viewer (vim keys) ──
+  programs.zathura = {
+    enable = true;
+    options = {
+      selection-clipboard = "clipboard";
+      recolor = true;
+      recolor-keephue = true;
     };
   };
 
@@ -112,7 +135,8 @@
     nixd # Nix language server
     claude-code
     (inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-      nativeBuildInputs = map (p:
+      nativeBuildInputs = map (
+        p:
         if (p.pname or "") == "bun" then
           p.overrideAttrs (bunOld: rec {
             version = "1.3.10";
@@ -121,12 +145,15 @@
               hash = "sha256-9XvAGH45Yj3nFro6OJ/aVIay175xMamAulTce3M9Lgg=";
             };
           })
-        else p
+        else
+          p
       ) old.nativeBuildInputs;
-      preBuild = ''
-        mkdir -p .github
-        touch .github/TEAM_MEMBERS
-      '' + (old.preBuild or "");
+      preBuild =
+        ''
+          mkdir -p .github
+          touch .github/TEAM_MEMBERS
+        ''
+        + (old.preBuild or "");
     }))
     opentofu
     awscli2
@@ -174,7 +201,7 @@
 
     # Cloud tools
     google-cloud-sdk # gcloud
-    # azure-cli # az — disabled: broken in nixpkgs (missing azure.mgmt.web.v2024_11_01)
+    # azure-cli # az -- disabled: broken in nixpkgs (missing azure.mgmt.web.v2024_11_01)
 
     # Formatters/Linters
     nodePackages.prettier
@@ -195,19 +222,109 @@
     nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only
     noto-fonts
+
+    # ── Desktop apps that were missing ──
+    # Media / documents
+    imv # Wayland-native image viewer
+    yt-dlp # Video downloader (mpv backend)
+
+    # Screen recording
+    wf-recorder # Wayland screen recorder (lightweight)
+    obs-studio # Full-featured recording/streaming
+
+    # USB automount
+    udiskie # Automount removable media with notifications
+
+    # Trash management (safe delete)
+    trashy # CLI trash (trash-put, trash-list, trash-restore)
+
+    # Archive management
+    ouch # Universal archive tool (compress/decompress)
+
+    # Audio tools (moved from system level)
+    easyeffects # System-wide EQ
+    helvum # PipeWire patchbay for debugging
+
+    # Clipboard image support
+    wl-clipboard
   ];
 
-  # XDG directories
+  # ── USB automount service ──
+  services.udiskie = {
+    enable = true;
+    automount = true;
+    notify = true;
+    tray = "auto";
+  };
+
+  # ── XDG directories and MIME defaults ──
   xdg = {
     enable = true;
+
     userDirs = {
-      enable = false;
+      enable = true;
+      createDirectories = true;
+      desktop = "${config.home.homeDirectory}/Desktop";
+      documents = "${config.home.homeDirectory}/Documents";
+      download = "${config.home.homeDirectory}/Downloads";
+      music = "${config.home.homeDirectory}/Music";
+      pictures = "${config.home.homeDirectory}/Pictures";
+      videos = "${config.home.homeDirectory}/Videos";
+    };
+
+    mimeApps = {
+      enable = true;
+      defaultApplications = {
+        # Web
+        "text/html" = "firefox.desktop";
+        "x-scheme-handler/http" = "firefox.desktop";
+        "x-scheme-handler/https" = "firefox.desktop";
+        "x-scheme-handler/about" = "firefox.desktop";
+        "x-scheme-handler/unknown" = "firefox.desktop";
+
+        # Images
+        "image/png" = "imv-dir.desktop";
+        "image/jpeg" = "imv-dir.desktop";
+        "image/gif" = "imv-dir.desktop";
+        "image/webp" = "imv-dir.desktop";
+        "image/svg+xml" = "imv-dir.desktop";
+        "image/bmp" = "imv-dir.desktop";
+        "image/tiff" = "imv-dir.desktop";
+
+        # Video
+        "video/mp4" = "mpv.desktop";
+        "video/x-matroska" = "mpv.desktop";
+        "video/webm" = "mpv.desktop";
+        "video/x-msvideo" = "mpv.desktop";
+        "video/quicktime" = "mpv.desktop";
+
+        # Audio
+        "audio/mpeg" = "mpv.desktop";
+        "audio/flac" = "mpv.desktop";
+        "audio/ogg" = "mpv.desktop";
+        "audio/wav" = "mpv.desktop";
+        "audio/x-wav" = "mpv.desktop";
+
+        # PDF / Documents
+        "application/pdf" = "org.pwmt.zathura.desktop";
+        "application/epub+zip" = "org.pwmt.zathura.desktop";
+
+        # Text / Code
+        "text/plain" = "zeditor.desktop";
+        "text/x-csrc" = "zeditor.desktop";
+        "text/x-python" = "zeditor.desktop";
+        "application/json" = "zeditor.desktop";
+        "application/xml" = "zeditor.desktop";
+        "application/x-yaml" = "zeditor.desktop";
+
+        # File manager
+        "inode/directory" = "yazi.desktop";
+      };
     };
   };
 
   # AWS configuration
   # Credentials are encrypted with agenix and decrypted directly to ~/.aws/credentials
-  # This just sets up the non-secret config file
   home.file.".aws/config".text = ''
     [default]
     region = eu-central-1
@@ -219,10 +336,6 @@
     $DRY_RUN_CMD mkdir -p $HOME/.aws
     $DRY_RUN_CMD chmod 700 $HOME/.aws
   '';
-
-  # KDE Plasma handles screenshots (Spectacle) and screen recording natively
-  # Use Meta+Shift+Print for area screenshot, Meta+Print for full screen
-  # Screen recording available via OBS or KDE's built-in recorder
 
   # Firefox configuration for Teams always-available status
   programs.firefox = {

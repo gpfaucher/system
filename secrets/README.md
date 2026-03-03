@@ -8,8 +8,8 @@ Secrets are encrypted using age with SSH public keys. Only users/systems with th
 
 ## Current Secrets
 
-- `tabby-token.age` - Authentication token for Tabby AI code completion server
-  - Decrypted to: `/run/agenix/tabby-token`
+- `aws-credentials.age` - AWS credentials for CLI access
+  - Decrypted to: `/home/gabriel/.aws/credentials`
   - Owner: gabriel
   - Permissions: 0400 (read-only for owner)
 
@@ -23,14 +23,12 @@ Secrets are encrypted using age with SSH public keys. Only users/systems with th
 
 ### Viewing/Editing Secrets
 
-To view or edit an encrypted secret:
-
 ```bash
 # Using agenix (if installed)
-agenix -e tabby-token.age
+agenix -e aws-credentials.age
 
 # Or using age directly
-age -d -i ~/.ssh/id_ed25519 tabby-token.age
+age -d -i ~/.ssh/id_ed25519 aws-credentials.age
 ```
 
 ### Creating New Secrets
@@ -64,19 +62,6 @@ age.secrets.new-secret = {
 sudo nixos-rebuild switch --flake .#laptop
 ```
 
-### Re-encrypting Secrets (e.g., after key rotation)
-
-```bash
-# Decrypt with old key
-age -d -i ~/.ssh/id_ed25519.old tabby-token.age > /tmp/secret
-
-# Re-encrypt with new key
-cat /tmp/secret | age -r "$(cat ~/.ssh/id_ed25519.pub)" > tabby-token.age
-
-# Securely delete temporary file
-shred -u /tmp/secret
-```
-
 ## Security Notes
 
 - Encrypted `.age` files are **safe to commit to git**
@@ -84,12 +69,3 @@ shred -u /tmp/secret
 - Decrypted secrets in `/run/agenix/` are only accessible to specified owners
 - Always use `echo -n` to avoid trailing newlines in secrets
 - Never commit unencrypted secrets or private keys
-
-## How It Works
-
-1. During NixOS build, agenix reads `secrets.nix` and `default.nix`
-2. At boot/rebuild, agenix decrypts secrets using the system's SSH host key or user's SSH key
-3. Decrypted secrets are placed in `/run/agenix/` with specified permissions
-4. Applications read secrets from `/run/agenix/` at runtime
-
-For the Tabby configuration, `modules/home/default.nix` uses a home-manager activation script that reads the decrypted token from `/run/agenix/tabby-token` and generates the config file.

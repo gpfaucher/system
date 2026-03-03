@@ -36,6 +36,7 @@ in
     "systemd.show_status=auto" # Show status only on slow boot
     "rd.udev.log_level=3" # Reduce udev logging in initrd
     "resume_offset=69935729" # btrfs swap file physical offset for hibernate resume
+    "consoleblank=0" # Disable VT console blanking (prevents grey screen on Wayland)
   ];
 
   # Console log level
