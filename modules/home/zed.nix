@@ -29,13 +29,11 @@
     ];
 
     userSettings = {
-      vim_mode = true;
       ui_font_size = lib.mkForce 14;
       buffer_font_size = lib.mkForce 13;
       hour_format = "hour24";
       tab_size = 2;
       show_whitespaces = "boundary";
-      relative_line_numbers = true;
 
       terminal = {
         shell = {
@@ -89,13 +87,8 @@
         };
       };
 
-      vim = {
-        use_system_clipboard = "always";
-        use_smartcase_find = true;
-      };
-
-      features = {
-        copilot = false;
+      edit_predictions = {
+        provider = "none";
       };
       telemetry = {
         metrics = false;
@@ -109,21 +102,6 @@
         bindings = {
           "ctrl-shift-t" = "workspace::NewTerminal";
           "ctrl-shift-e" = "workspace::ToggleLeftDock";
-        };
-      }
-      {
-        context = "vim_mode == normal";
-        bindings = {
-          "ctrl-h" = "workspace::ActivatePaneLeft";
-          "ctrl-j" = "workspace::ActivatePaneDown";
-          "ctrl-k" = "workspace::ActivatePaneUp";
-          "ctrl-l" = "workspace::ActivatePaneRight";
-          "shift-h" = "pane::ActivatePreviousItem";
-          "shift-l" = "pane::ActivateNextItem";
-          "space f" = "file_finder::Toggle";
-          "space g" = "project_search::ToggleFocus";
-          "space b" = "tab_switcher::Toggle";
-          "space e" = "workspace::ToggleLeftDock";
         };
       }
     ];
