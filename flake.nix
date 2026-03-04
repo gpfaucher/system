@@ -9,11 +9,6 @@
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    nvf = {
-      url = "github:notashelf/nvf";
-      inputs.nixpkgs.follows = "nixpkgs";
-    };
-
     stylix.url = "github:danth/stylix";
 
     ghostty = {
@@ -45,6 +40,14 @@
       url = "github:cachix/git-hooks.nix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    nix-flatpak.url = "github:gmodena/nix-flatpak";
+
+    plasma-manager = {
+      url = "github:nix-community/plasma-manager";
+      inputs.nixpkgs.follows = "nixpkgs";
+      inputs.home-manager.follows = "home-manager";
+    };
   };
 
   outputs =
@@ -52,7 +55,6 @@
       self,
       nixpkgs,
       home-manager,
-      nvf,
       stylix,
       ghostty,
       agenix,
@@ -60,6 +62,8 @@
       opencode,
       treefmt-nix,
       pre-commit-hooks,
+      nix-flatpak,
+      plasma-manager,
       ...
     }@inputs:
     let
@@ -80,6 +84,7 @@
           }
           stylix.nixosModules.stylix
           agenix.nixosModules.default
+          nix-flatpak.nixosModules.nix-flatpak
           ./hosts/laptop
           ./secrets
           home-manager.nixosModules.home-manager
@@ -90,8 +95,8 @@
               backupFileExtension = "hm-backup";
               extraSpecialArgs = { inherit inputs username self; };
               sharedModules = [
-                inputs.nvf.homeManagerModules.default
                 inputs.stylix.homeModules.stylix
+                inputs.plasma-manager.homeModules.plasma-manager
               ];
               users.${username} = import ./modules/home;
             };

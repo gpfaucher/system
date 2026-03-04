@@ -26,8 +26,8 @@
     };
 
     targets = {
-      # Editors
-      neovim.enable = true;
+      # Editors — base16-nvim handles Neovim theming now
+      neovim.enable = false;
       zed.enable = true;
 
       # Shell and CLI
@@ -48,13 +48,7 @@
       # Browser
       firefox.profileNames = [ "default" ];
 
-      # Notifications
-      dunst.enable = true;
-
-      # Hyprland
-      hyprland.enable = true;
-
-      # KDE/Qt — disabled (no longer using KDE)
+      # KDE/Qt — plasma-manager handles KDE theming
       kde.enable = false;
       qt.enable = false;
     };

@@ -18,10 +18,13 @@
     ../../modules/system/services.nix
     ../../modules/system/hardening.nix
     ../../modules/system/vr.nix
-    ../../modules/system/hyprland.nix
+    ../../modules/system/kde.nix
     ../../modules/system/power.nix
     ../../modules/system/maintenance.nix
     ../../modules/system/vpn.nix
+    ../../modules/system/tailscale.nix
+    ../../modules/system/flatpak.nix
+    ../../modules/system/logitech.nix
   ];
 
   # Hostname
@@ -39,6 +42,13 @@
 
   # Laptop-specific: NetworkManager group
   users.users.gabriel.extraGroups = [ "networkmanager" ];
+
+  # v4l2loopback: virtual camera for OBS Studio background effects in Teams/Zoom
+  boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
+  boot.kernelModules = [ "v4l2loopback" ];
+  boot.extraModprobeConfig = ''
+    options v4l2loopback devices=1 video_nr=10 card_label="OBS Virtual Camera" exclusive_caps=1
+  '';
 
   # X server (needed for XWayland + GPU drivers)
   services.xserver.enable = true;

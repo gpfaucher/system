@@ -11,11 +11,9 @@
       working-directory = "/home/gabriel";
       window-inherit-working-directory = false;
 
-      # Window settings - no decorations/borders
-      window-decoration = false;
+      # Window settings
       window-padding-x = 4;
       window-padding-y = 4;
-      gtk-titlebar = false;
 
       # Transparency
       background-opacity = 0.9;

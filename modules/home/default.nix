@@ -9,17 +9,16 @@
 
 {
   imports = [
-    ./nvf
+    ./nvim
     ./shell.nix
     ./terminal.nix
-    ./zellij.nix
     ./services.nix
     ./theme.nix
     ./zed.nix
     ./ssh.nix
     ./vscode.nix
-    ./hyprland
-    ./kanshi.nix
+    ./kde.nix
+    ./tmux.nix
   ];
 
   # Blue light filter - adjusts color temperature based on time of day
@@ -40,11 +39,10 @@
     };
   };
 
-  # Qt apps: read GTK settings (cursor theme/size, font, colors)
+  # Qt apps: KDE manages its own Qt theming
   qt = {
     enable = true;
-    platformTheme.name = "gtk2";
-    style.name = "gtk2";
+    platformTheme.name = "kde";
   };
 
   # Home Manager configuration
@@ -56,14 +54,13 @@
     # Default editor: nvim for terminal contexts, zed for visual
     sessionVariables = {
       EDITOR = "nvim";
-      VISUAL = "zeditor --wait";
+      VISUAL = lib.mkForce "zeditor --wait";
     };
 
     pointerCursor = {
       name = "breeze_cursors";
       package = pkgs.kdePackages.breeze;
       size = 24;
-      hyprcursor.enable = true;
       gtk.enable = true;
     };
   };
@@ -120,8 +117,7 @@
   home.packages = with pkgs; [
     # JetBrains (installed via Toolbox for marketplace plugin support)
     jetbrains-toolbox
-    zoom-us # Video conferencing
-    teams-for-linux
+    # zoom-us and teams-for-linux moved to Flatpak (modules/system/flatpak.nix)
     libreoffice-fresh # Office suite
     warp-terminal
 
@@ -132,7 +128,7 @@
     neovide
 
     # Development tools
-    nixd # Nix language server
+    # nixd replaced by nil in nvim/default.nix extraPackages
     claude-code
     (inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
       nativeBuildInputs = map (
@@ -156,18 +152,17 @@
         + (old.preBuild or "");
     }))
     opentofu
+    pulumi-bin
     awscli2
     gh
     gnumake
-    gcc
-    tree-sitter
+    # gcc and tree-sitter moved to nvim/default.nix extraPackages
     nodejs_22
     bun # Fast JavaScript runtime and package manager (required by opencode)
-    fd # For telescope find_files
-    ripgrep # For telescope live_grep
+    # fd and ripgrep moved to nvim/default.nix extraPackages
     docker-compose # Docker Compose
     python312 # Python runtime for LSP
-    tmux # Terminal multiplexer
+    # tmux moved to programs.tmux (modules/home/tmux.nix)
 
     # Modern CLI tools
     eza # Modern ls replacement
@@ -319,6 +314,12 @@
 
         # File manager
         "inode/directory" = "yazi.desktop";
+
+        # Meeting links → native apps
+        "x-scheme-handler/zoommtg" = "Zoom.desktop";
+        "x-scheme-handler/zoomus" = "Zoom.desktop";
+        "x-scheme-handler/zoomphonecall" = "Zoom.desktop";
+        "x-scheme-handler/msteams" = "teams-for-linux.desktop";
       };
     };
   };

@@ -5,6 +5,9 @@
   ...
 }:
 
+let
+  rnnoise = pkgs.rnnoise-plugin;
+in
 {
   # Disable PulseAudio (using PipeWire instead)
   services.pulseaudio.enable = false;
@@ -33,6 +36,43 @@
           "default.clock.min-quantum" = 512;
         };
       };
+
+      # RNNoise noise suppression — creates a virtual "Noise Cancelling Mic"
+      # source that apps like Teams/Zoom can select instead of the raw mic.
+      "30-noise-suppression" = {
+        "context.modules" = [
+          {
+            name = "libpipewire-module-filter-chain";
+            args = {
+              "node.description" = "Noise Cancelling Mic";
+              "media.name" = "Noise Cancelling Mic";
+              "filter.graph" = {
+                nodes = [
+                  {
+                    type = "ladspa";
+                    name = "rnnoise";
+                    plugin = "${rnnoise}/lib/ladspa/librnnoise_ladspa.so";
+                    label = "noise_suppressor_mono";
+                    control = {
+                      "VAD Threshold (%)" = 50.0;
+                    };
+                  }
+                ];
+              };
+              "capture.props" = {
+                "node.name" = "capture.rnnoise_source";
+                "node.passive" = true;
+                "audio.rate" = 48000;
+              };
+              "playback.props" = {
+                "node.name" = "rnnoise_source";
+                "media.class" = "Audio/Source";
+                "audio.rate" = 48000;
+              };
+            };
+          }
+        ];
+      };
     };
 
     wireplumber = {
@@ -44,6 +84,7 @@
             "bluez5.enable-sbc-xq" = true;
             "bluez5.enable-msbc" = true;
             "bluez5.enable-hw-volume" = true;
+            "bluez5.hfphsp-backend" = "native";
             "bluez5.roles" = [
               "a2dp_sink"
               "a2dp_source"

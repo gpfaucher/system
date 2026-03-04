@@ -9,7 +9,7 @@
   # NetworkManager for WiFi + wired management
   networking.networkmanager = {
     enable = true;
-    wifi.powersave = true;
+    wifi.powersave = false;
   };
 
   # ModemManager grabs the HFP Bluetooth profile on D-Bus, preventing

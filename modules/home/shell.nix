@@ -15,6 +15,9 @@
       # Add local bin to PATH
       fish_add_path -g ~/.local/bin
 
+      # npm global packages
+      fish_add_path -g ~/.npm-global/bin
+
       # Go
       set -gx GOPATH ~/.local/share/go
       fish_add_path -g $GOPATH/bin
