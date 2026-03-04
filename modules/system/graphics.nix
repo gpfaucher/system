@@ -6,39 +6,30 @@
 }:
 
 {
-  # Enable graphics with hardware acceleration
   hardware.graphics = {
     enable = true;
-    enable32Bit = true; # Required for Steam and some applications
+    enable32Bit = true;
 
-    # AMD VAAPI support for hardware video encoding/decoding
-    # Mesa provides radeonsi_drv_video.so for AMD Phoenix1 GPU
     extraPackages = with pkgs; [
-      libva # VA-API library
-      vulkan-loader # Vulkan runtime
+      libva
+      vulkan-loader
     ];
 
     extraPackages32 = with pkgs.pkgsi686Linux; [
-      libva # 32-bit VA-API support
+      libva
     ];
   };
 
-  # Load both GPU drivers
   services.xserver.videoDrivers = [
     "amdgpu"
     "nvidia"
   ];
 
-  # NVIDIA configuration - PRIME offload mode
-  # AMD Phoenix1 is primary (display), NVIDIA RTX 2000 Ada is secondary (compute on-demand)
   hardware.nvidia = {
     open = true;
     modesetting.enable = true;
     powerManagement.enable = true;
 
-    # PRIME offload mode - AMD primary, NVIDIA on-demand
-    # Use nvidia-offload or prime-run to run apps on NVIDIA GPU
-    # Offload mode: AMD handles display, NVIDIA available on-demand
     prime = {
       offload = {
         enable = true;
@@ -53,9 +44,8 @@
     };
   };
 
-  # System packages for graphics diagnostics
   environment.systemPackages = with pkgs; [
-    libva-utils # vainfo for testing VAAPI drivers
+    libva-utils
   ];
 
 }

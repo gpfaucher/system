@@ -15,13 +15,11 @@
       url = "github:ghostty-org/ghostty";
     };
 
-    # Agenix - Age-encrypted secrets for NixOS
     agenix = {
       url = "github:ryantm/agenix";
       inputs.nixpkgs.follows = "nixpkgs";
     };
 
-    # Zen Browser - Privacy-focused Firefox-based browser
     zen-browser = {
       url = "github:0xc000022070/zen-browser-flake";
       inputs.nixpkgs.follows = "nixpkgs";
@@ -104,7 +102,6 @@
         ];
       };
 
-      # Formatter configuration using treefmt-nix
       formatter.${system} = treefmt-nix.lib.mkWrapper pkgs {
         projectRootFile = "flake.nix";
         programs = {
@@ -114,7 +111,6 @@
         };
       };
 
-      # Development shell with pre-commit hooks
       devShells.${system}.default =
         let
           pre-commit = pre-commit-hooks.lib.${system}.run {

@@ -34,7 +34,6 @@
       }
     ];
 
-    # Custom keybindings matching Hyprland muscle memory
     hotkeys.commands = {
       "launch-terminal" = {
         key = "Meta+Return";
@@ -92,7 +91,6 @@
       };
     };
 
-    # Ayu Dark colors via configFile (for values Stylix can't set)
     configFile = {
       "kdeglobals"."General"."fixed" = "JetBrainsMono Nerd Font,14,-1,5,400,0,0,0,0,0,0,0,0,0,0,1";
     };

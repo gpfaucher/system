@@ -9,26 +9,22 @@ let
   c = config.lib.stylix.colors;
 in
 {
-  # Systemd-boot configuration
   boot.loader.systemd-boot = {
     enable = true;
     configurationLimit = 10;
-    editor = false; # Disable editor for security and faster boot
-    consoleMode = "auto"; # Auto-detect best console mode
+    editor = false; # Security
+    consoleMode = "auto";
   };
 
   boot.loader.efi.canTouchEfiVariables = true;
 
-  # Timeout to allow boot menu selection for dual-boot
   boot.loader.timeout = 5;
 
-  # Initrd optimization - use systemd in initrd for faster boot
   boot.initrd = {
-    verbose = false; # Less logging for faster boot
-    systemd.enable = true; # Systemd-based initrd (faster than scripted)
+    verbose = false;
+    systemd.enable = true;
   };
 
-  # Kernel parameters for faster/quieter boot
   boot.kernelParams = [
     "video=efifb:nobgrt" # Hide firmware logo
     "quiet" # Reduce kernel messages
@@ -38,13 +34,10 @@ in
     "consoleblank=0" # Disable VT console blanking (prevents grey screen on Wayland)
   ];
 
-  # Console log level
-  boot.consoleLogLevel = 3; # Only show errors and warnings
+  boot.consoleLogLevel = 3;
 
-  # Faster entropy generation for crypto operations
   services.haveged.enable = true;
 
-  # HiDPI console configuration
   console = {
     earlySetup = true;
     font = "ter-132n";

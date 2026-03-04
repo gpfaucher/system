@@ -6,25 +6,21 @@
 }:
 
 {
-  # ── Btrfs maintenance ──
   services.btrfs.autoScrub = {
     enable = true;
     interval = "monthly";
     fileSystems = [ "/" ];
   };
 
-  # ── Journal size limiting ──
   services.journald.extraConfig = ''
     SystemMaxUse=500M
     RuntimeMaxUse=100M
     MaxFileSec=7day
   '';
 
-  # ── SMART disk monitoring ──
   services.smartd = {
     enable = true;
     autodetect = true;
-    # Notify via wall message and log
     # -W diff,info,crit: warn if temp changes 4C, info at 55C, critical at 70C
     # NVMe drives run 40-60C normally; 70C+ is concerning
     defaults.monitored = "-a -o on -S on -n standby,q -W 4,55,70";
@@ -38,7 +34,6 @@
     smartmontools
   ];
 
-  # ── Nix store disk-pressure GC ──
   # Trigger GC when free space drops below 1GB, free up to 5GB
   nix.settings = {
     min-free = 1073741824; # 1 GiB

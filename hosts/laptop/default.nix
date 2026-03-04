@@ -11,7 +11,6 @@
     ./hardware.nix
     ../../modules/system/common.nix
     ../../modules/system/bootloader.nix
-    # GPU: offload mode (AMD primary, NVIDIA on-demand)
     ../../modules/system/graphics.nix
     ../../modules/system/networking.nix
     ../../modules/system/audio.nix
@@ -27,10 +26,8 @@
     ../../modules/system/logitech.nix
   ];
 
-  # Hostname
   networking.hostName = "laptop";
 
-  # Laptop-specific: extra binary cache for Ghostty
   nix.settings = {
     substituters = [
       "https://ghostty.cachix.org"
@@ -40,20 +37,17 @@
     ];
   };
 
-  # Laptop-specific: NetworkManager group
   users.users.gabriel.extraGroups = [ "networkmanager" ];
 
-  # v4l2loopback: virtual camera for OBS Studio background effects in Teams/Zoom
+  # Virtual camera for OBS background effects in Teams/Zoomw
   boot.extraModulePackages = with config.boot.kernelPackages; [ v4l2loopback ];
   boot.kernelModules = [ "v4l2loopback" ];
   boot.extraModprobeConfig = ''
     options v4l2loopback devices=1 video_nr=10 card_label="OBS Virtual Camera" exclusive_caps=1
   '';
 
-  # X server (needed for XWayland + GPU drivers)
   services.xserver.enable = true;
 
-  # Steam gaming platform
   programs.steam = {
     enable = true;
     remotePlay.openFirewall = true;
@@ -63,9 +57,8 @@
 
   programs.gamescope.enable = true;
 
-  # Gamemode for performance optimization while gaming
   programs.gamemode.enable = true;
 
-  # NixOS state version - do not change after initial install
+  # Do not change after initial install
   system.stateVersion = "24.11";
 }

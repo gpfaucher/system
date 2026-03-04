@@ -6,7 +6,6 @@
 }:
 
 let
-  # PRIME offload environment for NVIDIA GPU
   primeOffload = ''
     export __NV_PRIME_RENDER_OFFLOAD=1
     export __NV_PRIME_RENDER_OFFLOAD_PROVIDER=NVIDIA-G0
@@ -15,7 +14,6 @@ let
     export VK_ICD_FILENAMES=/run/opengl-driver/share/vulkan/icd.d/nvidia_icd.x86_64.json
   '';
 
-  # Steam wrapper for VR (runs on NVIDIA GPU)
   steam-vr = pkgs.writeShellScriptBin "steam-vr" ''
     ${primeOffload}
     exec steam "$@"
@@ -27,7 +25,6 @@ let
     exec "$@"
   '';
 
-  # ALVR wrapper that ensures ADB path is set and uses NVENC
   alvr-wrapped = pkgs.writeShellScriptBin "alvr" ''
     # Copy ADB binary where ALVR expects it (symlinks may not work)
     mkdir -p "$HOME/.config/alvr/tools/platform-tools"
@@ -51,10 +48,8 @@ let
   '';
 in
 {
-  # Add user to adbusers group
   users.users.gabriel.extraGroups = [ "adbusers" ];
 
-  # Udev rules for Meta Quest devices
   services.udev.extraRules = ''
     # Meta Quest 3S / Quest 3 / Quest 2 / Quest Pro
     SUBSYSTEM=="usb", ATTR{idVendor}=="2833", MODE="0666", GROUP="adbusers"
@@ -62,7 +57,6 @@ in
     SUBSYSTEM=="usb", ATTR{idVendor}=="2d40", MODE="0666", GROUP="adbusers"
   '';
 
-  # ALVR and VR tools
   environment.systemPackages = [
     alvr-wrapped
     steam-vr
@@ -71,17 +65,14 @@ in
     pkgs.scrcpy
   ];
 
-  # Force ALVR to use system ADB instead of bundled version
   environment.sessionVariables = {
     ALVR_ADB_PATH = "${pkgs.android-tools}/bin/adb";
   };
 
-  # Open firewall ports for ALVR
   networking.firewall = {
     allowedTCPPorts = [ 9943 9944 ];
     allowedUDPPorts = [ 9943 9944 ];
   };
 
-  # Ensure fuse is available (ALVR may need it)
   boot.kernelModules = [ "fuse" ];
 }

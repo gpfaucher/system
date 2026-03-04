@@ -21,7 +21,6 @@
     ./tmux.nix
   ];
 
-  # Blue light filter - adjusts color temperature based on time of day
   services.gammastep = {
     enable = true;
     provider = "manual";
@@ -33,25 +32,22 @@
     };
     settings = {
       general = {
-        fade = 1; # Smooth transition between day/night
+        fade = 1;
         adjustment-method = "wayland";
       };
     };
   };
 
-  # Qt apps: KDE manages its own Qt theming
   qt = {
     enable = true;
     platformTheme.name = "kde";
   };
 
-  # Home Manager configuration
   home = {
     username = username;
     homeDirectory = "/home/${username}";
     stateVersion = "24.11";
 
-    # Default editor: nvim for terminal contexts, zed for visual
     sessionVariables = {
       EDITOR = "nvim";
       VISUAL = lib.mkForce "zeditor --wait";
@@ -65,10 +61,8 @@
     };
   };
 
-  # Enable Home Manager
   programs.home-manager.enable = true;
 
-  # Git configuration
   programs.git = {
     enable = true;
     settings = {
@@ -80,7 +74,6 @@
     };
   };
 
-  # Delta - git diff viewer
   programs.delta = {
     enable = true;
     enableGitIntegration = true;
@@ -91,7 +84,6 @@
     };
   };
 
-  # ── mpv media player ──
   programs.mpv = {
     enable = true;
     config = {
@@ -103,7 +95,6 @@
     };
   };
 
-  # ── zathura PDF/ebook viewer (vim keys) ──
   programs.zathura = {
     enable = true;
     options = {
@@ -113,22 +104,16 @@
     };
   };
 
-  # Additional packages
   home.packages = with pkgs; [
-    # JetBrains (installed via Toolbox for marketplace plugin support)
     jetbrains-toolbox
-    # zoom-us and teams-for-linux moved to Flatpak (modules/system/flatpak.nix)
     libreoffice-fresh # Office suite
     warp-terminal
 
-    # Browsers
     firefox
     google-chrome
     inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight
     neovide
 
-    # Development tools
-    # nixd replaced by nil in nvim/default.nix extraPackages
     claude-code
     (inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
       nativeBuildInputs = map (
@@ -156,95 +141,75 @@
     awscli2
     gh
     gnumake
-    # gcc and tree-sitter moved to nvim/default.nix extraPackages
     nodejs_22
-    bun # Fast JavaScript runtime and package manager (required by opencode)
-    # fd and ripgrep moved to nvim/default.nix extraPackages
-    docker-compose # Docker Compose
-    python312 # Python runtime for LSP
-    # tmux moved to programs.tmux (modules/home/tmux.nix)
+    bun # required by opencode
+    docker-compose
+    python312
 
-    # Modern CLI tools
-    eza # Modern ls replacement
-    zoxide # Smart cd with 'z' command
-    atuin # Database-backed shell history
-    bat # Better cat with syntax highlighting
-    fzf # Fuzzy finder
-    jq # JSON processor
-    yq-go # YAML processor
-    tldr # Simplified man pages
-    duf # Better df
-    dust # Better du
-    procs # Better ps
-    bottom # btm - better top/htop
-    btop # Resource monitor with GPU support
+    eza
+    zoxide
+    atuin
+    bat
+    fzf
+    jq
+    yq-go
+    tldr
+    duf
+    dust
+    procs
+    bottom
+    btop
 
-    # Debuggers
     gdb
     lldb
 
-    # Kubernetes tools
-    kubectl # Kubernetes CLI
-    k9s # Kubernetes TUI
-    kubernetes-helm # Kubernetes package manager
+    kubectl
+    k9s
+    kubernetes-helm
 
-    # Database clients
-    postgresql # psql client
-    mariadb # mysql client
-    redis # redis-cli
-    mongosh # MongoDB shell
+    postgresql
+    mariadb
+    redis
+    mongosh
 
-    # Cloud tools
-    google-cloud-sdk # gcloud
+    google-cloud-sdk
     # azure-cli # az -- disabled: broken in nixpkgs (missing azure.mgmt.web.v2024_11_01)
 
-    # Formatters/Linters
     nodePackages.prettier
-    black # Python formatter
-    ruff # Python linter
-    shellcheck # Shell script linter
-    shfmt # Shell script formatter
+    black
+    ruff
+    shellcheck
+    shfmt
 
-    # System utilities
     unzip
     wget
     curl
     htop
     tree
-    psmisc # killall command
+    psmisc
 
-    # Fonts
     nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only
     noto-fonts
 
-    # ── Desktop apps that were missing ──
-    # Media / documents
-    imv # Wayland-native image viewer
-    yt-dlp # Video downloader (mpv backend)
+    imv
+    yt-dlp
 
-    # Screen recording
-    wf-recorder # Wayland screen recorder (lightweight)
-    obs-studio # Full-featured recording/streaming
+    wf-recorder
+    obs-studio
 
-    # USB automount
-    udiskie # Automount removable media with notifications
+    udiskie
 
-    # Trash management (safe delete)
-    trashy # CLI trash (trash-put, trash-list, trash-restore)
+    trashy
 
-    # Archive management
-    ouch # Universal archive tool (compress/decompress)
+    ouch
 
-    # Audio tools (moved from system level)
-    easyeffects # System-wide EQ
-    helvum # PipeWire patchbay for debugging
+    easyeffects
+    helvum
 
-    # Clipboard image support
     wl-clipboard
   ];
 
-  # ── USB automount service ──
   services.udiskie = {
     enable = true;
     automount = true;
@@ -252,7 +217,6 @@
     tray = "auto";
   };
 
-  # ── XDG directories and MIME defaults ──
   xdg = {
     enable = true;
 
@@ -324,7 +288,6 @@
     };
   };
 
-  # AWS configuration
   # Credentials are encrypted with agenix and decrypted directly to ~/.aws/credentials
   home.file.".aws/config".text = ''
     [default]
@@ -332,7 +295,6 @@
     output = json
   '';
 
-  # Ensure .aws directory exists with proper permissions
   home.activation.awsDir = lib.hm.dag.entryBefore [ "writeBoundary" ] ''
     $DRY_RUN_CMD mkdir -p $HOME/.aws
     $DRY_RUN_CMD chmod 700 $HOME/.aws
@@ -349,41 +311,33 @@
 
         "media.webrtc.camera.allow-pipewire" = true;
 
-        # Hardware video decode via VA-API (AMD radeonsi)
+        # VA-API hardware video decode
         "media.ffmpeg.vaapi.enabled" = true;
 
-        # GPU-accelerated compositing and WebRender
         "gfx.webrender.all" = true;
         "layers.gpu-process.enabled" = true;
 
-        # Faster page loads: more concurrent connections
         "network.http.max-persistent-connections-per-server" = 10;
         "network.http.max-connections" = 1800;
 
-        # Faster DNS
         "network.dnsCacheEntries" = 4000;
         "network.dnsCacheExpiration" = 3600;
 
-        # Disable heavy telemetry and reporting
         "toolkit.telemetry.enabled" = false;
         "toolkit.telemetry.unified" = false;
         "datareporting.healthreport.uploadEnabled" = false;
         "browser.ping-centre.telemetry" = false;
 
-        # Disable Pocket
         "extensions.pocket.enabled" = false;
 
-        # Skip slow shutdown steps
         "browser.sessionstore.resume_from_crash" = true;
         "toolkit.winRegisterApplicationRestart" = false;
 
-        # Reduce disk writes (session store interval: 5 min instead of 15 sec)
+        # Session store interval: 5 min instead of default 15 sec
         "browser.sessionstore.interval" = 300000;
 
-        # Compact UI (saves vertical space on HiDPI)
         "browser.compactmode.show" = true;
       };
-      # Ayu Dark theme for Firefox UI
       userChrome = ''
         /* Ayu Dark Theme */
         :root {
@@ -417,7 +371,6 @@
           background-color: var(--bg0) !important;
         }
       '';
-      # Ayu Dark theme for about: pages
       userContent = ''
         /* Style about: pages */
         @-moz-document url-prefix(about:) {
@@ -427,19 +380,17 @@
           }
         }
       '';
-      # Enable userChrome.css
       extraConfig = ''
         user_pref("toolkit.legacyUserProfileCustomizations.stylesheets", true);
       '';
     };
   };
 
-  # Chrome: enable hardware video decode via VA-API
   home.file.".config/chrome-flags.conf".text = ''
     --enable-features=VaapiVideoDecodeLinuxGL
   '';
 
-  # Greasemonkey/Tampermonkey userscript for Teams - install in browser
+  # Teams always-available userscript — install in browser with Tampermonkey
   home.file.".local/share/userscripts/teams-always-available.user.js" = {
     text = ''
       // ==UserScript==

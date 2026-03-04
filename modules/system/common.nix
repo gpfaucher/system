@@ -7,7 +7,6 @@
 }:
 
 {
-  # ── Nix daemon settings ──
   nix = {
     settings = {
       experimental-features = [
@@ -16,21 +15,16 @@
       ];
       auto-optimise-store = true;
 
-      # Parallel build optimization
       max-jobs = "auto";
       cores = 0;
 
-      # Download optimization
       http-connections = 25;
 
-      # Build caching optimization
       keep-outputs = true;
       keep-derivations = true;
 
-      # Tarball caching
       tarball-ttl = 300;
 
-      # Binary caches (shared across all hosts)
       substituters = [
         "https://cache.nixos.org"
         "https://nix-community.cachix.org"
@@ -47,7 +41,6 @@
     };
   };
 
-  # ── Fonts ──
   fonts = {
     packages = with pkgs; [
       nerd-fonts.jetbrains-mono
@@ -55,7 +48,6 @@
     fontconfig.enable = true;
   };
 
-  # ── User ──
   users.users.${username} = {
     isNormalUser = true;
     home = "/home/${username}";

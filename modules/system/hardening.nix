@@ -6,20 +6,6 @@
 }:
 
 {
-  # ============================================================================
-  # SECURITY HARDENING MODULE
-  # ============================================================================
-  # This module implements comprehensive security hardening for NixOS systems.
-  # It covers kernel parameters, sudo configuration, AppArmor, audit logging,
-  # and PAM settings following security best practices.
-  # ============================================================================
-
-  # ----------------------------------------------------------------------------
-  # KERNEL HARDENING
-  # ----------------------------------------------------------------------------
-  # Kernel parameters to restrict access to sensitive information and harden
-  # the system against various attack vectors.
-
   boot.kernel.sysctl = {
     # Kernel pointer protection - hide kernel pointers from unprivileged users
     # 0 = no restriction, 1 = hide from unprivileged, 2 = always hide
@@ -46,10 +32,6 @@
     # Disable kexec to prevent kernel replacement
     "kernel.kexec_load_disabled" = 1;
 
-    # ----------------------------------------------------------------------------
-    # NETWORK HARDENING
-    # ----------------------------------------------------------------------------
-
     # Enable reverse path filtering (helps prevent IP spoofing)
     # 0 = disabled, 1 = strict mode, 2 = loose mode
     "net.ipv4.conf.all.rp_filter" = 1;
@@ -67,11 +49,6 @@
     "net.ipv6.conf.all.accept_redirects" = 0;
     "net.ipv6.conf.default.accept_redirects" = 0;
   };
-
-  # ----------------------------------------------------------------------------
-  # SUDO HARDENING
-  # ----------------------------------------------------------------------------
-  # Enhanced sudo security configuration to reduce privilege escalation risks.
 
   security.sudo = {
     # Only allow sudo execution for users in the wheel group
@@ -96,22 +73,12 @@
     '';
   };
 
-  # ----------------------------------------------------------------------------
-  # APPARMOR MANDATORY ACCESS CONTROL
-  # ----------------------------------------------------------------------------
-  # AppArmor provides mandatory access control to confine programs.
-
   security.apparmor = {
     enable = true;
 
     # Kills processes that should be confined but aren't
     killUnconfinedConfinables = true;
   };
-
-  # ----------------------------------------------------------------------------
-  # AUDIT LOGGING
-  # ----------------------------------------------------------------------------
-  # Comprehensive audit logging to track security-relevant events.
 
   security.auditd.enable = true;
   security.audit = {
@@ -129,11 +96,6 @@
   # restarts this service on switch (ignoring restartIfChanged), so treat
   # auditctl's exit code 1 as success to avoid blocking the switch.
   systemd.services.audit-rules-nixos.serviceConfig.SuccessExitStatus = [ 1 ];
-
-  # ----------------------------------------------------------------------------
-  # PAM HARDENING AND LIMITS
-  # ----------------------------------------------------------------------------
-  # Configure PAM (Pluggable Authentication Modules) resource limits.
 
   security.pam.loginLimits = [
     # File descriptor limits (prevents DoS via file descriptor exhaustion)

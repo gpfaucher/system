@@ -1,49 +1,36 @@
 { pkgs, ... }:
 
 {
-  # Fish shell
   programs.fish = {
     enable = true;
 
     interactiveShellInit = ''
-      # Vi keybindings
       set -g fish_key_bindings fish_vi_key_bindings
-
-      # Disable greeting
       set fish_greeting
 
-      # Add local bin to PATH
       fish_add_path -g ~/.local/bin
-
-      # npm global packages
       fish_add_path -g ~/.npm-global/bin
 
-      # Go
       set -gx GOPATH ~/.local/share/go
       fish_add_path -g $GOPATH/bin
 
-      # Initialize zoxide (smart cd)
       zoxide init fish | source
-
-      # Initialize atuin (shell history)
       atuin init fish | source
     '';
 
     shellAbbrs = {
-      # Git
       ga = "git add";
       gc = "git commit";
       gd = "git diff";
       gs = "git status";
       lg = "lazygit";
 
-      # Modern CLI replacements
       ls = "eza";
       ll = "eza -l";
       la = "eza -la";
       lt = "eza --tree";
       cat = "bat";
-      cd = "z"; # zoxide
+      cd = "z";
     };
 
     functions = {
@@ -106,7 +93,6 @@
     };
   };
 
-  # Starship prompt
   programs.starship = {
     enable = true;
     enableFishIntegration = true;
@@ -160,14 +146,12 @@
     };
   };
 
-  # Direnv with nix-direnv
   programs.direnv = {
     enable = true;
     nix-direnv.enable = true;
     config.global.hide_env_diff = true;
   };
 
-  # Shell utilities (managed in default.nix, these are shell-specific)
   home.packages = with pkgs; [
     yazi
     lazygit

@@ -6,7 +6,6 @@
 }:
 
 {
-  # NetworkManager for WiFi + wired management
   networking.networkmanager = {
     enable = true;
     wifi.powersave = false;
@@ -17,9 +16,6 @@
   # Disable it since we don't use cellular modems.
   systemd.services.ModemManager.enable = false;
 
-  # Firewall configuration
-  # Dev servers bind to localhost by default - no need to open ports for them.
-  # Only open ports that genuinely need incoming connections from other devices.
   networking.firewall = {
     enable = true;
     allowedTCPPorts = [

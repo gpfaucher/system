@@ -9,20 +9,17 @@ let
   rnnoise = pkgs.rnnoise-plugin;
 in
 {
-  # Disable PulseAudio (using PipeWire instead)
   services.pulseaudio.enable = false;
 
-  # Enable rtkit for realtime scheduling (required for low-latency audio)
+  # Required for low-latency audio
   security.rtkit.enable = true;
 
-  # PipeWire audio server
   services.pipewire = {
     enable = true;
     alsa.enable = true;
     alsa.support32Bit = true;
     pulse.enable = true;
 
-    # Audio quality settings
     extraConfig.pipewire = {
       "10-higher-quality" = {
         "context.properties" = {
@@ -78,7 +75,6 @@ in
     wireplumber = {
       enable = true;
       extraConfig = {
-        # Bluetooth codec and role configuration
         "10-bluez" = {
           "monitor.bluez.properties" = {
             "bluez5.enable-sbc-xq" = true;
@@ -194,13 +190,11 @@ in
     };
   };
 
-  # Audio tools (GUI tools like easyeffects/helvum are in home-manager)
   environment.systemPackages = with pkgs; [
     pipewire
-    pulseaudio # pactl utilities
+    pulseaudio
   ];
 
-  # Bluetooth audio settings
   hardware.bluetooth.settings = {
     General = {
       Enable = "Source,Sink,Media,Socket";
