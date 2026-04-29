@@ -71,35 +71,42 @@
         inherit system;
         config.allowUnfree = true;
       };
+
+      mkHost =
+        hostPath:
+        nixpkgs.lib.nixosSystem {
+          specialArgs = { inherit inputs username self; };
+          modules = [
+            {
+              nixpkgs.hostPlatform = system;
+              nixpkgs.config.allowUnfree = true;
+            }
+            stylix.nixosModules.stylix
+            agenix.nixosModules.default
+            nix-flatpak.nixosModules.nix-flatpak
+            hostPath
+            ./secrets
+            home-manager.nixosModules.home-manager
+            {
+              home-manager = {
+                useGlobalPkgs = true;
+                useUserPackages = true;
+                backupFileExtension = "hm-backup";
+                extraSpecialArgs = { inherit inputs username self; };
+                sharedModules = [
+                  inputs.stylix.homeModules.stylix
+                  inputs.plasma-manager.homeModules.plasma-manager
+                ];
+                users.${username} = import ./modules/home;
+              };
+            }
+          ];
+        };
     in
     {
-      nixosConfigurations.laptop = nixpkgs.lib.nixosSystem {
-        specialArgs = { inherit inputs username self; };
-        modules = [
-          {
-            nixpkgs.hostPlatform = system;
-            nixpkgs.config.allowUnfree = true;
-          }
-          stylix.nixosModules.stylix
-          agenix.nixosModules.default
-          nix-flatpak.nixosModules.nix-flatpak
-          ./hosts/laptop
-          ./secrets
-          home-manager.nixosModules.home-manager
-          {
-            home-manager = {
-              useGlobalPkgs = true;
-              useUserPackages = true;
-              backupFileExtension = "hm-backup";
-              extraSpecialArgs = { inherit inputs username self; };
-              sharedModules = [
-                inputs.stylix.homeModules.stylix
-                inputs.plasma-manager.homeModules.plasma-manager
-              ];
-              users.${username} = import ./modules/home;
-            };
-          }
-        ];
+      nixosConfigurations = {
+        laptop = mkHost ./hosts/laptop;
+        workstation = mkHost ./hosts/workstation;
       };
 
       formatter.${system} = treefmt-nix.lib.mkWrapper pkgs {
