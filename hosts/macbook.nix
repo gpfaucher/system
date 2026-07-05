@@ -3,130 +3,26 @@
   pkgs,
   lib,
   inputs,
-  ...
+  ...,
+  username,
 }:
 
 let
-  username = "gabrielfaucher";
+  currentUserName = username;
 in
 {
   system.stateVersion = 7;
-  system.primaryUser = "${username}";
+  system.primaryUser = currentUserName;
 
   # 1. User Setup (Crucial for macOS paths)
-  users.users."${username}" = {
-    home = "/Users/gabrielfaucher";
+  users.users."${currentUserName}" = {
+    home = "/Users/${currentUserName}";
     isHidden = false;
     shell = pkgs.fish;
     ignoreShellProgramCheck = true;
   };
 
   programs.fish.enable = true;
-
-  config.fish = {
-    enable = true;
-    interactiveShellInit = ''
-      set -g fish_key_bindings fish_vi_key_bindings
-      set fish_greeting
-
-      fish_add_path -g ~/.local/bin
-      fish_add_path -g ~/.npm-global/bin
-      fish_add_path -g /opt/homebrew/bin  # Homebrew on Apple Silicon
-
-      set -gx GOPATH ~/.local/share/go
-      fish_add_path -g $GOPATH/bin
-
-      zoxide init fish | source
-      atuin init fish | source
-    '';
-    shellAbbrs = {
-      ga = "git add";
-      gc = "git commit";
-      gd = "git diff";
-      gs = "git status";
-      lg = "lazygit";
-
-      ls = "eza";
-      ll = "eza -l";
-      la = "eza -la";
-      lt = "eza --tree";
-      cat = "bat";
-      cd = "z";
-    };
-  };
-
-  programs.direnv = {
-    enable = true;
-    nix-direnv.enable = true;
-    config.global.hide_env_diff = true;
-  };
-
-  programs.starship = {
-    enable = true;
-    enableFishIntegration = true;
-
-    settings = {
-      add_newline = false;
-
-      format = "$username$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$python$character";
-
-      directory = {
-        style = "blue";
-      };
-
-      character = {
-        success_symbol = "[->](purple)";
-        error_symbol = "[->](red)";
-        vimcmd_symbol = "[<-](green)";
-      };
-
-      git_branch = {
-        format = "[$branch]($style)";
-        style = "bright-black";
-      };
-
-      git_status = {
-        format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)";
-        style = "cyan";
-        conflicted = "";
-        untracked = "";
-        modified = "";
-        staged = "";
-        renamed = "";
-        deleted = "";
-        stashed = "=";
-      };
-
-      git_state = {
-        format = "\\([$state( $progress_current/$progress_total)]($style)\) ";
-        style = "bright-black";
-      };
-
-      cmd_duration = {
-        format = "[$duration]($style) ";
-        style = "yellow";
-      };
-
-      python = {
-        format = "[$virtualenv]($style) ";
-        style = "bright-black";
-      };
-    };
-  };
-
-  # 2. Network & DNS
-  home = {
-    packages = with pkgs;
-      [
-        yazi
-        lazygit
-      ];
-  };
-
-  networking.dns = [
-    "8.8.8.8"
-    "1.1.1.1"
-  ];
 
   # 4. Declarative Homebrew (Installs Outlook/Citrix as Apps)
   homebrew = {
@@ -151,8 +47,172 @@ in
     ];
   };
 
-  system.defaults = {
+  config.fish.interactiveShellInit = ''
+    set -g fish_key_bindings fish_vi_key_bindings
+    set fish_greeting
+
+    fish_add_path -g ~/.local/bin
+    fish_add_path -g ~/.npm-global/bin
+    fish_add_path -g /opt/homebrew/bin  # Homebrew on Apple Silicon
+
+    set -gx GOPATH ~/.local/share/go
+    fish_add_path -g $GOPATH/bin
+
+    zoxide init fish | source
+    atuin init fish | source
+  '';
+
+  config.fish.shellAbbrs = {
+    ga = "git add";
+    gc = "git commit";
+    gd = "git diff";
+    gs = "git status";
+    lg = "lazygit";
+
+    ls = "eza";
+    ll = "eza -l";
+    la = "eza -la";
+    lt = "eza --tree";
+    cat = "bat";
+    cd = "z";
+  };
+
+  config.fish.functions = {
+    # Yazi shell wrapper (cd on exit)
+    y = ''
+      set tmp (mktemp -t "yazi-cwd.XXXXXX")
+      yazi $argv --cwd-file="$tmp"
+      if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
+        builtin cd -- "$cwd"
+      end
+      rm -f -- "$tmp"
+    '';
+
+    # Venv switcher for monorepos
+    venv = ''
+      # Find project root (git root or current dir)
+      set -l root (git rev-parse --show-toplevel 2>/dev/null; or echo $PWD)
+
+      # Find all venvs in project
+      set -l venvs (find $root -maxdepth 4 -type f -path "*/.venv/bin/activate.fish" -o -path "*/venv/bin/activate.fish" 2>/dev/null)
+
+      if test (count $argv) -eq 0
+        # List available venvs
+        if test (count $venvs) -eq 0
+          echo "No venvs found in $root"
+          return 1
+        end
+        echo "Available venvs:"
+        for v in $venvs
+          set -l name (string replace "$root/" "" (dirname (dirname (dirname $v))))
+          set -l marker ""
+          if set -q VIRTUAL_ENV; and test (dirname (dirname $v)) = "$VIRTUAL_ENV"
+            set marker " (active)"
+          end
+          echo "  $name$marker"
+        end
+        return 0
+      end
+
+      if test "$argv[1]" = "off"
+        if set -q VIRTUAL_ENV
+          deactivate
+          echo "Deactivated venv"
+        end
+        return 0
+      end
+
+      # Find matching venv
+      for v in $venvs
+        if string match -q "*$argv[1]*" $v
+          source $v
+          echo "Activated: $VIRTUAL_ENV"
+          return 0
+        end
+      end
+
+      echo "No venv matching '$argv[1]' found"
+      return 1
+    '';
+  };
+
+  config.programs.direnv = {
+    enable = true;
+    nix-direnv.enable = true;
+    config.global.hide_env_diff = true;
+  };
+
+  config.home.packages = with pkgs; [
+    yazi
+    lazygit
+  ];
+
+  config.programs.starship.settings.format = "${currentUserName}$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$python$character";
+
+  config.programs.starship.settings.add_newline = false;
+
+  config.programs.starship.settings.directory = {
+    style = "blue";
+  };
+
+  config.programs.starship.settings.character = {
+    success_symbol = "[->](purple)";
+    error_symbol = "[->](red)";
+    vimcmd_symbol = "[<-](green)";
+  };
+
+  config.programs.starship.settings.git_branch = {
+    format = "[$branch]($style)";
+    style = "bright-black";
+  };
+
+  config.programs.starship.settings.git_status = {
+    format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)";
+    style = "cyan";
+    conflicted = "";
+    untracked = "";
+    modified = "";
+    staged = "";
+    renamed = "";
+    deleted = "";
+    stashed = "=";
+  };
+
+  config.programs.starship.settings.git_state = {
+    format = "\\([$state( $progress_current/$progress_total)]($style)\\) ";
+    style = "bright-black";
+  };
+
+  config.programs.starship.settings.cmd_duration = {
+    format = "[$duration]($style) ";
+    style = "yellow";
+  };
+
+  config.programs.starship.settings.python = {
+    format = "[$virtualenv]($style) ";
+    style = "bright-black";
+  };
+
+  config.programs.starship.enableFishIntegration = true;
+
+  config.programs.starship.enable = true;
+
+  config.networking.dns = [
+    "8.8.8.8"
+    "1.1.1.1"
+  ];
+
+  config.system.defaults = {
     dock.autohide = false;
     finder.AppleShowAllExtensions = true;
   };
-}
+
+  home = {
+    homeDirectory = "/Users/${currentUserName}";
+    stateVersion = "23.05";
+
+    packages = with pkgs; [
+      yazi
+      lazygit
+    ];
+  };

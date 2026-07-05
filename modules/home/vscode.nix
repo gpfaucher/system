@@ -1,5 +1,5 @@
 { pkgs, ... }:
 
 {
-  home.packages = [ pkgs.vscode-fhs ];
+  home.packages = [ pkgs.vscodium ];
 }

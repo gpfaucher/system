@@ -1,35 +1,69 @@
-{ pkgs, lib, ... }:
+{ pkgs, lib, config, ... }:
 {
-  home = {
-    username = "gabriel";
-    homeDirectory = "/Users/gabrielfaucher";
-    stateVersion = "2305";
- 
-    # Enable Fish Shell for this user
-    sessionPath = [ "$HOME/.local/bin" ];
-  };
+  imports = [
+    ./home/nvim
+    ./home/terminal.nix
+    ./home/tmux.nix
+    ./home/ssh.nix
+    ./home/zed.nix
+    ./home/vscode.nix ];
 
-  programs.fish = {
-    enable = true;
-    shellAbbrs = {
-      ll = "ls -la";
-    };
+  home = {
+    homeDirectory = "/Users/gabrielfaucher";
+    stateVersion = "23.05";
   };
 
   home.packages = with pkgs; [
-    # Your standard CLI tools (these run natively on M4)
-    git 
-    neovim 
-    ripgrep 
-    fd 
-    tmux 
-    zoxide 
-    bat 
-    bottom 
+    # CLI tools
+    git
+    eza
+    fzf
+    jq
+    zoxide
+    atuin
+    yq-go
+    tldr
+    duf
+    dust
+    procs
+    btop
+
+    # Cloud & container tooling
+    gh
+    kubectl
+    k9s
+    kubernetes-helm
+    awscli2
+    google-cloud-sdk
+
+    # Databases
+    postgresql
+    redis
+
+    # Languages & runtimes
+    nodejs_22
+    bun
+    python3
+    go
+
+    # Dev tools
+    shellcheck
+    shfmt
+    black
+    ruff
+    prettier
+
+    # Utilities
+    unzip
+    wget
+    curl
+    htop
+    tree
+    # neovide # TODO: build fails on Darwin (needs OpenGL)
+    yt-dlp
+
+    # Fonts
+    nerd-fonts.jetbrains-mono
+    nerd-fonts.symbols-only
   ];
-  
-  # Ensure Nix stuff is on path for user
-  home.sessionVariables = {
-    PATH = "$HOME/.nix-profile/bin:$PATH";
-  };
 }

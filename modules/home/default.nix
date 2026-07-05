@@ -105,51 +105,19 @@
   };
 
   home.packages = with pkgs; [
-    jetbrains-toolbox
-    libreoffice-fresh # Office suite
-    warp-terminal
 
-    firefox
-    google-chrome
-    inputs.zen-browser.packages.${pkgs.stdenv.hostPlatform.system}.twilight
-    neovide
 
-    claude-code
-    (inputs.opencode.packages.${pkgs.stdenv.hostPlatform.system}.default.overrideAttrs (old: {
-      nativeBuildInputs = map (
-        p:
-        if (p.pname or "") == "bun" then
-          p.overrideAttrs (bunOld: rec {
-            version = "1.3.10";
-            src = fetchurl {
-              url = "https://github.com/oven-sh/bun/releases/download/bun-v${version}/bun-linux-x64.zip";
-              hash = "sha256-9XvAGH45Yj3nFro6OJ/aVIay175xMamAulTce3M9Lgg=";
-            };
-          })
-        else
-          p
-      ) old.nativeBuildInputs;
-      preBuild =
-        ''
-          mkdir -p .github
-          touch .github/TEAM_MEMBERS
-        ''
-        + (old.preBuild or "");
-    }))
-    opentofu
-    pulumi-bin
+
     awscli2
     gh
-    gnumake
     nodejs_22
-    bun # required by opencode
-    docker-compose
-    python312
-
+    
+    
     eza
+
+    
     zoxide
     atuin
-    bat
     fzf
     jq
     yq-go
@@ -157,26 +125,20 @@
     duf
     dust
     procs
-    bottom
     btop
-
-    gdb
-    lldb
-
-    kubectl
-    k9s
-    kubernetes-helm
-
+    
+    
+    
+    
     postgresql
-    mariadb
     redis
-    mongosh
-
+    
     google-cloud-sdk
-    # azure-cli # az -- disabled: broken in nixpkgs (missing azure.mgmt.web.v2024_11_01)
 
-    nodePackages.prettier
+    # azure-cli # az -- disabled: broken in nixpkgs (missing azure.mgmt.web.v2024_11_01)
+    
     black
+
     ruff
     shellcheck
     shfmt
@@ -190,27 +152,16 @@
 
     nerd-fonts.jetbrains-mono
     nerd-fonts.symbols-only
-    noto-fonts
 
-    imv
     yt-dlp
 
-    wf-recorder
-    obs-studio
 
-    udiskie
 
-    trashy
 
-    ouch
 
-    easyeffects
-    helvum
 
-    wl-clipboard
   ];
 
-  services.udiskie = {
     enable = true;
     automount = true;
     notify = true;
@@ -242,13 +193,6 @@
         "x-scheme-handler/unknown" = "firefox.desktop";
 
         # Images
-        "image/png" = "imv-dir.desktop";
-        "image/jpeg" = "imv-dir.desktop";
-        "image/gif" = "imv-dir.desktop";
-        "image/webp" = "imv-dir.desktop";
-        "image/svg+xml" = "imv-dir.desktop";
-        "image/bmp" = "imv-dir.desktop";
-        "image/tiff" = "imv-dir.desktop";
 
         # Video
         "video/mp4" = "mpv.desktop";

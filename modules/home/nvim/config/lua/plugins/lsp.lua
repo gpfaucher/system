@@ -1,11 +1,11 @@
 return {
   {
     "neovim/nvim-lspconfig",
-    event = { "BufReadPre", "BufNewFile" },
+    lazy = false,
     config = function()
-      local lspconfig = require("lspconfig")
+      local ok = pcall(require, "lspconfig")
+      if not ok then return end
 
-      -- Shared on_attach
       local on_attach = function(_, bufnr)
         local map = function(keys, func, desc)
           vim.keymap.set("n", keys, func, { buffer = bufnr, desc = desc })
@@ -20,11 +20,9 @@ return {
         map("<leader>r", vim.lsp.buf.rename, "Rename symbol")
         map("<leader>ca", vim.lsp.buf.code_action, "Code action")
 
-        -- Visual mode code action
         vim.keymap.set("v", "<leader>ca", vim.lsp.buf.code_action, { buffer = bufnr, desc = "Code action" })
       end
 
-      -- Diagnostics config
       vim.diagnostic.config({
         virtual_text = { spacing = 4, prefix = "●" },
         signs = true,
@@ -34,14 +32,11 @@ return {
         float = { border = "rounded", source = true },
       })
 
-      -- Diagnostic keymaps
       vim.keymap.set("n", "<leader>dn", function() vim.diagnostic.jump({ count = 1 }) end, { desc = "Next diagnostic" })
       vim.keymap.set("n", "<leader>dp", function() vim.diagnostic.jump({ count = -1 }) end, { desc = "Prev diagnostic" })
       vim.keymap.set("n", "<leader>df", vim.diagnostic.open_float, { desc = "Float diagnostic" })
 
-      -- Server configs (all binaries provided by Nix on PATH)
       local servers = {
-        nil_ls = {},
         lua_ls = {
           settings = {
             Lua = {
@@ -59,12 +54,11 @@ return {
 
       for server, config in pairs(servers) do
         config.on_attach = on_attach
-        lspconfig[server].setup(config)
+        require('lspconfig')[server].setup(config)
       end
     end,
   },
 
-  -- Trouble (diagnostics list)
   {
     "folke/trouble.nvim",
     cmd = "Trouble",

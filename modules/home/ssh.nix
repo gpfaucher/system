@@ -81,13 +81,6 @@
     fi
   '';
 
-  # ssh-askpass-fullscreen for Wayland passphrase prompts
-  home.sessionVariables = {
-    SSH_ASKPASS = "${pkgs.ssh-askpass-fullscreen}/bin/ssh-askpass-fullscreen";
-    SSH_ASKPASS_REQUIRE = "prefer";
-  };
-
-  home.packages = with pkgs; [
-    ssh-askpass-fullscreen
-  ];
+  # macOS uses keychain for SSH agent passphrase prompts
+  # No need for ssh-askpass-fullscreen (Wayland-only)
 }

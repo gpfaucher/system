@@ -13,15 +13,20 @@
       url = "github:LNL7/nix-darwin";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    ghostty = {
+      url = "github:ghostty-org/ghostty";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs = { self, nixpkgs, home-manager, darwin, ... }@inputs: {
     
-    # --- MACBOOK CONFIGURATION (Apple Silicon M4) ---
     darwinConfigurations.macbook = darwin.lib.darwinSystem {
-      system = "aarch64-darwin"; 
+      system = "aarch64-darwin";
       specialArgs = { inherit inputs; };
       modules = [
+        { nixpkgs.config.allowUnsupportedSystem = true; }
         ./hosts/macbook.nix
         
         # We integrate Home Manager to manage the user account
@@ -29,12 +34,15 @@
         {
           home-manager.useGlobalPkgs = true;
           home-manager.useUserPackages = true;
-          home-manager.users."gabriel" = import ./modules/home-darwin.nix;
+          home-manager.extraSpecialArgs = { inherit inputs; };
+          home-manager.users."gabrielfaucher" = import ./modules/home-darwin.nix;
         }
       ];
     };
 
-    # --- LINUX CONFIGURATION (Future use) ---
+    darwinOptions = { nixpkgs.hostPlatform = "aarch64-darwin"; };
+
+    # TODO: Future Linux installs (Homelab / VPS) go here.
     nixosConfigurations = {
       # laptop = inputs.nixpkgs.lib.nixosSystem { ... };
     };

@@ -2,12 +2,16 @@ return {
   {
     "nvim-treesitter/nvim-treesitter",
     build = ":TSUpdate",
-    event = { "BufReadPost", "BufNewFile" },
+    lazy = false,
     dependencies = {
       "nvim-treesitter/nvim-treesitter-textobjects",
     },
     config = function()
-      require("nvim-treesitter.configs").setup({
+      -- Guard: plugin may be called by telescope before it's installed
+      local ok, ts_config = pcall(require, "nvim-treesitter.configs")
+      if not ok then return end
+
+      ts_config.setup({
         ensure_installed = {
           "lua", "vim", "vimdoc", "query",
           "javascript", "typescript", "tsx",

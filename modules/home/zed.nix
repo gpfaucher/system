@@ -21,8 +21,8 @@
 
     extraPackages = with pkgs; [
       nixd
-      nodePackages.typescript-language-server
-      nodePackages.prettier
+      typescript-language-server
+      prettier
       ruff
       shellcheck
       shfmt
