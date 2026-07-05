@@ -3,7 +3,6 @@
   pkgs,
   lib,
   inputs,
-  ...,
   username,
 }:
 
@@ -29,12 +28,12 @@ in
     enable = true;
 
     # Apps to install (Cask) -- These appear in /Applications
-    onActivation.cleanup = "uninstall"; # Clean up old versions
+    onActivation.cleanup = "uninstall";
 
     casks = [
       "ghostty"
-      "microsoft-outlook" # Syncs your Exchange calendar to Apple Calendar
-      "citrix-workspace" # Your corporate VDI login
+      "microsoft-outlook"
+      "citrix-workspace"
       "iterm2"
       "karabiner-elements"
       "zoom"
@@ -43,7 +42,7 @@ in
 
     brews = [
       # Apple Silicon native CLI tools via Homebrew
-      "openshift-cli" # oc/kubectl for OKD/OpenShift (Apple Silicon build)
+      "openshift-cli"
     ];
   };
 
@@ -78,7 +77,6 @@ in
   };
 
   config.fish.functions = {
-    # Yazi shell wrapper (cd on exit)
     y = ''
       set tmp (mktemp -t "yazi-cwd.XXXXXX")
       yazi $argv --cwd-file="$tmp"
@@ -88,16 +86,10 @@ in
       rm -f -- "$tmp"
     '';
 
-    # Venv switcher for monorepos
     venv = ''
-      # Find project root (git root or current dir)
       set -l root (git rev-parse --show-toplevel 2>/dev/null; or echo $PWD)
-
-      # Find all venvs in project
       set -l venvs (find $root -maxdepth 4 -type f -path "*/.venv/bin/activate.fish" -o -path "*/venv/bin/activate.fish" 2>/dev/null)
-
       if test (count $argv) -eq 0
-        # List available venvs
         if test (count $venvs) -eq 0
           echo "No venvs found in $root"
           return 1
@@ -122,7 +114,6 @@ in
         return 0
       end
 
-      # Find matching venv
       for v in $venvs
         if string match -q "*$argv[1]*" $v
           source $v
@@ -148,24 +139,17 @@ in
   ];
 
   config.programs.starship.settings.format = "${currentUserName}$hostname$directory$git_branch$git_state$git_status$cmd_duration$line_break$python$character";
-
   config.programs.starship.settings.add_newline = false;
-
-  config.programs.starship.settings.directory = {
-    style = "blue";
-  };
-
+  config.programs.starship.settings.directory = { style = "blue"; };
   config.programs.starship.settings.character = {
     success_symbol = "[->](purple)";
     error_symbol = "[->](red)";
     vimcmd_symbol = "[<-](green)";
   };
-
   config.programs.starship.settings.git_branch = {
     format = "[$branch]($style)";
     style = "bright-black";
   };
-
   config.programs.starship.settings.git_status = {
     format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)";
     style = "cyan";
@@ -177,24 +161,19 @@ in
     deleted = "";
     stashed = "=";
   };
-
   config.programs.starship.settings.git_state = {
     format = "\\([$state( $progress_current/$progress_total)]($style)\\) ";
     style = "bright-black";
   };
-
   config.programs.starship.settings.cmd_duration = {
     format = "[$duration]($style) ";
     style = "yellow";
   };
-
   config.programs.starship.settings.python = {
     format = "[$virtualenv]($style) ";
     style = "bright-black";
   };
-
   config.programs.starship.enableFishIntegration = true;
-
   config.programs.starship.enable = true;
 
   config.networking.dns = [
@@ -216,3 +195,4 @@ in
       lazygit
     ];
   };
+}
