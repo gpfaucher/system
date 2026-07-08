@@ -122,7 +122,6 @@
             fluxcd
             jq
             k9s
-            kind
             kubeconform
             kubectl
             kubectx
@@ -134,9 +133,9 @@
 
           shellHook = ''
             echo "Kubernetes learning shell"
-            echo "Start local cluster: kind create cluster --config labs/kubernetes/kind/cluster.yaml"
-            echo "Use kubeconfig:      kubectl cluster-info --context kind-learning"
-            echo "Sample app:          kubectl apply -f labs/kubernetes/kind/manifests/whoami.yaml"
+            echo "Target cluster:      NixOS server k3s"
+            echo "Check access:        kubectl cluster-info"
+            echo "Explore:             kubectl get nodes && kubectl get pods -A"
           '';
         };
       });

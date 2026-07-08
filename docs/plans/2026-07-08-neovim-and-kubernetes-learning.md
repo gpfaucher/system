@@ -8,8 +8,8 @@ Rebuild Neovim from scratch while also making this repo a good Kubernetes
 learning environment.
 
 The editor should feel small, understandable, and useful before it becomes
-fancy. The Kubernetes workflow should start locally with kind and only later move
-to the NixOS server.
+fancy. The Kubernetes workflow should target the NixOS server's k3s cluster
+rather than a local kind cluster.
 
 ## Current State
 
@@ -189,7 +189,6 @@ Nix packages:
 - `kustomize`
 - `kubeconform`
 - `k9s`
-- `kind`
 - `stern`
 
 Neovim support:
@@ -236,7 +235,7 @@ Only after the base editor is comfortable:
 
 Keep these as optional modules.
 
-## Kubernetes Learning Flake
+## Kubernetes Learning Shell
 
 This repo now exposes:
 
@@ -244,9 +243,8 @@ This repo now exposes:
 nix develop .#kubernetes-learning
 ```
 
-Use it for local Kubernetes practice with:
+Use it for Kubernetes practice against the NixOS server's k3s cluster with:
 
-- kind
 - kubectl
 - helm
 - k9s
@@ -256,18 +254,12 @@ Use it for local Kubernetes practice with:
 - Flux CLI
 - Argo CD CLI
 
-Local lab files live in:
-
-```text
-labs/kubernetes/kind/
-```
-
-Start with:
+Once the server exists and kubeconfig is copied to the MacBook, start with:
 
 ```bash
-kind create cluster --config labs/kubernetes/kind/cluster.yaml
+kubectl cluster-info
 kubectl get nodes
-kubectl apply -f labs/kubernetes/kind/manifests/whoami.yaml
+kubectl get pods -A
 ```
 
 ## What Is Left
@@ -284,7 +276,6 @@ NixOS server:
 
 Kubernetes:
 
-- Learn locally with kind first.
 - Decide whether k3s should be enabled immediately on the server or after the
   base server is proven stable.
 - Keep Kubernetes API private to LAN.
