@@ -53,7 +53,9 @@
         HostName = "95.217.73.154";
         User = "gabriel";
         IdentityFile = [ "~/.ssh/id_ed25519" ];
-        SetEnv = { TERM = "xterm-256color"; };
+        SetEnv = {
+          TERM = "xterm-256color";
+        };
       };
     };
   };

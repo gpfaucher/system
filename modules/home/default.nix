@@ -9,29 +9,24 @@
 }:
 
 let
-  homeDirectory =
-    if isDarwin then
-      "/Users/${username}"
-    else
-      "/home/${username}";
+  homeDirectory = if isDarwin then "/Users/${username}" else "/home/${username}";
 in
 {
-  imports =
-    [
-      ./nvim
-      ./common/git.nix
-      ./shell.nix
-      ./ssh.nix
-      ./tmux.nix
-    ]
-    ++ lib.optionals isDarwin [
-      ./platforms/darwin.nix
-      ./profiles/macbook.nix
-    ]
-    ++ lib.optionals isLinux [
-      ./platforms/linux.nix
-      ./profiles/server-admin.nix
-    ];
+  imports = [
+    ./nvim
+    ./common/git.nix
+    ./shell.nix
+    ./ssh.nix
+    ./tmux.nix
+  ]
+  ++ lib.optionals isDarwin [
+    ./platforms/darwin.nix
+    ./profiles/macbook.nix
+  ]
+  ++ lib.optionals isLinux [
+    ./platforms/linux.nix
+    ./profiles/server-admin.nix
+  ];
 
   home = {
     username = username;

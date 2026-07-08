@@ -30,6 +30,22 @@
     }@inputs:
     let
       username = "gabrielfaucher";
+      supportedSystems = [
+        "aarch64-darwin"
+        "x86_64-linux"
+      ];
+
+      forAllSystems =
+        fn:
+        nixpkgs.lib.genAttrs supportedSystems (
+          system:
+          fn (
+            import nixpkgs {
+              inherit system;
+              config.allowUnsupportedSystem = true;
+            }
+          )
+        );
 
       mkHomeManager =
         {
@@ -89,5 +105,54 @@
       darwinConfigurations.macbook = mkDarwinHost "macbook" "aarch64-darwin";
 
       nixosConfigurations.server = mkNixosHost "server" "x86_64-linux";
+
+      devShells = forAllSystems (pkgs: {
+        default = pkgs.mkShellNoCC {
+          packages = with pkgs; [
+            git
+            jq
+            nixfmt
+            yq-go
+          ];
+        };
+
+        kubernetes-learning = pkgs.mkShellNoCC {
+          packages = with pkgs; [
+            argocd
+            fluxcd
+            jq
+            k9s
+            kind
+            kubeconform
+            kubectl
+            kubectx
+            kubernetes-helm
+            kustomize
+            stern
+            yq-go
+          ];
+
+          shellHook = ''
+            echo "Kubernetes learning shell"
+            echo "Start local cluster: kind create cluster --config labs/kubernetes/kind/cluster.yaml"
+            echo "Use kubeconfig:      kubectl cluster-info --context kind-learning"
+            echo "Sample app:          kubectl apply -f labs/kubernetes/kind/manifests/whoami.yaml"
+          '';
+        };
+      });
+
+      formatter = forAllSystems (
+        pkgs:
+        pkgs.writeShellApplication {
+          name = "format-nix-files";
+          runtimeInputs = with pkgs; [
+            findutils
+            nixfmt
+          ];
+          text = ''
+            find . -name '*.nix' -not -path './.git/*' -print0 | xargs -0 nixfmt
+          '';
+        }
+      );
     };
 }

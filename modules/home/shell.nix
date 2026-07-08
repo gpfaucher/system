@@ -152,12 +152,11 @@
     config.global.hide_env_diff = true;
   };
 
-  home.packages = with pkgs;
-    [
-      # Global packages for all hosts
-      yazi
-      lazygit
-      zoxide
-      atuin
-    ];
+  home.packages = with pkgs; [
+    # Global packages for all hosts
+    yazi
+    lazygit
+    zoxide
+    atuin
+  ];
 }
