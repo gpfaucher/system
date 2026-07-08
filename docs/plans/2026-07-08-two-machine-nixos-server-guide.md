@@ -31,16 +31,15 @@ The old Linux desktop host folders have been removed:
 The server host now lives at `hosts/server`. It starts from a placeholder
 hardware file that must be regenerated on the actual machine before install.
 
-There is no real server role yet. The useful pieces for a server are scattered
-through the existing NixOS modules:
+The server role now lives under `modules/nixos`. It is intentionally headless:
 
-- `modules/system/common.nix`: Nix settings, user, fish, fonts, Stylix.
-- `modules/system/networking.nix`: NetworkManager, firewall, SSH port.
-- `modules/system/hardening.nix`: sysctl hardening, sudo, AppArmor, audit.
-- `modules/system/tailscale.nix`: Tailscale service and firewall trust.
-- `modules/system/maintenance.nix`: btrfs scrub, journal size, smartd, GC.
-- `secrets/default.nix`: agenix-style secret config, but agenix is not currently
-  wired into the flake inputs.
+- `modules/nixos/base`: Nix settings, user, SSH, network, hardening, maintenance.
+- `modules/nixos/roles/server.nix`: small server package/profile layer.
+- `modules/nixos/services/k3s.nix`: single-node Kubernetes.
+- `modules/nixos/services/ingress.nix`: public HTTP/HTTPS ingress ports.
+- `modules/nixos/services/backups.nix`: restic scaffolding.
+- `secrets/default.nix`: old agenix-style secret config, not yet wired into the
+  current flake.
 
 The home layer should stay unified:
 
@@ -82,7 +81,6 @@ modules/
     roles/
       server.nix
     services/
-      tailscale.nix
       k3s.nix
       ingress.nix
       backups.nix
@@ -118,7 +116,7 @@ Keep these rules in mind while restructuring:
 
 2. Modules should be reusable.
 
-   A module should express one concern: SSH, Tailscale, k3s, backups, users,
+   A module should express one concern: SSH, k3s, backups, users,
    Homebrew, shell, Neovim, and so on.
 
 3. Darwin and NixOS system modules should stay separate.
@@ -242,7 +240,9 @@ The new server host should look more like this:
     ./hardware.nix
     ../../modules/nixos/base
     ../../modules/nixos/roles/server.nix
-    ../../modules/nixos/services/tailscale.nix
+    ../../modules/nixos/services/backups.nix
+    ../../modules/nixos/services/ingress.nix
+    ../../modules/nixos/services/k3s.nix
   ];
 
   networking.hostName = "server";
@@ -281,14 +281,13 @@ Start with these base concerns:
 - users
 - SSH
 - firewall
-- Tailscale
 - updates and garbage collection
 - logs
 - disk health
 - basic hardening
 
-Split the current `modules/system/common.nix` into smaller modules over time.
-For learning, this is valuable because it teaches the NixOS option tree.
+Keep the server base split into small modules. For learning, this is valuable
+because it teaches the NixOS option tree.
 
 Suggested base module split:
 
@@ -515,42 +514,79 @@ What to learn here:
 - NixOS manages system services and boot-level behavior.
 - `pkgs.stdenv.isDarwin` and `pkgs.stdenv.isLinux` are useful in Home Manager.
 
-## Phase 7: Add Tailscale Before Public Exposure
+## Phase 7: Private Access Without Tailscale
 
-Goal: get private access working before opening public services.
+Goal: get reliable admin access without installing an overlay VPN that conflicts
+with Tunnelblick or the work OpenVPN setup.
 
-Use Tailscale for:
+Tailscale is explicitly out of scope for this setup. Do not install it on the
+MacBook and do not enable it on the server.
 
-- SSH from MacBook to server
-- Kubernetes API access from MacBook
-- emergency admin access if public DNS or ingress breaks
+Start with the simplest access model:
 
-Server module:
+- MacBook and server on the same LAN.
+- Server gets a predictable LAN IP from the router using a DHCP reservation.
+- MacBook connects by SSH to that LAN IP or a local DNS name.
+- Kubernetes API is reachable only from the LAN while learning.
+- Public internet exposure is limited to HTTP/HTTPS ingress later.
+
+Router setup:
+
+1. Find the server's network MAC address after install.
+2. Add a DHCP reservation in the router.
+3. Pick a stable address, for example `192.168.1.20`.
+4. Optionally add a local DNS name such as `server.home.arpa`.
+
+MacBook SSH config example:
+
+```sshconfig
+Host server
+  HostName 192.168.1.20
+  User gabrielfaucher
+  IdentityFile ~/.ssh/id_ed25519
+  ServerAliveInterval 60
+  ServerAliveCountMax 3
+```
+
+NixOS server SSH module:
 
 ```nix
 {
-  services.tailscale.enable = true;
-
-  networking.firewall = {
-    allowedUDPPorts = [ config.services.tailscale.port ];
-    trustedInterfaces = [ "tailscale0" ];
+  services.openssh = {
+    enable = true;
+    settings = {
+      PasswordAuthentication = false;
+      PermitRootLogin = "no";
+    };
   };
+
+  networking.firewall.allowedTCPPorts = [ 22 ];
 }
 ```
 
-After rebuild:
+Remote access when away from home should be a separate decision. Options:
 
-```bash
-sudo tailscale up
-tailscale status
-```
+- Use only HTTPS public apps remotely, and do admin work when back on LAN.
+- Use a router-provided VPN if it does not conflict with Tunnelblick.
+- Use a bastion/VPS with SSH reverse tunnels later, if remote admin becomes
+  important.
+
+Do not expose SSH or the Kubernetes API publicly as the default learning path.
+If you later expose SSH, restrict it hard:
+
+- SSH keys only
+- no root login
+- fail2ban or equivalent
+- non-default port only as a noise reducer, not as security
+- firewall allowlist if your source IP is predictable
 
 What to learn here:
 
-- Tailscale gives the server a private overlay network identity.
-- Trusting `tailscale0` means traffic from your tailnet bypasses the normal
-  firewall restrictions.
-- This is convenient, but it means your Tailscale account security matters.
+- Private admin access and public app access are different problems.
+- A stable LAN IP is enough for the first NixOS and Kubernetes learning loop.
+- Avoiding network-layer conflicts on the MacBook is more important than a
+  fashionable overlay network.
+- Kubernetes API access should stay private.
 
 ## Phase 8: Choose Kubernetes Distribution
 
@@ -585,8 +621,8 @@ Basic NixOS k3s module:
 }
 ```
 
-For Tailscale-only Kubernetes API access, do not expose 6443 publicly. Prefer
-accessing it through the tailnet.
+Do not expose 6443 publicly. While learning, access the Kubernetes API from the
+LAN only.
 
 After rebuild on the server:
 
@@ -601,8 +637,8 @@ Copy kubeconfig to the MacBook later:
 sudo cat /etc/rancher/k3s/k3s.yaml
 ```
 
-Then edit the `server:` address in the kubeconfig to use the server's Tailscale
-IP or MagicDNS name.
+Then edit the `server:` address in the kubeconfig to use the server's LAN IP or
+local DNS name.
 
 What to learn here:
 
@@ -629,7 +665,7 @@ Avoid exposing:
 - databases
 - dashboards
 - random app ports
-- SSH, if Tailscale SSH access is reliable
+- SSH, unless you have made a deliberate hardened remote-admin decision
 
 Ingress choices:
 
@@ -715,7 +751,6 @@ You need two layers of secrets:
 
    - restic passwords
    - service tokens
-   - Tailscale auth key, if you choose declarative auth
    - backup credentials
 
 2. Kubernetes application secrets
@@ -990,8 +1025,7 @@ Only after this works should you automate backups.
 
 ### NixOS Backup Module
 
-Restic is already sketched in `modules/system/maintenance.nix`. Move that into a
-server backup module when ready:
+Restic belongs in a dedicated server backup module:
 
 ```text
 modules/nixos/services/backups.nix
@@ -1438,7 +1472,6 @@ Keep or adapt these categories:
 - user setup
 - SSH
 - firewall
-- Tailscale
 - hardening
 - maintenance
 - smartd
@@ -1469,9 +1502,9 @@ Use these as checkpoints:
 4. Server boots NixOS from `.#server`.
 5. MacBook can SSH to server.
 6. Remote rebuild works.
-7. Tailscale works.
+7. Server has a stable LAN IP or local DNS name.
 8. k3s node is Ready.
-9. `kubectl` from MacBook works over Tailscale.
+9. `kubectl` from MacBook works over LAN.
 10. First internal test app works.
 11. First public HTTPS app works.
 12. Restic backup and restore test succeeds.
@@ -1505,7 +1538,7 @@ Use these as checkpoints:
 
 ### Task 5: Create NixOS server base modules
 
-- Split reusable server-safe pieces from `modules/system`.
+- Keep reusable server-safe pieces in `modules/nixos/base`.
 - Do not import desktop modules.
 
 ### Task 6: Create `hosts/server`

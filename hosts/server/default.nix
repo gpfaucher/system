@@ -6,7 +6,6 @@
     ../../modules/nixos/services/backups.nix
     ../../modules/nixos/services/ingress.nix
     ../../modules/nixos/services/k3s.nix
-    ../../modules/nixos/services/tailscale.nix
   ];
 
   networking.hostName = "server";
