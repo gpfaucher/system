@@ -9,3 +9,4 @@ result
 
 # Tool-generated state
 .automaker/
+.pi/

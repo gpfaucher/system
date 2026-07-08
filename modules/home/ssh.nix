@@ -14,49 +14,46 @@
     # Disable default config - we set our own defaults via "*" matchBlock
     enableDefaultConfig = false;
 
-    matchBlocks = {
+    settings = {
       "*" = {
         # Keys expire after 4h
-        addKeysToAgent = "4h";
+        AddKeysToAgent = "4h";
 
         # Only use explicitly configured identities
-        identitiesOnly = true;
+        IdentitiesOnly = true;
 
-        serverAliveInterval = 60;
-        serverAliveCountMax = 3;
-
-        extraOptions = {
-          ControlMaster = "auto";
-          ControlPath = "~/.ssh/sockets/%r@%h-%p";
-          ControlPersist = "10m";
-        };
+        ServerAliveInterval = 60;
+        ServerAliveCountMax = 3;
+        ControlMaster = "auto";
+        ControlPath = "~/.ssh/sockets/%r@%h-%p";
+        ControlPersist = "10m";
       };
 
       "github.com" = {
-        hostname = "github.com";
-        user = "git";
-        identityFile = [ "~/.ssh/id_ed25519" ];
-        addKeysToAgent = "4h";
+        HostName = "github.com";
+        User = "git";
+        IdentityFile = [ "~/.ssh/id_ed25519" ];
+        AddKeysToAgent = "4h";
       };
 
       "gitlab.com" = {
-        hostname = "gitlab.com";
-        user = "git";
-        identityFile = [ "~/.ssh/id_ed25519" ];
-        addKeysToAgent = "4h";
+        HostName = "gitlab.com";
+        User = "git";
+        IdentityFile = [ "~/.ssh/id_ed25519" ];
+        AddKeysToAgent = "4h";
       };
 
       "*.github.com" = {
-        user = "git";
-        identityFile = [ "~/.ssh/id_ed25519" ];
-        addKeysToAgent = "4h";
+        User = "git";
+        IdentityFile = [ "~/.ssh/id_ed25519" ];
+        AddKeysToAgent = "4h";
       };
 
       "vps" = {
-        hostname = "95.217.73.154";
-        user = "gabriel";
-        identityFile = [ "~/.ssh/id_ed25519" ];
-        setEnv = { TERM = "xterm-256color"; };
+        HostName = "95.217.73.154";
+        User = "gabriel";
+        IdentityFile = [ "~/.ssh/id_ed25519" ];
+        SetEnv = { TERM = "xterm-256color"; };
       };
     };
   };
