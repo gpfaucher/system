@@ -12,6 +12,8 @@
     package = pkgs.neovim-unwrapped;
     vimAlias = true;
     viAlias = true;
+    withPython3 = true;
+    withRuby = true;
 
     extraPackages = with pkgs; [
       # LSP servers
