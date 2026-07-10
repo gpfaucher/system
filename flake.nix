@@ -29,7 +29,8 @@
       ...
     }@inputs:
     let
-      username = "gabrielfaucher";
+      macUsername = "gabrielfaucher";
+      serverUsername = "gabriel";
       supportedSystems = [
         "aarch64-darwin"
         "x86_64-linux"
@@ -51,6 +52,7 @@
         {
           isDarwin,
           isLinux,
+          username,
         }:
         {
           home-manager.useGlobalPkgs = true;
@@ -69,6 +71,9 @@
 
       mkDarwinHost =
         name: system:
+        let
+          username = macUsername;
+        in
         darwin.lib.darwinSystem {
           inherit system;
           specialArgs = {
@@ -81,12 +86,13 @@
             (mkHomeManager {
               isDarwin = true;
               isLinux = false;
+              inherit username;
             })
           ];
         };
 
       mkNixosHost =
-        name: system:
+        name: system: username:
         nixpkgs.lib.nixosSystem {
           inherit system;
           specialArgs = {
@@ -98,6 +104,7 @@
             (mkHomeManager {
               isDarwin = false;
               isLinux = true;
+              inherit username;
             })
           ];
         };
@@ -105,7 +112,7 @@
     {
       darwinConfigurations.macbook = mkDarwinHost "macbook" "aarch64-darwin";
 
-      nixosConfigurations.server = mkNixosHost "server" "x86_64-linux";
+      nixosConfigurations.server = mkNixosHost "server" "x86_64-linux" serverUsername;
 
       devShells = forAllSystems (pkgs: {
         default = pkgs.mkShellNoCC {
