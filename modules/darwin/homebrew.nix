@@ -11,6 +11,7 @@
       "karabiner-elements"
       "zoom"
       "orbstack"
+      "tailscale-app"
     ];
 
     brews = [
