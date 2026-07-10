@@ -6,14 +6,14 @@ set -e
 
 cd "$(dirname "$0")/.."
 
-# Allow override: ./scripts/rebuild.sh laptop  or  ./scripts/rebuild.sh workstation
+# Allow override: ./scripts/rebuild.sh macbook  or  ./scripts/rebuild.sh server
 HOST="${1:-$(hostname)}"
 
 case "$HOST" in
-  laptop|workstation) ;;
+  macbook|server) ;;
   *)
     echo "Unknown host: $HOST"
-    echo "Usage: $0 [laptop|workstation]"
+    echo "Usage: $0 [macbook|server]"
     exit 1
     ;;
 esac

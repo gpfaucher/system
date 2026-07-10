@@ -11,7 +11,7 @@
     ];
 
     openssh.authorizedKeys.keys = [
-      # Add your MacBook public SSH key before installing the server.
+      "ssh-ed25519 AAAAC3NzaC1lZDI1NTE5AAAAIMshKw/HbLHTO7UshikMrq4LOy7oxf/VP2ngj5QGbVM1 gabrielfaucher@Gabriels-MacBook-Pro.local"
     ];
   };
 
