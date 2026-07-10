@@ -30,7 +30,7 @@
     }@inputs:
     let
       macUsername = "gabrielfaucher";
-      serverUsername = "gabriel";
+      serverUsername = "gabrielfaucher";
       supportedSystems = [
         "aarch64-darwin"
         "x86_64-linux"
