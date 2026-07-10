@@ -1,7 +1,7 @@
 { pkgs, ... }:
 
 let
-  uptimeSmokeManifest = pkgs.writeText "uptime-smoke.yaml" ''
+  podinfoManifest = pkgs.writeText "uptime-podinfo.yaml" ''
     apiVersion: v1
     kind: Namespace
     metadata:
@@ -13,30 +13,30 @@ let
       name: uptime-smoke
       namespace: uptime
       labels:
-        app.kubernetes.io/name: uptime-smoke
+        app.kubernetes.io/name: podinfo
     spec:
       replicas: 1
       selector:
         matchLabels:
-          app.kubernetes.io/name: uptime-smoke
+          app.kubernetes.io/name: podinfo
       template:
         metadata:
           labels:
-            app.kubernetes.io/name: uptime-smoke
+            app.kubernetes.io/name: podinfo
         spec:
           containers:
-            - name: whoami
-              image: traefik/whoami:v1.11.0
+            - name: podinfo
+              image: ghcr.io/stefanprodan/podinfo:6.9.1
               ports:
                 - name: http
-                  containerPort: 80
+                  containerPort: 9898
               readinessProbe:
                 httpGet:
-                  path: /
+                  path: /readyz
                   port: http
               livenessProbe:
                 httpGet:
-                  path: /
+                  path: /healthz
                   port: http
     ---
     apiVersion: v1
@@ -46,7 +46,7 @@ let
       namespace: uptime
     spec:
       selector:
-        app.kubernetes.io/name: uptime-smoke
+        app.kubernetes.io/name: podinfo
       ports:
         - name: http
           port: 80
@@ -58,8 +58,13 @@ let
       name: uptime-smoke
       namespace: uptime
       annotations:
-        traefik.ingress.kubernetes.io/router.entrypoints: web
+        cert-manager.io/cluster-issuer: letsencrypt-http01
+        traefik.ingress.kubernetes.io/router.entrypoints: web,websecure
     spec:
+      tls:
+        - hosts:
+            - uptime.faucher.dev
+          secretName: uptime-faucher-dev-tls
       rules:
         - host: uptime.faucher.dev
           http:
@@ -85,7 +90,7 @@ in
     extraFlags = [
       "--tls-san=100.88.195.11"
     ];
-    manifests.uptime-smoke.source = uptimeSmokeManifest;
+    manifests.uptime-podinfo.source = podinfoManifest;
   };
 
   networking.firewall.allowedTCPPorts = [
