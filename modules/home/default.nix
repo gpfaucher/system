@@ -14,6 +14,7 @@ in
 {
   imports = [
     ./common/git.nix
+    ./neovim.nix
     ./shell.nix
     ./ssh.nix
     ./tmux.nix
@@ -33,8 +34,8 @@ in
     stateVersion = if isDarwin then "23.05" else "24.11";
 
     sessionVariables = {
-      EDITOR = "vim";
-      VISUAL = lib.mkDefault "vim";
+      EDITOR = "nvim";
+      VISUAL = lib.mkDefault "nvim";
     };
   };
 
