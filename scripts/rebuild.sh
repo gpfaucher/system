@@ -32,5 +32,3 @@ fi
 
 echo ""
 echo "✓ System rebuild complete!"
-echo ""
-echo "If neovim was updated, restart any running neovim instances to use the new configuration."

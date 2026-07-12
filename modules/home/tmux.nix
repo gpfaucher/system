@@ -15,14 +15,12 @@
     focusEvents = true;
 
     plugins = with pkgs.tmuxPlugins; [
-      # Seamless Ctrl+hjkl between Neovim and tmux panes
       vim-tmux-navigator
 
       # Session persistence across reboots
       {
         plugin = resurrect;
         extraConfig = ''
-          set -g @resurrect-strategy-nvim 'session'
           set -g @resurrect-capture-pane-contents 'on'
         '';
       }
