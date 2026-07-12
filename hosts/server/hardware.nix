@@ -1,10 +1,4 @@
-# Placeholder hardware configuration for the future NixOS server.
-#
-# Replace this file on the target machine with:
-#
-#   sudo nixos-generate-config --show-hardware-config > hosts/server/hardware.nix
-#
-# Then replace the fake UUIDs below with the actual disk UUIDs from the server.
+# Generated from the NixOS server and cleaned to keep only persistent mounts.
 {
   config,
   lib,
@@ -22,34 +16,30 @@
     "xhci_pci"
     "ahci"
     "usbhid"
-    "usb_storage"
-    "sd_mod"
   ];
   boot.initrd.kernelModules = [ ];
   boot.kernelModules = [ "kvm-amd" ];
   boot.extraModulePackages = [ ];
 
-  boot.loader.systemd-boot = {
-    enable = true;
-    configurationLimit = 10;
-    editor = false;
-  };
-  boot.loader.efi.canTouchEfiVariables = true;
-
   fileSystems."/" = {
-    device = "/dev/disk/by-uuid/REPLACE-ROOT-UUID";
+    device = "/dev/disk/by-uuid/2fcf9065-e699-40fe-bdc6-115b1ad47711";
     fsType = "btrfs";
-    options = [ "subvol=@" ];
+  };
+
+  fileSystems."/nix" = {
+    device = "/dev/disk/by-uuid/2fcf9065-e699-40fe-bdc6-115b1ad47711";
+    fsType = "btrfs";
+    options = [ "subvol=nix" ];
   };
 
   fileSystems."/home" = {
-    device = "/dev/disk/by-uuid/REPLACE-ROOT-UUID";
+    device = "/dev/disk/by-uuid/2fcf9065-e699-40fe-bdc6-115b1ad47711";
     fsType = "btrfs";
-    options = [ "subvol=@home" ];
+    options = [ "subvol=home" ];
   };
 
   fileSystems."/boot" = {
-    device = "/dev/disk/by-uuid/REPLACE-EFI-UUID";
+    device = "/dev/disk/by-uuid/DF0A-0038";
     fsType = "vfat";
     options = [
       "fmask=0077"
@@ -57,13 +47,9 @@
     ];
   };
 
-  zramSwap = {
-    enable = true;
-    memoryPercent = 50;
-    algorithm = "zstd";
-  };
-
-  swapDevices = [ ];
+  swapDevices = [
+    { device = "/dev/disk/by-uuid/e092b378-0edc-4f89-be3d-8e0548dfae1d"; }
+  ];
 
   nixpkgs.hostPlatform = lib.mkDefault "x86_64-linux";
   hardware.cpu.amd.updateMicrocode = lib.mkDefault config.hardware.enableRedistributableFirmware;

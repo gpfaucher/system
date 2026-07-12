@@ -1,21 +1,11 @@
 {
   homebrew = {
     enable = true;
-    onActivation.cleanup = "uninstall";
+    onActivation.cleanup = "none";
 
     casks = [
       "ghostty"
-      "microsoft-outlook"
-      "citrix-workspace"
-      "iterm2"
-      "karabiner-elements"
-      "zoom"
-      "orbstack"
       "tailscale-app"
-    ];
-
-    brews = [
-      "openshift-cli"
     ];
   };
 }

@@ -13,7 +13,6 @@ let
 in
 {
   imports = [
-    ./nvim
     ./common/git.nix
     ./shell.nix
     ./ssh.nix
@@ -34,21 +33,10 @@ in
     stateVersion = if isDarwin then "23.05" else "24.11";
 
     sessionVariables = {
-      EDITOR = "nvim";
-      VISUAL = lib.mkDefault "nvim";
+      EDITOR = "vim";
+      VISUAL = lib.mkDefault "vim";
     };
   };
 
   programs.home-manager.enable = true;
-
-  home.file.".aws/config".text = ''
-    [default]
-    region = eu-central-1
-    output = json
-  '';
-
-  home.activation.awsDir = lib.hm.dag.entryBefore [ "writeBoundary" ] ''
-    $DRY_RUN_CMD mkdir -p $HOME/.aws
-    $DRY_RUN_CMD chmod 700 $HOME/.aws
-  '';
 }

@@ -23,7 +23,6 @@
       gc = "git commit";
       gd = "git diff";
       gs = "git status";
-      lg = "lazygit";
 
       ls = "eza";
       ll = "eza -l";
@@ -33,64 +32,7 @@
       cd = "z";
     };
 
-    functions = {
-      # Yazi shell wrapper (cd on exit)
-      y = ''
-        set tmp (mktemp -t "yazi-cwd.XXXXXX")
-        yazi $argv --cwd-file="$tmp"
-        if set cwd (command cat -- "$tmp"); and [ -n "$cwd" ]; and [ "$cwd" != "$PWD" ]
-          builtin cd -- "$cwd"
-        end
-        rm -f -- "$tmp"
-      '';
-
-      # Venv switcher for monorepos
-      venv = ''
-        # Find project root (git root or current dir)
-        set -l root (git rev-parse --show-toplevel 2>/dev/null; or echo $PWD)
-
-        # Find all venvs in project
-        set -l venvs (find $root -maxdepth 4 -type f -path "*/.venv/bin/activate.fish" -o -path "*/venv/bin/activate.fish" 2>/dev/null)
-
-        if test (count $argv) -eq 0
-          # List available venvs
-          if test (count $venvs) -eq 0
-            echo "No venvs found in $root"
-            return 1
-          end
-          echo "Available venvs:"
-          for v in $venvs
-            set -l name (string replace "$root/" "" (dirname (dirname (dirname $v))))
-            set -l marker ""
-            if set -q VIRTUAL_ENV; and test (dirname (dirname $v)) = "$VIRTUAL_ENV"
-              set marker " (active)"
-            end
-            echo "  $name$marker"
-          end
-          return 0
-        end
-
-        if test "$argv[1]" = "off"
-          if set -q VIRTUAL_ENV
-            deactivate
-            echo "Deactivated venv"
-          end
-          return 0
-        end
-
-        # Find matching venv
-        for v in $venvs
-          if string match -q "*$argv[1]*" $v
-            source $v
-            echo "Activated: $VIRTUAL_ENV"
-            return 0
-          end
-        end
-
-        echo "No venv matching '$argv[1]' found"
-        return 1
-      '';
-    };
+    functions = { };
   };
 
   programs.starship = {
@@ -153,10 +95,10 @@
   };
 
   home.packages = with pkgs; [
-    # Global packages for all hosts
-    yazi
-    lazygit
     zoxide
     atuin
+    eza
+    bat
+    fzf
   ];
 }
