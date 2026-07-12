@@ -12,7 +12,7 @@ if grep -R "REPLACE-.*-UUID" hosts/server/hardware.nix >/dev/null; then
   exit 1
 fi
 
-rsync -az \
+rsync -az --delete \
   --exclude .git \
   --exclude .direnv \
   --exclude codex \
