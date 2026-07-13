@@ -24,6 +24,8 @@
       gd = "git diff";
       gs = "git status";
 
+      clm = "codex --oss --local-provider lmstudio";
+
       ls = "eza";
       ll = "eza -l";
       la = "eza -la";
