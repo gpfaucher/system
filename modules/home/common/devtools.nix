@@ -5,6 +5,7 @@
     awscli2
     gh
     nodejs_22
+    codex
 
     eza
     bat

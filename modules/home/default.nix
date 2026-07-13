@@ -13,6 +13,7 @@ let
 in
 {
   imports = [
+    ./common/devtools.nix
     ./common/git.nix
     ./neovim.nix
     ./shell.nix
