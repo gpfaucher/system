@@ -36,6 +36,10 @@ let
           id = localModel;
           name = "Qwen3.6 (local)";
           reasoning = true;
+          input = [
+            "text"
+            "image"
+          ];
           contextWindow = 32768;
           maxTokens = 8192;
           cost = {
@@ -47,6 +51,29 @@ let
         }
       ];
     };
+  };
+
+  piSettings = (pkgs.formats.json { }).generate "pi-settings.json" {
+    defaultProvider = "ollama";
+    defaultModel = localModel;
+    defaultThinkingLevel = "low";
+    hideThinkingBlock = false;
+    theme = "dark";
+    defaultProjectTrust = "ask";
+    enableInstallTelemetry = false;
+    enabledModels = [ "ollama/${localModel}" ];
+    packages = [ ];
+    compaction = {
+      enabled = true;
+      reserveTokens = 8192;
+      keepRecentTokens = 12000;
+    };
+    retry = {
+      enabled = true;
+      maxRetries = 2;
+      baseDelayMs = 2000;
+    };
+    terminal.showImages = true;
   };
 
   mkPiWrapper =
@@ -75,6 +102,7 @@ in
   ];
 
   home.file.".pi/agent/models.json".source = piModels;
+  home.file.".pi/agent/settings.json".source = piSettings;
   home.file.".pi/agent/extensions/.keep".text = "";
 
   home.sessionVariables = {
