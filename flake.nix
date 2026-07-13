@@ -18,6 +18,11 @@
       url = "github:ghostty-org/ghostty";
       inputs.nixpkgs.follows = "nixpkgs";
     };
+
+    stylix = {
+      url = "github:nix-community/stylix";
+      inputs.nixpkgs.follows = "nixpkgs";
+    };
   };
 
   outputs =
@@ -81,6 +86,8 @@
           };
           modules = [
             { nixpkgs.config.allowUnsupportedSystem = true; }
+            inputs.stylix.darwinModules.stylix
+            ./modules/theme.nix
             ./hosts/${name}
             home-manager.darwinModules.home-manager
             (mkHomeManager {
@@ -99,6 +106,8 @@
             inherit inputs username;
           };
           modules = [
+            inputs.stylix.nixosModules.stylix
+            ./modules/theme.nix
             ./hosts/${name}
             home-manager.nixosModules.home-manager
             (mkHomeManager {

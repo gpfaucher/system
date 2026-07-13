@@ -40,4 +40,12 @@ in
   };
 
   programs.home-manager.enable = true;
+
+  stylix.targets = {
+    fish.enable = true;
+    ghostty.enable = isDarwin;
+    neovim.enable = true;
+    starship.enable = true;
+    tmux.enable = true;
+  };
 }

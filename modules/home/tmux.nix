@@ -40,17 +40,6 @@
       set -ag terminal-overrides ",xterm-256color:RGB"
       set -ag terminal-overrides ",xterm-ghostty:RGB"
 
-      # Ayu Dark status bar colors
-      set -g status-style "bg=#0b0e14,fg=#e6e1cf"
-      set -g status-left "#[fg=#59c2ff,bold] #S "
-      set -g status-right "#[fg=#e6e1cf]%H:%M "
-      set -g status-left-length 20
-      set -g window-status-current-style "fg=#aad94c,bold"
-      set -g window-status-style "fg=#565b66"
-      set -g pane-border-style "fg=#1c2029"
-      set -g pane-active-border-style "fg=#59c2ff"
-      set -g message-style "bg=#0b0e14,fg=#e6e1cf"
-
       # Split panes with | and -
       bind | split-window -h -c "#{pane_current_path}"
       bind - split-window -v -c "#{pane_current_path}"
