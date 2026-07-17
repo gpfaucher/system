@@ -29,7 +29,7 @@
     gn3_profile="$shared_profiles/SP Beheer GN3 (TCP).tblk/Contents/Resources"
 
     /usr/bin/install -d -m 0755 "$gn2_profile" "$gn3_profile"
-    /usr/bin/install -o root -g wheel -m 0600 ${./vpn-profiles/sp-beheer-gn2-udp.ovpn} "$gn2_profile/config.ovpn"
-    /usr/bin/install -o root -g wheel -m 0600 ${./vpn-profiles/sp-beheer-gn3-tcp.ovpn} "$gn3_profile/config.ovpn"
+    /usr/bin/install -o root -g wheel -m 0700 ${./vpn-profiles/sp-beheer-gn2-udp.ovpn} "$gn2_profile/config.ovpn"
+    /usr/bin/install -o root -g wheel -m 0700 ${./vpn-profiles/sp-beheer-gn3-tcp.ovpn} "$gn3_profile/config.ovpn"
   '';
 }
