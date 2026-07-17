@@ -262,6 +262,10 @@ in
   xdg.configFile."herdr/config.toml".text = ''
     onboarding = false
 
+    [ui]
+    # Let Ghostty receive Cmd-clicks for URLs and file hyperlinks.
+    mouse_capture = false
+
     [session]
     resume_agents_on_restore = true
 
