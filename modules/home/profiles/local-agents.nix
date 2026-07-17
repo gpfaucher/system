@@ -7,6 +7,30 @@
 
 let
   localModel = "qwen3.6:latest";
+  documentationModel = "qwen3.5:9b";
+  documentationRoot = "${config.home.homeDirectory}/Developer/intern.wiki";
+  documentationPrompt = pkgs.writeText "documentation-agent-prompt.md" ''
+    You are the dedicated read-only documentation agent for the Markdown wiki in
+    ${documentationRoot}.
+
+    Answer questions using the wiki as the primary and authoritative source.
+
+    Rules:
+    - Search the wiki before answering, even when you think you know the answer.
+    - Read the relevant Markdown files rather than relying on filenames alone.
+    - Match the language of the user's question. Most wiki content is Dutch.
+    - Cite every substantive answer with repository-relative Markdown paths and,
+      where possible, the relevant heading.
+    - Clearly distinguish documented facts from your own inference.
+    - If the documentation is missing, contradictory, or possibly outdated, say so.
+    - Never claim that an external system's current state matches the documentation.
+    - Do not modify, create, delete, or move files. You are strictly read-only.
+    - Prefer concise answers, followed by a short "Sources" list.
+
+    When searching, try related Dutch and English terminology, synonyms, filenames,
+    headings, and repository-wide content searches before concluding that an answer
+    is absent.
+  '';
   herdrPackage = pkgs.stdenvNoCC.mkDerivation {
     pname = "herdr";
     version = "0.7.3";
@@ -49,6 +73,23 @@ let
             cacheWrite = 0;
           };
         }
+        {
+          id = documentationModel;
+          name = "Qwen3.5 9B (documentation)";
+          reasoning = true;
+          input = [
+            "text"
+            "image"
+          ];
+          contextWindow = 98304;
+          maxTokens = 8192;
+          cost = {
+            input = 0;
+            output = 0;
+            cacheRead = 0;
+            cacheWrite = 0;
+          };
+        }
       ];
     };
   };
@@ -61,7 +102,10 @@ let
     theme = "dark";
     defaultProjectTrust = "ask";
     enableInstallTelemetry = false;
-    enabledModels = [ "ollama/${localModel}" ];
+    enabledModels = [
+      "ollama/${localModel}"
+      "ollama/${documentationModel}"
+    ];
     packages = [ ];
     compaction = {
       enabled = true;
@@ -88,6 +132,53 @@ let
         exec pi --model ${lib.escapeShellArg "ollama/${localModel}"} ${lib.optionalString readOnly "--tools read,grep,find,ls"} "$@"
       '';
     };
+
+  localDocsAgent = pkgs.writeShellApplication {
+    name = "local-docs-agent";
+    runtimeInputs = [ pkgs.pi-coding-agent ];
+    text = ''
+      cd ${lib.escapeShellArg documentationRoot}
+      exec pi \
+        --model ${lib.escapeShellArg "ollama/${documentationModel}"} \
+        --tools read,grep,find,ls \
+        --append-system-prompt ${lib.escapeShellArg documentationPrompt} \
+        --session-id intern-wiki-documentation \
+        --name "Documentation" \
+        "$@"
+    '';
+  };
+
+  askDocs = pkgs.writeShellApplication {
+    name = "ask-docs";
+    runtimeInputs = [
+      herdrPackage
+      pkgs.jq
+    ];
+    text = ''
+      if [ "$#" -eq 0 ]; then
+        echo 'Usage: ask-docs "your documentation question"' >&2
+        exit 2
+      fi
+
+      if ! herdr status server >/dev/null 2>&1; then
+        echo "Herdr is not running. Start Herdr, then run ask-docs again." >&2
+        exit 1
+      fi
+
+      if ! herdr agent get docs >/dev/null 2>&1; then
+        herdr agent start docs \
+          --cwd ${lib.escapeShellArg documentationRoot} \
+          --no-focus \
+          -- ${localDocsAgent}/bin/local-docs-agent
+        herdr agent wait docs --status idle --timeout 60000 >/dev/null
+      fi
+
+      pane_id="$(herdr agent get docs | jq -er '.result.agent.pane_id')"
+      herdr agent send docs "$*" >/dev/null
+      herdr pane send-keys "$pane_id" enter >/dev/null
+      echo "Question sent to the docs agent. Open it with: herdr agent focus docs"
+    '';
+  };
 in
 {
   home.packages = [
@@ -99,11 +190,14 @@ in
       name = "local-agent-readonly";
       readOnly = true;
     })
+    localDocsAgent
+    askDocs
   ];
 
   home.file.".pi/agent/models.json".source = piModels;
   home.file.".pi/agent/settings.json".source = piSettings;
   home.file.".pi/agent/extensions/.keep".text = "";
+  home.file.".pi/agent/prompts/documentation-agent.md".source = documentationPrompt;
 
   home.sessionVariables = {
     PI_TELEMETRY = "0";
