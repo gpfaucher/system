@@ -16,8 +16,11 @@
       scrollback-limit = 1000000000;
 
       # Make terminal Alt bindings reliable on every macOS keyboard layout.
-      # Right Option remains available for native macOS Unicode character input.
-      macos-option-as-alt = "left";
+      macos-option-as-alt = true;
+      keybind = [
+        # Fish/fzf expects ESC-c for its Alt-C directory picker.
+        "alt+c=esc:c"
+      ];
     };
   };
 }
