@@ -2,7 +2,8 @@
   # Keep normal and Tailscale DNS for general traffic, but resolve SP's private
   # domain through the DNS server reachable over the beheer OpenVPN tunnel.
   environment.etc."resolver/s15m.nl".text = ''
-    nameserver 10.200.1.2
+    nameserver 10.200.1.5
+    nameserver 10.200.101.5
     timeout 2
   '';
 
@@ -14,11 +15,11 @@
 
     "SP Beheer GN2 (UDP)-doNotDisableIpv6onTun" = true;
     "SP Beheer GN2 (UDP)-loginWindowSecurityTokenCheckboxIsChecked" = true;
-    "SP Beheer GN2 (UDP)-useDNS" = 0;
+    "SP Beheer GN2 (UDP)useDNS" = 0;
 
     "SP Beheer GN3 (TCP)-doNotDisableIpv6onTun" = true;
     "SP Beheer GN3 (TCP)-loginWindowSecurityTokenCheckboxIsChecked" = true;
-    "SP Beheer GN3 (TCP)-useDNS" = 0;
+    "SP Beheer GN3 (TCP)useDNS" = 0;
   };
 
   # Shared Tunnelblick profiles are installed system-wide. Credentials remain
