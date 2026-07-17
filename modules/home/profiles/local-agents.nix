@@ -20,7 +20,7 @@ let
     - Read the relevant Markdown files rather than relying on filenames alone.
     - Match the language of the user's question. Most wiki content is Dutch.
     - Cite every substantive answer with repository-relative Markdown paths and,
-      where possible, the relevant heading.
+      where possible, a line number using the clickable form path/to/file.md:line.
     - Clearly distinguish documented facts from your own inference.
     - If the documentation is missing, contradictory, or possibly outdated, say so.
     - Never claim that an external system's current state matches the documentation.
@@ -148,6 +148,60 @@ let
     '';
   };
 
+  openDoc = pkgs.writeShellApplication {
+    name = "open-doc";
+    runtimeInputs = with pkgs; [
+      bat
+      coreutils
+      fd
+      fzf
+      neovim
+    ];
+    text = ''
+      wiki_root=${lib.escapeShellArg documentationRoot}
+
+      if [ "$#" -gt 1 ]; then
+        echo "Usage: open-doc [relative/path.md[:line]]" >&2
+        exit 2
+      fi
+
+      reference="''${1:-}"
+      if [ -z "$reference" ]; then
+        reference="$({
+          cd "$wiki_root"
+          fd --type f --extension md --hidden --exclude .git
+        } | fzf \
+          --prompt='Wiki file > ' \
+          --preview="bat --color=always --style=numbers --line-range=:240 '$wiki_root'/{}")"
+        [ -n "$reference" ] || exit 0
+      fi
+
+      line=1
+      if [[ "$reference" =~ :([0-9]+)$ ]]; then
+        line="''${BASH_REMATCH[1]}"
+        reference="''${reference%:*}"
+      fi
+
+      reference="''${reference#./}"
+      if [[ "$reference" = /* ]]; then
+        target="$reference"
+      else
+        target="$wiki_root/$reference"
+      fi
+
+      target="$(realpath "$target")"
+      case "$target" in
+        "$wiki_root"/*.md) ;;
+        *)
+          echo "Refusing to open a path outside the Markdown wiki: $target" >&2
+          exit 1
+          ;;
+      esac
+
+      exec nvim "+$line" "$target"
+    '';
+  };
+
   askDocs = pkgs.writeShellApplication {
     name = "ask-docs";
     runtimeInputs = [
@@ -192,6 +246,7 @@ in
     })
     localDocsAgent
     askDocs
+    openDoc
   ];
 
   home.file.".pi/agent/models.json".source = piModels;
