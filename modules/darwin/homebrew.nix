@@ -6,6 +6,7 @@
     casks = [
       "ghostty"
       "tailscale-app"
+      "openvpn-connect"
     ];
   };
 }
