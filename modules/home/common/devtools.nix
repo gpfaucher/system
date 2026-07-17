@@ -12,6 +12,8 @@
     zoxide
     atuin
     fzf
+    fd
+    ripgrep
     jq
     yq-go
     tldr
@@ -21,6 +23,8 @@
     btop
     yazi
     lazygit
+    sesh
+    nixd
 
     kubectl
     k9s

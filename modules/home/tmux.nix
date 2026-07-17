@@ -36,6 +36,9 @@
     ];
 
     extraConfig = ''
+      # Keep tmux alive when the current project session is closed.
+      set -g detach-on-destroy off
+
       # True color support for Neovim
       set -ag terminal-overrides ",xterm-256color:RGB"
       set -ag terminal-overrides ",xterm-ghostty:RGB"
@@ -48,6 +51,11 @@
 
       # New windows in current path
       bind c new-window -c "#{pane_current_path}"
+
+      # Terminal-native project and session navigation through sesh.
+      bind T display-popup -E -w 80% -h 80% -d "#{pane_current_path}" -T "Projects" "sesh picker -i"
+      bind L run-shell "sesh last"
+      bind 9 run-shell "sesh connect --root '#{pane_current_path}'"
 
       # Reload config
       bind r source-file ~/.config/tmux/tmux.conf \; display "Reloaded!"
@@ -63,4 +71,30 @@
       set -as terminal-overrides ',*:Setulc=\E[58::2::%p1%{65536}%/%d::%p1%{256}%/%{255}%&%d::%p1%{255}%&%d%;m'
     '';
   };
+
+  xdg.configFile."sesh/sesh.toml".text = ''
+    [tui]
+    prompt = "Project > "
+    placeholder = "Filter projects and sessions..."
+    show_icons = true
+
+    [default_session]
+    preview_command = "eza --all --git --icons --color=always {}"
+
+    [[session]]
+    name = "system"
+    path = "~/Developer/system"
+    startup_command = "nvim"
+    windows = [ "shell", "rebuild", "git" ]
+
+    [[window]]
+    name = "shell"
+
+    [[window]]
+    name = "rebuild"
+
+    [[window]]
+    name = "git"
+    startup_script = "lazygit"
+  '';
 }
