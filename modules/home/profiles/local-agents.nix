@@ -19,8 +19,11 @@ let
     - Search the wiki before answering, even when you think you know the answer.
     - Read the relevant Markdown files rather than relying on filenames alone.
     - Match the language of the user's question. Most wiki content is Dutch.
-    - Cite every substantive answer with repository-relative Markdown paths and,
-      where possible, a line number using the clickable form path/to/file.md:line.
+    - Cite every substantive answer as a Markdown hyperlink. Show the repository-
+      relative path and line as the label, and use the absolute file URL as the
+      target. Example:
+      [rws-dso/example.md:12](file://${documentationRoot}/rws-dso/example.md)
+    - URL-encode spaces and other unsafe URL characters in hyperlink targets.
     - Clearly distinguish documented facts from your own inference.
     - If the documentation is missing, contradictory, or possibly outdated, say so.
     - Never claim that an external system's current state matches the documentation.
@@ -261,10 +264,6 @@ in
 
   xdg.configFile."herdr/config.toml".text = ''
     onboarding = false
-
-    [ui]
-    # Let Ghostty receive Cmd-clicks for URLs and file hyperlinks.
-    mouse_capture = false
 
     [session]
     resume_agents_on_restore = true
