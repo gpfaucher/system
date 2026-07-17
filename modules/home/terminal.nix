@@ -14,6 +14,10 @@
       confirm-close-surface = false;
       mouse-hide-while-typing = true;
       scrollback-limit = 1000000000;
+
+      # Make terminal Alt bindings reliable on every macOS keyboard layout.
+      # Right Option remains available for native macOS Unicode character input.
+      macos-option-as-alt = "left";
     };
   };
 }
